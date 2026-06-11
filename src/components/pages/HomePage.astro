@@ -63,25 +63,17 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
   </section>
 
   <!-- ════ SHOWREEL — pantalla completa ════════════════════════════ -->
-  <!--
-    Para agregar video real: reemplaza el <div class="showreel-inner"> por:
-    <video class="showreel-inner" src="/videos/showreel.mp4" autoplay muted loop playsinline></video>
-  -->
   <div class="showreel-section" data-reveal>
-    <div class="showreel-inner">
-      <span class="showreel-corner showreel-corner--left">BrandUp — Showreel</span>
-      <span class="showreel-corner showreel-corner--right">2025</span>
-
-      <button class="showreel-play" aria-label="Reproducir showreel">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="#f8f8f8" aria-hidden="true">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-      </button>
-
-      <span class="showreel-label">
-        {locale === 'es' ? 'Video próximamente' : 'Video coming soon'}
-      </span>
-    </div>
+    <video
+      class="showreel-inner"
+      src="/videos/showreel.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+    <span class="showreel-corner showreel-corner--left">BrandUp — Showreel</span>
+    <span class="showreel-corner showreel-corner--right">2025</span>
   </div>
 
   <!-- ════ STATEMENT — centrado, post-its, swap reversible ═════════ -->
@@ -218,11 +210,12 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
 
     <ul class="svc-list">
-      {SERVICES.map((s) => (
+      {SERVICES.map((s, i) => (
         <li class="svc-row" data-svc-row>
           <button class="svc-row__head" type="button" aria-expanded="false">
             <span class="svc-row__tag">{pick(s.tag, locale)}</span>
             <span class="svc-row__title">{pick(s.title, locale)}</span>
+            <span class="svc-row__num">{String(i + 1).padStart(2, '0')}.</span>
             <span class="svc-row__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
                 <line x1="12" y1="5" x2="12" y2="19" class="svc-row__icon-v" />
