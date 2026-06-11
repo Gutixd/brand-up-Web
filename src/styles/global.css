@@ -146,6 +146,8 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   max-width: 1100px;
   padding-inline: 24px;
   text-align: center;
+  /* Ligeramente más arriba del centro para que el swap se lea cómodo */
+  transform: translateY(-5%);
 }
 /* Grid overlay: ambos textos ocupan la misma celda → cambian en el mismo lugar */
 .statement-texts {
@@ -163,10 +165,18 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   transform: translateY(40px);
 }
 
-/* Post-its / sticky labels (SEO + estética) */
+/* Grupos de post-its — A visible al inicio, B aparece tras el swap */
+.statement-posits {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.statement-posits--b { opacity: 0; }
+
+/* Post-it individual (SEO + estética) */
 .statement-posit {
   position: absolute;
-  z-index: 3;
   font-family: var(--font-body);
   font-size: clamp(0.75rem, 1.2vw, 0.95rem);
   font-weight: 500;
@@ -175,18 +185,27 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   border-radius: 3px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   white-space: nowrap;
-  pointer-events: none;
 }
-.statement-posit--1 { top: 16%;  left: 14%;  background: #B2F366; transform: rotate(-4deg); }
-.statement-posit--2 { top: 22%;  right: 12%; background: #FCD5D7; transform: rotate(3deg); }
-.statement-posit--3 { bottom: 20%; left: 18%; background: #f8d99a; transform: rotate(2deg); }
-.statement-posit--4 { bottom: 16%; right: 16%; background: #bcd9f0; transform: rotate(-3deg); }
-.statement-posit--5 { top: 50%;  left: 6%;   background: #efe3ff; transform: rotate(-2deg); }
+/* Posiciones del set A */
+.statement-posits--a .statement-posit--1 { top: 16%;  left: 14%;  background: #B2F366; transform: rotate(-4deg); }
+.statement-posits--a .statement-posit--2 { top: 22%;  right: 12%; background: #FCD5D7; transform: rotate(3deg); }
+.statement-posits--a .statement-posit--3 { bottom: 20%; left: 18%; background: #f8d99a; transform: rotate(2deg); }
+.statement-posits--a .statement-posit--4 { bottom: 16%; right: 16%; background: #bcd9f0; transform: rotate(-3deg); }
+.statement-posits--a .statement-posit--5 { top: 50%;  left: 6%;   background: #efe3ff; transform: rotate(-2deg); }
+/* Posiciones del set B — distintas para que se vea diferente */
+.statement-posits--b .statement-posit--1 { top: 14%;  right: 18%; background: #f8d99a; transform: rotate(4deg); }
+.statement-posits--b .statement-posit--2 { top: 26%;  left: 10%;  background: #bcd9f0; transform: rotate(-3deg); }
+.statement-posits--b .statement-posit--3 { bottom: 18%; right: 14%; background: #B2F366; transform: rotate(-2deg); }
+.statement-posits--b .statement-posit--4 { bottom: 24%; left: 16%; background: #efe3ff; transform: rotate(3deg); }
+.statement-posits--b .statement-posit--5 { top: 48%;  right: 7%;  background: #FCD5D7; transform: rotate(2deg); }
 @media (max-width: 767px) {
   .statement-posit--3, .statement-posit--5 { display: none; }
-  .statement-posit--1 { top: 9%; left: 6%; }
-  .statement-posit--2 { top: 13%; right: 6%; }
-  .statement-posit--4 { bottom: 11%; right: 8%; }
+  .statement-posits--a .statement-posit--1 { top: 9%; left: 6%; }
+  .statement-posits--a .statement-posit--2 { top: 13%; right: 6%; }
+  .statement-posits--a .statement-posit--4 { bottom: 11%; right: 8%; }
+  .statement-posits--b .statement-posit--1 { top: 9%; right: 6%; }
+  .statement-posits--b .statement-posit--2 { top: 13%; left: 6%; }
+  .statement-posits--b .statement-posit--4 { bottom: 11%; left: 8%; }
 }
 
 /* ─── Stacked cards — base card-wrapper ─────────────────────────── */
@@ -317,23 +336,22 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 @keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 .works-intro__hint svg { animation: nudge 1.6s ease-in-out infinite; }
 
-/* ─── Trabajos — videos a pantalla completa que se apilan ──────────── */
-.stacked-works {
+/* ─── Trabajos — videos full-screen sticky (se apilan por encima) ──── */
+.works-videos {
+  position: relative;
   background: #0d0d0d;
 }
-.stacked-works .card-wrapper {
-  align-items: stretch;
-  perspective: none;
-}
+/* Cada video se queda pegado a pantalla completa; el siguiente sube por
+   encima → el de arriba permanece a pantalla completa, sin encoger. */
 .project-video {
-  position: relative;
+  position: sticky;
+  top: 0;
   width: 100%;
   height: 100svh;
   overflow: hidden;
   background: #0d0d0d;
   display: block;
   text-decoration: none;
-  will-change: transform, opacity;
 }
 /* Contenedor del media — JS inyecta <video> cuando data-video-src está seteado */
 .project-video__inner {
@@ -378,18 +396,149 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
 }
-/* Índice discreto en esquina (número, no nombre) */
-.project-video__index {
-  position: absolute;
-  top: 26px;
-  left: 28px;
-  z-index: 4;
+.stacked-spacer { height: 100svh; }
+.stat-val { font-variant-numeric: tabular-nums; }
+
+/* ─── Servicios — acordeón hover/tap ───────────────────────────────── */
+.svc-accordion {
+  background: #141414;
+  color: #f8f8f8;
+  padding: 96px 0 104px;
+}
+.svc-accordion__header {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  margin-bottom: 56px;
+}
+@media (min-width: 768px) { .svc-accordion__header { padding-inline: 48px; } }
+.svc-accordion__kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 18px;
+}
+.svc-accordion__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 5.5rem);
+  font-weight: 600;
+  line-height: 0.98;
+  max-width: 18ch;
+}
+.svc-accordion__sub {
+  margin-top: 22px;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: rgba(248,248,248,0.5);
+  max-width: 46ch;
+}
+
+.svc-list {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  border-top: 1px solid rgba(248,248,248,0.12);
+}
+@media (min-width: 768px) { .svc-list { padding-inline: 48px; } }
+.svc-row { border-bottom: 1px solid rgba(248,248,248,0.12); }
+.svc-row__head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(20px, 3vw, 36px) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+@media (max-width: 767px) {
+  .svc-row__head { grid-template-columns: 1fr auto; }
+  .svc-row__tag { display: none; }
+}
+.svc-row__tag {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: rgba(248,248,248,0.55);
-  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  color: rgba(248,248,248,0.4);
+  transition: color 0.3s;
 }
+.svc-row__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 5vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #f8f8f8;
+  transition: color 0.3s, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.svc-row__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(248,248,248,0.2);
+  color: rgba(248,248,248,0.6);
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.4s;
+}
+.svc-row__icon-v {
+  transform-origin: center;
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+/* Cuerpo expandible — animación suave con grid-template-rows */
+.svc-row__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.svc-row__body-inner {
+  overflow: hidden;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .svc-row__body-inner { grid-template-columns: minmax(120px,200px) 1fr; }
+  .svc-row__desc { grid-column: 2; }
+  .svc-row__more { grid-column: 2; }
+}
+.svc-row__desc {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.55;
+  color: rgba(248,248,248,0.7);
+  max-width: 60ch;
+  padding-bottom: 4px;
+}
+.svc-row__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  width: fit-content;
+  padding-bottom: 32px;
+  transition: gap 0.3s;
+}
+.svc-row__more:hover { gap: 14px; }
 
-.stacked-spacer { height: 100svh; }
-.stat-val { font-variant-numeric: tabular-nums; }
+/* Estado abierto */
+.svc-row.is-open .svc-row__body { grid-template-rows: 1fr; }
+.svc-row.is-open .svc-row__title { color: var(--color-accent); transform: translateX(8px); }
+.svc-row.is-open .svc-row__tag { color: rgba(248,248,248,0.7); }
+.svc-row.is-open .svc-row__icon {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+.svc-row.is-open .svc-row__icon-v { transform: rotate(90deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-row__body, .svc-row__title, .svc-row__icon, .svc-row__icon-v { transition: none; }
+}

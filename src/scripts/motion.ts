@@ -141,26 +141,69 @@ function initCharReveals() {
   });
 }
 
-// ── Statement text swap (reversible) ───────────────────────────────
+// ── Statement text swap (reversible) + post-its ────────────────────
 function initStatementSwap() {
   const textA = document.querySelector<HTMLElement>('.statement-text--a');
   const textB = document.querySelector<HTMLElement>('.statement-text--b');
   if (!textA || !textB) return;
 
-  // Both share the same grid cell → swap happens in place.
+  const positsA = document.querySelector<HTMLElement>('.statement-posits--a');
+  const positsB = document.querySelector<HTMLElement>('.statement-posits--b');
+
+  // Both texts share the same grid cell → swap happens in place.
   gsap.set(textA, { opacity: 1, y: 0 });
   gsap.set(textB, { opacity: 0, y: 40 });
+  if (positsA) gsap.set(positsA, { opacity: 1, scale: 1 });
+  if (positsB) gsap.set(positsB, { opacity: 0, scale: 0.9 });
 
-  // Paused timeline so it can play forward (scroll down) and reverse (scroll up).
+  // Paused timeline → play forward (scroll down), reverse (scroll up).
   const tl = gsap.timeline({ paused: true });
-  tl.to(textA, { y: -45, opacity: 0, duration: 0.6, ease: 'power3.in' })
-    .fromTo(textB, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, '-=0.2');
+  tl.to(textA, { y: -45, opacity: 0, duration: 0.6, ease: 'power3.in' }, 0)
+    .fromTo(textB, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.35);
+  if (positsA) tl.to(positsA, { opacity: 0, scale: 0.9, duration: 0.5, ease: 'power2.in' }, 0);
+  if (positsB) tl.to(positsB, { opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' }, 0.4);
 
   ScrollTrigger.create({
     trigger: '.statement-section',
     start: 'center 58%',
     onEnter: () => tl.play(),
     onLeaveBack: () => tl.reverse(),
+  });
+}
+
+// ── Servicios — acordeón (hover en desktop, tap en touch) ──────────
+function initServicesAccordion() {
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-svc-row]'));
+  if (!rows.length) return;
+
+  const hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  const open = (row: HTMLElement) => {
+    rows.forEach((r) => {
+      const on = r === row;
+      r.classList.toggle('is-open', on);
+      r.querySelector('.svc-row__head')?.setAttribute('aria-expanded', String(on));
+    });
+  };
+  const closeAll = () => rows.forEach((r) => {
+    r.classList.remove('is-open');
+    r.querySelector('.svc-row__head')?.setAttribute('aria-expanded', 'false');
+  });
+
+  // Primer servicio abierto por defecto
+  open(rows[0]);
+
+  rows.forEach((row) => {
+    const head = row.querySelector<HTMLElement>('.svc-row__head');
+    if (!head) return;
+    if (hoverable) {
+      row.addEventListener('mouseenter', () => open(row));
+    } else {
+      head.addEventListener('click', () => {
+        if (row.classList.contains('is-open')) closeAll();
+        else open(row);
+      });
+    }
   });
 }
 
@@ -220,12 +263,12 @@ function setup() {
   initWordReveals();
   initFadeReveals();
   initParallax();
-  initCardStack('.stacked-section', '.stack-card');
-  initCardStack('.stacked-works', '.project-video');
+  initCardStack('.stacked-section', '.stack-card'); // (otras páginas pueden usarlo)
   initCounters();
   initMarqueeScroll();
   initCharReveals();
   initStatementSwap();
+  initServicesAccordion();
   initWorkGrid();
   initProjectVideos();
 }

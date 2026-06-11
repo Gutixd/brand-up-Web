@@ -15,13 +15,24 @@ interface Props {
 export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, pathname }: Props) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+      // Ocultar al bajar, mostrar al subir (con menú cerrado y pasado el header)
+      if (!open) {
+        if (y > lastY && y > 120) setHidden(true);
+        else if (y < lastY) setHidden(false);
+      }
+      lastY = y;
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? 'hidden' : '';
@@ -33,6 +44,8 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      hidden && !open ? '-translate-y-full' : 'translate-y-0'
+    } ${
       scrolled || open ? 'bg-ink/95 backdrop-blur-md border-b border-line' : 'bg-transparent'
     }`}>
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:px-8">
@@ -41,18 +54,15 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
         </a>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Principal">
-          {nav.map((item, i) => (
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Principal">
+          {nav.map((item) => (
             <a
               key={item.href}
               href={lp(item.href)}
-              className={`group relative flex items-center gap-1.5 py-1 text-sm font-medium transition-colors ${
+              className={`group relative py-1 text-sm font-medium transition-colors ${
                 isActive(item.href) ? 'text-accent' : 'text-paper/70 hover:text-paper'
               }`}
             >
-              <span className="text-[10px] font-mono tracking-wider text-gray/50 transition-colors group-hover:text-accent/70">
-                0{i + 1}
-              </span>
               {item.label}
               {/* animated underline */}
               <span className={`absolute -bottom-0.5 left-0 h-px bg-accent transition-all duration-300 ${
@@ -105,10 +115,7 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
               style={{ animationDelay: `${i * 40}ms` }}
               onClick={() => setOpen(false)}
             >
-              <div className="flex items-baseline gap-3">
-                <span className="font-mono text-xs text-gray/40">0{i + 1}</span>
-                <span className="font-display text-2xl font-semibold tracking-tight">{item.label}</span>
-              </div>
+              <span className="font-display text-2xl font-semibold tracking-tight">{item.label}</span>
               <span className="text-gray/30 transition-colors group-hover:text-accent">↗</span>
             </a>
           ))}
