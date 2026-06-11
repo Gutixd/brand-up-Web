@@ -13,19 +13,49 @@
       "title": "BrandUp — Digital creative agency in Santiago, Chile",
       "desc": "Full-service creative agency in Santiago: web design, e-commerce, branding, reels and digital advertising. We don't sell websites, we build growth."
     },
-    "services": { "title": "Services — BrandUp Agency", "desc": "Web design and development, e-commerce, branding, reels, digital advertising and growth marketing in Santiago, Chile." },
-    "work": { "title": "Work — BrandUp Agency", "desc": "Real BrandUp projects: web, branding, content and advertising for Chilean brands." },
-    "industries": { "title": "Industries — BrandUp Agency", "desc": "Experience in food & beverage, e-commerce, B2B, education, health and institutions." },
-    "about": { "title": "About — BrandUp Agency", "desc": "Meet BrandUp: technology and advertising working together to grow brands in Chile." },
-    "contact": { "title": "Contact — BrandUp Agency", "desc": "Let's talk about your project. Reach us on WhatsApp or through the form." },
-    "quote": { "title": "Start a project — BrandUp Agency", "desc": "Tell us what you need and we'll send you a tailored proposal." }
+    "services": {
+      "title": "Services — BrandUp Agency",
+      "desc": "Web design and development, e-commerce, branding, reels, digital advertising and growth marketing in Santiago, Chile."
+    },
+    "work": {
+      "title": "Work — BrandUp Agency",
+      "desc": "Real BrandUp projects: web, branding, content and advertising for Chilean brands."
+    },
+    "industries": {
+      "title": "Industries — BrandUp Agency",
+      "desc": "Experience in food & beverage, e-commerce, B2B, education, health and institutions."
+    },
+    "about": {
+      "title": "About — BrandUp Agency",
+      "desc": "Meet BrandUp: technology and advertising working together to grow brands in Chile."
+    },
+    "contact": {
+      "title": "Contact — BrandUp Agency",
+      "desc": "Let's talk about your project. Reach us on WhatsApp or through the form."
+    },
+    "quote": {
+      "title": "Start a project — BrandUp Agency",
+      "desc": "Tell us what you need and we'll send you a tailored proposal."
+    },
+    "terms": {
+      "title": "Terms & Conditions — BrandUp Agency",
+      "desc": "Terms and conditions for BrandUp Agency services."
+    },
+    "privacy": {
+      "title": "Privacy Policy — BrandUp Agency",
+      "desc": "How BrandUp Agency handles your personal data."
+    }
   },
   "hero": {
-    "kicker": "Full-service creative agency — Santiago, Chile",
-    "title": "We don't sell websites. We build growth.",
+    "kicker": "Creative Digital Agency",
+    "line1": "Creative",
+    "line2": "Digital",
+    "line3": "Agency",
+    "location": "Santiago — Chile",
     "subtitle": "Web design, e-commerce, branding, content and digital advertising for brands that are serious about growing.",
     "cta": "Start a project",
-    "cta2": "View work"
+    "cta2": "View work",
+    "scroll": "Scroll"
   },
   "home": {
     "servicesKicker": "What we do",
@@ -37,10 +67,22 @@
     "whyKicker": "Why BrandUp",
     "whyTitle": "One team, two worlds: technology and advertising",
     "why": [
-      { "t": "Premium design", "d": "Every piece is designed with intent: world-class aesthetics in service of conversion." },
-      { "t": "Real technology", "d": "Clean code, loading speed and automation. No slow templates." },
-      { "t": "Measurable results", "d": "We work with data and metrics, not promises. Every project has clear goals." },
-      { "t": "A close partner", "d": "Direct communication with the people doing the work. No middlemen, no canned replies." }
+      {
+        "t": "Premium design",
+        "d": "Every piece is designed with intent: world-class aesthetics in service of conversion."
+      },
+      {
+        "t": "Real technology",
+        "d": "Clean code, loading speed and automation. No slow templates."
+      },
+      {
+        "t": "Measurable results",
+        "d": "We work with data and metrics, not promises. Every project has clear goals."
+      },
+      {
+        "t": "A close partner",
+        "d": "Direct communication with the people doing the work. No middlemen, no canned replies."
+      }
     ],
     "clientsKicker": "Brands that trusted us",
     "testimonialsKicker": "What our clients say",
@@ -58,11 +100,26 @@
     "faqKicker": "FAQ",
     "faqTitle": "What we always get asked",
     "faq": [
-      { "q": "How much does a website cost?", "a": "It depends on scope: a landing page starts at roughly $120.000 CLP and a corporate site or e-commerce is quoted based on features. You always get a fixed price before we start." },
-      { "q": "How long does a project take?", "a": "A landing page takes 1–2 weeks; a corporate site, 3–5 weeks; an e-commerce, 4–8 weeks. We give you a clear timeline at kickoff." },
-      { "q": "Do you include support and maintenance?", "a": "Yes. Every project includes a post-launch support period, and we offer monthly maintenance plans: backups, security, updates and minor changes." },
-      { "q": "How many design revisions are included?", "a": "We work with defined revision rounds (usually 2–3 per stage) to move fast without losing quality. Your feedback is part of the process, not an extra." },
-      { "q": "Do you work with clients outside Santiago?", "a": "Yes, we work 100% remotely with clients across Chile and abroad. Meetings happen over video calls and day-to-day communication over WhatsApp." }
+      {
+        "q": "How much does a website cost?",
+        "a": "It depends on scope: a landing page starts at roughly $120.000 CLP and a corporate site or e-commerce is quoted based on features. You always get a fixed price before we start."
+      },
+      {
+        "q": "How long does a project take?",
+        "a": "A landing page takes 1–2 weeks; a corporate site, 3–5 weeks; an e-commerce, 4–8 weeks. We give you a clear timeline at kickoff."
+      },
+      {
+        "q": "Do you include support and maintenance?",
+        "a": "Yes. Every project includes a post-launch support period, and we offer monthly maintenance plans: backups, security, updates and minor changes."
+      },
+      {
+        "q": "How many design revisions are included?",
+        "a": "We work with defined revision rounds (usually 2–3 per stage) to move fast without losing quality. Your feedback is part of the process, not an extra."
+      },
+      {
+        "q": "Do you work with clients outside Santiago?",
+        "a": "Yes, we work 100% remotely with clients across Chile and abroad. Meetings happen over video calls and day-to-day communication over WhatsApp."
+      }
     ]
   },
   "work": {
@@ -92,22 +149,59 @@
     "manifesto": "BrandUp was born from a simple conviction: a brand grows when design, technology and strategy pull in the same direction. We're not a website factory or a smoke-and-mirrors agency. We're a small, senior team obsessed with making every peso you invest show up in your business.",
     "teamKicker": "The team",
     "teamTitle": "Who's behind it",
-    "diego": { "name": "Diego Gutiérrez", "role": "Co-founder · Engineering & Development", "bio": "Computer science engineer. He leads web development, e-commerce and the technology layer of every project: performance, automation and integrations." },
-    "valentina": { "name": "Valentina", "role": "Co-founder · Advertising & Strategy", "bio": "Advertising professional and content creator. She leads branding, creative direction, content and strategy: the visible face of the brands we build." },
+    "diego": {
+      "name": "Diego Gutiérrez",
+      "role": "Co-founder · Engineering & Development",
+      "bio": "Computer science engineer. He leads web development, e-commerce and the technology layer of every project: performance, automation and integrations."
+    },
+    "valentina": {
+      "name": "Valentina",
+      "role": "Co-founder · Advertising & Strategy",
+      "bio": "Advertising professional and content creator. She leads branding, creative direction, content and strategy: the visible face of the brands we build."
+    },
     "valuesKicker": "How we work",
     "values": [
-      { "t": "Clarity over jargon", "d": "We explain what we do and why, in plain language. Decisions are made with information, not technicalities." },
-      { "t": "Quality without shortcuts", "d": "We'd rather take on fewer projects and make them impeccable. Your brand is our portfolio." },
-      { "t": "Data over opinions", "d": "We measure everything we do. If something doesn't work, we change it fast." }
+      {
+        "t": "Clarity over jargon",
+        "d": "We explain what we do and why, in plain language. Decisions are made with information, not technicalities."
+      },
+      {
+        "t": "Quality without shortcuts",
+        "d": "We'd rather take on fewer projects and make them impeccable. Your brand is our portfolio."
+      },
+      {
+        "t": "Data over opinions",
+        "d": "We measure everything we do. If something doesn't work, we change it fast."
+      }
     ],
     "processKicker": "Our process",
     "processTitle": "How we take your project from brief to launch",
     "process": [
-      { "n": "01", "t": "Discovery", "d": "We understand your business, your clients and your goals. We audit your current presence and define what success means for you." },
-      { "n": "02", "t": "Strategy", "d": "We define the plan: scope, messaging, architecture and metrics. You receive a concrete proposal with timeline and a fixed price." },
-      { "n": "03", "t": "Design", "d": "We create the visual concept and iterate it with you through defined revision rounds, until it represents your brand 100%." },
-      { "n": "04", "t": "Build", "d": "We develop with clean code and modern technology: speed, SEO and flawless responsive from the ground up." },
-      { "n": "05", "t": "Launch & growth", "d": "We publish, measure and optimize. Launch isn't the end: it's where growth begins." }
+      {
+        "n": "01",
+        "t": "Discovery",
+        "d": "We understand your business, your clients and your goals. We audit your current presence and define what success means for you."
+      },
+      {
+        "n": "02",
+        "t": "Strategy",
+        "d": "We define the plan: scope, messaging, architecture and metrics. You receive a concrete proposal with timeline and a fixed price."
+      },
+      {
+        "n": "03",
+        "t": "Design",
+        "d": "We create the visual concept and iterate it with you through defined revision rounds, until it represents your brand 100%."
+      },
+      {
+        "n": "04",
+        "t": "Build",
+        "d": "We develop with clean code and modern technology: speed, SEO and flawless responsive from the ground up."
+      },
+      {
+        "n": "05",
+        "t": "Launch & growth",
+        "d": "We publish, measure and optimize. Launch isn't the end: it's where growth begins."
+      }
     ]
   },
   "contact": {
@@ -122,7 +216,11 @@
     "kicker": "Quote",
     "title": "Start a project",
     "intro": "The more context you give us, the more precise the proposal. We reply with concrete pricing and timelines.",
-    "steps": ["Tell us your idea", "We send a proposal", "We start building"]
+    "steps": [
+      "Tell us your idea",
+      "We send a proposal",
+      "We start building"
+    ]
   },
   "form": {
     "name": "Name",
@@ -130,10 +228,24 @@
     "company": "Company (optional)",
     "service": "Service type",
     "servicePlaceholder": "Select a service",
-    "serviceOptions": ["Web design & development", "E-commerce", "Branding & identity", "Reels & content", "Digital advertising (Ads)", "Marketing & growth", "Other"],
+    "serviceOptions": [
+      "Web design & development",
+      "E-commerce",
+      "Branding & identity",
+      "Reels & content",
+      "Digital advertising (Ads)",
+      "Marketing & growth",
+      "Other"
+    ],
     "budget": "Estimated budget",
     "budgetPlaceholder": "Select a range",
-    "budgetOptions": ["Under $200.000 CLP", "$200.000 – $500.000 CLP", "$500.000 – $1.000.000 CLP", "Over $1.000.000 CLP", "Not sure yet"],
+    "budgetOptions": [
+      "Under $200.000 CLP",
+      "$200.000 – $500.000 CLP",
+      "$500.000 – $1.000.000 CLP",
+      "Over $1.000.000 CLP",
+      "Not sure yet"
+    ],
     "message": "Tell us about your project",
     "submit": "Send",
     "sending": "Sending…",
@@ -150,6 +262,56 @@
     "language": "Language",
     "rights": "All rights reserved."
   },
-  "lang": { "es": "Español", "en": "English", "switch": "Español" },
-  "notFound": { "title": "Page not found", "text": "The page you're looking for doesn't exist or was moved.", "back": "Back to home" }
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "switch": "Español"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you're looking for doesn't exist or was moved.",
+    "back": "Back to home"
+  },
+  "marquee": {
+    "words": [
+      "Growth",
+      "Designed",
+      "Differently"
+    ]
+  },
+  "statement": {
+    "text": "We integrate premium design, technology and advertising strategy to build brands that convert. We do not sell websites: we build growth.",
+    "tags": [
+      "Web Design",
+      "E-commerce",
+      "Branding",
+      "Content",
+      "Advertising",
+      "360° Agency"
+    ]
+  },
+  "stats": {
+    "items": [
+      {
+        "val": "15+",
+        "lbl": "Projects delivered"
+      },
+      {
+        "val": "6",
+        "lbl": "Industries"
+      },
+      {
+        "val": "267K",
+        "lbl": "Views on one reel"
+      },
+      {
+        "val": "2",
+        "lbl": "Countries reached"
+      }
+    ]
+  },
+  "legal": {
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy"
+  }
 }

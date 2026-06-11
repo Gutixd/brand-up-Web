@@ -1,22 +1,11 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import SectionHead from '../SectionHead.astro';
-import CtaBand from '../CtaBand.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
-
-import logoChacha from '../../assets/logos/chachapollo.webp';
-import logoJdcargo from '../../assets/logos/jdcargo.webp';
-import logoAracnida from '../../assets/logos/aracnida.webp';
-import logoTemplo from '../../assets/logos/templo-maipu.webp';
-import logoBell from '../../assets/logos/bell-college.webp';
-import logoBschool from '../../assets/logos/bschool.webp';
-import logoDuoc from '../../assets/logos/duoc-uc.webp';
-import logoSuperlunch from '../../assets/logos/superlunch.webp';
 
 interface Props {
   locale: Locale;
@@ -25,119 +14,159 @@ const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
 
-const featured = PROJECTS.filter((p) => p.featured).slice(0, 6);
-const clientLogos = [
-  { img: logoChacha, name: 'El Chacha Pollo' },
-  { img: logoJdcargo, name: 'JD Cargo Logistics' },
-  { img: logoAracnida, name: 'Aracnida Store' },
-  { img: logoTemplo, name: 'Templo Votivo de Maipú' },
-  { img: logoBell, name: 'Bell College' },
-  { img: logoBschool, name: 'BSchool' },
-  { img: logoDuoc, name: 'Duoc UC' },
-  { img: logoSuperlunch, name: 'Superlunch' },
-];
+const featured = PROJECTS.filter((p) => p.featured).slice(0, 4);
 const testimonials = TESTIMONIALS.map((x) => ({
   text: pick(x.text, locale),
   name: x.name,
   role: pick(x.role, locale),
   initials: x.initials,
 }));
+const workLabel = locale === 'es' ? 'Todos los trabajos' : 'All work';
+const servicesLabel = locale === 'es' ? 'Todos los servicios' : 'All services';
+const goTo = locale === 'es' ? 'Ir a' : 'Go to';
 ---
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
-  <!-- HERO -->
-  <section class="relative flex min-h-[100svh] items-center overflow-hidden">
-    <div class="hero-glow -top-32 right-[-10%] h-[520px] w-[520px] bg-accent/25"></div>
-    <div class="hero-glow bottom-[-20%] left-[-15%] h-[460px] w-[460px] bg-accent/10" style="animation-delay: -7s"></div>
-    <div
-      class="pointer-events-none absolute inset-0 opacity-[0.07]"
-      style="background-image: linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px); background-size: 80px 80px;"
-    >
+  <!-- ============ HERO — tipografía gigante estilo TFTL ============ -->
+  <section class="relative flex min-h-[100svh] flex-col justify-between px-5 pt-[88px] md:px-8">
+    <div class="mx-auto flex w-full max-w-[1400px] items-center justify-between pt-6 text-xs font-medium uppercase tracking-[0.14em] text-gray">
+      <span data-reveal>{t.hero.location}</span>
+      <span data-reveal data-delay="0.1">©{new Date().getFullYear()}</span>
     </div>
-    <div class="relative mx-auto w-full max-w-7xl px-5 pt-28 pb-20 md:px-8">
-      <p class="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-accent" data-reveal>{t.hero.kicker}</p>
-      <h1 class="max-w-5xl font-display text-5xl font-extrabold leading-[1.04] tracking-tight md:text-7xl lg:text-8xl" data-reveal-word>
-        {t.hero.title}
+
+    <div class="mx-auto w-full max-w-[1400px]">
+      <h1 class="display-tight font-display text-[17vw] uppercase leading-[0.92] md:text-[12.5vw]">
+        <span class="block" data-reveal-word>{t.hero.line1}</span>
+        <span class="block pl-[8vw] text-accent" data-reveal-word>{t.hero.line2}</span>
+        <span class="block" data-reveal-word>{t.hero.line3}</span>
       </h1>
-      <p class="mt-8 max-w-xl text-lg text-gray md:text-xl" data-reveal data-delay="0.3">{t.hero.subtitle}</p>
-      <div class="mt-10 flex flex-wrap gap-4" data-reveal data-delay="0.45">
-        <a href={lp('/cotizar')} class="rounded-full bg-accent px-8 py-4 font-semibold text-ink transition-transform hover:scale-105">{t.hero.cta}</a>
-        <a href={lp('/trabajos')} class="rounded-full border border-line px-8 py-4 font-semibold text-paper transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
+    </div>
+
+    <div class="mx-auto flex w-full max-w-[1400px] flex-col gap-8 pb-10 md:flex-row md:items-end md:justify-between">
+      <p class="max-w-md text-base text-gray md:text-lg" data-reveal data-delay="0.5">{t.hero.subtitle}</p>
+      <div class="flex items-center gap-4" data-reveal data-delay="0.6">
+        <a href={lp('/cotizar')} class="rounded-full bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-accent">{t.hero.cta}</a>
+        <a href={lp('/trabajos')} class="rounded-full border border-line px-7 py-3.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section class="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-    <SectionHead kicker={t.home.servicesKicker} title={t.home.servicesTitle} />
-    <div class="divide-y divide-line border-y border-line">
-      {SERVICES.map((s) => (
-        <a href={`${lp('/servicios')}#${s.slug}`} class="group grid gap-2 py-7 transition-colors md:grid-cols-[80px_1fr_auto] md:items-center md:gap-8" data-reveal>
-          <span class="font-display text-sm font-bold text-accent">{s.num}</span>
-          <span>
-            <span class="font-display text-2xl font-bold text-paper transition-colors group-hover:text-accent md:text-3xl">{pick(s.title, locale)}</span>
-            <span class="mt-1 block text-sm text-gray">{pick(s.short, locale)}</span>
-          </span>
-          <span class="hidden text-2xl text-gray transition-all group-hover:translate-x-2 group-hover:text-accent md:block" aria-hidden="true">→</span>
-        </a>
+  <!-- ============ MARQUEE GIGANTE + bloque de video ============ -->
+  <section class="rule overflow-hidden py-16 md:py-24">
+    <div class="marquee-track marquee-track--slow items-center" aria-hidden="true">
+      {[0, 1].map(() => (
+        <span class="display-tight whitespace-nowrap pr-8 font-display text-[11vw] uppercase md:text-[8vw]">
+          {t.marquee.words.map((w, i) => (
+            <span class={i === 1 ? 'text-accent' : ''}>{w}&nbsp;</span>
+          ))}
+          —&nbsp;
+        </span>
       ))}
     </div>
-    <a href={lp('/servicios')} class="mt-8 inline-block text-sm font-semibold text-accent hover:underline">{t.home.servicesAll} →</a>
-  </section>
 
-  <!-- FEATURED WORK -->
-  <section class="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-20">
-    <SectionHead kicker={t.home.workKicker} title={t.home.workTitle} />
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {featured.map((p) => (
-        <a href={lp(`/trabajos/${p.slug}`)} class="group block" data-reveal>
-          <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-line transition-transform duration-500 group-hover:scale-[1.015]" style={`background:${p.gradient}`}>
-            {p.logo && <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[45%] w-auto max-w-[55%] rounded-lg object-contain transition-transform duration-500 group-hover:scale-110" widths={[320, 480]} />}
-          </div>
-          <div class="mt-4 flex items-baseline justify-between gap-4">
-            <h3 class="font-display text-lg font-bold transition-colors group-hover:text-accent">{p.client}</h3>
-            <span class="text-right text-xs text-gray">{pick(p.sector, locale)}</span>
-          </div>
-        </a>
-      ))}
+    <!-- Placeholder de video: reemplazar el div interior por <video> cuando estén los videos por sección -->
+    <div class="mx-auto mt-14 max-w-[1400px] px-5 md:px-8" data-reveal>
+      <div class="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl bg-paper" data-parallax="-6">
+        <span class="absolute left-6 top-6 text-xs font-medium uppercase tracking-[0.14em] text-ink/60">BrandUp — Showreel</span>
+        <span class="absolute right-6 top-6 text-xs font-medium text-ink/60">00:00</span>
+        <span class="flex h-20 w-20 items-center justify-center rounded-full bg-ink/10 backdrop-blur transition-transform duration-500 group-hover:scale-110">
+          <svg viewBox="0 0 24 24" class="ml-1 h-7 w-7 fill-ink" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+        <span class="absolute bottom-6 left-6 text-xs uppercase tracking-[0.14em] text-ink/40">{locale === 'es' ? 'Video próximamente' : 'Video coming soon'}</span>
+      </div>
     </div>
-    <a href={lp('/trabajos')} class="mt-10 inline-block text-sm font-semibold text-accent hover:underline">{t.home.workAll} →</a>
   </section>
 
-  <!-- WHY BRANDUP -->
-  <section class="border-y border-line bg-ink-2/50">
-    <div class="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-      <SectionHead kicker={t.home.whyKicker} title={t.home.whyTitle} />
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {t.home.why.map((w, i) => (
-          <div class="rounded-2xl border border-line bg-ink p-7 transition-colors hover:border-accent/50" data-reveal data-delay={`${i * 0.08}`}>
-            <span class="font-display text-sm font-bold text-accent">0{i + 1}</span>
-            <h3 class="mt-3 font-display text-xl font-bold">{w.t}</h3>
-            <p class="mt-3 text-sm leading-relaxed text-gray">{w.d}</p>
-          </div>
+  <!-- ============ STATEMENT + tags ============ -->
+  <section class="rule">
+    <div class="mx-auto max-w-[1400px] px-5 py-24 md:px-8 md:py-36">
+      <p class="display-tight max-w-5xl font-display text-3xl md:text-5xl" data-reveal-word>{t.statement.text}</p>
+      <ul class="mt-12 flex flex-wrap gap-3" data-reveal data-delay="0.2">
+        {t.statement.tags.map((tag) => (
+          <li class="rounded-full border border-line px-5 py-2.5 text-sm text-gray transition-colors hover:border-accent hover:text-accent">{tag}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TRABAJOS — grilla 2×2 con tarjetas de color ============ -->
+  <section class="rule">
+    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
+      <div class="mb-12 flex items-end justify-between">
+        <h2 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.home.workKicker}</h2>
+        <a href={lp('/trabajos')} class="hidden shrink-0 text-sm font-medium underline-offset-4 transition-colors hover:text-accent hover:underline md:block" data-reveal>{workLabel} →</a>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {featured.map((p, i) => (
+          <a href={lp(`/trabajos/${p.slug}`)} class={`group block ${i % 2 ? 'md:mt-16' : ''}`} data-reveal data-delay={`${(i % 2) * 0.1}`}>
+            <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl transition-transform duration-500 group-hover:scale-[0.985]" style={`background:${p.gradient}`}>
+              {p.logo && (
+                <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[42%] w-auto max-w-[50%] rounded-xl object-contain mix-blend-multiply transition-transform duration-700 group-hover:scale-105" widths={[320, 480]} />
+              )}
+              <span class="absolute bottom-5 left-5 rounded-full bg-[#232323]/80 px-4 py-1.5 text-xs text-white backdrop-blur">{pick(p.sector, locale)}</span>
+              <span class="absolute bottom-5 right-5 rounded-full bg-[#232323]/80 px-4 py-1.5 text-xs text-white backdrop-blur">{p.year}</span>
+            </div>
+            <h3 class="mt-4 font-display text-2xl font-semibold tracking-tight transition-colors group-hover:text-accent">{p.client}</h3>
+          </a>
         ))}
       </div>
+      <a href={lp('/trabajos')} class="mt-10 inline-block text-sm font-medium underline underline-offset-4 transition-colors hover:text-accent md:hidden">{workLabel} →</a>
     </div>
   </section>
 
-  <!-- CLIENT LOGOS MARQUEE -->
-  <section class="overflow-hidden py-20">
-    <p class="mb-10 text-center text-sm font-semibold uppercase tracking-[0.2em] text-gray" data-reveal>{t.home.clientsKicker}</p>
-    <div class="marquee-track items-center gap-14 pr-14">
-      {[...clientLogos, ...clientLogos].map((c) => (
-        <Image src={c.img} alt={c.name} class="h-14 w-auto shrink-0 rounded-lg opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0" widths={[200]} />
+  <!-- ============ STATS ============ -->
+  <section class="rule">
+    <div class="mx-auto grid max-w-[1400px] grid-cols-2 gap-y-12 px-5 py-20 md:grid-cols-4 md:px-8 md:py-28">
+      {t.stats.items.map((s, i) => (
+        <div data-reveal data-delay={`${i * 0.08}`}>
+          <span class="display-tight block font-display text-5xl md:text-7xl">{s.val}</span>
+          <span class="mt-2 block text-sm text-gray">{s.lbl}</span>
+        </div>
       ))}
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section class="mx-auto max-w-7xl px-5 py-24 md:px-8">
-    <p class="mb-3 text-center text-sm font-semibold uppercase tracking-[0.2em] text-accent" data-reveal>{t.home.testimonialsKicker}</p>
-    <h2 class="mb-14 text-center font-display text-4xl font-extrabold tracking-tight md:text-5xl" data-reveal-word>{t.home.testimonialsTitle}</h2>
-    <div data-reveal>
-      <TestimonialCarousel client:visible items={testimonials} />
+  <!-- ============ SERVICIOS — directorio ordenado ============ -->
+  <section class="rule">
+    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
+      <div class="mb-12 flex items-end justify-between">
+        <h2 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.nav.services}</h2>
+        <a href={lp('/servicios')} class="hidden shrink-0 text-sm font-medium underline-offset-4 transition-colors hover:text-accent hover:underline md:block" data-reveal>{servicesLabel} →</a>
+      </div>
+      <ol class="rule">
+        {SERVICES.map((s) => (
+          <li class="border-b border-line">
+            <a href={`${lp('/servicios')}#${s.slug}`} class="group grid items-center gap-x-8 gap-y-1 py-8 md:grid-cols-[64px_1fr_1fr_auto]" data-reveal>
+              <span class="text-sm text-gray">({s.num})</span>
+              <span class="display-tight font-display text-2xl transition-colors group-hover:text-accent md:text-4xl">{pick(s.title, locale)}</span>
+              <span class="text-sm text-gray md:max-w-sm">{pick(s.short, locale)}</span>
+              <span class="hidden text-sm font-medium text-gray transition-colors group-hover:text-accent md:block">{goTo} →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
-  <CtaBand locale={locale} />
+  <!-- ============ TESTIMONIOS ============ -->
+  <section class="rule">
+    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
+      <h2 class="display-tight mb-14 font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.home.testimonialsTitle}</h2>
+      <div data-reveal>
+        <TestimonialCarousel client:visible items={testimonials} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL grande ============ -->
+  <section class="rule">
+    <a href={lp('/cotizar')} class="group block">
+      <div class="mx-auto max-w-[1400px] px-5 py-24 md:px-8 md:py-36">
+        <p class="text-xs font-medium uppercase tracking-[0.2em] text-gray" data-reveal>{t.home.ctaText}</p>
+        <p class="display-tight mt-4 font-display text-[12vw] uppercase transition-colors group-hover:text-accent md:text-[9vw]" data-reveal-word>
+          {t.home.ctaTitle}
+        </p>
+      </div>
+    </a>
+  </section>
 </Base>

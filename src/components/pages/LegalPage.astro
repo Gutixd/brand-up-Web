@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+import { useT, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+  kind: 'terms' | 'privacy';
+}
+const { locale, kind } = Astro.props;
+const t = useT(locale);
+const meta = kind === 'terms' ? t.meta.terms : t.meta.privacy;
+const title = kind === 'terms' ? t.legal.terms : t.legal.privacy;
+
+// Contenido legal estándar — revisar/ajustar con asesoría legal antes de lanzar.
+const CONTENT = {
+  terms: {
+    es: [
+      ['1. Identificación', `Este sitio web es operado por ${SITE.legalName} ("BrandUp"), agencia creativa con base en ${SITE.city}. Contacto: ${SITE.email} / ${SITE.phone}.`],
+      ['2. Objeto', 'Estos términos regulan el uso del sitio y la contratación de los servicios de diseño web, e-commerce, branding, contenido y publicidad digital ofrecidos por BrandUp.'],
+      ['3. Propuestas y precios', 'Toda propuesta comercial enviada por BrandUp es válida por 30 días, salvo que se indique lo contrario. Los precios se expresan en pesos chilenos (CLP) y pueden no incluir impuestos. El alcance, plazos y valores definitivos se fijan por escrito antes de iniciar cada proyecto.'],
+      ['4. Proceso y revisiones', 'Los proyectos se desarrollan por etapas con rondas de revisión definidas en la propuesta. Cambios fuera del alcance acordado se cotizan por separado.'],
+      ['5. Pagos', 'Salvo acuerdo distinto, los proyectos consideran un anticipo para reservar el inicio y el saldo contra entrega. Los servicios mensuales se facturan por adelantado.'],
+      ['6. Propiedad intelectual', 'Una vez pagado el total del proyecto, el cliente recibe los derechos de uso de los entregables finales. BrandUp conserva el derecho de exhibir los trabajos en su portafolio y redes, salvo pacto de confidencialidad.'],
+      ['7. Contenido del cliente', 'El cliente garantiza que el material que entrega (textos, imágenes, logos, etc.) es de su propiedad o cuenta con licencias para su uso, y libera a BrandUp de reclamos de terceros por dicho material.'],
+      ['8. Responsabilidad', 'BrandUp trabaja con estándares profesionales pero no garantiza resultados comerciales específicos (ventas, posicionamiento o métricas), ya que dependen de factores externos. La responsabilidad total de BrandUp se limita al monto pagado por el servicio en cuestión.'],
+      ['9. Soporte', 'Cada proyecto incluye el período de soporte indicado en su propuesta. La mantención continua se contrata como servicio mensual.'],
+      ['10. Modificaciones', 'BrandUp puede actualizar estos términos. La versión vigente estará siempre publicada en este sitio.'],
+      ['11. Ley aplicable', 'Estos términos se rigen por las leyes de la República de Chile. Cualquier controversia será sometida a los tribunales de Santiago de Chile.'],
+    ],
+    en: [
+      ['1. Identification', `This website is operated by ${SITE.legalName} ("BrandUp"), a creative agency based in ${SITE.city}. Contact: ${SITE.email} / ${SITE.phone}.`],
+      ['2. Purpose', 'These terms govern the use of this site and the engagement of BrandUp’s web design, e-commerce, branding, content and digital advertising services.'],
+      ['3. Proposals and pricing', 'Commercial proposals are valid for 30 days unless stated otherwise. Prices are expressed in Chilean pesos (CLP) and may exclude taxes. Final scope, timeline and pricing are set in writing before each project starts.'],
+      ['4. Process and revisions', 'Projects are developed in stages with revision rounds defined in the proposal. Changes outside the agreed scope are quoted separately.'],
+      ['5. Payments', 'Unless otherwise agreed, projects require an upfront deposit and the balance upon delivery. Monthly services are billed in advance.'],
+      ['6. Intellectual property', 'Once the project is paid in full, the client receives usage rights over the final deliverables. BrandUp retains the right to showcase the work in its portfolio and social media, unless a confidentiality agreement applies.'],
+      ['7. Client content', 'The client warrants that all material provided (copy, images, logos, etc.) is owned or duly licensed, and holds BrandUp harmless from third-party claims over such material.'],
+      ['8. Liability', 'BrandUp works to professional standards but does not guarantee specific commercial results (sales, rankings or metrics), as these depend on external factors. BrandUp’s total liability is limited to the amount paid for the service in question.'],
+      ['9. Support', 'Each project includes the support period stated in its proposal. Ongoing maintenance is contracted as a monthly service.'],
+      ['10. Changes', 'BrandUp may update these terms. The current version will always be published on this site.'],
+      ['11. Governing law', 'These terms are governed by the laws of the Republic of Chile. Any dispute shall be submitted to the courts of Santiago, Chile.'],
+    ],
+  },
+  privacy: {
+    es: [
+      ['1. Responsable', `${SITE.legalName}, ${SITE.city}. Contacto: ${SITE.email}.`],
+      ['2. Datos que recopilamos', 'A través de los formularios de contacto y cotización recopilamos: nombre, email, empresa, tipo de servicio, presupuesto estimado y el mensaje que nos envías. No recopilamos datos sensibles.'],
+      ['3. Finalidad', 'Usamos tus datos exclusivamente para responder tu consulta, preparar propuestas comerciales y mantener la comunicación del proyecto. No vendemos ni cedemos tus datos a terceros.'],
+      ['4. Proveedores', 'El envío de formularios se procesa mediante un proveedor externo (Formspree) y las comunicaciones pueden realizarse vía WhatsApp e email. Cada proveedor trata los datos según sus propias políticas.'],
+      ['5. Conservación', 'Conservamos los datos de contacto mientras exista una relación comercial o potencial, y los eliminamos a solicitud.'],
+      ['6. Tus derechos', `Puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo a ${SITE.email}.`],
+      ['7. Cookies', 'Este sitio es estático y no utiliza cookies de seguimiento propias. Si en el futuro se incorporan herramientas de analítica, esta política será actualizada.'],
+    ],
+    en: [
+      ['1. Controller', `${SITE.legalName}, ${SITE.city}. Contact: ${SITE.email}.`],
+      ['2. Data we collect', 'Through the contact and quote forms we collect: name, email, company, service type, estimated budget and your message. We do not collect sensitive data.'],
+      ['3. Purpose', 'We use your data exclusively to answer your inquiry, prepare commercial proposals and manage project communication. We do not sell or share your data with third parties.'],
+      ['4. Providers', 'Form submissions are processed by an external provider (Formspree) and communications may take place via WhatsApp and email. Each provider processes data under its own policies.'],
+      ['5. Retention', 'We keep contact data while a commercial or potential relationship exists, and delete it upon request.'],
+      ['6. Your rights', `You may request access, rectification or deletion of your data by writing to ${SITE.email}.`],
+      ['7. Cookies', 'This is a static site and does not use first-party tracking cookies. If analytics tools are added in the future, this policy will be updated.'],
+    ],
+  },
+} as const;
+
+const sections = CONTENT[kind][locale];
+const updated = locale === 'es' ? 'Última actualización: junio 2026' : 'Last updated: June 2026';
+---
+
+<Base locale={locale} title={meta.title} description={meta.desc}>
+  <section class="mx-auto max-w-3xl px-5 pt-40 pb-24 md:px-8">
+    <h1 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{title}</h1>
+    <p class="mt-4 text-sm text-gray" data-reveal>{updated}</p>
+    <div class="mt-12 space-y-10">
+      {sections.map(([h, body]) => (
+        <div data-reveal>
+          <h2 class="font-display text-xl font-semibold tracking-tight">{h}</h2>
+          <p class="mt-3 leading-relaxed text-gray">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

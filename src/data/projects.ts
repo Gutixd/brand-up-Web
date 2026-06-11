@@ -40,7 +40,7 @@ export const PROJECTS: Project[] = [
       en: ['Social Media', 'Content & Reels', 'Meta Ads'],
     },
     logo: logoChacha,
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #2b1a0e 55%, #f1965033 100%)',
+    gradient: '#f5cc53',
     summary: {
       es: 'Estrategia completa de contenido en Instagram: reels de alto alcance, parrilla constante y una identidad visual que llenó el local.',
       en: 'Complete Instagram content strategy: high-reach reels, a consistent calendar and a visual identity that filled the restaurant.',
@@ -76,7 +76,7 @@ export const PROJECTS: Project[] = [
       en: ['Web Design', 'B2B Strategy', 'Conversion'],
     },
     logo: logoJdcargo,
-    gradient: 'linear-gradient(135deg, #10131a 0%, #1a1f2b 55%, #f1965026 100%)',
+    gradient: '#cbbedc',
     summary: {
       es: 'Sitio corporativo para una empresa de agenciamiento de carga internacional, orientado a generar cotizaciones y transmitir credibilidad B2B.',
       en: 'Corporate website for an international freight forwarding company, built to generate quotes and convey B2B credibility.',
@@ -112,7 +112,7 @@ export const PROJECTS: Project[] = [
       en: ['E-commerce', 'CRM', 'Email Marketing'],
     },
     logo: logoAracnida,
-    gradient: 'linear-gradient(135deg, #14101a 0%, #241a2b 55%, #f1965029 100%)',
+    gradient: '#f49fc5',
     summary: {
       es: 'Tienda online premium con integración de CRM y email marketing para multiplicar el ticket promedio.',
       en: 'Premium online store with CRM and email marketing integration to multiply average order value.',
@@ -146,7 +146,7 @@ export const PROJECTS: Project[] = [
       en: ['Graphic Design', 'Awareness Campaign', 'Social Assets'],
     },
     logo: logoTemplo,
-    gradient: 'linear-gradient(135deg, #131313 0%, #26211a 55%, #f1965033 100%)',
+    gradient: '#f2fbe0',
     summary: {
       es: 'Diseño de campaña gráfica para eventos institucionales, con piezas impresas y digitales coherentes con la identidad del Templo.',
       en: 'Graphic campaign design for institutional events, with print and digital assets consistent with the Temple identity.',
@@ -177,7 +177,7 @@ export const PROJECTS: Project[] = [
       en: ['Content & Reels', 'Social Media'],
     },
     logo: logoBell,
-    gradient: 'linear-gradient(135deg, #101418 0%, #1a2026 55%, #f196502b 100%)',
+    gradient: '#bcd9f0',
     summary: {
       es: 'Producción de contenido audiovisual para redes: la vida del colegio contada en formato reel.',
       en: 'Audiovisual content production for social media: school life told in reel format.',
@@ -208,7 +208,7 @@ export const PROJECTS: Project[] = [
       en: ['Branding', 'Graphic Design'],
     },
     logo: logoSuperlunch,
-    gradient: 'linear-gradient(135deg, #161310 0%, #29200f 55%, #f1965030 100%)',
+    gradient: '#f8cfd2',
     summary: {
       es: 'Identidad y piezas gráficas para un servicio de almuerzos, con una imagen apetitosa y directa.',
       en: 'Identity and graphic assets for a lunch service, with an appetizing, direct image.',

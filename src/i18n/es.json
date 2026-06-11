@@ -13,19 +13,49 @@
       "title": "BrandUp — Agencia creativa digital en Santiago de Chile",
       "desc": "Agencia creativa full service en Santiago: diseño web, e-commerce, branding, reels y publicidad digital. No vendemos páginas web, construimos crecimiento."
     },
-    "services": { "title": "Servicios — BrandUp Agency", "desc": "Diseño y desarrollo web, e-commerce, branding, reels, publicidad digital y growth marketing en Santiago de Chile." },
-    "work": { "title": "Trabajos — BrandUp Agency", "desc": "Proyectos reales de BrandUp: web, branding, contenido y publicidad para marcas chilenas." },
-    "industries": { "title": "Industrias — BrandUp Agency", "desc": "Experiencia en gastronomía, e-commerce, B2B, educación, salud e instituciones." },
-    "about": { "title": "Nosotros — BrandUp Agency", "desc": "Conoce a BrandUp: tecnología y publicidad trabajando juntas para hacer crecer marcas en Chile." },
-    "contact": { "title": "Contacto — BrandUp Agency", "desc": "Hablemos de tu proyecto. Escríbenos por WhatsApp o por el formulario." },
-    "quote": { "title": "Cotiza tu proyecto — BrandUp Agency", "desc": "Cuéntanos qué necesitas y te enviamos una propuesta a medida." }
+    "services": {
+      "title": "Servicios — BrandUp Agency",
+      "desc": "Diseño y desarrollo web, e-commerce, branding, reels, publicidad digital y growth marketing en Santiago de Chile."
+    },
+    "work": {
+      "title": "Trabajos — BrandUp Agency",
+      "desc": "Proyectos reales de BrandUp: web, branding, contenido y publicidad para marcas chilenas."
+    },
+    "industries": {
+      "title": "Industrias — BrandUp Agency",
+      "desc": "Experiencia en gastronomía, e-commerce, B2B, educación, salud e instituciones."
+    },
+    "about": {
+      "title": "Nosotros — BrandUp Agency",
+      "desc": "Conoce a BrandUp: tecnología y publicidad trabajando juntas para hacer crecer marcas en Chile."
+    },
+    "contact": {
+      "title": "Contacto — BrandUp Agency",
+      "desc": "Hablemos de tu proyecto. Escríbenos por WhatsApp o por el formulario."
+    },
+    "quote": {
+      "title": "Cotiza tu proyecto — BrandUp Agency",
+      "desc": "Cuéntanos qué necesitas y te enviamos una propuesta a medida."
+    },
+    "terms": {
+      "title": "Términos y Condiciones — BrandUp Agency",
+      "desc": "Términos y condiciones de los servicios de BrandUp Agency."
+    },
+    "privacy": {
+      "title": "Política de Privacidad — BrandUp Agency",
+      "desc": "Cómo BrandUp Agency trata tus datos personales."
+    }
   },
   "hero": {
-    "kicker": "Agencia creativa full service — Santiago de Chile",
-    "title": "No vendemos páginas web. Construimos crecimiento.",
+    "kicker": "Agencia Creativa Digital",
+    "line1": "Agencia",
+    "line2": "Creativa",
+    "line3": "Digital",
+    "location": "Santiago — Chile",
     "subtitle": "Diseño web, e-commerce, branding, contenido y publicidad digital para marcas que quieren crecer en serio.",
     "cta": "Cotiza tu proyecto",
-    "cta2": "Ver trabajos"
+    "cta2": "Ver trabajos",
+    "scroll": "Scroll"
   },
   "home": {
     "servicesKicker": "Lo que hacemos",
@@ -37,10 +67,22 @@
     "whyKicker": "Por qué BrandUp",
     "whyTitle": "Un equipo, dos mundos: tecnología y publicidad",
     "why": [
-      { "t": "Diseño premium", "d": "Cada pieza se diseña con intención: estética de nivel internacional al servicio de la conversión." },
-      { "t": "Tecnología real", "d": "Código limpio, velocidad de carga y automatización. Nada de plantillas lentas." },
-      { "t": "Resultados medibles", "d": "Trabajamos con datos y métricas, no con promesas. Cada proyecto tiene objetivos claros." },
-      { "t": "Partner cercano", "d": "Comunicación directa con quienes hacen el trabajo. Sin intermediarios ni respuestas tipo." }
+      {
+        "t": "Diseño premium",
+        "d": "Cada pieza se diseña con intención: estética de nivel internacional al servicio de la conversión."
+      },
+      {
+        "t": "Tecnología real",
+        "d": "Código limpio, velocidad de carga y automatización. Nada de plantillas lentas."
+      },
+      {
+        "t": "Resultados medibles",
+        "d": "Trabajamos con datos y métricas, no con promesas. Cada proyecto tiene objetivos claros."
+      },
+      {
+        "t": "Partner cercano",
+        "d": "Comunicación directa con quienes hacen el trabajo. Sin intermediarios ni respuestas tipo."
+      }
     ],
     "clientsKicker": "Marcas que confiaron en nosotros",
     "testimonialsKicker": "Lo que dicen nuestros clientes",
@@ -58,11 +100,26 @@
     "faqKicker": "Preguntas frecuentes",
     "faqTitle": "Lo que siempre nos preguntan",
     "faq": [
-      { "q": "¿Cuánto cuesta un sitio web?", "a": "Depende del alcance: una landing page parte aproximadamente desde $120.000 CLP y un sitio corporativo o e-commerce se cotiza a medida según funcionalidades. Siempre te entregamos un precio cerrado antes de empezar." },
-      { "q": "¿Cuánto se demora un proyecto?", "a": "Una landing page toma entre 1 y 2 semanas; un sitio corporativo, entre 3 y 5 semanas; un e-commerce, entre 4 y 8 semanas. Te damos un calendario claro al iniciar." },
-      { "q": "¿Incluyen soporte y mantención?", "a": "Sí. Todos los proyectos incluyen un período de soporte post-lanzamiento, y ofrecemos planes mensuales de mantención: backups, seguridad, actualizaciones y cambios menores." },
-      { "q": "¿Cuántas revisiones incluye el diseño?", "a": "Trabajamos con rondas de revisión definidas (normalmente 2 a 3 por etapa) para avanzar rápido sin perder calidad. Tu feedback es parte del proceso, no un extra." },
-      { "q": "¿Trabajan con clientes fuera de Santiago?", "a": "Sí, trabajamos 100% remoto con clientes de todo Chile y el extranjero. Las reuniones son por videollamada y la comunicación diaria por WhatsApp." }
+      {
+        "q": "¿Cuánto cuesta un sitio web?",
+        "a": "Depende del alcance: una landing page parte aproximadamente desde $120.000 CLP y un sitio corporativo o e-commerce se cotiza a medida según funcionalidades. Siempre te entregamos un precio cerrado antes de empezar."
+      },
+      {
+        "q": "¿Cuánto se demora un proyecto?",
+        "a": "Una landing page toma entre 1 y 2 semanas; un sitio corporativo, entre 3 y 5 semanas; un e-commerce, entre 4 y 8 semanas. Te damos un calendario claro al iniciar."
+      },
+      {
+        "q": "¿Incluyen soporte y mantención?",
+        "a": "Sí. Todos los proyectos incluyen un período de soporte post-lanzamiento, y ofrecemos planes mensuales de mantención: backups, seguridad, actualizaciones y cambios menores."
+      },
+      {
+        "q": "¿Cuántas revisiones incluye el diseño?",
+        "a": "Trabajamos con rondas de revisión definidas (normalmente 2 a 3 por etapa) para avanzar rápido sin perder calidad. Tu feedback es parte del proceso, no un extra."
+      },
+      {
+        "q": "¿Trabajan con clientes fuera de Santiago?",
+        "a": "Sí, trabajamos 100% remoto con clientes de todo Chile y el extranjero. Las reuniones son por videollamada y la comunicación diaria por WhatsApp."
+      }
     ]
   },
   "work": {
@@ -92,22 +149,59 @@
     "manifesto": "BrandUp nace de una convicción simple: una marca crece cuando el diseño, la tecnología y la estrategia trabajan en la misma dirección. No somos una fábrica de páginas web ni una agencia de humo. Somos un equipo chico, senior y obsesionado con que cada peso que inviertes se note en tu negocio.",
     "teamKicker": "El equipo",
     "teamTitle": "Quiénes están detrás",
-    "diego": { "name": "Diego Gutiérrez", "role": "Co-fundador · Ingeniería & Desarrollo", "bio": "Ingeniero en informática. Lidera el desarrollo web, el e-commerce y la capa tecnológica de cada proyecto: rendimiento, automatización e integraciones." },
-    "valentina": { "name": "Valentina", "role": "Co-fundadora · Publicidad & Estrategia", "bio": "Publicista y creadora de contenido. Lidera branding, dirección creativa, contenido y estrategia: la cara visible de las marcas que construimos." },
+    "diego": {
+      "name": "Diego Gutiérrez",
+      "role": "Co-fundador · Ingeniería & Desarrollo",
+      "bio": "Ingeniero en informática. Lidera el desarrollo web, el e-commerce y la capa tecnológica de cada proyecto: rendimiento, automatización e integraciones."
+    },
+    "valentina": {
+      "name": "Valentina",
+      "role": "Co-fundadora · Publicidad & Estrategia",
+      "bio": "Publicista y creadora de contenido. Lidera branding, dirección creativa, contenido y estrategia: la cara visible de las marcas que construimos."
+    },
     "valuesKicker": "Cómo trabajamos",
     "values": [
-      { "t": "Claridad antes que jerga", "d": "Te explicamos qué hacemos y por qué, en simple. Las decisiones se toman con información, no con tecnicismos." },
-      { "t": "Calidad sin atajos", "d": "Preferimos hacer menos proyectos y hacerlos impecables. Tu marca es nuestro portafolio." },
-      { "t": "Datos sobre opiniones", "d": "Medimos todo lo que hacemos. Si algo no funciona, lo cambiamos rápido." }
+      {
+        "t": "Claridad antes que jerga",
+        "d": "Te explicamos qué hacemos y por qué, en simple. Las decisiones se toman con información, no con tecnicismos."
+      },
+      {
+        "t": "Calidad sin atajos",
+        "d": "Preferimos hacer menos proyectos y hacerlos impecables. Tu marca es nuestro portafolio."
+      },
+      {
+        "t": "Datos sobre opiniones",
+        "d": "Medimos todo lo que hacemos. Si algo no funciona, lo cambiamos rápido."
+      }
     ],
     "processKicker": "Nuestro proceso",
     "processTitle": "Cómo llevamos tu proyecto del brief al lanzamiento",
     "process": [
-      { "n": "01", "t": "Descubrimiento", "d": "Entendemos tu negocio, tus clientes y tus objetivos. Auditamos tu presencia actual y definimos qué éxito significa para ti." },
-      { "n": "02", "t": "Estrategia", "d": "Definimos el plan: alcance, mensajes, arquitectura y métricas. Recibes una propuesta concreta con plazos y precio cerrado." },
-      { "n": "03", "t": "Diseño", "d": "Creamos el concepto visual y lo iteramos contigo en rondas de revisión definidas, hasta que represente tu marca al 100%." },
-      { "n": "04", "t": "Construcción", "d": "Desarrollamos con código limpio y tecnología moderna: velocidad, SEO y responsive impecable desde la base." },
-      { "n": "05", "t": "Lanzamiento & crecimiento", "d": "Publicamos, medimos y optimizamos. El lanzamiento no es el final: es donde empieza el crecimiento." }
+      {
+        "n": "01",
+        "t": "Descubrimiento",
+        "d": "Entendemos tu negocio, tus clientes y tus objetivos. Auditamos tu presencia actual y definimos qué éxito significa para ti."
+      },
+      {
+        "n": "02",
+        "t": "Estrategia",
+        "d": "Definimos el plan: alcance, mensajes, arquitectura y métricas. Recibes una propuesta concreta con plazos y precio cerrado."
+      },
+      {
+        "n": "03",
+        "t": "Diseño",
+        "d": "Creamos el concepto visual y lo iteramos contigo en rondas de revisión definidas, hasta que represente tu marca al 100%."
+      },
+      {
+        "n": "04",
+        "t": "Construcción",
+        "d": "Desarrollamos con código limpio y tecnología moderna: velocidad, SEO y responsive impecable desde la base."
+      },
+      {
+        "n": "05",
+        "t": "Lanzamiento & crecimiento",
+        "d": "Publicamos, medimos y optimizamos. El lanzamiento no es el final: es donde empieza el crecimiento."
+      }
     ]
   },
   "contact": {
@@ -122,7 +216,11 @@
     "kicker": "Cotización",
     "title": "Cotiza tu proyecto",
     "intro": "Mientras más contexto nos des, más precisa será la propuesta. Te respondemos con precios y plazos concretos.",
-    "steps": ["Nos cuentas tu idea", "Te enviamos una propuesta", "Empezamos a construir"]
+    "steps": [
+      "Nos cuentas tu idea",
+      "Te enviamos una propuesta",
+      "Empezamos a construir"
+    ]
   },
   "form": {
     "name": "Nombre",
@@ -130,10 +228,24 @@
     "company": "Empresa (opcional)",
     "service": "Tipo de servicio",
     "servicePlaceholder": "Selecciona un servicio",
-    "serviceOptions": ["Diseño & desarrollo web", "E-commerce", "Branding e identidad", "Reels & contenido", "Publicidad digital (Ads)", "Marketing & growth", "Otro"],
+    "serviceOptions": [
+      "Diseño & desarrollo web",
+      "E-commerce",
+      "Branding e identidad",
+      "Reels & contenido",
+      "Publicidad digital (Ads)",
+      "Marketing & growth",
+      "Otro"
+    ],
     "budget": "Presupuesto estimado",
     "budgetPlaceholder": "Selecciona un rango",
-    "budgetOptions": ["Menos de $200.000 CLP", "$200.000 – $500.000 CLP", "$500.000 – $1.000.000 CLP", "Más de $1.000.000 CLP", "Aún no lo sé"],
+    "budgetOptions": [
+      "Menos de $200.000 CLP",
+      "$200.000 – $500.000 CLP",
+      "$500.000 – $1.000.000 CLP",
+      "Más de $1.000.000 CLP",
+      "Aún no lo sé"
+    ],
     "message": "Cuéntanos sobre tu proyecto",
     "submit": "Enviar",
     "sending": "Enviando…",
@@ -150,6 +262,56 @@
     "language": "Idioma",
     "rights": "Todos los derechos reservados."
   },
-  "lang": { "es": "Español", "en": "English", "switch": "English" },
-  "notFound": { "title": "Página no encontrada", "text": "La página que buscas no existe o fue movida.", "back": "Volver al inicio" }
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "switch": "English"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "text": "La página que buscas no existe o fue movida.",
+    "back": "Volver al inicio"
+  },
+  "marquee": {
+    "words": [
+      "Crecimiento",
+      "Diseñado",
+      "Diferente"
+    ]
+  },
+  "statement": {
+    "text": "Integramos diseño premium, tecnología y estrategia publicitaria para construir marcas que convierten. No vendemos páginas web: construimos crecimiento.",
+    "tags": [
+      "Diseño Web",
+      "E-commerce",
+      "Branding",
+      "Contenido",
+      "Publicidad",
+      "Agencia 360°"
+    ]
+  },
+  "stats": {
+    "items": [
+      {
+        "val": "15+",
+        "lbl": "Proyectos entregados"
+      },
+      {
+        "val": "6",
+        "lbl": "Industrias"
+      },
+      {
+        "val": "267K",
+        "lbl": "Views en un reel"
+      },
+      {
+        "val": "2",
+        "lbl": "Países alcanzados"
+      }
+    ]
+  },
+  "legal": {
+    "terms": "Términos y Condiciones",
+    "privacy": "Política de Privacidad"
+  }
 }

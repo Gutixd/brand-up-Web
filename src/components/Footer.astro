@@ -61,7 +61,13 @@ const nav = [
       </p>
     </div>
   </div>
-  <div class="border-t border-line py-6 text-center text-xs text-gray">
-    © {year} {SITE.legalName} — {t.footer.rights}
+  <div class="border-t border-line">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-5 py-6 text-xs text-gray md:flex-row md:px-8">
+      <span>© {year} {SITE.legalName} — {t.footer.rights}</span>
+      <span class="flex gap-5">
+        <a href={lp('/terminos')} class="transition-colors hover:text-accent">{t.legal.terms}</a>
+        <a href={lp('/privacidad')} class="transition-colors hover:text-accent">{t.legal.privacy}</a>
+      </span>
+    </div>
   </div>
 </footer>
