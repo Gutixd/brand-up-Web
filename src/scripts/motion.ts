@@ -175,13 +175,13 @@ function initStatementSwap() {
   // Ghost drifts from bottom (58%) to top (-58%)
   tl.to(ghost, { yPercent: -58, ease: 'none' }, 0);
 
-  // Text A out at 38%, text B in at 54%
-  tl.to(textA,   { y: -44, opacity: 0, ease: 'power3.in'  }, 0.36);
-  tl.fromTo(textB, { y: 36, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out' }, 0.52);
+  // Text A exits fast at 40%, B enters immediately after — zero overlap
+  tl.to(textA,   { y: -32, opacity: 0, ease: 'power3.in',  duration: 0.07 }, 0.40);
+  tl.fromTo(textB, { y: 28, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out', duration: 0.07 }, 0.48);
 
-  // Post-its swap at same breakpoints
-  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.92, ease: 'power2.in'  }, 0.36);
-  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out' }, 0.54);
+  // Post-its: same clean cutover
+  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.94, ease: 'power2.in',  duration: 0.06 }, 0.40);
+  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out', duration: 0.07 }, 0.48);
 }
 
 // ── Servicios — acordeón (hover en desktop, tap en touch) ──────────
