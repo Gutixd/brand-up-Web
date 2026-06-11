@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
+import Scene3D from '../Scene3D';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
@@ -142,17 +143,10 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
   <!-- ════ TRABAJOS — videos full-screen (sticky, sin nombres) ═════ -->
   <div class="works-videos">
     {featured.map((p) => (
-      <!--
-        AGREGAR VIDEO: pon la ruta en data-video-src, ej:
-          data-video-src="/videos/chacha.mp4"
-        motion.ts inyecta el <video> (autoplay/loop/muted) al entrar en pantalla.
-        Cada bloque es sticky → el video previo queda fijo a pantalla completa
-        mientras el siguiente sube por encima.
-      -->
       <a
         href={lp(`/trabajos/${p.slug}`)}
         class="project-video group"
-        data-video-src=""
+        data-video-src="/videos/showreel.mp4"
         aria-label={p.client}
       >
         <div class="project-video__inner" style={`background:${p.gradient}`}>
@@ -248,16 +242,27 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
   </section>
 
-  <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
-  <section class="rule">
-    <a href={lp('/cotizar')} class="group block">
-      <div class="mx-auto max-w-[1400px] px-5 py-24 md:px-8 md:py-36">
-        <p class="text-xs font-medium uppercase tracking-[0.2em] text-gray" data-reveal>{t.home.ctaText}</p>
-        <p class="display-tight mt-4 font-display text-[12vw] uppercase transition-colors group-hover:text-accent md:text-[9vw]" data-split-chars>
+  <!-- ════ CTA FINAL + 3D ═════════════════════════════════════════════ -->
+  <section class="cta3d rule">
+    <div class="cta3d__inner">
+
+      <!-- Texto + botón -->
+      <div class="cta3d__text">
+        <p class="cta3d__kicker" data-reveal>{t.home.ctaText}</p>
+        <h2 class="cta3d__title display-tight" data-split-chars>
           {t.home.ctaTitle}
-        </p>
+        </h2>
+        <a href={lp('/cotizar')} class="cta3d__btn" data-reveal data-delay="0.3">
+          {locale === 'es' ? 'Empezar ahora' : 'Start now'} →
+        </a>
       </div>
-    </a>
+
+      <!-- Escena 3D -->
+      <div class="cta3d__scene" aria-hidden="true">
+        <Scene3D client:visible />
+      </div>
+
+    </div>
   </section>
 
 </Base>
