@@ -105,7 +105,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 .statement-section {
   position: relative;
   overflow: hidden;
-  min-height: 92svh;
+  height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -572,48 +572,58 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   .svc-row, .svc-row__body, .svc-row__title, .svc-row__icon, .svc-row__icon-v { transition: none; }
 }
 
-/* ─── CTA Final + 3D scene ─────────────────────────────────────────── */
-.cta3d {
-  overflow: hidden;
+/* ─── CTA Final ──────────────────────────────────────────────────── */
+.cta-final {
   background: #0d0d0d;
   color: #f8f8f8;
+  overflow: hidden;
+  position: relative;
 }
-.cta3d__inner {
-  display: grid;
-  grid-template-columns: 1fr;
-  min-height: 80svh;
+.cta-final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(240,94,35,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-final__inner {
+  position: relative;
+  z-index: 1;
   max-width: 1400px;
   margin-inline: auto;
-  padding: 80px 24px 60px;
-  gap: 48px;
-  align-items: center;
-}
-@media (min-width: 900px) {
-  .cta3d__inner {
-    grid-template-columns: 1fr 1fr;
-    padding: 100px 48px;
-    gap: 0;
-  }
-}
-.cta3d__text {
+  padding: 96px 24px 104px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 36px;
+  align-items: flex-start;
 }
-.cta3d__kicker {
+@media (min-width: 768px) {
+  .cta-final__inner { padding: 120px 48px 128px; }
+}
+.cta-final__kicker {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(248,248,248,0.45);
+  color: rgba(248,248,248,0.4);
 }
-.cta3d__title {
+.cta-final__title {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 7.5rem);
-  line-height: 0.94;
+  font-size: clamp(3.2rem, 9vw, 8rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
   color: #f8f8f8;
+  max-width: 14ch;
 }
-.cta3d__btn {
+.cta-final__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.cta-final__btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -621,24 +631,21 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
-  padding: 16px 36px;
+  padding: 17px 38px;
   border-radius: 100px;
-  width: fit-content;
-  transition: background 0.3s, gap 0.3s, transform 0.3s;
+  transition: background 0.3s, gap 0.3s, transform 0.25s;
 }
-.cta3d__btn:hover {
-  background: var(--color-paper);
+.cta-final__btn:hover {
+  background: #fff;
+  color: #0d0d0d;
   gap: 18px;
   transform: translateY(-2px);
 }
-.cta3d__scene {
-  position: relative;
-  width: 100%;
-  height: 420px;
-  flex-shrink: 0;
+.cta-final__link {
+  font-size: 0.9rem;
+  color: rgba(248,248,248,0.4);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.3s;
 }
-@media (min-width: 900px) {
-  .cta3d__scene {
-    height: 560px;
-  }
-}
+.cta-final__link:hover { color: rgba(248,248,248,0.85); }

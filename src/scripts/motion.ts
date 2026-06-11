@@ -141,34 +141,47 @@ function initCharReveals() {
   });
 }
 
-// ── Statement text swap (reversible) + post-its ────────────────────
+// ── Statement — pin + ghost parallax + text swap scrubbed ──────────
 function initStatementSwap() {
-  const textA = document.querySelector<HTMLElement>('.statement-text--a');
-  const textB = document.querySelector<HTMLElement>('.statement-text--b');
-  if (!textA || !textB) return;
+  const section = document.querySelector<HTMLElement>('.statement-section');
+  const ghost   = document.querySelector<HTMLElement>('.statement-ghost');
+  const textA   = document.querySelector<HTMLElement>('.statement-text--a');
+  const textB   = document.querySelector<HTMLElement>('.statement-text--b');
+  if (!section || !textA || !textB) return;
 
   const positsA = document.querySelector<HTMLElement>('.statement-posits--a');
   const positsB = document.querySelector<HTMLElement>('.statement-posits--b');
 
-  // Both texts share the same grid cell → swap happens in place.
+  // Initial states
   gsap.set(textA, { opacity: 1, y: 0 });
-  gsap.set(textB, { opacity: 0, y: 40 });
+  gsap.set(textB, { opacity: 0, y: 36 });
   if (positsA) gsap.set(positsA, { opacity: 1, scale: 1 });
-  if (positsB) gsap.set(positsB, { opacity: 0, scale: 0.9 });
+  if (positsB) gsap.set(positsB, { opacity: 0, scale: 0.92 });
+  if (ghost)   gsap.set(ghost,   { yPercent: 58 });
 
-  // Paused timeline → play forward (scroll down), reverse (scroll up).
-  const tl = gsap.timeline({ paused: true });
-  tl.to(textA, { y: -45, opacity: 0, duration: 0.6, ease: 'power3.in' }, 0)
-    .fromTo(textB, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.35);
-  if (positsA) tl.to(positsA, { opacity: 0, scale: 0.9, duration: 0.5, ease: 'power2.in' }, 0);
-  if (positsB) tl.to(positsB, { opacity: 1, scale: 1, duration: 0.6, ease: 'power3.out' }, 0.4);
-
-  ScrollTrigger.create({
-    trigger: '.statement-section',
-    start: 'center 58%',
-    onEnter: () => tl.play(),
-    onLeaveBack: () => tl.reverse(),
+  // Pinned scrubbed timeline — section pins while ghost scrolls through
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: '+=170%',
+      pin: true,
+      pinSpacing: true,
+      scrub: 1.4,
+      invalidateOnRefresh: true,
+    },
   });
+
+  // Ghost drifts from bottom (58%) to top (-58%)
+  tl.to(ghost, { yPercent: -58, ease: 'none' }, 0);
+
+  // Text A out at 38%, text B in at 54%
+  tl.to(textA,   { y: -44, opacity: 0, ease: 'power3.in'  }, 0.36);
+  tl.fromTo(textB, { y: 36, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out' }, 0.52);
+
+  // Post-its swap at same breakpoints
+  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.92, ease: 'power2.in'  }, 0.36);
+  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out' }, 0.54);
 }
 
 // ── Servicios — acordeón (hover en desktop, tap en touch) ──────────

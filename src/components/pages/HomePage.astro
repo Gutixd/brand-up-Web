@@ -1,7 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
-import Scene3D from '../Scene3D';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
@@ -85,7 +84,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
   -->
   <section class="statement-section rule">
     <div class="statement-bg"></div>
-    <span class="statement-ghost" aria-hidden="true">{locale === 'es' ? 'Agencia 360°' : '360° Agency'}</span>
+    <span class="statement-ghost" aria-hidden="true">{locale === 'es' ? 'Páginas Web' : 'Web Design'}</span>
 
     <!-- Post-its set A (visible con texto A) -->
     <div class="statement-posits statement-posits--a">
@@ -220,7 +219,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
           <div class="svc-row__body">
             <div class="svc-row__body-inner">
               <p class="svc-row__desc">{pick(s.desc, locale)}</p>
-              <a href={`${lp('/servicios')}#${s.slug}`} class="svc-row__more">
+              <a href={lp(`/servicios/${s.slug}`)} class="svc-row__more">
                 <span>↳</span> {locale === 'es' ? 'Más información' : 'More information'}
               </a>
             </div>
@@ -242,26 +241,21 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
   </section>
 
-  <!-- ════ CTA FINAL + 3D ═════════════════════════════════════════════ -->
-  <section class="cta3d rule">
-    <div class="cta3d__inner">
-
-      <!-- Texto + botón -->
-      <div class="cta3d__text">
-        <p class="cta3d__kicker" data-reveal>{t.home.ctaText}</p>
-        <h2 class="cta3d__title display-tight" data-split-chars>
-          {t.home.ctaTitle}
-        </h2>
-        <a href={lp('/cotizar')} class="cta3d__btn" data-reveal data-delay="0.3">
+  <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
+  <section class="cta-final">
+    <div class="cta-final__inner">
+      <p class="cta-final__kicker" data-reveal>{t.home.ctaText}</p>
+      <h2 class="cta-final__title display-tight" data-split-chars>
+        {t.home.ctaTitle}
+      </h2>
+      <div class="cta-final__actions" data-reveal data-delay="0.3">
+        <a href={lp('/cotizar')} class="cta-final__btn">
           {locale === 'es' ? 'Empezar ahora' : 'Start now'} →
         </a>
+        <a href={lp('/trabajos')} class="cta-final__link">
+          {locale === 'es' ? 'Ver nuestros trabajos' : 'See our work'}
+        </a>
       </div>
-
-      <!-- Escena 3D -->
-      <div class="cta3d__scene" aria-hidden="true">
-        <Scene3D client:visible />
-      </div>
-
     </div>
   </section>
 
