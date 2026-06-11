@@ -175,6 +175,38 @@ export const SERVICES: Service[] = [
   },
   {
     num: '06',
+    slug: 'automatizaciones-ia',
+    title: { es: 'Automatizaciones con IA', en: 'AI Automations' },
+    tag: { es: 'Eficiencia', en: 'Efficiency' },
+    short: {
+      es: 'Chatbots, CRM y flujos automáticos que trabajan por ti las 24 horas.',
+      en: 'Chatbots, CRM and automated flows that work for you 24 hours a day.',
+    },
+    headline: {
+      es: 'Tu negocio no puede depender de que alguien esté disponible.',
+      en: 'Your business cannot depend on someone being available.',
+    },
+    desc: {
+      es: 'Automatizamos la atención, el seguimiento y la calificación de leads con IA. Chatbots en WhatsApp e Instagram, integraciones de CRM, notificaciones automáticas y flujos que convierten sin intervención humana.',
+      en: 'We automate support, follow-up and lead qualification with AI. WhatsApp and Instagram chatbots, CRM integrations, automatic notifications and flows that convert without human intervention.',
+    },
+    items: {
+      es: [
+        'Chatbots con IA para WhatsApp e Instagram',
+        'Integración y automatización de CRM',
+        'Flujos de calificación y seguimiento de leads',
+        'Notificaciones y respuestas automáticas 24/7',
+      ],
+      en: [
+        'AI chatbots for WhatsApp and Instagram',
+        'CRM integration and automation',
+        'Lead qualification and follow-up flows',
+        'Automatic notifications and responses 24/7',
+      ],
+    },
+  },
+  {
+    num: '07',
     slug: 'marketing-growth',
     title: { es: 'Marketing & Growth', en: 'Marketing & Growth' },
     tag: { es: 'Estrategia', en: 'Strategy' },

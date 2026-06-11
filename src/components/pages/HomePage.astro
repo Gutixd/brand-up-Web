@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
 import { SERVICES } from '../../data/services';
@@ -7,27 +6,27 @@ import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
-interface Props {
-  locale: Locale;
-}
+interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
 
-const featured = PROJECTS.filter((p) => p.featured).slice(0, 4);
+const featured = PROJECTS.filter((p) => p.featured);
 const testimonials = TESTIMONIALS.map((x) => ({
   text: pick(x.text, locale),
   name: x.name,
   role: pick(x.role, locale),
   initials: x.initials,
 }));
-const workLabel = locale === 'es' ? 'Todos los trabajos' : 'All work';
-const servicesLabel = locale === 'es' ? 'Todos los servicios' : 'All services';
-const goTo = locale === 'es' ? 'Ir a' : 'Go to';
+
+const cardVariants = ['dark', 'lime', 'pink', 'dark', 'lime', 'pink', 'dark'] as const;
+const worksAllLabel  = locale === 'es' ? 'Ver todos los trabajos' : 'View all work';
+const servicesLabel  = locale === 'es' ? 'Todos los servicios' : 'All services';
 ---
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
-  <!-- ============ HERO — tipografía gigante estilo TFTL ============ -->
+
+  <!-- ════ HERO ════════════════════════════════════════════════════ -->
   <section class="relative flex min-h-[100svh] flex-col justify-between px-5 pt-[88px] md:px-8">
     <div class="mx-auto flex w-full max-w-[1400px] items-center justify-between pt-6 text-xs font-medium uppercase tracking-[0.14em] text-gray">
       <span data-reveal>{t.hero.location}</span>
@@ -51,122 +50,204 @@ const goTo = locale === 'es' ? 'Ir a' : 'Go to';
     </div>
   </section>
 
-  <!-- ============ MARQUEE GIGANTE + bloque de video ============ -->
-  <section class="rule overflow-hidden py-16 md:py-24">
+  <!-- ════ MARQUEE ══════════════════════════════════════════════════ -->
+  <section class="rule overflow-hidden py-12 md:py-20">
     <div class="marquee-track marquee-track--slow items-center" aria-hidden="true">
       {[0, 1].map(() => (
         <span class="display-tight whitespace-nowrap pr-8 font-display text-[11vw] uppercase md:text-[8vw]">
-          {t.marquee.words.map((w, i) => (
+          {t.marquee.words.map((w: string, i: number) => (
             <span class={i === 1 ? 'text-accent' : ''}>{w}&nbsp;</span>
           ))}
           —&nbsp;
         </span>
       ))}
     </div>
+  </section>
 
-    <!-- Placeholder de video: reemplazar el div interior por <video> cuando estén los videos por sección -->
-    <div class="mx-auto mt-14 max-w-[1400px] px-5 md:px-8" data-reveal>
-      <div class="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-2xl bg-paper" data-parallax="-6">
-        <span class="absolute left-6 top-6 text-xs font-medium uppercase tracking-[0.14em] text-ink/60">BrandUp — Showreel</span>
-        <span class="absolute right-6 top-6 text-xs font-medium text-ink/60">00:00</span>
-        <span class="flex h-20 w-20 items-center justify-center rounded-full bg-ink/10 backdrop-blur transition-transform duration-500 group-hover:scale-110">
-          <svg viewBox="0 0 24 24" class="ml-1 h-7 w-7 fill-ink" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-        </span>
-        <span class="absolute bottom-6 left-6 text-xs uppercase tracking-[0.14em] text-ink/40">{locale === 'es' ? 'Video próximamente' : 'Video coming soon'}</span>
+  <!-- ════ SHOWREEL — pantalla completa ════════════════════════════ -->
+  <!--
+    Para agregar video real: reemplaza el <div class="showreel-inner"> por:
+    <video class="showreel-inner" src="/videos/showreel.mp4" autoplay muted loop playsinline></video>
+  -->
+  <div class="showreel-section" data-reveal>
+    <div class="showreel-inner">
+      <span class="showreel-corner showreel-corner--left">BrandUp — Showreel</span>
+      <span class="showreel-corner showreel-corner--right">2025</span>
+
+      <button class="showreel-play" aria-label="Reproducir showreel">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="#f8f8f8" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+
+      <span class="showreel-label">
+        {locale === 'es' ? 'Video próximamente' : 'Video coming soon'}
+      </span>
+    </div>
+  </div>
+
+  <!-- ════ STATEMENT — centrado, post-its, swap reversible ═════════ -->
+  <!--
+    FOTO DE FONDO: cuando la tengas, añade al div.statement-bg:
+      style="background-image:url('/img/tu-foto.jpg')"
+    (ya queda sutil al 10% de opacidad).
+  -->
+  <section class="statement-section rule">
+    <div class="statement-bg"></div>
+    <span class="statement-ghost" aria-hidden="true">{locale === 'es' ? 'Agencia 360°' : '360° Agency'}</span>
+
+    <!-- Post-its (estética + SEO local) -->
+    <span class="statement-posit statement-posit--1">Santiago</span>
+    <span class="statement-posit statement-posit--2">Chile</span>
+    <span class="statement-posit statement-posit--3">{locale === 'es' ? 'Agencia Digital' : 'Digital Agency'}</span>
+    <span class="statement-posit statement-posit--4">{locale === 'es' ? 'Marketing 360°' : '360° Marketing'}</span>
+    <span class="statement-posit statement-posit--5">{locale === 'es' ? 'Diseño Web' : 'Web Design'}</span>
+
+    <div class="statement-inner">
+      <div class="statement-texts">
+        <p class="statement-text--a display-tight font-display text-[clamp(1.8rem,4.5vw,3.6rem)] leading-[1.08]">
+          {t.statement.text}
+        </p>
+        <p class="statement-text--b display-tight font-display text-[clamp(1.8rem,4.5vw,3.6rem)] leading-[1.08]">
+          {t.statement.text2}
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ============ STATEMENT + tags ============ -->
-  <section class="rule">
-    <div class="mx-auto max-w-[1400px] px-5 py-24 md:px-8 md:py-36">
-      <p class="display-tight max-w-5xl font-display text-3xl md:text-5xl" data-reveal-word>{t.statement.text}</p>
-      <ul class="mt-12 flex flex-wrap gap-3" data-reveal data-delay="0.2">
-        {t.statement.tags.map((tag) => (
-          <li class="rounded-full border border-line px-5 py-2.5 text-sm text-gray transition-colors hover:border-accent hover:text-accent">{tag}</li>
-        ))}
-      </ul>
+  <!-- ════ TRABAJOS — intro "Our Works" ════════════════════════════ -->
+  <!--
+    VIDEO DE FONDO del intro: reemplaza el <div class="works-intro__bg"> por:
+    <div class="works-intro__bg"><video src="/videos/intro-trabajos.mp4" autoplay muted loop playsinline></video></div>
+  -->
+  <section class="works-intro">
+    <div class="works-intro__bg"></div>
+    <div class="works-intro__scrim"></div>
+    <h2 class="works-intro__title">
+      <span class="ln">{locale === 'es' ? 'Nuestros' : 'Our'}</span>
+      <span class="ln ln--alt">{locale === 'es' ? 'Trabajos' : 'Works'}</span>
+    </h2>
+    <div class="works-intro__meta">
+      <span>{locale === 'es' ? 'Selección 2024–2025' : 'Selection 2024–2025'}</span>
+      <span class="works-intro__hint">
+        {locale === 'es' ? 'Desplázate' : 'Scroll'}
+        <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
+          <path d="M6 1v12M1 8l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
     </div>
   </section>
 
-  <!-- ============ TRABAJOS — grilla 2×2 con tarjetas de color ============ -->
-  <section class="rule">
-    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
-      <div class="mb-12 flex items-end justify-between">
-        <h2 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.home.workKicker}</h2>
-        <a href={lp('/trabajos')} class="hidden shrink-0 text-sm font-medium underline-offset-4 transition-colors hover:text-accent hover:underline md:block" data-reveal>{workLabel} →</a>
-      </div>
-      <div class="grid gap-5 md:grid-cols-2">
-        {featured.map((p, i) => (
-          <a href={lp(`/trabajos/${p.slug}`)} class={`group block ${i % 2 ? 'md:mt-16' : ''}`} data-reveal data-delay={`${(i % 2) * 0.1}`}>
-            <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl transition-transform duration-500 group-hover:scale-[0.985]" style={`background:${p.gradient}`}>
-              {p.logo && (
-                <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[42%] w-auto max-w-[50%] rounded-xl object-contain mix-blend-multiply transition-transform duration-700 group-hover:scale-105" widths={[320, 480]} />
-              )}
-              <span class="absolute bottom-5 left-5 rounded-full bg-[#232323]/80 px-4 py-1.5 text-xs text-white backdrop-blur">{pick(p.sector, locale)}</span>
-              <span class="absolute bottom-5 right-5 rounded-full bg-[#232323]/80 px-4 py-1.5 text-xs text-white backdrop-blur">{p.year}</span>
+  <!-- ════ TRABAJOS — videos a pantalla completa que se apilan ═════ -->
+  <div class="stacked-works">
+    {featured.map((p, i) => (
+      <div class="card-wrapper">
+        <!--
+          AGREGAR VIDEO: pon la ruta en data-video-src, ej:
+            data-video-src="/videos/chacha.mp4"
+          motion.ts inyecta el <video> (autoplay/loop/muted) al entrar en pantalla.
+        -->
+        <a
+          href={lp(`/trabajos/${p.slug}`)}
+          class="project-video group"
+          data-video-src=""
+          aria-label={p.client}
+        >
+          <span class="project-video__index">{String(i + 1).padStart(2, '0')}</span>
+          <div class="project-video__inner" style={`background:${p.gradient}`}>
+            <div class="project-video__placeholder">
+              <span class="project-video__play">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="#f8f8f8" aria-hidden="true">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </span>
+              <span class="project-video__soon">{locale === 'es' ? 'Video próximamente' : 'Video coming soon'}</span>
             </div>
-            <h3 class="mt-4 font-display text-2xl font-semibold tracking-tight transition-colors group-hover:text-accent">{p.client}</h3>
-          </a>
-        ))}
+          </div>
+        </a>
       </div>
-      <a href={lp('/trabajos')} class="mt-10 inline-block text-sm font-medium underline underline-offset-4 transition-colors hover:text-accent md:hidden">{workLabel} →</a>
-    </div>
-  </section>
+    ))}
+    <div class="stacked-spacer"></div>
 
-  <!-- ============ STATS ============ -->
+    <!-- Cierre: ver todos -->
+    <div class="flex justify-center bg-[#0d0d0d] pb-20 pt-4">
+      <a href={lp('/trabajos')} class="rounded-full border border-[rgba(248,248,248,0.2)] px-8 py-3.5 text-sm font-medium text-[#f8f8f8] transition-colors hover:border-accent hover:text-accent">
+        {worksAllLabel} →
+      </a>
+    </div>
+  </div>
+
+  <!-- ════ STATS ════════════════════════════════════════════════════ -->
   <section class="rule">
     <div class="mx-auto grid max-w-[1400px] grid-cols-2 gap-y-12 px-5 py-20 md:grid-cols-4 md:px-8 md:py-28">
-      {t.stats.items.map((s, i) => (
+      {[
+        { num: 15, suffix: '+', lbl: locale === 'es' ? 'Proyectos entregados' : 'Delivered projects' },
+        { num: 6,  suffix: '',  lbl: locale === 'es' ? 'Industrias' : 'Industries' },
+        { num: 267, suffix: 'K', lbl: locale === 'es' ? 'Views en un reel' : 'Views on a reel' },
+        { num: 2,  suffix: '',  lbl: locale === 'es' ? 'Países alcanzados' : 'Countries reached' },
+      ].map((s, i) => (
         <div data-reveal data-delay={`${i * 0.08}`}>
-          <span class="display-tight block font-display text-5xl md:text-7xl">{s.val}</span>
+          <span class="stat-val display-tight block font-display text-5xl md:text-7xl" data-counter={s.num} data-suffix={s.suffix}>
+            {s.num}{s.suffix}
+          </span>
           <span class="mt-2 block text-sm text-gray">{s.lbl}</span>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- ============ SERVICIOS — directorio ordenado ============ -->
-  <section class="rule">
-    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
-      <div class="mb-12 flex items-end justify-between">
-        <h2 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.nav.services}</h2>
-        <a href={lp('/servicios')} class="hidden shrink-0 text-sm font-medium underline-offset-4 transition-colors hover:text-accent hover:underline md:block" data-reveal>{servicesLabel} →</a>
-      </div>
-      <ol class="rule">
-        {SERVICES.map((s) => (
-          <li class="border-b border-line">
-            <a href={`${lp('/servicios')}#${s.slug}`} class="group grid items-center gap-x-8 gap-y-1 py-8 md:grid-cols-[64px_1fr_1fr_auto]" data-reveal>
-              <span class="text-sm text-gray">({s.num})</span>
-              <span class="display-tight font-display text-2xl transition-colors group-hover:text-accent md:text-4xl">{pick(s.title, locale)}</span>
-              <span class="text-sm text-gray md:max-w-sm">{pick(s.short, locale)}</span>
-              <span class="hidden text-sm font-medium text-gray transition-colors group-hover:text-accent md:block">{goTo} →</span>
-            </a>
-          </li>
-        ))}
-      </ol>
+  <!-- ════ SERVICIOS — stacked cards ═══════════════════════════════ -->
+  <div class="stacked-section">
+    <div class="stacked-section__header">
+      <h2 class="stacked-section__title display-tight font-display text-4xl uppercase md:text-6xl" data-split-chars>
+        {t.nav.services}
+      </h2>
+      <a href={lp('/servicios')} class="stacked-section__link hidden md:block">{servicesLabel} →</a>
     </div>
-  </section>
 
-  <!-- ============ TESTIMONIOS ============ -->
+    {SERVICES.map((s, i) => {
+      const variant = cardVariants[i % 3];
+      return (
+        <div class="card-wrapper">
+          <a href={`${lp('/servicios')}#${s.slug}`} class={`stack-card stack-card--${variant} group`}>
+            <div class="flex items-center justify-between">
+              <span class="stack-card__num">({s.num})</span>
+              <span class="stack-card__tag">{pick(s.tag, locale)}</span>
+            </div>
+            <h3 class="stack-card__title">{pick(s.title, locale)}</h3>
+            <div class="stack-card__bottom">
+              <p class="stack-card__desc">{pick(s.short, locale)}</p>
+              <span class="hidden shrink-0 text-sm font-medium opacity-50 transition-opacity group-hover:opacity-100 md:block">→</span>
+            </div>
+          </a>
+        </div>
+      );
+    })}
+    <div class="stacked-spacer"></div>
+  </div>
+
+  <!-- ════ TESTIMONIOS ══════════════════════════════════════════════ -->
   <section class="rule">
     <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
-      <h2 class="display-tight mb-14 font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.home.testimonialsTitle}</h2>
+      <h2 class="display-tight mb-14 font-display text-4xl uppercase md:text-6xl" data-reveal-word>
+        {t.home.testimonialsTitle}
+      </h2>
       <div data-reveal>
         <TestimonialCarousel client:visible items={testimonials} />
       </div>
     </div>
   </section>
 
-  <!-- ============ CTA FINAL grande ============ -->
+  <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
   <section class="rule">
     <a href={lp('/cotizar')} class="group block">
       <div class="mx-auto max-w-[1400px] px-5 py-24 md:px-8 md:py-36">
         <p class="text-xs font-medium uppercase tracking-[0.2em] text-gray" data-reveal>{t.home.ctaText}</p>
-        <p class="display-tight mt-4 font-display text-[12vw] uppercase transition-colors group-hover:text-accent md:text-[9vw]" data-reveal-word>
+        <p class="display-tight mt-4 font-display text-[12vw] uppercase transition-colors group-hover:text-accent md:text-[9vw]" data-split-chars>
           {t.home.ctaTitle}
         </p>
       </div>
     </a>
   </section>
+
 </Base>
