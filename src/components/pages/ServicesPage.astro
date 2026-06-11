@@ -1,0 +1,81 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../SectionHead.astro';
+import CtaBand from '../CtaBand.astro';
+import { SERVICES } from '../../data/services';
+import { wa } from '../../data/site';
+import { useT, pick, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: t.services.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base locale={locale} title={t.meta.services.title} description={t.meta.services.desc}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+
+  <section class="mx-auto max-w-7xl px-5 pt-40 pb-10 md:px-8">
+    <SectionHead kicker={t.services.kicker} title={t.services.title} intro={t.services.intro} />
+  </section>
+
+  <section class="mx-auto max-w-7xl space-y-20 px-5 pb-24 md:px-8">
+    {SERVICES.map((s, i) => (
+      <article id={s.slug} class={`grid scroll-mt-28 gap-10 border-t border-line pt-16 lg:grid-cols-2 ${i % 2 ? 'lg:[&>div:first-child]:order-2' : ''}`}>
+        <div data-reveal>
+          <span class="font-display text-sm font-bold text-accent">{s.num} — {pick(s.tag, locale)}</span>
+          <h2 class="mt-3 font-display text-3xl font-extrabold tracking-tight md:text-4xl">{pick(s.title, locale)}</h2>
+          <p class="mt-4 font-display text-xl font-semibold text-paper/90">{pick(s.headline, locale)}</p>
+          <p class="mt-4 leading-relaxed text-gray">{pick(s.desc, locale)}</p>
+          <a
+            href={wa(locale === 'es' ? `Hola BrandUp, me interesa el servicio de ${pick(s.title, 'es')}` : `Hi BrandUp, I'm interested in ${pick(s.title, 'en')}`)}
+            target="_blank"
+            rel="noopener"
+            class="mt-6 inline-block rounded-full border border-accent px-6 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-ink"
+          >
+            {t.services.microCta}
+          </a>
+        </div>
+        <ul class="space-y-4 self-center" data-reveal data-delay="0.15">
+          {pick(s.items, locale).map((item) => (
+            <li class="flex items-start gap-3 rounded-xl border border-line bg-ink-2/60 p-4 text-sm text-paper/90">
+              <span class="mt-0.5 text-accent" aria-hidden="true">↗</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-line bg-ink-2/50">
+    <div class="mx-auto max-w-4xl px-5 py-24 md:px-8">
+      <SectionHead kicker={t.services.faqKicker} title={t.services.faqTitle} />
+      <div class="space-y-3">
+        {t.services.faq.map((f) => (
+          <details class="group rounded-xl border border-line bg-ink p-5 transition-colors open:border-accent/50" data-reveal>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display font-bold text-paper">
+              {f.q}
+              <span class="text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-4 text-sm leading-relaxed text-gray">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand locale={locale} />
+</Base>

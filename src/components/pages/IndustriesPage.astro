@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../SectionHead.astro';
+import CtaBand from '../CtaBand.astro';
+import { INDUSTRIES } from '../../data/industries';
+import { PROJECTS } from '../../data/projects';
+import { wa } from '../../data/site';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+const lp = (p: string) => localePath(locale, p);
+---
+
+<Base locale={locale} title={t.meta.industries.title} description={t.meta.industries.desc}>
+  <section class="mx-auto max-w-7xl px-5 pt-40 pb-24 md:px-8">
+    <SectionHead kicker={t.industries.kicker} title={t.industries.title} intro={t.industries.intro} />
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {INDUSTRIES.map((ind, i) => {
+        const projects = PROJECTS.filter((p) => p.industry === ind.key);
+        return (
+          <div class="flex flex-col rounded-2xl border border-line bg-ink-2/50 p-7 transition-colors hover:border-accent/50" data-reveal data-delay={`${(i % 3) * 0.08}`}>
+            <h2 class="font-display text-2xl font-bold">{pick(ind.name, locale)}</h2>
+            <p class="mt-3 flex-1 text-sm leading-relaxed text-gray">{pick(ind.desc, locale)}</p>
+            <div class="mt-6 border-t border-line pt-5">
+              {projects.length > 0 ? (
+                <>
+                  <p class="mb-3 text-xs font-semibold uppercase tracking-widest text-accent">{t.industries.projectsIn}</p>
+                  <ul class="space-y-2">
+                    {projects.map((p) => (
+                      <li>
+                        <a href={lp(`/trabajos/${p.slug}`)} class="text-sm text-paper/90 transition-colors hover:text-accent">{p.client} →</a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p class="text-sm italic text-gray">{t.industries.empty}</p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    <div class="mt-14 text-center" data-reveal>
+      <a href={wa(locale === 'es' ? 'Hola BrandUp, quiero conversar sobre mi industria' : 'Hi BrandUp, I want to talk about my industry')} target="_blank" rel="noopener" class="rounded-full bg-accent px-8 py-4 font-semibold text-ink transition-transform hover:scale-105 inline-block">
+        {t.industries.cta}
+      </a>
+    </div>
+  </section>
+  <CtaBand locale={locale} />
+</Base>

@@ -1,0 +1,67 @@
+---
+import Logo from './Logo';
+import { SITE, wa } from '../data/site';
+import { useT, localePath, altPath, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+const lp = (p: string) => localePath(locale, p);
+const year = new Date().getFullYear();
+
+const nav = [
+  { label: t.nav.home, href: '/' },
+  { label: t.nav.services, href: '/servicios' },
+  { label: t.nav.work, href: '/trabajos' },
+  { label: t.nav.industries, href: '/industrias' },
+  { label: t.nav.about, href: '/nosotros' },
+  { label: t.nav.contact, href: '/contacto' },
+];
+---
+
+<footer class="border-t border-line bg-ink">
+  <div class="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-4 md:px-8">
+    <div class="md:col-span-2">
+      <a href={lp('/')} aria-label="BrandUp"><Logo /></a>
+      <p class="mt-4 max-w-xs text-sm text-gray">{t.footer.tagline}</p>
+      <a
+        href={lp('/cotizar')}
+        class="mt-6 inline-block rounded-full border border-accent px-6 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-ink"
+      >
+        {t.nav.quote}
+      </a>
+    </div>
+
+    <div>
+      <h3 class="font-display text-sm font-bold uppercase tracking-widest text-paper">{t.footer.nav}</h3>
+      <ul class="mt-4 space-y-2">
+        {nav.map((item) => (
+          <li><a href={lp(item.href)} class="text-sm text-gray transition-colors hover:text-accent">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-display text-sm font-bold uppercase tracking-widest text-paper">{t.footer.contact}</h3>
+      <ul class="mt-4 space-y-2 text-sm text-gray">
+        <li>{SITE.city}</li>
+        <li><a href={wa('Hola BrandUp, quiero información')} class="transition-colors hover:text-accent" target="_blank" rel="noopener">{SITE.phone}</a></li>
+        <li><a href={`mailto:${SITE.email}`} class="transition-colors hover:text-accent">{SITE.email}</a></li>
+      </ul>
+      <h3 class="mt-6 font-display text-sm font-bold uppercase tracking-widest text-paper">{t.footer.social}</h3>
+      <ul class="mt-4 space-y-2 text-sm text-gray">
+        <li><a href={SITE.instagram} target="_blank" rel="noopener" class="transition-colors hover:text-accent">Instagram</a></li>
+        <li><a href={SITE.tiktok} target="_blank" rel="noopener" class="transition-colors hover:text-accent">TikTok</a></li>
+      </ul>
+      <h3 class="mt-6 font-display text-sm font-bold uppercase tracking-widest text-paper">{t.footer.language}</h3>
+      <p class="mt-3 text-sm">
+        <a href={altPath(locale, Astro.url.pathname)} class="text-gray transition-colors hover:text-accent">{t.lang.switch}</a>
+      </p>
+    </div>
+  </div>
+  <div class="border-t border-line py-6 text-center text-xs text-gray">
+    © {year} {SITE.legalName} — {t.footer.rights}
+  </div>
+</footer>

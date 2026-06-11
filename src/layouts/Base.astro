@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import '@fontsource-variable/syne';
+import '@fontsource-variable/dm-sans';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../data/site';
+import { useT, altPath, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+}
+
+const { locale, title, description } = Astro.props;
+const t = useT(locale);
+const pathname = Astro.url.pathname;
+const alternate = altPath(locale, pathname);
+const canonical = new URL(pathname, Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.legalName,
+  url: SITE.domain,
+  email: SITE.email,
+  telephone: SITE.phone,
+  address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
+  sameAs: [SITE.instagram, SITE.tiktok],
+  logo: `${SITE.domain}/favicon-512.png`,
+};
+
+const nav = [
+  { label: t.nav.services, href: '/servicios' },
+  { label: t.nav.work, href: '/trabajos' },
+  { label: t.nav.industries, href: '/industrias' },
+  { label: t.nav.about, href: '/nosotros' },
+  { label: t.nav.contact, href: '/contacto' },
+];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale === 'es' ? 'en' : 'es'} href={new URL(alternate, Astro.site).href} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/favicon-180.png" />
+    <meta name="generator" content={Astro.generator} />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE.domain}/og-image.png`} />
+    <meta property="og:locale" content={locale === 'es' ? 'es_CL' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script>
+      // Mark JS availability ASAP so reveal styles only hide content when GSAP will run.
+      document.documentElement.classList.add('js');
+    </script>
+    <ClientRouter />
+  </head>
+  <body class="bg-ink text-paper antialiased">
+    <Header client:load locale={locale} nav={nav} quoteLabel={t.nav.quote} altHref={alternate} switchLabel={t.lang.switch} pathname={pathname} />
+    <main>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <script src="../scripts/motion.ts"></script>
+  </body>
+</html>

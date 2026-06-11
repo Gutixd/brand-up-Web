@@ -1,0 +1,143 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../SectionHead.astro';
+import CtaBand from '../CtaBand.astro';
+import TestimonialCarousel from '../TestimonialCarousel';
+import { SERVICES } from '../../data/services';
+import { PROJECTS } from '../../data/projects';
+import { TESTIMONIALS } from '../../data/testimonials';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+import logoChacha from '../../assets/logos/chachapollo.webp';
+import logoJdcargo from '../../assets/logos/jdcargo.webp';
+import logoAracnida from '../../assets/logos/aracnida.webp';
+import logoTemplo from '../../assets/logos/templo-maipu.webp';
+import logoBell from '../../assets/logos/bell-college.webp';
+import logoBschool from '../../assets/logos/bschool.webp';
+import logoDuoc from '../../assets/logos/duoc-uc.webp';
+import logoSuperlunch from '../../assets/logos/superlunch.webp';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+const lp = (p: string) => localePath(locale, p);
+
+const featured = PROJECTS.filter((p) => p.featured).slice(0, 6);
+const clientLogos = [
+  { img: logoChacha, name: 'El Chacha Pollo' },
+  { img: logoJdcargo, name: 'JD Cargo Logistics' },
+  { img: logoAracnida, name: 'Aracnida Store' },
+  { img: logoTemplo, name: 'Templo Votivo de Maipú' },
+  { img: logoBell, name: 'Bell College' },
+  { img: logoBschool, name: 'BSchool' },
+  { img: logoDuoc, name: 'Duoc UC' },
+  { img: logoSuperlunch, name: 'Superlunch' },
+];
+const testimonials = TESTIMONIALS.map((x) => ({
+  text: pick(x.text, locale),
+  name: x.name,
+  role: pick(x.role, locale),
+  initials: x.initials,
+}));
+---
+
+<Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
+  <!-- HERO -->
+  <section class="relative flex min-h-[100svh] items-center overflow-hidden">
+    <div class="hero-glow -top-32 right-[-10%] h-[520px] w-[520px] bg-accent/25"></div>
+    <div class="hero-glow bottom-[-20%] left-[-15%] h-[460px] w-[460px] bg-accent/10" style="animation-delay: -7s"></div>
+    <div
+      class="pointer-events-none absolute inset-0 opacity-[0.07]"
+      style="background-image: linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px); background-size: 80px 80px;"
+    >
+    </div>
+    <div class="relative mx-auto w-full max-w-7xl px-5 pt-28 pb-20 md:px-8">
+      <p class="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-accent" data-reveal>{t.hero.kicker}</p>
+      <h1 class="max-w-5xl font-display text-5xl font-extrabold leading-[1.04] tracking-tight md:text-7xl lg:text-8xl" data-reveal-word>
+        {t.hero.title}
+      </h1>
+      <p class="mt-8 max-w-xl text-lg text-gray md:text-xl" data-reveal data-delay="0.3">{t.hero.subtitle}</p>
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal data-delay="0.45">
+        <a href={lp('/cotizar')} class="rounded-full bg-accent px-8 py-4 font-semibold text-ink transition-transform hover:scale-105">{t.hero.cta}</a>
+        <a href={lp('/trabajos')} class="rounded-full border border-line px-8 py-4 font-semibold text-paper transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+    <SectionHead kicker={t.home.servicesKicker} title={t.home.servicesTitle} />
+    <div class="divide-y divide-line border-y border-line">
+      {SERVICES.map((s) => (
+        <a href={`${lp('/servicios')}#${s.slug}`} class="group grid gap-2 py-7 transition-colors md:grid-cols-[80px_1fr_auto] md:items-center md:gap-8" data-reveal>
+          <span class="font-display text-sm font-bold text-accent">{s.num}</span>
+          <span>
+            <span class="font-display text-2xl font-bold text-paper transition-colors group-hover:text-accent md:text-3xl">{pick(s.title, locale)}</span>
+            <span class="mt-1 block text-sm text-gray">{pick(s.short, locale)}</span>
+          </span>
+          <span class="hidden text-2xl text-gray transition-all group-hover:translate-x-2 group-hover:text-accent md:block" aria-hidden="true">→</span>
+        </a>
+      ))}
+    </div>
+    <a href={lp('/servicios')} class="mt-8 inline-block text-sm font-semibold text-accent hover:underline">{t.home.servicesAll} →</a>
+  </section>
+
+  <!-- FEATURED WORK -->
+  <section class="mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-20">
+    <SectionHead kicker={t.home.workKicker} title={t.home.workTitle} />
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {featured.map((p) => (
+        <a href={lp(`/trabajos/${p.slug}`)} class="group block" data-reveal>
+          <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-line transition-transform duration-500 group-hover:scale-[1.015]" style={`background:${p.gradient}`}>
+            {p.logo && <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[45%] w-auto max-w-[55%] rounded-lg object-contain transition-transform duration-500 group-hover:scale-110" widths={[320, 480]} />}
+          </div>
+          <div class="mt-4 flex items-baseline justify-between gap-4">
+            <h3 class="font-display text-lg font-bold transition-colors group-hover:text-accent">{p.client}</h3>
+            <span class="text-right text-xs text-gray">{pick(p.sector, locale)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <a href={lp('/trabajos')} class="mt-10 inline-block text-sm font-semibold text-accent hover:underline">{t.home.workAll} →</a>
+  </section>
+
+  <!-- WHY BRANDUP -->
+  <section class="border-y border-line bg-ink-2/50">
+    <div class="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+      <SectionHead kicker={t.home.whyKicker} title={t.home.whyTitle} />
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {t.home.why.map((w, i) => (
+          <div class="rounded-2xl border border-line bg-ink p-7 transition-colors hover:border-accent/50" data-reveal data-delay={`${i * 0.08}`}>
+            <span class="font-display text-sm font-bold text-accent">0{i + 1}</span>
+            <h3 class="mt-3 font-display text-xl font-bold">{w.t}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-gray">{w.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENT LOGOS MARQUEE -->
+  <section class="overflow-hidden py-20">
+    <p class="mb-10 text-center text-sm font-semibold uppercase tracking-[0.2em] text-gray" data-reveal>{t.home.clientsKicker}</p>
+    <div class="marquee-track items-center gap-14 pr-14">
+      {[...clientLogos, ...clientLogos].map((c) => (
+        <Image src={c.img} alt={c.name} class="h-14 w-auto shrink-0 rounded-lg opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0" widths={[200]} />
+      ))}
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="mx-auto max-w-7xl px-5 py-24 md:px-8">
+    <p class="mb-3 text-center text-sm font-semibold uppercase tracking-[0.2em] text-accent" data-reveal>{t.home.testimonialsKicker}</p>
+    <h2 class="mb-14 text-center font-display text-4xl font-extrabold tracking-tight md:text-5xl" data-reveal-word>{t.home.testimonialsTitle}</h2>
+    <div data-reveal>
+      <TestimonialCarousel client:visible items={testimonials} />
+    </div>
+  </section>
+
+  <CtaBand locale={locale} />
+</Base>

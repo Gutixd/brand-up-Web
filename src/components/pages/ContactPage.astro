@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactForm from '../ContactForm';
+import { SITE, wa } from '../../data/site';
+import { useT, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+  variant?: 'contact' | 'quote';
+}
+const { locale, variant = 'contact' } = Astro.props;
+const t = useT(locale);
+const isQuote = variant === 'quote';
+const page = isQuote ? t.quote : t.contact;
+const meta = isQuote ? t.meta.quote : t.meta.contact;
+const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi BrandUp, I want a project quote';
+---
+
+<Base locale={locale} title={meta.title} description={meta.desc}>
+  <section class="mx-auto grid max-w-7xl gap-14 px-5 pt-40 pb-24 md:px-8 lg:grid-cols-[1fr_1.2fr]">
+    <div>
+      <p class="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-accent" data-reveal>{page.kicker}</p>
+      <h1 class="font-display text-4xl font-extrabold leading-tight tracking-tight md:text-6xl" data-reveal-word>{page.title}</h1>
+      <p class="mt-6 max-w-md text-lg text-gray" data-reveal data-delay="0.15">{page.intro}</p>
+
+      {isQuote && 'steps' in page && (
+        <ol class="mt-8 space-y-3" data-reveal data-delay="0.2">
+          {(page as typeof t.quote).steps.map((s, i) => (
+            <li class="flex items-center gap-3 text-sm text-paper/90">
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent/15 font-display text-xs font-bold text-accent">{i + 1}</span>
+              {s}
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div class="mt-10 space-y-4" data-reveal data-delay="0.25">
+        <a href={wa(waMsg)} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 font-semibold text-ink transition-transform hover:scale-105">
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.91-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.43-9.88 9.9-9.88a9.82 9.82 0 0 1 6.98 2.9 9.82 9.82 0 0 1 2.9 7 9.9 9.9 0 0 1-9.9 9.87m8.42-18.3A11.8 11.8 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.9 0-3.18-1.24-6.16-3.48-8.4"/></svg>
+          {t.contact.whatsapp}
+        </a>
+        <div class="text-sm text-gray">
+          <p class="mb-2 font-semibold uppercase tracking-widest text-paper/80">{t.contact.info}</p>
+          <p>{SITE.city}</p>
+          <p><a href={`mailto:${SITE.email}`} class="transition-colors hover:text-accent">{SITE.email}</a></p>
+          <p>{SITE.phone}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="self-start rounded-2xl border border-line bg-ink-2/60 p-7 md:p-10" data-reveal data-delay="0.2">
+      <p class="mb-6 text-sm text-gray">{t.contact.or}</p>
+      <ContactForm client:visible labels={t.form} variant={isQuote ? 'quote' : 'contact'} />
+    </div>
+  </section>
+</Base>

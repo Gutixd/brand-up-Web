@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "brand-up-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "C:\\Users\\chini\\OneDrive\\Desktop\\brand-up-web",
+      "port": 4321
+    }
+  ]
+}

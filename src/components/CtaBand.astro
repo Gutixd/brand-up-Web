@@ -1,0 +1,27 @@
+---
+import { wa } from '../data/site';
+import { useT, localePath, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi BrandUp, I want a project quote';
+---
+
+<section class="relative overflow-hidden border-t border-line">
+  <div class="hero-glow left-1/2 top-1/2 h-[420px] w-[640px] -translate-x-1/2 -translate-y-1/2 bg-accent/20"></div>
+  <div class="relative mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
+    <h2 class="font-display text-4xl font-extrabold tracking-tight md:text-6xl" data-reveal-word>{t.home.ctaTitle}</h2>
+    <p class="mx-auto mt-5 max-w-xl text-lg text-gray" data-reveal>{t.home.ctaText}</p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal data-delay="0.1">
+      <a href={localePath(locale, '/cotizar')} class="rounded-full bg-accent px-8 py-4 font-semibold text-ink transition-transform hover:scale-105">
+        {t.home.ctaButton}
+      </a>
+      <a href={wa(waMsg)} target="_blank" rel="noopener" class="rounded-full border border-line px-8 py-4 font-semibold text-paper transition-colors hover:border-accent hover:text-accent">
+        {t.home.ctaWhatsApp}
+      </a>
+    </div>
+  </div>
+</section>

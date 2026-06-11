@@ -1,0 +1,37 @@
+---
+import Base from '../../layouts/Base.astro';
+import SectionHead from '../SectionHead.astro';
+import CtaBand from '../CtaBand.astro';
+import WorkGrid from '../WorkGrid';
+import { PROJECTS } from '../../data/projects';
+import { INDUSTRIES } from '../../data/industries';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useT(locale);
+
+const items = PROJECTS.map((p) => ({
+  slug: p.slug,
+  client: p.client,
+  sector: pick(p.sector, locale),
+  year: p.year,
+  industry: p.industry,
+  gradient: p.gradient,
+  logoSrc: p.logo?.src,
+  href: localePath(locale, `/trabajos/${p.slug}`),
+}));
+const filters = INDUSTRIES.map((i) => ({ key: i.key, label: pick(i.name, locale) }));
+---
+
+<Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
+  <section class="mx-auto max-w-7xl px-5 pt-40 pb-24 md:px-8">
+    <SectionHead kicker={t.work.kicker} title={t.work.title} intro={t.work.intro} />
+    <div data-reveal>
+      <WorkGrid client:load items={items} filters={filters} allLabel={t.work.filterAll} />
+    </div>
+  </section>
+  <CtaBand locale={locale} />
+</Base>
