@@ -1,0 +1,21 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  intro?: string;
+  backHref?: string;
+  backLabel?: string;
+}
+const { kicker, title, intro, backHref, backLabel } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="page-hero__inner">
+    {backHref && (
+      <a href={backHref} class="page-hero__back">← {backLabel}</a>
+    )}
+    <p class="page-hero__kicker" data-reveal>{kicker}</p>
+    <h1 class="page-hero__title" data-reveal data-delay="0.08">{title}</h1>
+    {intro && <p class="page-hero__intro" data-reveal data-delay="0.16">{intro}</p>}
+  </div>
+</section>

@@ -6,10 +6,58 @@ const t = useT('es');
 ---
 
 <Base locale="es" title={`404 — ${t.notFound.title}`} description={t.notFound.text}>
-  <section class="flex min-h-[80svh] flex-col items-center justify-center px-5 text-center">
-    <p class="font-display text-8xl font-extrabold text-accent">404</p>
-    <h1 class="mt-4 font-display text-3xl font-bold">{t.notFound.title}</h1>
-    <p class="mt-3 text-gray">{t.notFound.text}</p>
-    <a href="/" class="mt-8 rounded-full bg-accent px-8 py-4 font-semibold text-ink transition-transform hover:scale-105">{t.notFound.back}</a>
+  <section class="nf">
+    <div class="nf__glow"></div>
+    <p class="nf__code">404</p>
+    <h1 class="nf__title">{t.notFound.title}</h1>
+    <p class="nf__text">{t.notFound.text}</p>
+    <a href="/" class="btn-primary nf__btn">{t.notFound.back}</a>
   </section>
 </Base>
+
+<style>
+.nf {
+  position: relative;
+  min-height: 86svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  overflow: hidden;
+}
+.nf__glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,94,35,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.nf__code {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 14rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--color-accent);
+}
+.nf__title {
+  position: relative;
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--color-paper);
+}
+.nf__text {
+  position: relative;
+  margin-top: 12px;
+  font-size: 1.05rem;
+  color: var(--color-gray);
+  max-width: 40ch;
+}
+.nf__btn { position: relative; margin-top: 36px; }
+</style>

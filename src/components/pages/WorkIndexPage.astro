@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import SectionHead from '../SectionHead.astro';
+import PageHero from '../PageHero.astro';
 import CtaBand from '../CtaBand.astro';
 import WorkGrid from '../WorkGrid';
 import { PROJECTS } from '../../data/projects';
@@ -27,11 +27,14 @@ const filters = INDUSTRIES.map((i) => ({ key: i.key, label: pick(i.name, locale)
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
-  <section class="mx-auto max-w-7xl px-5 pt-40 pb-24 md:px-8">
-    <SectionHead kicker={t.work.kicker} title={t.work.title} intro={t.work.intro} />
+
+  <PageHero kicker={t.work.kicker} title={t.work.title} intro={t.work.intro} />
+
+  <section class="page-section">
     <div data-reveal>
       <WorkGrid client:load items={items} filters={filters} allLabel={t.work.filterAll} />
     </div>
   </section>
+
   <CtaBand locale={locale} />
 </Base>

@@ -19,70 +19,248 @@ const title = `${p.client} — ${t.meta.work.title}`;
 ---
 
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
+
   <!-- Cover -->
-  <section class="relative flex min-h-[60svh] items-end overflow-hidden" style={`background:${p.gradient}`}>
-    <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent"></div>
+  <section class="work-cover" style={`background:${p.gradient}`}>
+    <div class="work-cover__scrim"></div>
     {p.logo && (
-      <div class="absolute inset-0 flex items-center justify-center" data-parallax="-12">
+      <div class="work-cover__logo" data-parallax="-12">
         <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[30%] w-auto max-w-[40%] rounded-xl object-contain opacity-90" widths={[320, 480]} />
       </div>
     )}
-    <div class="relative mx-auto w-full max-w-7xl px-5 pb-14 pt-48 md:px-8">
-      <a href={lp('/trabajos')} class="mb-6 inline-block text-sm text-gray transition-colors hover:text-accent">← {t.work.back}</a>
-      <h1 class="font-display text-5xl font-extrabold tracking-tight md:text-7xl" data-reveal-word>{p.client}</h1>
-      <p class="mt-4 text-gray">{pick(p.sector, locale)} · {p.year}</p>
+    <div class="work-cover__inner">
+      <a href={lp('/trabajos')} class="work-cover__back">← {t.work.back}</a>
+      <h1 class="work-cover__title" data-reveal-word>{p.client}</h1>
+      <p class="work-cover__meta">{pick(p.sector, locale)} · {p.year}</p>
     </div>
   </section>
 
-  <section class="mx-auto grid max-w-7xl gap-14 px-5 py-20 md:px-8 lg:grid-cols-[2fr_1fr]">
-    <div class="space-y-12">
-      <p class="font-display text-2xl font-semibold leading-relaxed text-paper/95" data-reveal>{pick(p.summary, locale)}</p>
+  <section class="work-body">
+    <div class="work-body__main">
+      <p class="work-body__lead" data-reveal>{pick(p.summary, locale)}</p>
       {[
         { h: t.work.challenge, text: pick(p.challenge, locale) },
         { h: t.work.approach, text: pick(p.approach, locale) },
         { h: t.work.outcome, text: pick(p.outcome, locale) },
       ].map((b) => (
-        <div data-reveal>
-          <h2 class="mb-3 font-display text-sm font-bold uppercase tracking-[0.2em] text-accent">{b.h}</h2>
-          <p class="leading-relaxed text-gray">{b.text}</p>
+        <div class="work-block" data-reveal>
+          <h2 class="work-block__h">{b.h}</h2>
+          <p class="work-block__p">{b.text}</p>
         </div>
       ))}
     </div>
 
-    <aside class="space-y-8 self-start rounded-2xl border border-line bg-ink-2/60 p-7" data-reveal data-delay="0.15">
+    <aside class="work-aside" data-reveal data-delay="0.15">
       <div>
-        <h2 class="mb-3 font-display text-sm font-bold uppercase tracking-[0.2em] text-accent">{t.work.servicesLabel}</h2>
-        <ul class="flex flex-wrap gap-2">
+        <h2 class="work-aside__h">{t.work.servicesLabel}</h2>
+        <ul class="work-aside__tags">
           {pick(p.services, locale).map((s) => (
-            <li class="rounded-full border border-line px-3 py-1.5 text-xs text-paper/90">{s}</li>
+            <li class="work-aside__tag">{s}</li>
           ))}
         </ul>
       </div>
-      <div class="space-y-5">
+      <div class="work-aside__metrics">
         {p.metrics.map((m) => (
-          <div class="border-t border-line pt-4">
-            <span class="font-display text-3xl font-extrabold text-accent">{m.val}</span>
-            <span class="block text-sm text-gray">{pick(m.lbl, locale)}</span>
+          <div class="work-metric">
+            <span class="work-metric__val">{m.val}</span>
+            <span class="work-metric__lbl">{pick(m.lbl, locale)}</span>
           </div>
         ))}
       </div>
       {p.link && (
-        <a href={p.link} target="_blank" rel="noopener" class="inline-block rounded-full border border-accent px-5 py-2.5 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-ink">
-          {t.work.visit} ↗
-        </a>
+        <a href={p.link} target="_blank" rel="noopener" class="btn-ghost">{t.work.visit} ↗</a>
       )}
     </aside>
   </section>
 
-  <section class="border-t border-line">
-    <a href={lp(`/trabajos/${next.slug}`)} class="group mx-auto flex max-w-7xl items-center justify-between px-5 py-14 md:px-8">
+  <!-- Siguiente proyecto -->
+  <section class="work-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="work-next__link group">
       <span>
-        <span class="text-sm text-gray">{t.work.next}</span>
-        <span class="mt-1 block font-display text-3xl font-extrabold transition-colors group-hover:text-accent md:text-4xl">{next.client}</span>
+        <span class="work-next__label">{t.work.next}</span>
+        <span class="work-next__client">{next.client}</span>
       </span>
-      <span class="text-3xl text-gray transition-all group-hover:translate-x-2 group-hover:text-accent" aria-hidden="true">→</span>
+      <span class="work-next__arrow" aria-hidden="true">→</span>
     </a>
   </section>
 
   <CtaBand locale={locale} />
 </Base>
+
+<style>
+.work-cover {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 64svh;
+  overflow: hidden;
+}
+.work-cover__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #0d0d0d 0%, rgba(13,13,13,0.3) 45%, transparent 100%);
+}
+.work-cover__logo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.work-cover__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin-inline: auto;
+  padding: 200px 24px 56px;
+  color: #f8f8f8;
+}
+@media (min-width: 768px) { .work-cover__inner { padding-inline: 48px; } }
+.work-cover__back {
+  display: inline-block;
+  margin-bottom: 24px;
+  font-size: 0.85rem;
+  color: rgba(248,248,248,0.6);
+  transition: color 0.2s;
+}
+.work-cover__back:hover { color: #fff; }
+.work-cover__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+.work-cover__meta {
+  margin-top: 14px;
+  font-size: 1rem;
+  color: rgba(248,248,248,0.6);
+}
+
+.work-body {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: 80px 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+}
+@media (min-width: 768px) { .work-body { padding-inline: 48px; } }
+@media (min-width: 1024px) {
+  .work-body { grid-template-columns: 2fr 1fr; gap: 80px; padding-block: 104px; }
+}
+.work-body__lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--color-paper);
+  margin-bottom: 48px;
+}
+.work-block { margin-bottom: 40px; }
+.work-block__h {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 12px;
+}
+.work-block__p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--color-gray);
+  max-width: 60ch;
+}
+
+.work-aside {
+  align-self: start;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: #f0ede8;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.work-aside__h {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.work-aside__tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.work-aside__tag {
+  border: 1px solid var(--color-line);
+  border-radius: 100px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+.work-aside__metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.work-metric {
+  border-top: 1px solid var(--color-line);
+  padding-top: 16px;
+}
+.work-metric__val {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.work-metric__lbl {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: var(--color-gray);
+}
+
+.work-next { border-top: 1px solid var(--color-line); }
+.work-next__link {
+  max-width: 1400px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 56px 24px;
+}
+@media (min-width: 768px) { .work-next__link { padding-inline: 48px; } }
+.work-next__label {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+.work-next__client {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--color-paper);
+  transition: color 0.3s;
+}
+.work-next__link:hover .work-next__client { color: var(--color-accent); }
+.work-next__arrow {
+  font-size: 2rem;
+  color: var(--color-gray);
+  transition: transform 0.3s, color 0.3s;
+}
+.work-next__link:hover .work-next__arrow { transform: translateX(8px); color: var(--color-accent); }
+</style>

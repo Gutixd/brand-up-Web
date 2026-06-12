@@ -10,17 +10,13 @@ const t = useT(locale);
 const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi BrandUp, I want a project quote';
 ---
 
-<section class="rule">
-  <div class="mx-auto max-w-4xl px-5 py-24 text-center md:py-32">
-    <h2 class="display-tight font-display text-4xl uppercase md:text-6xl" data-reveal-word>{t.home.ctaTitle}</h2>
-    <p class="mx-auto mt-5 max-w-xl text-lg text-gray" data-reveal>{t.home.ctaText}</p>
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal data-delay="0.1">
-      <a href={localePath(locale, '/cotizar')} class="rounded-full bg-paper px-8 py-4 text-sm font-medium text-ink transition-colors hover:bg-accent">
-        {t.home.ctaButton}
-      </a>
-      <a href={wa(waMsg)} target="_blank" rel="noopener" class="rounded-full border border-line px-8 py-4 text-sm font-medium transition-colors hover:border-accent hover:text-accent">
-        {t.home.ctaWhatsApp}
-      </a>
+<section class="cta-final">
+  <div class="cta-final__inner">
+    <p class="cta-final__kicker" data-reveal>{t.home.ctaText}</p>
+    <h2 class="cta-final__title display-tight" data-split-chars>{t.home.ctaTitle}</h2>
+    <div class="cta-final__actions" data-reveal data-delay="0.3">
+      <a href={localePath(locale, '/cotizar')} class="cta-final__btn">{t.home.ctaButton}</a>
+      <a href={wa(waMsg)} target="_blank" rel="noopener" class="cta-final__link">{t.home.ctaWhatsApp}</a>
     </div>
   </div>
 </section>
