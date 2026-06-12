@@ -141,11 +141,11 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 
   <!-- ════ TRABAJOS — videos full-screen (sticky, sin nombres) ═════ -->
   <div class="works-videos">
-    {featured.map((p) => (
+    {featured.map((p, i) => (
       <a
         href={lp(`/trabajos/${p.slug}`)}
         class="project-video group"
-        data-video-src="/videos/showreel.mp4"
+        data-video-src={`/videos/work${i + 1}.mp4`}
         aria-label={p.client}
       >
         <div class="project-video__inner" style={`background:${p.gradient}`}>
