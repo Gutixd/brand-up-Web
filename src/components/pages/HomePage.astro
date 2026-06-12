@@ -72,6 +72,24 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       loop
       playsinline
     ></video>
+
+    <!-- Overlay de texto sobre el showreel -->
+    <div class="showreel-overlay">
+      <p class="showreel-overlay__kicker">
+        {locale === 'es' ? 'Agencia creativa digital · Santiago de Chile' : 'Creative Digital Agency · Santiago, Chile'}
+      </p>
+      <h2 class="showreel-overlay__title">
+        {locale === 'es'
+          ? 'Diseño que convierte.\nMarketing que vende.'
+          : 'Design that converts.\nMarketing that sells.'}
+      </h2>
+      <p class="showreel-overlay__sub">
+        {locale === 'es'
+          ? 'Construimos marcas con propósito: sitios web, branding, contenido y publicidad digital que generan resultados reales.'
+          : 'We build purposeful brands: websites, branding, content and digital advertising that generate real results.'}
+      </p>
+    </div>
+
     <span class="showreel-corner showreel-corner--left">BrandUp — Showreel</span>
     <span class="showreel-corner showreel-corner--right">2025</span>
   </div>
@@ -117,21 +135,26 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
   </section>
 
   <!-- ════ TRABAJOS — intro "Our Works" ════════════════════════════ -->
-  <!--
-    VIDEO DE FONDO del intro: reemplaza el <div class="works-intro__bg"> por:
-    <div class="works-intro__bg"><video src="/videos/intro-trabajos.mp4" autoplay muted loop playsinline></video></div>
-  -->
   <section class="works-intro">
     <div class="works-intro__bg"></div>
     <div class="works-intro__scrim"></div>
-    <h2 class="works-intro__title">
-      <span class="ln">{locale === 'es' ? 'Nuestros' : 'Our'}</span>
-      <span class="ln ln--alt">{locale === 'es' ? 'Trabajos' : 'Works'}</span>
-    </h2>
+    <div class="works-intro__content">
+      <p class="works-intro__kicker">
+        {locale === 'es' ? '— Portafolio seleccionado 2024–2025' : '— Selected portfolio 2024–2025'}
+      </p>
+      <h2 class="works-intro__title">
+        <span class="ln">{locale === 'es' ? 'Nuestros' : 'Our'}</span>
+        <span class="ln ln--alt">{locale === 'es' ? 'Trabajos' : 'Works'}</span>
+      </h2>
+      <p class="works-intro__desc">
+        {locale === 'es'
+          ? 'Marcas reales, resultados medibles. Cada proyecto parte de un objetivo concreto: más ventas, más visibilidad o una identidad que dure. Esto es lo que hemos construido.'
+          : 'Real brands, measurable results. Every project starts from a concrete goal: more sales, more visibility or an identity built to last. This is what we\'ve built.'}
+      </p>
+    </div>
     <div class="works-intro__meta">
-      <span>{locale === 'es' ? 'Selección 2024–2025' : 'Selection 2024–2025'}</span>
       <span class="works-intro__hint">
-        {locale === 'es' ? 'Desplázate' : 'Scroll'}
+        {locale === 'es' ? 'Desplázate para ver' : 'Scroll to explore'}
         <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
           <path d="M6 1v12M1 8l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

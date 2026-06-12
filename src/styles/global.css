@@ -78,6 +78,48 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 }
 .showreel-corner--left { left: 32px; }
 .showreel-corner--right { right: 32px; }
+/* Overlay de texto centrado sobre el showreel */
+.showreel-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-inline: clamp(1.5rem, 6vw, 6rem);
+  background: linear-gradient(180deg, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.6) 100%);
+  pointer-events: none;
+}
+.showreel-overlay__kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.25rem;
+}
+.showreel-overlay__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6.5vw, 7rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: #f8f8f8;
+  white-space: pre-line;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+}
+.showreel-overlay__sub {
+  max-width: 52ch;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  line-height: 1.6;
+  color: rgba(248,248,248,0.75);
+}
+@media (max-width: 640px) {
+  .showreel-overlay__title { font-size: clamp(1.8rem, 9vw, 3.2rem); }
+}
 .showreel-play {
   width: 88px;
   height: 88px;
@@ -297,6 +339,23 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   z-index: 1;
   background: linear-gradient(180deg, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.15) 50%, rgba(13,13,13,0.85) 100%);
 }
+.works-intro__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-inline: clamp(1.5rem, 6vw, 4rem);
+}
+.works-intro__kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(248,248,248,0.45);
+  margin-bottom: 1.75rem;
+}
 .works-intro__title {
   position: relative;
   z-index: 2;
@@ -309,6 +368,13 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   text-transform: uppercase;
   color: var(--color-accent);
   text-shadow: 0 4px 60px rgba(240,94,35,0.25);
+  margin-bottom: 2rem;
+}
+.works-intro__desc {
+  max-width: 54ch;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(248,248,248,0.6);
 }
 .works-intro__title .ln { display: block; }
 .works-intro__title .ln--alt { color: #f8f8f8; }
