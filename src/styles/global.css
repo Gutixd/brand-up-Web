@@ -490,6 +490,62 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 .stacked-spacer { height: 100svh; }
 .stat-val { font-variant-numeric: tabular-nums; }
 
+/* ─── Stats + Esfera 3D ─────────────────────────────────────────────── */
+.stats-section {
+  overflow: hidden;
+}
+.stats-section__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: 5rem 1.25rem;
+  gap: 4rem;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .stats-section__inner {
+    grid-template-columns: 1fr 1fr;
+    padding: 7rem 2rem;
+    gap: 3rem;
+  }
+}
+.stats-section__kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 2.5rem;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem 3rem;
+}
+.stat-item {}
+.stat-lbl {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  color: var(--color-gray);
+}
+
+/* Canvas de la esfera */
+.stats-section__right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sphere-canvas {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1;
+  display: block;
+  cursor: none;
+}
+
 /* ─── Servicios — acordeón hover/tap ───────────────────────────────── */
 .svc-accordion {
   background: var(--color-ink);

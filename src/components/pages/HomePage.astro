@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
+import ParticleSphere from '../ParticleSphere.astro';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
@@ -185,22 +186,37 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
   </div>
 
-  <!-- ════ STATS ════════════════════════════════════════════════════ -->
-  <section class="rule">
-    <div class="mx-auto grid max-w-[1400px] grid-cols-2 gap-y-12 px-5 py-20 md:grid-cols-4 md:px-8 md:py-28">
-      {[
-        { num: 15, suffix: '+', lbl: locale === 'es' ? 'Proyectos entregados' : 'Delivered projects' },
-        { num: 6,  suffix: '',  lbl: locale === 'es' ? 'Industrias' : 'Industries' },
-        { num: 267, suffix: 'K', lbl: locale === 'es' ? 'Views en un reel' : 'Views on a reel' },
-        { num: 2,  suffix: '',  lbl: locale === 'es' ? 'Países alcanzados' : 'Countries reached' },
-      ].map((s, i) => (
-        <div data-reveal data-delay={`${i * 0.08}`}>
-          <span class="stat-val display-tight block font-display text-5xl md:text-7xl" data-counter={s.num} data-suffix={s.suffix}>
-            {s.num}{s.suffix}
-          </span>
-          <span class="mt-2 block text-sm text-gray">{s.lbl}</span>
+  <!-- ════ STATS + ESFERA 3D ══════════════════════════════════════ -->
+  <section class="stats-section rule">
+    <div class="stats-section__inner">
+
+      <!-- Columna izquierda: kicker + números -->
+      <div class="stats-section__left">
+        <p class="stats-section__kicker" data-reveal>
+          {locale === 'es' ? '— En números' : '— By the numbers'}
+        </p>
+        <div class="stats-grid">
+          {[
+            { num: 15, suffix: '+', lbl: locale === 'es' ? 'Proyectos entregados' : 'Delivered projects' },
+            { num: 6,  suffix: '',  lbl: locale === 'es' ? 'Industrias' : 'Industries' },
+            { num: 267, suffix: 'K', lbl: locale === 'es' ? 'Views en un reel' : 'Views on a reel' },
+            { num: 2,  suffix: '',  lbl: locale === 'es' ? 'Países alcanzados' : 'Countries reached' },
+          ].map((s, i) => (
+            <div class="stat-item" data-reveal data-delay={`${i * 0.1}`}>
+              <span class="stat-val display-tight block font-display text-5xl md:text-7xl" data-counter={s.num} data-suffix={s.suffix}>
+                {s.num}{s.suffix}
+              </span>
+              <span class="stat-lbl">{s.lbl}</span>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      <!-- Columna derecha: esfera 3D -->
+      <div class="stats-section__right">
+        <ParticleSphere />
+      </div>
+
     </div>
   </section>
 
