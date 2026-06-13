@@ -167,7 +167,7 @@ function initStatementSwap() {
       end: '+=95%',
       pin: true,
       pinSpacing: true,
-      scrub: 1.2,
+      scrub: 1.0,
       invalidateOnRefresh: true,
     },
   });
@@ -175,13 +175,13 @@ function initStatementSwap() {
   // Ghost drifts from bottom (58%) to top (-58%)
   tl.to(ghost, { yPercent: -58, ease: 'none' }, 0);
 
-  // Swap at exact midpoint — A out at 0.46, B in at 0.54, zero overlap
-  tl.to(textA,   { y: -32, opacity: 0, ease: 'power3.in',  duration: 0.07 }, 0.46);
-  tl.fromTo(textB, { y: 28, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out', duration: 0.07 }, 0.54);
+  // A gets ~65% of the scroll, B gets ~28% — B is brief
+  tl.to(textA,   { y: -32, opacity: 0, ease: 'power3.in',  duration: 0.07 }, 0.63);
+  tl.fromTo(textB, { y: 28, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out', duration: 0.07 }, 0.71);
 
   // Post-its: same clean cutover
-  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.94, ease: 'power2.in',  duration: 0.06 }, 0.46);
-  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out', duration: 0.07 }, 0.54);
+  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.94, ease: 'power2.in',  duration: 0.06 }, 0.63);
+  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out', duration: 0.07 }, 0.71);
 }
 
 // ── Servicios — acordeón (hover en desktop, tap en touch) ──────────
@@ -308,20 +308,46 @@ function initShowreelLightbox() {
     </span>`;
   document.body.appendChild(cursor);
 
-  // Posición con lerp suave
+  // Física del cursor — lerp + blob squash/stretch
   let mouseX = 0, mouseY = 0;
   let curX = 0, curY = 0;
+  let prevCurX = 0, prevCurY = 0;
+  let scaleTarget = 0, scaleCur = 0;
+  let stretchX = 1, stretchY = 1;
+  let blobAngle = 0;
   let raf = 0;
   let isInsideZone = false;
 
   function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
 
   function tick() {
-    curX = lerp(curX, mouseX, 0.12);
-    curY = lerp(curY, mouseY, 0.12);
+    curX = lerp(curX, mouseX, 0.13);
+    curY = lerp(curY, mouseY, 0.13);
+    scaleCur = lerp(scaleCur, scaleTarget, 0.14);
+
+    // Velocidad del círculo (no del mouse directo — más suave)
+    const dx = curX - prevCurX;
+    const dy = curY - prevCurY;
+    prevCurX = curX;
+    prevCurY = curY;
+
+    const speed = Math.sqrt(dx * dx + dy * dy);
+    const t = Math.min(speed / 16, 1); // normalizar — 16px/frame = max
+
+    // Ángulo de movimiento
+    if (speed > 0.4) blobAngle = lerp(blobAngle, Math.atan2(dy, dx) * (180 / Math.PI), 0.2);
+
+    // Squash & stretch: se estira en dirección de movimiento
+    stretchX = lerp(stretchX, 1 + t * 0.55, 0.14);
+    stretchY = lerp(stretchY, 1 - t * 0.28, 0.14);
+
     cursor.style.left = `${curX}px`;
     cursor.style.top  = `${curY}px`;
-    if (isInsideZone) raf = requestAnimationFrame(tick);
+    cursor.style.transform =
+      `translate(-50%,-50%) scale(${scaleCur}) rotate(${blobAngle}deg) scaleX(${stretchX}) scaleY(${stretchY})`;
+
+    const stillMoving = isInsideZone || scaleCur > 0.01 || Math.abs(stretchX - 1) > 0.005;
+    if (stillMoving) raf = requestAnimationFrame(tick);
   }
 
   function onMouseMove(e: MouseEvent) {
@@ -330,15 +356,21 @@ function initShowreelLightbox() {
   }
 
   function showCursor() {
+    if (isInsideZone) return;
     isInsideZone = true;
-    cursor.classList.add('is-visible');
+    scaleTarget = 1;
+    // Snap posición para evitar vuelo desde (0,0)
+    if (curX === 0 && curY === 0) { curX = mouseX; curY = mouseY; prevCurX = mouseX; prevCurY = mouseY; }
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(tick);
   }
 
   function hideCursor() {
     isInsideZone = false;
-    cursor.classList.remove('is-visible');
+    scaleTarget = 0;
+    // Sigue el RAF para animar la salida
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(tick);
   }
 
   // Zona del video de fondo
