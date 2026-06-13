@@ -284,6 +284,41 @@ function setup() {
   initServicesAccordion();
   initWorkGrid();
   initProjectVideos();
+  initShowreelLightbox();
+}
+
+// ── Showreel lightbox — click to open/close with sound ─────────────
+function initShowreelLightbox() {
+  const trigger   = document.getElementById('showreel-trigger');
+  const lightbox  = document.getElementById('showreel-lightbox');
+  const modal     = document.getElementById('showreel-modal-video') as HTMLVideoElement | null;
+  const closeBtn  = document.getElementById('showreel-close-btn');
+  const backdrop  = document.getElementById('showreel-close');
+  if (!trigger || !lightbox || !modal) return;
+
+  function openLightbox() {
+    lightbox!.classList.add('is-open');
+    lightbox!.removeAttribute('aria-hidden');
+    modal!.currentTime = 0;
+    modal!.muted = false;
+    modal!.play().catch(() => { modal!.muted = true; modal!.play(); });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox!.classList.remove('is-open');
+    lightbox!.setAttribute('aria-hidden', 'true');
+    modal!.pause();
+    modal!.muted = true;
+    document.body.style.overflow = '';
+  }
+
+  trigger.addEventListener('click', openLightbox);
+  closeBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+  backdrop?.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox!.classList.contains('is-open')) closeLightbox();
+  });
 }
 
 document.addEventListener('astro:page-load', () => {
