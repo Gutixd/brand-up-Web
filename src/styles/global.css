@@ -720,81 +720,99 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 
 /* ─── CTA Final ──────────────────────────────────────────────────── */
 .cta-final {
-  background: #0d0d0d;
+  background: #080808;
   color: #f8f8f8;
   overflow: hidden;
   position: relative;
+  border-top: 1px solid rgba(248,248,248,0.05);
 }
 .cta-final::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(240,94,35,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse 70% 55% at 50% 100%, rgba(240,94,35,0.14) 0%, transparent 70%);
   pointer-events: none;
+}
+.cta-final::after {
+  content: '↗';
+  position: absolute;
+  right: 2%;
+  bottom: -8%;
+  font-size: clamp(10rem, 28vw, 28rem);
+  line-height: 1;
+  color: rgba(248,248,248,0.025);
+  font-family: var(--font-display);
+  pointer-events: none;
+  user-select: none;
+  font-weight: 700;
 }
 .cta-final__inner {
   position: relative;
   z-index: 1;
-  max-width: 1400px;
+  max-width: 860px;
   margin-inline: auto;
-  padding: 96px 24px 104px;
+  padding: 100px 28px 116px;
   display: flex;
   flex-direction: column;
-  gap: 36px;
-  align-items: flex-start;
+  gap: 28px;
+  align-items: center;
+  text-align: center;
 }
 @media (min-width: 768px) {
-  .cta-final__inner { padding: 120px 48px 128px; }
+  .cta-final__inner { padding: 128px 48px 140px; }
 }
 .cta-final__kicker {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(248,248,248,0.4);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: rgba(248,248,248,0.38);
+  max-width: 50ch;
 }
 .cta-final__title {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 9vw, 8rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  font-size: clamp(3rem, 8.5vw, 7.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
   line-height: 0.92;
   color: #f8f8f8;
-  max-width: 14ch;
 }
 .cta-final__actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
-  margin-top: 8px;
+  justify-content: center;
+  margin-top: 12px;
 }
 .cta-final__btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--color-accent);
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 17px 38px;
+  padding: 16px 40px;
   border-radius: 100px;
-  transition: background 0.3s, gap 0.3s, transform 0.25s;
+  transition: background 0.3s, gap 0.3s, transform 0.25s, box-shadow 0.3s;
 }
 .cta-final__btn:hover {
   background: #fff;
-  color: #0d0d0d;
-  gap: 18px;
-  transform: translateY(-2px);
+  color: #080808;
+  gap: 20px;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(240,94,35,0.25);
 }
 .cta-final__link {
-  font-size: 0.9rem;
-  color: rgba(248,248,248,0.4);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  transition: color 0.3s;
+  font-size: 0.88rem;
+  color: rgba(248,248,248,0.35);
+  border-bottom: 1px solid rgba(248,248,248,0.12);
+  padding-bottom: 2px;
+  transition: color 0.3s, border-color 0.3s;
 }
-.cta-final__link:hover { color: rgba(248,248,248,0.85); }
+.cta-final__link:hover {
+  color: rgba(248,248,248,0.8);
+  border-color: rgba(248,248,248,0.4);
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    PAGE SYSTEM — diseño consistente para páginas internas

@@ -26,7 +26,6 @@ const filters = [
 ];
 
 const total = projects.length;
-const year  = new Date().getFullYear();
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
@@ -50,7 +49,6 @@ const year  = new Date().getFullYear();
               : 'Real brands. Measurable results.'}
           </p>
         </div>
-        <div class="works-dark-year" aria-hidden="true">{year}</div>
       </div>
     </header>
 
@@ -131,10 +129,6 @@ const year  = new Date().getFullYear();
 .works-dark-header__inner {
   max-width: 1400px;
   margin-inline: auto;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
 }
 .works-dark-title {
   font-family: var(--font-display);
@@ -156,16 +150,6 @@ const year  = new Date().getFullYear();
   margin-top: 1rem;
   font-size: clamp(0.9rem, 1.4vw, 1.1rem);
   color: rgba(248,248,248,0.4);
-}
-.works-dark-year {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 7vw, 9rem);
-  font-weight: 700;
-  letter-spacing: -0.06em;
-  color: rgba(248,248,248,0.04);
-  line-height: 1;
-  white-space: nowrap;
-  user-select: none;
 }
 
 /* Filtros */
@@ -213,14 +197,13 @@ const year  = new Date().getFullYear();
   margin-inline: auto;
   padding: 48px 48px 80px;
   columns: 2;
-  column-gap: 20px;
+  column-gap: 24px;
 }
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .works-dark-grid { columns: 1; padding: 32px 20px 60px; }
   .works-dark-header { padding: 100px 20px 32px; }
   .works-dark-filters { padding: 0 20px 32px; }
 }
-@media (min-width: 1100px) { .works-dark-grid { columns: 3; } }
 
 /* Tarjeta */
 .works-dark-card {
@@ -240,10 +223,9 @@ const year  = new Date().getFullYear();
   border-radius: 6px;
   background: #111;
 }
-/* Alturas variables para efecto masonry */
-.works-dark-card:nth-child(3n+1) .works-dark-card__img { aspect-ratio: 4/5; }
-.works-dark-card:nth-child(3n+2) .works-dark-card__img { aspect-ratio: 3/4; }
-.works-dark-card:nth-child(3n)   .works-dark-card__img { aspect-ratio: 5/6; }
+/* Alturas variables horizontales */
+.works-dark-card:nth-child(odd)  .works-dark-card__img { aspect-ratio: 16/9; }
+.works-dark-card:nth-child(even) .works-dark-card__img { aspect-ratio: 3/2; }
 
 /* Gradiente/foto */
 .works-dark-card__grad {
