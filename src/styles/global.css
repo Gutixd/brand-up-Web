@@ -543,7 +543,6 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   max-width: 520px;
   aspect-ratio: 1;
   display: block;
-  cursor: none;
 }
 
 /* ─── Servicios — acordeón hover/tap ───────────────────────────────── */
