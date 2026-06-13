@@ -73,34 +73,17 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       loop
       playsinline
     ></video>
-
-    <!-- Play button hover -->
-    <div class="showreel-play-btn" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="28" height="28" fill="#0d0d0d">
-        <path d="M8 5v14l11-7z"/>
-      </svg>
-    </div>
-
-    <span class="showreel-corner showreel-corner--left">BrandUp — Showreel</span>
-    <span class="showreel-corner showreel-corner--right">2025</span>
   </div>
 
   <!-- ════ LIGHTBOX DEL SHOWREEL ════════════════════════════════════ -->
   <div class="showreel-lightbox" id="showreel-lightbox" aria-hidden="true">
-    <div class="showreel-lightbox__backdrop" id="showreel-close"></div>
     <div class="showreel-lightbox__wrap">
       <video
         class="showreel-lightbox__video"
         id="showreel-modal-video"
         src="/videos/showreel.mp4"
         playsinline
-        controls
       ></video>
-      <button class="showreel-lightbox__close" id="showreel-close-btn" aria-label="Cerrar">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
     </div>
   </div>
 

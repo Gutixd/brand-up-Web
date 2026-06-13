@@ -287,37 +287,103 @@ function setup() {
   initShowreelLightbox();
 }
 
-// ── Showreel lightbox — click to open/close with sound ─────────────
+// ── Showreel lightbox + cursor magnético ───────────────────────────
 function initShowreelLightbox() {
-  const trigger   = document.getElementById('showreel-trigger');
-  const lightbox  = document.getElementById('showreel-lightbox');
-  const modal     = document.getElementById('showreel-modal-video') as HTMLVideoElement | null;
-  const closeBtn  = document.getElementById('showreel-close-btn');
-  const backdrop  = document.getElementById('showreel-close');
+  const trigger  = document.getElementById('showreel-trigger');
+  const lightbox = document.getElementById('showreel-lightbox');
+  const modal    = document.getElementById('showreel-modal-video') as HTMLVideoElement | null;
   if (!trigger || !lightbox || !modal) return;
 
+  // Crear cursor custom
+  const cursor = document.createElement('div');
+  cursor.className = 'showreel-cursor';
+  cursor.innerHTML = `
+    <span class="showreel-cursor__icon showreel-cursor__play">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="#0d0d0d"><path d="M8 5v14l11-7z"/></svg>
+    </span>
+    <span class="showreel-cursor__icon showreel-cursor__close">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f8f8f8" stroke-width="2.2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>`;
+  document.body.appendChild(cursor);
+
+  // Posición con lerp suave
+  let mouseX = 0, mouseY = 0;
+  let curX = 0, curY = 0;
+  let raf = 0;
+  let isInsideZone = false;
+
+  function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
+
+  function tick() {
+    curX = lerp(curX, mouseX, 0.12);
+    curY = lerp(curY, mouseY, 0.12);
+    cursor.style.left = `${curX}px`;
+    cursor.style.top  = `${curY}px`;
+    if (isInsideZone) raf = requestAnimationFrame(tick);
+  }
+
+  function onMouseMove(e: MouseEvent) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }
+
+  function showCursor() {
+    isInsideZone = true;
+    cursor.classList.add('is-visible');
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(tick);
+  }
+
+  function hideCursor() {
+    isInsideZone = false;
+    cursor.classList.remove('is-visible');
+  }
+
+  // Zona del video de fondo
+  trigger.addEventListener('mouseenter', showCursor);
+  trigger.addEventListener('mouseleave', hideCursor);
+  trigger.addEventListener('mousemove', onMouseMove);
+
+  // Zona del lightbox (cuando está abierto)
+  lightbox.addEventListener('mousemove', onMouseMove);
+  lightbox.addEventListener('mouseenter', () => { if (lightbox.classList.contains('is-open')) showCursor(); });
+  lightbox.addEventListener('mouseleave', () => { if (lightbox.classList.contains('is-open')) hideCursor(); });
+
   function openLightbox() {
-    lightbox!.classList.add('is-open');
-    lightbox!.removeAttribute('aria-hidden');
-    modal!.currentTime = 0;
-    modal!.muted = false;
-    modal!.play().catch(() => { modal!.muted = true; modal!.play(); });
+    lightbox.classList.add('is-open');
+    lightbox.removeAttribute('aria-hidden');
+    modal.currentTime = 0;
+    modal.volume = 0.5;
+    modal.muted = false;
+    modal.play().catch(() => { modal.muted = true; modal.play(); });
     document.body.style.overflow = 'hidden';
+    cursor.classList.add('is-close');
+    // El cursor sigue visible sobre el lightbox
+    if (!isInsideZone) { isInsideZone = true; raf = requestAnimationFrame(tick); }
   }
 
   function closeLightbox() {
-    lightbox!.classList.remove('is-open');
-    lightbox!.setAttribute('aria-hidden', 'true');
-    modal!.pause();
-    modal!.muted = true;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    modal.pause();
+    modal.muted = true;
     document.body.style.overflow = '';
+    cursor.classList.remove('is-close');
+    // Si el mouse ya no está sobre el trigger, ocultar
+    const rect = trigger.getBoundingClientRect();
+    if (mouseX < rect.left || mouseX > rect.right || mouseY < rect.top || mouseY > rect.bottom) {
+      hideCursor();
+    }
   }
 
   trigger.addEventListener('click', openLightbox);
-  closeBtn?.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
-  backdrop?.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (lightbox.classList.contains('is-open')) closeLightbox();
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox!.classList.contains('is-open')) closeLightbox();
+    if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
   });
 }
 
