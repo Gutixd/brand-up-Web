@@ -164,10 +164,10 @@ function initStatementSwap() {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=170%',
+      end: '+=95%',
       pin: true,
       pinSpacing: true,
-      scrub: 1.4,
+      scrub: 1.2,
       invalidateOnRefresh: true,
     },
   });
@@ -175,13 +175,13 @@ function initStatementSwap() {
   // Ghost drifts from bottom (58%) to top (-58%)
   tl.to(ghost, { yPercent: -58, ease: 'none' }, 0);
 
-  // Text A exits fast at 40%, B enters immediately after — zero overlap
-  tl.to(textA,   { y: -32, opacity: 0, ease: 'power3.in',  duration: 0.07 }, 0.40);
-  tl.fromTo(textB, { y: 28, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out', duration: 0.07 }, 0.48);
+  // Swap at exact midpoint — A out at 0.46, B in at 0.54, zero overlap
+  tl.to(textA,   { y: -32, opacity: 0, ease: 'power3.in',  duration: 0.07 }, 0.46);
+  tl.fromTo(textB, { y: 28, opacity: 0 }, { y: 0, opacity: 1, ease: 'power3.out', duration: 0.07 }, 0.54);
 
   // Post-its: same clean cutover
-  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.94, ease: 'power2.in',  duration: 0.06 }, 0.40);
-  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out', duration: 0.07 }, 0.48);
+  if (positsA) tl.to(positsA,  { opacity: 0, scale: 0.94, ease: 'power2.in',  duration: 0.06 }, 0.46);
+  if (positsB) tl.to(positsB,  { opacity: 1, scale: 1,    ease: 'power2.out', duration: 0.07 }, 0.54);
 }
 
 // ── Servicios — acordeón (hover en desktop, tap en touch) ──────────
