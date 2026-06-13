@@ -1,40 +1,427 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PageHero from '../PageHero.astro';
 import CtaBand from '../CtaBand.astro';
-import WorkGrid from '../WorkGrid';
 import { PROJECTS } from '../../data/projects';
 import { INDUSTRIES } from '../../data/industries';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
-interface Props {
-  locale: Locale;
-}
+interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
+const lp = (p: string) => localePath(locale, p);
 
-const items = PROJECTS.map((p) => ({
+const projects = PROJECTS.map((p) => ({
   slug: p.slug,
   client: p.client,
   sector: pick(p.sector, locale),
   year: p.year,
   industry: p.industry,
   gradient: p.gradient,
-  logoSrc: p.logo?.src,
-  href: localePath(locale, `/trabajos/${p.slug}`),
+  href: lp(`/trabajos/${p.slug}`),
 }));
-const filters = INDUSTRIES.map((i) => ({ key: i.key, label: pick(i.name, locale) }));
+
+const filters = [
+  { key: 'all', label: locale === 'es' ? 'Todos' : 'All' },
+  ...INDUSTRIES.map((i) => ({ key: i.key, label: pick(i.name, locale) })),
+];
+
+const total = projects.length;
+const year  = new Date().getFullYear();
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
 
-  <PageHero kicker={t.work.kicker} title={t.work.title} intro={t.work.intro} />
+  <div class="works-dark-page">
 
-  <section class="page-section">
-    <div data-reveal>
-      <WorkGrid client:load items={items} filters={filters} allLabel={t.work.filterAll} />
-    </div>
-  </section>
+    <!-- Physics canvas background -->
+    <canvas class="works-physics-bg" id="works-physics-bg" aria-hidden="true"></canvas>
+
+    <!-- Header editorial -->
+    <header class="works-dark-header">
+      <div class="works-dark-header__inner">
+        <div class="works-dark-header__left">
+          <h1 class="works-dark-title">
+            {locale === 'es' ? 'PROYECTOS' : 'PROJECTS'}
+            <sup class="works-dark-count">{total}</sup>
+          </h1>
+          <p class="works-dark-sub">
+            {locale === 'es'
+              ? 'Marcas reales. Resultados medibles.'
+              : 'Real brands. Measurable results.'}
+          </p>
+        </div>
+        <div class="works-dark-year" aria-hidden="true">{year}</div>
+      </div>
+    </header>
+
+    <!-- Filtros -->
+    <nav class="works-dark-filters" aria-label={locale === 'es' ? 'Filtrar por industria' : 'Filter by industry'}>
+      <div class="works-dark-filters__inner">
+        {filters.map((f) => (
+          <button
+            class={`works-filter-btn${f.key === 'all' ? ' is-active' : ''}`}
+            data-filter={f.key}
+            type="button"
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+    </nav>
+
+    <!-- Grid editorial -->
+    <main class="works-dark-grid" id="works-dark-grid">
+      {projects.map((p, i) => (
+        <a
+          href={p.href}
+          class="works-dark-card"
+          data-industry={p.industry}
+          data-index={i}
+          style={`--card-grad: ${p.gradient}`}
+        >
+          <!-- Imagen / gradiente placeholder -->
+          <div class="works-dark-card__img">
+            <div class="works-dark-card__grad" style={`background: ${p.gradient}`}></div>
+            <div class="works-dark-card__overlay"></div>
+            <!-- Flecha esquina -->
+            <span class="works-dark-card__arrow" aria-hidden="true">↗</span>
+          </div>
+
+          <!-- Info debajo -->
+          <div class="works-dark-card__info">
+            <span class="works-dark-card__sector">{p.sector}</span>
+            <span class="works-dark-card__client">{p.client}</span>
+          </div>
+        </a>
+      ))}
+    </main>
+
+  </div>
 
   <CtaBand locale={locale} />
+
 </Base>
+
+<style>
+/* ── Página oscura ───────────────────────────────────────────────── */
+.works-dark-page {
+  position: relative;
+  min-height: 100vh;
+  background: #080808;
+  color: #f8f8f8;
+  overflow: hidden;
+}
+
+/* Canvas background */
+.works-physics-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header */
+.works-dark-header {
+  position: relative;
+  z-index: 1;
+  padding: 120px 48px 40px;
+}
+.works-dark-header__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.works-dark-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 10rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #f8f8f8;
+}
+.works-dark-count {
+  font-size: 0.22em;
+  font-weight: 500;
+  vertical-align: super;
+  color: var(--color-accent);
+  letter-spacing: 0;
+}
+.works-dark-sub {
+  margin-top: 1rem;
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  color: rgba(248,248,248,0.4);
+}
+.works-dark-year {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 9rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  color: rgba(248,248,248,0.04);
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Filtros */
+.works-dark-filters {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px 48px;
+  border-bottom: 1px solid rgba(248,248,248,0.06);
+}
+.works-dark-filters__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.works-filter-btn {
+  padding: 8px 20px;
+  border-radius: 100px;
+  border: 1px solid rgba(248,248,248,0.12);
+  background: transparent;
+  color: rgba(248,248,248,0.45);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color .25s, color .25s, background .25s;
+}
+.works-filter-btn:hover {
+  border-color: rgba(248,248,248,0.35);
+  color: #f8f8f8;
+}
+.works-filter-btn.is-active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+/* Grid masonry editorial */
+.works-dark-grid {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: 48px 48px 80px;
+  columns: 2;
+  column-gap: 20px;
+}
+@media (max-width: 700px) {
+  .works-dark-grid { columns: 1; padding: 32px 20px 60px; }
+  .works-dark-header { padding: 100px 20px 32px; }
+  .works-dark-filters { padding: 0 20px 32px; }
+}
+@media (min-width: 1100px) { .works-dark-grid { columns: 3; } }
+
+/* Tarjeta */
+.works-dark-card {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity .35s;
+}
+.works-dark-card.is-hidden {
+  display: none;
+}
+.works-dark-card__img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #111;
+}
+/* Alturas variables para efecto masonry */
+.works-dark-card:nth-child(3n+1) .works-dark-card__img { aspect-ratio: 4/5; }
+.works-dark-card:nth-child(3n+2) .works-dark-card__img { aspect-ratio: 3/4; }
+.works-dark-card:nth-child(3n)   .works-dark-card__img { aspect-ratio: 5/6; }
+
+/* Gradiente/foto */
+.works-dark-card__grad {
+  position: absolute;
+  inset: 0;
+  transition: filter .55s ease, transform .55s cubic-bezier(0.25,0.46,0.45,0.94);
+  filter: grayscale(1) brightness(0.55);
+  transform: scale(1.0);
+  will-change: filter, transform;
+}
+/* Overlay oscuro encima */
+.works-dark-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,8,8,0.45);
+  transition: opacity .45s ease;
+}
+/* Flecha */
+.works-dark-card__arrow {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(8,8,8,0.6);
+  border: 1px solid rgba(248,248,248,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: rgba(248,248,248,0.7);
+  opacity: 0;
+  transform: translate(4px,-4px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+/* Hover */
+.works-dark-card:hover .works-dark-card__grad {
+  filter: grayscale(0) brightness(0.85);
+  transform: scale(1.04);
+}
+.works-dark-card:hover .works-dark-card__overlay {
+  opacity: 0.2;
+}
+.works-dark-card:hover .works-dark-card__arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Info */
+.works-dark-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 4px 0;
+}
+.works-dark-card__sector {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.works-dark-card__client {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #f8f8f8;
+  text-transform: uppercase;
+}
+</style>
+
+<script>
+// ── Filtros ──────────────────────────────────────────────────────
+const btns  = document.querySelectorAll<HTMLButtonElement>('.works-filter-btn');
+const cards = document.querySelectorAll<HTMLElement>('.works-dark-card');
+
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    btns.forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    const f = btn.dataset.filter;
+    cards.forEach(c => {
+      const show = f === 'all' || c.dataset.industry === f;
+      c.classList.toggle('is-hidden', !show);
+    });
+  });
+});
+
+// ── Física de fondo — partículas con mouse repulsion ─────────────
+(function () {
+  const canvas = document.getElementById('works-physics-bg') as HTMLCanvasElement | null;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d')!;
+
+  let W = 0, H = 0;
+  function resize() {
+    W = canvas!.width  = window.innerWidth;
+    H = canvas!.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Partículas
+  const N = 90;
+  type Particle = { x: number; y: number; vx: number; vy: number; size: number; alpha: number; baseAlpha: number };
+  const particles: Particle[] = Array.from({ length: N }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: (Math.random() - 0.5) * 0.25,
+    size: Math.random() * 1.8 + 0.4,
+    alpha: 0,
+    baseAlpha: Math.random() * 0.35 + 0.08,
+  }));
+
+  let mx = -9999, my = -9999;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  document.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+
+    particles.forEach(p => {
+      // Mouse repulsion
+      const dx = p.x - mx, dy = p.y - my;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const radius = 180;
+      if (dist < radius && dist > 0) {
+        const force = ((radius - dist) / radius) ** 2 * 1.8;
+        p.vx += (dx / dist) * force;
+        p.vy += (dy / dist) * force;
+      }
+
+      // Damping + drift back to base speed
+      p.vx *= 0.96;
+      p.vy *= 0.96;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Wrap edges
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+      if (p.y < -10) p.y = H + 10;
+      if (p.y > H + 10) p.y = -10;
+
+      // Alpha pulsa con velocidad
+      const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+      p.alpha += (p.baseAlpha + speed * 0.15 - p.alpha) * 0.08;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(240,94,35,${Math.min(p.alpha, 0.7)})`;
+      ctx.fill();
+    });
+
+    // Líneas entre partículas cercanas
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const a = particles[i], b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 130) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(240,94,35,${(1 - d / 130) * 0.07})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
