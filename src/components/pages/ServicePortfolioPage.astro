@@ -68,8 +68,6 @@ const serviceBack = isEs ? `← ${serviceName}` : `← ${serviceName}`;
           {projects.map((p) => (
             <a
               href={lp(`/trabajos/${p.slug}`)}
-              target="_blank"
-              rel="noopener noreferrer"
               class="svc-folio-card"
               aria-label={`${p.client} — ${isEs ? 'Abrir proyecto' : 'Open project'}`}
             >
