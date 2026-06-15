@@ -27,19 +27,21 @@ export const SERVICES: Service[] = [
       en: 'Your website is your best salesperson. It has to perform like one.',
     },
     desc: {
-      es: 'Un buen sitio no es una tarjeta de presentación: es una herramienta activa de captación. Diseñamos sitios veloces, bien estructurados y pensados para convertir visitas en consultas, reservas o ventas.',
-      en: 'A good website is not a business card: it is an active acquisition tool. We design fast, well-structured sites built to convert visits into inquiries, bookings or sales.',
+      es: 'Un buen sitio no es una tarjeta de presentación: es una herramienta activa de captación. Diseñamos sitios nuevos, migramos sitios existentes y resolvemos problemas técnicos como DNS y hosting para que tu presencia digital funcione sin interrupciones.',
+      en: 'A good website is not a business card: it is an active acquisition tool. We build new sites, migrate existing ones and resolve technical issues like DNS and hosting so your digital presence works without interruption.',
     },
     items: {
       es: [
         'Desarrollo en código limpio para máxima velocidad de carga',
         'Diseño mobile-first y SEO técnico avanzado desde la base',
+        'Migración de sitios, corrección de DNS y cambio de hosting',
         'Landing pages orientadas a la conversión',
         'UX/UI centrado en la experiencia y en los resultados del negocio',
       ],
       en: [
         'Clean-code development for maximum loading speed',
         'Mobile-first design and advanced technical SEO from the ground up',
+        'Site migration, DNS correction and hosting changes',
         'Conversion-focused landing pages',
         'UX/UI centered on experience and business results',
       ],

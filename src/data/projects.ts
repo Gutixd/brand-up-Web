@@ -105,6 +105,108 @@ export const PROJECTS: Project[] = [
     featured: true,
   },
   {
+    slug: 'altitude',
+    client: 'Altitude',
+    industry: 'b2b',
+    sector: { es: 'Consultoría · Migración Web', en: 'Consulting · Web Migration' },
+    year: '2025',
+    services: {
+      es: ['Migración Web', 'Corrección DNS', 'Soporte Técnico'],
+      en: ['Web Migration', 'DNS Fix', 'Technical Support'],
+    },
+    serviceSlugs: ['diseno-web'],
+    gradient: '#c8d8e8',
+    summary: {
+      es: 'Migración completa del sitio y corrección de DNS para restablecer la presencia digital sin interrupciones.',
+      en: 'Full site migration and DNS correction to restore digital presence without interruptions.',
+    },
+    challenge: {
+      es: 'El sitio presentaba problemas técnicos de DNS que impedían su correcta resolución y afectaban la visibilidad de la marca.',
+      en: 'The site had DNS technical issues preventing correct resolution and affecting brand visibility.',
+    },
+    approach: {
+      es: 'Realizamos la migración completa del hosting, corrección de registros DNS y verificación del funcionamiento en todos los dominios.',
+      en: 'We performed a full hosting migration, DNS record correction and functionality verification across all domains.',
+    },
+    outcome: {
+      es: 'Sitio funcionando correctamente con DNS estabilizado y sin pérdida de tráfico.',
+      en: 'Site working correctly with stabilized DNS and no traffic loss.',
+    },
+    metrics: [
+      { val: '100%', lbl: { es: 'Uptime restaurado', en: 'Uptime restored' } },
+    ],
+    link: 'https://altitude.cl',
+    featured: false,
+  },
+  {
+    slug: 'musclecarchile',
+    client: 'MuscleCarChile',
+    industry: 'ecommerce',
+    sector: { es: 'Automotriz · Migración Web', en: 'Automotive · Web Migration' },
+    year: '2025',
+    services: {
+      es: ['Migración Web', 'Corrección DNS', 'Soporte Técnico'],
+      en: ['Web Migration', 'DNS Fix', 'Technical Support'],
+    },
+    serviceSlugs: ['diseno-web'],
+    gradient: '#1a1a2e',
+    summary: {
+      es: 'Migración y corrección de DNS para una tienda de accesorios y cultura muscle car en Chile.',
+      en: 'Migration and DNS correction for a muscle car accessories and culture store in Chile.',
+    },
+    challenge: {
+      es: 'Problemas de configuración DNS que dejaban el sitio inaccesible o con errores intermitentes para los clientes.',
+      en: 'DNS configuration issues leaving the site inaccessible or intermittently erroring for customers.',
+    },
+    approach: {
+      es: 'Diagnóstico completo de la configuración DNS, migración al nuevo servidor y validación del sitio en producción.',
+      en: 'Full DNS configuration diagnosis, migration to new server and production site validation.',
+    },
+    outcome: {
+      es: 'Sitio estable, accesible y sin interrupciones para los fanáticos del muscle car en Chile.',
+      en: 'Stable, accessible site with no interruptions for muscle car fans in Chile.',
+    },
+    metrics: [
+      { val: '✓', lbl: { es: 'DNS corregido', en: 'DNS fixed' } },
+    ],
+    link: 'https://musclecarchile.cl',
+    featured: false,
+  },
+  {
+    slug: 'aseocool',
+    client: 'AseoCool',
+    industry: 'b2b',
+    sector: { es: 'Servicios · Limpieza', en: 'Services · Cleaning' },
+    year: '2025',
+    services: {
+      es: ['Diseño Web', 'Identidad Visual', 'Estrategia Digital'],
+      en: ['Web Design', 'Visual Identity', 'Digital Strategy'],
+    },
+    serviceSlugs: ['diseno-web', 'branding'],
+    gradient: '#d4ecd4',
+    summary: {
+      es: 'Sitio web completo para empresa de aseo y limpieza profesional, con identidad visual e integración digital.',
+      en: 'Complete website for a professional cleaning company, with visual identity and digital integration.',
+    },
+    challenge: {
+      es: 'Empresa de aseo que necesitaba proyectar profesionalismo y captar clientes corporativos a través de su presencia digital.',
+      en: 'Cleaning company needing to project professionalism and attract corporate clients through their digital presence.',
+    },
+    approach: {
+      es: 'Diseñamos el sitio completo, la identidad visual y la estrategia para posicionar a AseoCool como opción premium en su rubro.',
+      en: 'We designed the full site, visual identity and strategy to position AseoCool as a premium option in their industry.',
+    },
+    outcome: {
+      es: 'Presencia digital profesional que permite a AseoCool competir con empresas de mayor tamaño en el mercado corporativo.',
+      en: 'Professional digital presence that lets AseoCool compete with larger companies in the corporate market.',
+    },
+    metrics: [
+      { val: 'Full', lbl: { es: 'Proyecto completo', en: 'Full project' } },
+    ],
+    link: 'https://aseocool.cl',
+    featured: false,
+  },
+  {
     slug: 'aracnida-store',
     client: 'Aracnida Store',
     industry: 'ecommerce',
@@ -137,6 +239,7 @@ export const PROJECTS: Project[] = [
       { val: '+450%', lbl: { es: 'Ticket promedio', en: 'Average order value' } },
       { val: '+95%', lbl: { es: 'Recompra', en: 'Repurchase' } },
     ],
+    link: 'https://aracnidastore.com',
     featured: true,
   },
   {
