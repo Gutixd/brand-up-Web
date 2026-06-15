@@ -1,4 +1,4 @@
----
+﻿---
 import Base from '../../../layouts/Base.astro';
 import { SERVICES } from '../../../data/services';
 import { localePath } from '../../../i18n';
@@ -12,12 +12,12 @@ const locale = 'en' as const;
 const lp = (p: string) => localePath(locale, p);
 ---
 
-<Base locale={locale} title={`${service.title.en} — BrandUp`} description={service.desc.en}>
+<Base locale={locale} title={`${service.title.en} â€” BrandUp`} description={service.desc.en}>
 
   <!-- Hero -->
   <section class="svc-page-hero">
     <div class="svc-page-hero__inner">
-      <a href={lp('/servicios')} class="svc-page-hero__back">← Services</a>
+      <a href={lp('/servicios')} class="svc-page-hero__back">â† Services</a>
       <span class="svc-page-hero__tag">{service.tag.en}</span>
       <h1 class="svc-page-hero__title display-tight">{service.title.en}</h1>
       <p class="svc-page-hero__headline">{service.headline.en}</p>
@@ -31,7 +31,7 @@ const lp = (p: string) => localePath(locale, p);
       <div class="svc-page-body__desc-col">
         <p class="svc-page-body__desc">{service.desc.en}</p>
         <a href={lp('/cotizar')} class="svc-page-body__cta">
-          Quote {service.title.en} →
+          Quote {service.title.en} â†’
         </a>
       </div>
 
@@ -40,7 +40,7 @@ const lp = (p: string) => localePath(locale, p);
         <ul class="svc-page-body__items">
           {service.items.en.map((item) => (
             <li class="svc-page-body__item">
-              <span class="svc-page-body__item-dot" aria-hidden="true">→</span>
+              <span class="svc-page-body__item-dot" aria-hidden="true">â†’</span>
               {item}
             </li>
           ))}
@@ -55,7 +55,7 @@ const lp = (p: string) => localePath(locale, p);
     <div class="svc-page-cta__inner">
       <h2 class="svc-page-cta__title display-tight">Interested?</h2>
       <p class="svc-page-cta__sub">Tell us about your project and we'll respond with a concrete proposal.</p>
-      <a href={lp('/cotizar')} class="svc-page-cta__btn">Start now →</a>
+      <a href={lp('/cotizar')} class="svc-page-cta__btn">Start now â†’</a>
     </div>
   </section>
 
@@ -88,4 +88,15 @@ const lp = (p: string) => localePath(locale, p);
 .svc-page-cta__sub { font-size: 1.05rem; color: var(--color-gray); max-width: 44ch; }
 .svc-page-cta__btn { display: inline-flex; align-items: center; gap: 10px; background: #0d0d0d; color: #f8f8f8; font-size: 1rem; font-weight: 600; padding: 16px 36px; border-radius: 100px; margin-top: 12px; transition: background 0.3s, gap 0.3s; }
 .svc-page-cta__btn:hover { background: #f05e23; gap: 18px; }
+
+/* ── Portfolio band ─────────────────────────────────────────────── */
+.svc-portfolio-band { background: #0d0d0d; border-top: 1px solid rgba(248,248,248,0.06); border-bottom: 1px solid rgba(248,248,248,0.06); }
+.svc-portfolio-band__inner { max-width: 1100px; margin-inline: auto; padding: 48px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+@media (min-width: 768px) { .svc-portfolio-band__inner { padding: 56px 48px; } }
+.svc-portfolio-band__kicker { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #f05e23; margin-bottom: 8px; }
+.svc-portfolio-band__title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.8rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: #f8f8f8; }
+.svc-portfolio-band__btn { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: #f8f8f8; font-size: 0.9rem; font-weight: 600; padding: 14px 28px; border-radius: 100px; border: 1px solid rgba(248,248,248,0.18); white-space: nowrap; transition: background 0.3s, border-color 0.3s, gap 0.3s; }
+.svc-portfolio-band__btn:hover { background: #f05e23; border-color: #f05e23; gap: 16px; }
 </style>
+
+

@@ -17,6 +17,7 @@ export interface Project {
   sector: L;
   year: string;
   services: { es: string[]; en: string[] };
+  serviceSlugs: string[]; // keys of SERVICES
   logo?: ImageMetadata;
   gradient: string; // cover gradient (CSS)
   summary: L;
@@ -39,6 +40,7 @@ export const PROJECTS: Project[] = [
       es: ['Social Media', 'Contenido & Reels', 'Meta Ads'],
       en: ['Social Media', 'Content & Reels', 'Meta Ads'],
     },
+    serviceSlugs: ['contenido-reels', 'publicidad-digital'],
     logo: logoChacha,
     gradient: '#f5cc53',
     summary: {
@@ -75,6 +77,7 @@ export const PROJECTS: Project[] = [
       es: ['Diseño Web', 'Estrategia B2B', 'Conversión'],
       en: ['Web Design', 'B2B Strategy', 'Conversion'],
     },
+    serviceSlugs: ['diseno-web'],
     logo: logoJdcargo,
     gradient: '#cbbedc',
     summary: {
@@ -111,6 +114,7 @@ export const PROJECTS: Project[] = [
       es: ['E-commerce', 'CRM', 'Email Marketing'],
       en: ['E-commerce', 'CRM', 'Email Marketing'],
     },
+    serviceSlugs: ['ecommerce', 'automatizaciones-ia'],
     logo: logoAracnida,
     gradient: '#f49fc5',
     summary: {
@@ -145,6 +149,7 @@ export const PROJECTS: Project[] = [
       es: ['Diseño Gráfico', 'Campaña de Difusión', 'Piezas para Redes'],
       en: ['Graphic Design', 'Awareness Campaign', 'Social Assets'],
     },
+    serviceSlugs: ['branding'],
     logo: logoTemplo,
     gradient: '#f2fbe0',
     summary: {
@@ -176,6 +181,7 @@ export const PROJECTS: Project[] = [
       es: ['Contenido & Reels', 'Social Media'],
       en: ['Content & Reels', 'Social Media'],
     },
+    serviceSlugs: ['contenido-reels'],
     logo: logoBell,
     gradient: '#bcd9f0',
     summary: {
@@ -207,6 +213,7 @@ export const PROJECTS: Project[] = [
       es: ['Branding', 'Diseño Gráfico'],
       en: ['Branding', 'Graphic Design'],
     },
+    serviceSlugs: ['branding'],
     logo: logoSuperlunch,
     gradient: '#f8cfd2',
     summary: {
