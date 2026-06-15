@@ -1,95 +1,79 @@
 ---
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
+import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
-import { INDUSTRIES } from '../../data/industries';
-import { useT, pick, localePath, type Locale } from '../../i18n';
+import { useT, localePath, type Locale } from '../../i18n';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
+const isEs = locale === 'es';
 
-const projects = PROJECTS.map((p) => ({
-  slug: p.slug,
-  client: p.client,
-  sector: pick(p.sector, locale),
-  year: p.year,
-  industry: p.industry,
-  gradient: p.gradient,
-  href: lp(`/trabajos/${p.slug}`),
+const categories = SERVICES.map((s) => ({
+  num: s.num,
+  slug: s.slug,
+  title: isEs ? s.title.es : s.title.en,
+  tag: isEs ? s.tag.es : s.tag.en,
+  short: isEs ? s.short.es : s.short.en,
+  count: PROJECTS.filter((p) => p.serviceSlugs.includes(s.slug)).length,
+  href: lp(`/servicios/${s.slug}/portafolio`),
 }));
 
-const filters = [
-  { key: 'all', label: locale === 'es' ? 'Todos' : 'All' },
-  ...INDUSTRIES.map((i) => ({ key: i.key, label: pick(i.name, locale) })),
-];
-
-const total = projects.length;
+const total = PROJECTS.length;
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
 
-  <div class="works-dark-page">
+  <div class="works-chooser-page">
 
-    <!-- Physics canvas background -->
+    <!-- Canvas fondo partículas -->
     <canvas class="works-physics-bg" id="works-physics-bg" aria-hidden="true"></canvas>
 
     <!-- Header editorial -->
-    <header class="works-dark-header">
-      <div class="works-dark-header__inner">
-        <div class="works-dark-header__left">
-          <h1 class="works-dark-title">
-            {locale === 'es' ? 'PROYECTOS' : 'PROJECTS'}
-            <sup class="works-dark-count">{total}</sup>
-          </h1>
-          <p class="works-dark-sub">
-            {locale === 'es'
-              ? 'Marcas reales. Resultados medibles.'
-              : 'Real brands. Measurable results.'}
-          </p>
-        </div>
+    <header class="works-chooser-header">
+      <div class="works-chooser-header__inner">
+        <span class="works-chooser-header__kicker">
+          {isEs ? `${total} proyectos realizados` : `${total} completed projects`}
+        </span>
+        <h1 class="works-chooser-title display-tight">
+          {isEs ? 'Nuestro\nTrabajo' : 'Our\nWork'}
+        </h1>
+        <p class="works-chooser-sub">
+          {isEs
+            ? 'Elige una categoría para explorar los casos reales de esa área.'
+            : 'Choose a category to explore real cases from that area.'}
+        </p>
       </div>
     </header>
 
-    <!-- Filtros -->
-    <nav class="works-dark-filters" aria-label={locale === 'es' ? 'Filtrar por industria' : 'Filter by industry'}>
-      <div class="works-dark-filters__inner">
-        {filters.map((f) => (
-          <button
-            class={`works-filter-btn${f.key === 'all' ? ' is-active' : ''}`}
-            data-filter={f.key}
-            type="button"
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-    </nav>
+    <!-- Grid de categorías -->
+    <main class="works-cat-grid" id="works-cat-grid">
+      {categories.map((cat) => (
+        <a href={cat.href} class={`works-cat-card${cat.count === 0 ? ' is-empty' : ''}`}>
 
-    <!-- Grid editorial -->
-    <main class="works-dark-grid" id="works-dark-grid">
-      {projects.map((p, i) => (
-        <a
-          href={p.href}
-          class="works-dark-card"
-          data-industry={p.industry}
-          data-index={i}
-          style={`--card-grad: ${p.gradient}`}
-        >
-          <!-- Imagen / gradiente placeholder -->
-          <div class="works-dark-card__img">
-            <div class="works-dark-card__grad" style={`background: ${p.gradient}`}></div>
-            <div class="works-dark-card__overlay"></div>
-            <!-- Flecha esquina -->
-            <span class="works-dark-card__arrow" aria-hidden="true">↗</span>
+          <div class="works-cat-card__top">
+            <span class="works-cat-card__num">{cat.num}</span>
+            <span class="works-cat-card__tag">{cat.tag}</span>
           </div>
 
-          <!-- Info debajo -->
-          <div class="works-dark-card__info">
-            <span class="works-dark-card__sector">{p.sector}</span>
-            <span class="works-dark-card__client">{p.client}</span>
+          <div class="works-cat-card__body">
+            <h2 class="works-cat-card__title">{cat.title}</h2>
+            <p class="works-cat-card__short">{cat.short}</p>
           </div>
+
+          <div class="works-cat-card__bottom">
+            <span class="works-cat-card__count">
+              {cat.count > 0
+                ? `${cat.count} ${isEs ? (cat.count === 1 ? 'caso' : 'casos') : (cat.count === 1 ? 'case' : 'cases')}`
+                : (isEs ? 'Próximamente' : 'Coming soon')}
+            </span>
+            <span class="works-cat-card__arrow" aria-hidden="true">&#8599;</span>
+          </div>
+
+          <div class="works-cat-card__line" aria-hidden="true"></div>
+
         </a>
       ))}
     </main>
@@ -101,8 +85,8 @@ const total = projects.length;
 </Base>
 
 <style>
-/* ── Página oscura ───────────────────────────────────────────────── */
-.works-dark-page {
+/* ── Página ──────────────────────────────────────────────────────── */
+.works-chooser-page {
   position: relative;
   min-height: 100vh;
   background: #080808;
@@ -110,7 +94,6 @@ const total = projects.length;
   overflow: hidden;
 }
 
-/* Canvas background */
 .works-physics-bg {
   position: fixed;
   inset: 0;
@@ -120,204 +103,195 @@ const total = projects.length;
   z-index: 0;
 }
 
-/* Header */
-.works-dark-header {
+/* ── Header ──────────────────────────────────────────────────────── */
+.works-chooser-header {
   position: relative;
   z-index: 1;
-  padding: 120px 48px 40px;
-}
-.works-dark-header__inner {
-  max-width: 1400px;
-  margin-inline: auto;
-}
-.works-dark-title {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 9vw, 10rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  text-transform: uppercase;
-  color: #f8f8f8;
-}
-.works-dark-count {
-  font-size: 0.22em;
-  font-weight: 500;
-  vertical-align: super;
-  color: var(--color-accent);
-  letter-spacing: 0;
-}
-.works-dark-sub {
-  margin-top: 1rem;
-  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
-  color: rgba(248,248,248,0.4);
-}
-
-/* Filtros */
-.works-dark-filters {
-  position: relative;
-  z-index: 1;
-  padding: 0 48px 48px;
+  padding: 130px 48px 64px;
   border-bottom: 1px solid rgba(248,248,248,0.06);
 }
-.works-dark-filters__inner {
-  max-width: 1400px;
+@media (max-width: 600px) { .works-chooser-header { padding: 110px 20px 48px; } }
+.works-chooser-header__inner {
+  max-width: 1200px;
   margin-inline: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 20px;
 }
-.works-filter-btn {
-  padding: 8px 20px;
-  border-radius: 100px;
-  border: 1px solid rgba(248,248,248,0.12);
-  background: transparent;
-  color: rgba(248,248,248,0.45);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+.works-chooser-header__kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: border-color .25s, color .25s, background .25s;
+  color: #f05e23;
 }
-.works-filter-btn:hover {
-  border-color: rgba(248,248,248,0.35);
+.works-chooser-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 11vw, 11rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  text-transform: uppercase;
   color: #f8f8f8;
+  white-space: pre-line;
 }
-.works-filter-btn.is-active {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #fff;
+.works-chooser-sub {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: rgba(248,248,248,0.38);
+  max-width: 52ch;
 }
 
-/* Grid masonry editorial */
-.works-dark-grid {
+/* ── Grid categorías ─────────────────────────────────────────────── */
+.works-cat-grid {
   position: relative;
   z-index: 1;
-  max-width: 1400px;
+  max-width: 1200px;
   margin-inline: auto;
-  padding: 48px 48px 80px;
-  columns: 2;
-  column-gap: 24px;
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
 }
-@media (max-width: 600px) {
-  .works-dark-grid { columns: 1; padding: 32px 20px 60px; }
-  .works-dark-header { padding: 100px 20px 32px; }
-  .works-dark-filters { padding: 0 20px 32px; }
+@media (max-width: 700px) {
+  .works-cat-grid { grid-template-columns: 1fr; padding: 0 20px 60px; }
 }
 
-/* Tarjeta */
-.works-dark-card {
-  display: block;
-  break-inside: avoid;
-  margin-bottom: 20px;
+/* ── Tarjeta categoría ───────────────────────────────────────────── */
+.works-cat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 40px 40px 36px;
+  border-bottom: 1px solid rgba(248,248,248,0.07);
   text-decoration: none;
   color: inherit;
-  transition: opacity .35s;
-}
-.works-dark-card.is-hidden {
-  display: none;
-}
-.works-dark-card__img {
-  position: relative;
+  transition: background 0.35s;
   overflow: hidden;
-  border-radius: 6px;
-  background: #111;
 }
-/* Alturas variables horizontales */
-.works-dark-card:nth-child(odd)  .works-dark-card__img { aspect-ratio: 16/9; }
-.works-dark-card:nth-child(even) .works-dark-card__img { aspect-ratio: 3/2; }
+/* right border para columna izquierda */
+.works-cat-card:nth-child(odd) {
+  border-right: 1px solid rgba(248,248,248,0.07);
+}
+@media (max-width: 700px) {
+  .works-cat-card:nth-child(odd) { border-right: none; }
+}
+@media (max-width: 600px) { .works-cat-card { padding: 28px 20px 24px; } }
 
-/* Gradiente/foto */
-.works-dark-card__grad {
+.works-cat-card::before {
+  content: '';
   position: absolute;
   inset: 0;
-  transition: filter .55s ease, transform .55s cubic-bezier(0.25,0.46,0.45,0.94);
-  filter: grayscale(1) brightness(0.55);
-  transform: scale(1.0);
-  will-change: filter, transform;
+  background: radial-gradient(ellipse at 20% 50%, rgba(240,94,35,0.07) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
 }
-/* Overlay oscuro encima */
-.works-dark-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(8,8,8,0.45);
-  transition: opacity .45s ease;
+.works-cat-card:hover::before { opacity: 1; }
+.works-cat-card:hover { background: rgba(248,248,248,0.025); }
+.works-cat-card.is-empty { opacity: 0.45; pointer-events: none; }
+
+/* Top row */
+.works-cat-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
 }
-/* Flecha */
-.works-dark-card__arrow {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  width: 38px;
-  height: 38px;
+.works-cat-card__num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(248,248,248,0.2);
+}
+.works-cat-card__tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f05e23;
+  background: rgba(240,94,35,0.1);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+/* Body */
+.works-cat-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+.works-cat-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.8vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #f8f8f8;
+  transition: color 0.25s;
+}
+.works-cat-card:hover .works-cat-card__title { color: #f8f8f8; }
+.works-cat-card__short {
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  line-height: 1.6;
+  color: rgba(248,248,248,0.35);
+  max-width: 36ch;
+  transition: color 0.25s;
+}
+.works-cat-card:hover .works-cat-card__short { color: rgba(248,248,248,0.5); }
+
+/* Bottom row */
+.works-cat-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.works-cat-card__count {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248,248,248,0.25);
+  transition: color 0.25s;
+}
+.works-cat-card:hover .works-cat-card__count { color: rgba(248,248,248,0.55); }
+
+.works-cat-card__arrow {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(8,8,8,0.6);
-  border: 1px solid rgba(248,248,248,0.2);
+  border: 1px solid rgba(248,248,248,0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: rgba(248,248,248,0.7);
-  opacity: 0;
-  transform: translate(4px,-4px);
-  transition: opacity .3s ease, transform .3s ease;
+  font-size: 18px;
+  color: rgba(248,248,248,0.3);
+  transform: translate(-4px, 4px);
+  transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
 }
-
-/* Hover */
-.works-dark-card:hover .works-dark-card__grad {
-  filter: grayscale(0) brightness(0.85);
-  transform: scale(1.04);
-}
-.works-dark-card:hover .works-dark-card__overlay {
-  opacity: 0.2;
-}
-.works-dark-card:hover .works-dark-card__arrow {
-  opacity: 1;
+.works-cat-card:hover .works-cat-card__arrow {
+  background: #f05e23;
+  border-color: #f05e23;
+  color: #fff;
   transform: translate(0, 0);
 }
 
-/* Info */
-.works-dark-card__info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 12px 4px 0;
+/* Animated underline */
+.works-cat-card__line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: #f05e23;
+  transition: width 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
 }
-.works-dark-card__sector {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-.works-dark-card__client {
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 2vw, 1.4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #f8f8f8;
-  text-transform: uppercase;
-}
+.works-cat-card:hover .works-cat-card__line { width: 100%; }
 </style>
 
 <script>
-// ── Filtros ──────────────────────────────────────────────────────
-const btns  = document.querySelectorAll<HTMLButtonElement>('.works-filter-btn');
-const cards = document.querySelectorAll<HTMLElement>('.works-dark-card');
-
-btns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    btns.forEach(b => b.classList.remove('is-active'));
-    btn.classList.add('is-active');
-    const f = btn.dataset.filter;
-    cards.forEach(c => {
-      const show = f === 'all' || c.dataset.industry === f;
-      c.classList.toggle('is-hidden', !show);
-    });
-  });
-});
-
-// ── Física de fondo — partículas con mouse repulsion ─────────────
 (function () {
   const canvas = document.getElementById('works-physics-bg') as HTMLCanvasElement | null;
   if (!canvas) return;
@@ -331,17 +305,16 @@ btns.forEach(btn => {
   resize();
   window.addEventListener('resize', resize);
 
-  // Partículas
-  const N = 90;
+  const N = 70;
   type Particle = { x: number; y: number; vx: number; vy: number; size: number; alpha: number; baseAlpha: number };
   const particles: Particle[] = Array.from({ length: N }, () => ({
     x: Math.random() * W,
     y: Math.random() * H,
-    vx: (Math.random() - 0.5) * 0.25,
-    vy: (Math.random() - 0.5) * 0.25,
-    size: Math.random() * 1.8 + 0.4,
+    vx: (Math.random() - 0.5) * 0.22,
+    vy: (Math.random() - 0.5) * 0.22,
+    size: Math.random() * 1.6 + 0.4,
     alpha: 0,
-    baseAlpha: Math.random() * 0.35 + 0.08,
+    baseAlpha: Math.random() * 0.3 + 0.06,
   }));
 
   let mx = -9999, my = -9999;
@@ -350,58 +323,42 @@ btns.forEach(btn => {
 
   function animate() {
     ctx.clearRect(0, 0, W, H);
-
     particles.forEach(p => {
-      // Mouse repulsion
       const dx = p.x - mx, dy = p.y - my;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const radius = 180;
+      const radius = 160;
       if (dist < radius && dist > 0) {
-        const force = ((radius - dist) / radius) ** 2 * 1.8;
+        const force = ((radius - dist) / radius) ** 2 * 1.5;
         p.vx += (dx / dist) * force;
         p.vy += (dy / dist) * force;
       }
-
-      // Damping + drift back to base speed
-      p.vx *= 0.96;
-      p.vy *= 0.96;
-
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Wrap edges
+      p.vx *= 0.96; p.vy *= 0.96;
+      p.x += p.vx; p.y += p.vy;
       if (p.x < -10) p.x = W + 10;
       if (p.x > W + 10) p.x = -10;
       if (p.y < -10) p.y = H + 10;
       if (p.y > H + 10) p.y = -10;
-
-      // Alpha pulsa con velocidad
       const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-      p.alpha += (p.baseAlpha + speed * 0.15 - p.alpha) * 0.08;
-
+      p.alpha += (p.baseAlpha + speed * 0.12 - p.alpha) * 0.08;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(240,94,35,${Math.min(p.alpha, 0.7)})`;
+      ctx.fillStyle = `rgba(240,94,35,${Math.min(p.alpha, 0.65)})`;
       ctx.fill();
     });
-
-    // Líneas entre partículas cercanas
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
         const a = particles[i], b = particles[j];
         const dx = a.x - b.x, dy = a.y - b.y;
         const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 130) {
+        if (d < 120) {
           ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(240,94,35,${(1 - d / 130) * 0.07})`;
-          ctx.lineWidth = 0.6;
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(240,94,35,${(1 - d / 120) * 0.06})`;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
     }
-
     requestAnimationFrame(animate);
   }
   animate();
