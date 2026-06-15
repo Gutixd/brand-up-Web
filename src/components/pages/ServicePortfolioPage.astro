@@ -74,8 +74,20 @@ const serviceBack = isEs ? `← ${serviceName}` : `← ${serviceName}`;
               <!-- Imagen / gradiente -->
               <div class="svc-folio-card__img" style={`background: ${p.gradient}`}>
 
-                <!-- Logo centrado -->
-                {p.logo && (
+                <!-- Foto de portada (si existe) -->
+                {p.cover && (
+                  <img
+                    src={p.cover.src}
+                    alt={p.client}
+                    class="svc-folio-card__cover"
+                    width={p.cover.width}
+                    height={p.cover.height}
+                    loading="lazy"
+                  />
+                )}
+
+                <!-- Logo centrado (solo si no hay cover) -->
+                {!p.cover && p.logo && (
                   <div class="svc-folio-card__logo-wrap">
                     <img
                       src={p.logo.src}
@@ -233,6 +245,19 @@ const serviceBack = isEs ? `← ${serviceName}` : `← ${serviceName}`;
   transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .svc-folio-card:hover .svc-folio-card__img { transform: scale(1.01); }
+
+/* Cover image */
+.svc-folio-card__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  transition: transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.svc-folio-card:hover .svc-folio-card__cover { transform: scale(1.04); }
 
 /* Logo centrado */
 .svc-folio-card__logo-wrap {

@@ -10,9 +10,15 @@ import logoTemplo from '../assets/logos/templo-maipu.webp';
 import logoBell from '../assets/logos/bell-college.webp';
 import logoSuperlunch from '../assets/logos/superlunch.webp';
 
+import coverJdcargo from '../assets/projects/jdcargo.webp';
+import coverAltitude from '../assets/projects/altitude.webp';
+import coverMusclecarchile from '../assets/projects/musclecarchile.webp';
+import coverAseocool from '../assets/projects/aseocool.webp';
+
 export interface Project {
   slug: string;
   client: string;
+  cover?: ImageMetadata;
   industry: string; // key of INDUSTRIES
   sector: L;
   year: string;
@@ -79,6 +85,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['diseno-web'],
     logo: logoJdcargo,
+    cover: coverJdcargo,
     gradient: '#cbbedc',
     summary: {
       es: 'Sitio corporativo para una empresa de agenciamiento de carga internacional, orientado a generar cotizaciones y transmitir credibilidad B2B.',
@@ -115,6 +122,7 @@ export const PROJECTS: Project[] = [
       en: ['Web Migration', 'DNS Fix', 'Technical Support'],
     },
     serviceSlugs: ['diseno-web'],
+    cover: coverAltitude,
     gradient: '#c8d8e8',
     summary: {
       es: 'Migración completa del sitio y corrección de DNS para restablecer la presencia digital sin interrupciones.',
@@ -149,6 +157,7 @@ export const PROJECTS: Project[] = [
       en: ['Web Migration', 'DNS Fix', 'Technical Support'],
     },
     serviceSlugs: ['diseno-web'],
+    cover: coverMusclecarchile,
     gradient: '#1a1a2e',
     summary: {
       es: 'Migración y corrección de DNS para una tienda de accesorios y cultura muscle car en Chile.',
@@ -183,6 +192,7 @@ export const PROJECTS: Project[] = [
       en: ['Web Design', 'Visual Identity', 'Digital Strategy'],
     },
     serviceSlugs: ['diseno-web', 'branding'],
+    cover: coverAseocool,
     gradient: '#d4ecd4',
     summary: {
       es: 'Sitio web completo para empresa de aseo y limpieza profesional, con identidad visual e integración digital.',
