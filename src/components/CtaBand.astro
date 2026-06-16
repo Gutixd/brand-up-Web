@@ -18,7 +18,7 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
       <p class="cta-final__desc" data-reveal>{t.home.ctaText}</p>
     </div>
     <div class="cta-final__actions" data-reveal data-delay="0.2">
-      <a href={localePath(locale, '/cotizar')} class="cta-final__btn">{t.home.ctaButton} →</a>
+      <a href={localePath(locale, '/cotizar')} data-magnetic="0.35" class="cta-final__btn">{t.home.ctaButton} →</a>
       <a href={wa(waMsg)} target="_blank" rel="noopener" class="cta-final__link">{t.home.ctaWhatsApp}</a>
     </div>
   </div>

@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
+let cursorCleanup: (() => void) | null = null;
 
 function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -262,6 +263,135 @@ function initProjectVideos() {
   });
 }
 
+// ── Scroll progress bar ────────────────────────────────────────────
+function initScrollProgress() {
+  const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  gsap.set(bar, { scaleX: 0 });
+  ScrollTrigger.create({
+    start: 0,
+    end: 'max',
+    onUpdate: (self) => {
+      gsap.to(bar, { scaleX: self.progress, duration: 0.15, ease: 'none', overwrite: true });
+    },
+  });
+}
+
+// ── Custom global cursor (ring lerps, dot is instant) ──────────────
+function initCustomCursor() {
+  cursorCleanup?.();
+  cursorCleanup = null;
+  document.body.classList.remove('cursor-suppress');
+
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const ring = document.getElementById('cursor-ring');
+  const dot = document.getElementById('cursor-dot');
+  if (!ring || !dot) return;
+
+  const last = (window as { __mouse?: { x: number; y: number } }).__mouse;
+  let mx = last?.x ?? window.innerWidth / 2;
+  let my = last?.y ?? window.innerHeight / 2;
+  let rx = mx;
+  let ry = my;
+  let visible = false;
+  let raf = 0;
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+  // Si ya hubo movimiento antes de navegar, activar de inmediato (sin hueco)
+  if (last) {
+    visible = true;
+    document.body.classList.add('has-cursor');
+    ring.classList.add('is-active');
+    dot.classList.add('is-active');
+  }
+
+  function tick() {
+    rx = lerp(rx, mx, 0.2);
+    ry = lerp(ry, my, 0.2);
+    ring!.style.left = `${rx}px`;
+    ring!.style.top = `${ry}px`;
+    dot!.style.left = `${mx}px`;
+    dot!.style.top = `${my}px`;
+    raf = requestAnimationFrame(tick);
+  }
+  raf = requestAnimationFrame(tick);
+
+  const onMove = (e: MouseEvent) => {
+    mx = e.clientX;
+    my = e.clientY;
+    (window as { __mouse?: { x: number; y: number } }).__mouse = { x: mx, y: my };
+    if (!visible) {
+      visible = true;
+      // Solo ocultamos el cursor nativo cuando confirmamos movimiento real
+      document.body.classList.add('has-cursor');
+      ring.classList.add('is-active');
+      dot.classList.add('is-active');
+    }
+  };
+  const onLeave = () => {
+    visible = false;
+    ring.classList.remove('is-active');
+    dot.classList.remove('is-active');
+  };
+
+  const interactiveSel = 'a, button, [role="button"], input, textarea, label, summary, [data-magnetic]';
+  const onOver = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest(interactiveSel)) {
+      ring.classList.add('is-hover');
+      dot.classList.add('is-hover');
+    }
+  };
+  const onOut = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest(interactiveSel)) {
+      ring.classList.remove('is-hover');
+      dot.classList.remove('is-hover');
+    }
+  };
+
+  window.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseleave', onLeave);
+  document.addEventListener('mouseover', onOver);
+  document.addEventListener('mouseout', onOut);
+
+  // El showreel tiene su propio cursor → suprimir el global sobre esas zonas
+  const zones = Array.from(document.querySelectorAll('.showreel-section, .showreel-lightbox'));
+  const suppress = () => document.body.classList.add('cursor-suppress');
+  const unsuppress = () => document.body.classList.remove('cursor-suppress');
+  zones.forEach((z) => {
+    z.addEventListener('mouseenter', suppress);
+    z.addEventListener('mouseleave', unsuppress);
+  });
+
+  cursorCleanup = () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseleave', onLeave);
+    document.removeEventListener('mouseover', onOver);
+    document.removeEventListener('mouseout', onOut);
+    zones.forEach((z) => {
+      z.removeEventListener('mouseenter', suppress);
+      z.removeEventListener('mouseleave', unsuppress);
+    });
+  };
+}
+
+// ── Magnetic elements ──────────────────────────────────────────────
+function initMagnetic() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+    const strength = parseFloat(el.dataset.magnetic || '0.3');
+    const move = (e: MouseEvent) => {
+      const b = el.getBoundingClientRect();
+      const relX = e.clientX - b.left - b.width / 2;
+      const relY = e.clientY - b.top - b.height / 2;
+      gsap.to(el, { x: relX * strength, y: relY * strength, duration: 0.45, ease: 'power3.out' });
+    };
+    const reset = () => gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.45)' });
+    el.addEventListener('mousemove', move);
+    el.addEventListener('mouseleave', reset);
+  });
+}
+
 // ── Master setup ───────────────────────────────────────────────────
 function setup() {
   if (reducedMotion()) {
@@ -285,6 +415,9 @@ function setup() {
   initWorkGrid();
   initProjectVideos();
   initShowreelLightbox();
+  initScrollProgress();
+  initCustomCursor();
+  initMagnetic();
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────

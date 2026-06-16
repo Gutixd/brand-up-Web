@@ -43,8 +43,8 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     <div class="mx-auto flex w-full max-w-[1400px] flex-col gap-8 pb-10 md:flex-row md:items-end md:justify-between">
       <p class="max-w-md text-base text-gray md:text-lg" data-reveal data-delay="0.5">{t.hero.subtitle}</p>
       <div class="flex items-center gap-4" data-reveal data-delay="0.6">
-        <a href={lp('/cotizar')} class="rounded-full bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-accent">{t.hero.cta}</a>
-        <a href={lp('/trabajos')} class="rounded-full border border-line px-7 py-3.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
+        <a href={lp('/cotizar')} data-magnetic="0.4" class="rounded-full bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-accent">{t.hero.cta}</a>
+        <a href={lp('/trabajos')} data-magnetic="0.4" class="rounded-full border border-line px-7 py-3.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
       </div>
     </div>
   </section>
@@ -260,7 +260,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
         {t.home.ctaTitle}
       </h2>
       <div class="cta-final__actions" data-reveal data-delay="0.3">
-        <a href={lp('/cotizar')} class="cta-final__btn">
+        <a href={lp('/cotizar')} data-magnetic="0.35" class="cta-final__btn">
           {locale === 'es' ? 'Empezar ahora' : 'Start now'} →
         </a>
         <a href={lp('/trabajos')} class="cta-final__link">
