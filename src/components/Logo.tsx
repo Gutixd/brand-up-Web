@@ -4,29 +4,64 @@ export default function Logo({ className = '' }: { className?: string }) {
       className={`inline-flex items-center gap-2.5 ${className}`}
       aria-label="BrandUp"
     >
-      {/* Mark — reproduce el B↑ del logo oficial sobre fondo naranja */}
+      {/* Mark — B↑ recreado como SVG fiel al logo oficial */}
       <svg
-        viewBox="0 0 36 36"
+        viewBox="0 0 56 62"
         width="34"
-        height="34"
+        height="38"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
       >
-        {/* Fondo redondeado naranja */}
-        <rect width="36" height="36" rx="7" fill="#f05e23" />
-        {/* B bold en blanco */}
-        <text
-          x="6"
-          y="27"
-          fontFamily="Georgia, serif"
-          fontSize="24"
-          fontWeight="700"
-          fill="white"
-        >B</text>
-        {/* Flecha diagonal arriba-derecha */}
-        <line x1="21" y1="20" x2="29" y2="10" stroke="white" strokeWidth="2.8" strokeLinecap="round"/>
-        <polyline points="24,10 29,10 29,15" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+        {/* Letra B — forma completa con recortes interiores */}
+        <path
+          fillRule="evenodd"
+          fill="currentColor"
+          d="
+            M 4 4
+            L 4 58
+            L 32 58
+            C 46 58 54 52 54 42
+            C 54 35 50 30 43 28
+            C 49 25 52 20 52 13
+            C 52 7 46 4 33 4
+            Z
+            M 17 10
+            L 30 10
+            C 37 10 40 13 40 17
+            C 40 21 37 25 30 25
+            L 17 25
+            Z
+            M 17 31
+            L 32 31
+            C 41 31 44 35 44 40
+            C 44 45 41 49 32 49
+            L 17 49
+            Z
+          "
+        />
+
+        {/* Flecha naranja — sube por la derecha de la B */}
+        <path
+          d="M 42 54 C 50 54 54 49 54 42 C 54 35 50 31 44 31 C 44 31 46 35 46 42 C 46 49 44 54 42 54 Z"
+          fill="#f05e23"
+        />
+        {/* Tallo de la flecha naranja subiendo */}
+        <path
+          d="M 46 42 L 46 16"
+          stroke="#f05e23"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        {/* Cabeza de la flecha */}
+        <path
+          d="M 36 24 L 46 14 L 56 24"
+          stroke="#f05e23"
+          strokeWidth="5.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
       </svg>
 
       {/* Wordmark */}
