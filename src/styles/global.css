@@ -92,9 +92,13 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   align-items: center;
   justify-content: center;
   background: #f8f8f8;
+  opacity: 0;
   /* transform gestionado 100% por JS — no CSS transition para transform */
-  transition: background 0.25s ease;
+  transition: background 0.25s ease, opacity 0.2s ease;
   will-change: transform, left, top;
+}
+.showreel-cursor.is-visible {
+  opacity: 1;
 }
 .showreel-cursor.is-close {
   background: #111;

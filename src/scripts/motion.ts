@@ -361,6 +361,7 @@ function initShowreelLightbox() {
     scaleTarget = 1;
     // Snap posición para evitar vuelo desde (0,0)
     if (curX === 0 && curY === 0) { curX = mouseX; curY = mouseY; prevCurX = mouseX; prevCurY = mouseY; }
+    cursor.classList.add('is-visible');
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(tick);
   }
