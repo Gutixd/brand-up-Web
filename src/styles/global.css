@@ -1165,3 +1165,150 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, var(--color-line) 18%, var(--color-line) 82%, transparent 100%);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   HOME — hero aurora, eyebrow, scroll cue, stats premium
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Hero aurora (subtle animated gradient mesh) ─────────────────── */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-aurora::before,
+.hero-aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+.hero-aurora::before {
+  width: 48vw;
+  height: 48vw;
+  top: -12vw;
+  right: -8vw;
+  background: radial-gradient(circle, rgba(240, 94, 35, 0.16) 0%, transparent 70%);
+  animation: auroraA 19s ease-in-out infinite alternate;
+}
+.hero-aurora::after {
+  width: 40vw;
+  height: 40vw;
+  bottom: -14vw;
+  left: -10vw;
+  background: radial-gradient(circle, rgba(241, 150, 80, 0.14) 0%, transparent 70%);
+  animation: auroraB 23s ease-in-out infinite alternate;
+}
+@keyframes auroraA {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-6vw, 5vw) scale(1.18); }
+}
+@keyframes auroraB {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(5vw, -4vw) scale(1.22); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora::before, .hero-aurora::after { animation: none; }
+}
+
+/* ── Hero eyebrow with pulsing availability dot ──────────────────── */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gray);
+  margin-bottom: 24px;
+}
+.hero-eyebrow__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex-shrink: 0;
+  animation: pulseDot 2.2s ease-out infinite;
+}
+@keyframes pulseDot {
+  0%   { box-shadow: 0 0 0 0 rgba(240, 94, 35, 0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(240, 94, 35, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(240, 94, 35, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-eyebrow__dot { animation: none; } }
+
+/* ── Hero scroll cue ─────────────────────────────────────────────── */
+.hero-scroll {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gray);
+  z-index: 5;
+}
+.hero-scroll__line {
+  position: relative;
+  width: 1px;
+  height: 46px;
+  background: rgba(35, 35, 35, 0.12);
+  overflow: hidden;
+}
+.hero-scroll__line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 42%;
+  background: var(--color-accent);
+  animation: scrollDrop 1.9s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+@keyframes scrollDrop {
+  0%   { transform: translateY(-110%); }
+  100% { transform: translateY(260%); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-scroll__line::after { animation: none; } }
+
+/* ── Stats — kicker + per-item gradient divider ──────────────────── */
+.stats-section__heading {
+  margin-bottom: 2.25rem;
+}
+.stats-section__heading-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--color-paper);
+  max-width: 22ch;
+}
+.stat-item {
+  position: relative;
+  padding-top: 22px;
+}
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, rgba(240, 94, 35, 0) 70%);
+}
+.stat-val {
+  background: linear-gradient(180deg, var(--color-paper) 0%, rgba(35, 35, 35, 0.62) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -26,13 +26,19 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
 
   <!-- ════ HERO ════════════════════════════════════════════════════ -->
-  <section class="relative flex min-h-[100svh] flex-col justify-between px-5 pt-[88px] md:px-8">
-    <div class="mx-auto flex w-full max-w-[1400px] items-center justify-between pt-6 text-xs font-medium uppercase tracking-[0.14em] text-gray">
+  <section class="relative flex min-h-[100svh] flex-col justify-between overflow-hidden px-5 pt-[88px] md:px-8">
+    <div class="hero-aurora" aria-hidden="true"></div>
+
+    <div class="relative z-10 mx-auto flex w-full max-w-[1400px] items-center justify-between pt-6 text-xs font-medium uppercase tracking-[0.14em] text-gray">
       <span data-reveal>{t.hero.location}</span>
       <span data-reveal data-delay="0.1">©{new Date().getFullYear()}</span>
     </div>
 
-    <div class="mx-auto w-full max-w-[1400px]">
+    <div class="relative z-10 mx-auto w-full max-w-[1400px]">
+      <p class="hero-eyebrow" data-reveal>
+        <span class="hero-eyebrow__dot" aria-hidden="true"></span>
+        {locale === 'es' ? 'Disponible para nuevos proyectos' : 'Available for new projects'}
+      </p>
       <h1 class="display-tight font-display text-[17vw] uppercase leading-[0.92] md:text-[12.5vw]">
         <span class="block" data-reveal-word>{t.hero.line1}</span>
         <span class="block pl-[8vw] text-accent" data-reveal-word>{t.hero.line2}</span>
@@ -40,12 +46,17 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       </h1>
     </div>
 
-    <div class="mx-auto flex w-full max-w-[1400px] flex-col gap-8 pb-10 md:flex-row md:items-end md:justify-between">
+    <div class="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-8 pb-10 md:flex-row md:items-end md:justify-between">
       <p class="max-w-md text-base text-gray md:text-lg" data-reveal data-delay="0.5">{t.hero.subtitle}</p>
       <div class="flex items-center gap-4" data-reveal data-delay="0.6">
         <a href={lp('/cotizar')} data-magnetic="0.4" class="rounded-full bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-accent">{t.hero.cta}</a>
         <a href={lp('/trabajos')} data-magnetic="0.4" class="rounded-full border border-line px-7 py-3.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
       </div>
+    </div>
+
+    <div class="hero-scroll hidden md:flex" aria-hidden="true">
+      <span>{locale === 'es' ? 'Scroll' : 'Scroll'}</span>
+      <span class="hero-scroll__line"></span>
     </div>
   </section>
 
@@ -174,6 +185,12 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 
       <!-- Columna izquierda: números -->
       <div class="stats-section__left">
+        <div class="stats-section__heading" data-reveal>
+          <p class="stats-section__kicker">{locale === 'es' ? '— En números' : '— By the numbers'}</p>
+          <h2 class="stats-section__heading-title display-tight">
+            {locale === 'es' ? 'Resultados, no promesas.' : 'Results, not promises.'}
+          </h2>
+        </div>
         <div class="stats-grid">
           {[
             { num: 15, suffix: '+', lbl: locale === 'es' ? 'Proyectos entregados' : 'Delivered projects' },
