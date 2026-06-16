@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
 import ParticleSphere from '../ParticleSphere.astro';
@@ -6,6 +7,17 @@ import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
+
+import imgStudio from '../../assets/categories/studio.webp';
+import imgWorksBg from '../../assets/categories/team.webp';
+import logoChacha from '../../assets/logos/chachapollo.webp';
+import logoJdcargo from '../../assets/logos/jdcargo.webp';
+import logoAracnida from '../../assets/logos/aracnida.webp';
+import logoTemplo from '../../assets/logos/templo-maipu.webp';
+import logoBell from '../../assets/logos/bell-college.webp';
+import logoSuperlunch from '../../assets/logos/superlunch.webp';
+
+const clientLogos = [logoChacha, logoJdcargo, logoAracnida, logoTemplo, logoBell, logoSuperlunch];
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -123,7 +135,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 
   <!-- ════ TRABAJOS — intro "Our Works" ════════════════════════════ -->
   <section class="works-intro">
-    <div class="works-intro__bg"></div>
+    <div class="works-intro__bg" style={`background-image:url(${imgWorksBg.src})`}></div>
     <div class="works-intro__scrim"></div>
     <div class="works-intro__content">
       <p class="works-intro__kicker">
@@ -213,6 +225,54 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
         <ParticleSphere />
       </div>
 
+    </div>
+  </section>
+
+  <!-- ════ MURO DE LOGOS — marcas que confían ══════════════════════ -->
+  <section class="logos-wall">
+    <div class="logos-wall__inner">
+      <p class="logos-wall__label" data-reveal>
+        {locale === 'es' ? 'Marcas que ya confiaron en nosotros' : 'Brands that already trusted us'}
+      </p>
+      <div class="logos-wall__row" data-reveal data-delay="0.1">
+        {clientLogos.map((l) => (
+          <span class="logos-wall__item">
+            <img src={l.src} alt="" loading="lazy" decoding="async" />
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ STUDIO — teaser con foto + manifiesto ═══════════════════ -->
+  <section class="studio rule">
+    <div class="studio__inner">
+      <div class="studio__media" data-reveal>
+        <Image
+          src={imgStudio}
+          alt={locale === 'es' ? 'Equipo BrandUp trabajando' : 'BrandUp team at work'}
+          class="studio__img"
+          widths={[600, 1000, 1400]}
+          sizes="(max-width: 900px) 100vw, 600px"
+        />
+        <span class="studio__badge">Santiago · Chile</span>
+      </div>
+      <div class="studio__text">
+        <p class="studio__kicker">{locale === 'es' ? '— El estudio' : '— The studio'}</p>
+        <h2 class="studio__title display-tight" data-reveal-word>
+          {locale === 'es'
+            ? 'Tecnología y publicidad, trabajando juntas.'
+            : 'Technology and advertising, working together.'}
+        </h2>
+        <p class="studio__desc" data-reveal data-delay="0.1">
+          {locale === 'es'
+            ? 'No somos una fábrica de sitios web ni una agencia de humo. Somos un equipo pequeño y senior, obsesionado con que cada peso que inviertes se note en tu negocio.'
+            : 'We are not a website factory or a smoke-and-mirrors agency. We are a small, senior team obsessed with making every peso you invest show up in your business.'}
+        </p>
+        <a href={lp('/nosotros')} data-magnetic="0.3" class="btn-primary">
+          {locale === 'es' ? 'Conoce al equipo' : 'Meet the team'} →
+        </a>
+      </div>
     </div>
   </section>
 
