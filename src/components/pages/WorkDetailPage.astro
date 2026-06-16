@@ -22,8 +22,17 @@ const title = `${p.client} — ${t.meta.work.title}`;
 
   <!-- Cover -->
   <section class="work-cover" style={`background:${p.gradient}`}>
+    {p.cover && (
+      <Image
+        src={p.cover}
+        alt={p.client}
+        class="work-cover__bg-img"
+        widths={[800, 1400, 1920]}
+        sizes="100vw"
+      />
+    )}
     <div class="work-cover__scrim"></div>
-    {p.logo && (
+    {!p.cover && p.logo && (
       <div class="work-cover__logo" data-parallax="-12">
         <Image src={p.logo} alt={`Logo ${p.client}`} class="max-h-[30%] w-auto max-w-[40%] rounded-xl object-contain opacity-90" widths={[320, 480]} />
       </div>
@@ -95,10 +104,22 @@ const title = `${p.client} — ${t.meta.work.title}`;
   min-height: 64svh;
   overflow: hidden;
 }
+.work-cover__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
 .work-cover__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, #0d0d0d 0%, rgba(13,13,13,0.3) 45%, transparent 100%);
+  z-index: 1;
+  background: linear-gradient(to top, #0d0d0d 0%, rgba(13,13,13,0.45) 50%, rgba(13,13,13,0.15) 100%);
 }
 .work-cover__logo {
   position: absolute;
@@ -109,7 +130,7 @@ const title = `${p.client} — ${t.meta.work.title}`;
 }
 .work-cover__inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 1400px;
   width: 100%;
   margin-inline: auto;
