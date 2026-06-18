@@ -294,6 +294,89 @@ function initMagnetic() {
   });
 }
 
+// ── Hero arrow cursor — spring physics + squash & stretch ──────────
+let heroCursorCleanup: (() => void) | null = null;
+
+function initHeroCursor() {
+  heroCursorCleanup?.();
+  heroCursorCleanup = null;
+
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (reducedMotion()) return;
+  const section = document.querySelector<HTMLElement>('.hero-video-section');
+  const cursor = document.getElementById('hero-cursor');
+  if (!section || !cursor) return;
+
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+  let mx = 0, my = 0;            // objetivo (mouse)
+  let x = 0, y = 0;             // posición de la flecha (estela suave)
+  let px = 0, py = 0;          // posición previa → velocidad real
+  let angle = -45;            // ángulo actual (grados); reposo: arriba-derecha
+  let stretch = 1, squash = 1;
+  let primed = false;
+  let raf = 0;
+
+  const FOLLOW = 0.18;  // inercia del seguimiento (estela). Más bajo = más cola
+
+  const tick = () => {
+    // Seguimiento suave hacia el mouse: estela con inercia, sin rebote/wobble
+    x = lerp(x, mx, FOLLOW);
+    y = lerp(y, my, FOLLOW);
+
+    // Velocidad real = desplazamiento de la flecha (no del mouse directo → más suave)
+    const dx = x - px;
+    const dy = y - py;
+    px = x; py = y;
+
+    const speed = Math.hypot(dx, dy);
+    const t = Math.min(speed / 18, 1); // normalizar (18px/frame ≈ máximo)
+
+    // La flecha apunta hacia donde viaja (interpolación por camino corto)
+    if (speed > 0.4) {
+      const target = Math.atan2(dy, dx) * (180 / Math.PI);
+      let d = ((target - angle + 540) % 360) - 180;
+      angle += d * 0.25;
+    }
+
+    // Squash & stretch: se estira en el eje de movimiento, se aplana perpendicular
+    stretch = lerp(stretch, 1 + t * 0.45, 0.18);
+    squash  = lerp(squash, 1 - t * 0.24, 0.18);
+
+    cursor.style.transform =
+      `translate(${x}px, ${y}px) rotate(${angle}deg) scale(${stretch}, ${squash})`;
+
+    raf = requestAnimationFrame(tick);
+  };
+
+  const prime = (e: MouseEvent) => {
+    mx = e.clientX; my = e.clientY;
+    if (!primed) { x = px = mx; y = py = my; primed = true; }
+  };
+  const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
+  const onEnter = (e: MouseEvent) => {
+    prime(e);
+    cursor.classList.add('is-on');
+    section.classList.add('hide-native');
+  };
+  const onLeave = () => {
+    cursor.classList.remove('is-on');
+    section.classList.remove('hide-native');
+  };
+
+  section.addEventListener('mouseenter', onEnter);
+  section.addEventListener('mousemove', onMove);
+  section.addEventListener('mouseleave', onLeave);
+  raf = requestAnimationFrame(tick);
+
+  heroCursorCleanup = () => {
+    cancelAnimationFrame(raf);
+    section.removeEventListener('mouseenter', onEnter);
+    section.removeEventListener('mousemove', onMove);
+    section.removeEventListener('mouseleave', onLeave);
+  };
+}
+
 // ── Master setup ───────────────────────────────────────────────────
 function setup() {
   if (reducedMotion()) {
@@ -319,6 +402,7 @@ function setup() {
   initShowreelLightbox();
   initScrollProgress();
   initMagnetic();
+  initHeroCursor();
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────

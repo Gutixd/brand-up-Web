@@ -1199,6 +1199,38 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   100% { transform: scaleY(1); opacity: 0; }
 }
 
+/* ── Hero arrow cursor (física, solo sobre el video) ───────────────── */
+.hero-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  will-change: transform;
+}
+.hero-cursor.is-on { opacity: 1; }
+.hero-cursor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 3px 11px rgba(240, 94, 35, 0.55));
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-video-section.hide-native,
+  .hero-video-section.hide-native * { cursor: none; }
+}
+@media (hover: none), (pointer: coarse) {
+  .hero-cursor { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cursor { display: none; }
+}
+
 /* ── Hero eyebrow with pulsing availability dot ──────────────────── */
 .hero-eyebrow {
   display: inline-flex;
