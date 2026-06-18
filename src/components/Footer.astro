@@ -12,75 +12,257 @@ const lp = (p: string) => localePath(locale, p);
 const year = new Date().getFullYear();
 
 const nav = [
-  { label: t.nav.home, href: '/' },
+  { label: t.nav.home,     href: '/' },
   { label: t.nav.services, href: '/servicios' },
-  { label: t.nav.work, href: '/trabajos' },
-  { label: t.nav.about, href: '/nosotros' },
-  { label: t.nav.contact, href: '/contacto' },
+  { label: t.nav.work,     href: '/trabajos' },
+  { label: t.nav.about,    href: '/nosotros' },
+  { label: t.nav.contact,  href: '/contacto' },
 ];
 ---
 
-<footer class="border-t border-line bg-ink">
-  <div class="mx-auto max-w-7xl px-5 py-10 md:px-8 md:py-16">
+<footer class="site-footer">
 
-    <!-- Logo + tagline + CTA — fila completa arriba -->
-    <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between md:mb-12">
-      <div>
-        <a href={lp('/')} aria-label="BrandUp"><Logo /></a>
-        <p class="mt-2 text-sm text-gray">{t.footer.tagline}</p>
-      </div>
-      <a
-        href={lp('/cotizar')}
-        class="self-start rounded-full border border-accent px-5 py-2.5 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-ink sm:self-auto"
-      >
-        {t.nav.quote}
+  <!-- ── Top band: CTA ──────────────────────────────────────── -->
+  <div class="site-footer__cta-band">
+    <div class="site-footer__cta-inner">
+      <p class="site-footer__cta-label">
+        {locale === 'es' ? '¿Tienes un proyecto en mente?' : 'Have a project in mind?'}
+      </p>
+      <a href={lp('/cotizar')} class="site-footer__cta-btn">
+        {locale === 'es' ? 'Hablemos →' : 'Let\'s talk →'}
       </a>
     </div>
-
-    <!-- Nav + Contacto en 2 columnas en móvil, 3 en desktop -->
-    <div class="grid grid-cols-2 gap-8 md:grid-cols-3">
-
-      <div>
-        <h3 class="font-display text-xs font-bold uppercase tracking-widest text-paper">{t.footer.nav}</h3>
-        <ul class="mt-3 space-y-1.5">
-          {nav.map((item) => (
-            <li><a href={lp(item.href)} class="text-sm text-gray transition-colors hover:text-accent">{item.label}</a></li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h3 class="font-display text-xs font-bold uppercase tracking-widest text-paper">{t.footer.contact}</h3>
-        <ul class="mt-3 space-y-1.5 text-sm text-gray">
-          <li>{SITE.city}</li>
-          <li><a href={wa('Hola BrandUp, quiero información')} class="transition-colors hover:text-accent" target="_blank" rel="noopener">{SITE.phone}</a></li>
-          <li><a href={`mailto:${SITE.email}`} class="transition-colors hover:text-accent">{SITE.email}</a></li>
-        </ul>
-        <h3 class="mt-5 font-display text-xs font-bold uppercase tracking-widest text-paper">{t.footer.social}</h3>
-        <ul class="mt-3 flex gap-4 text-sm text-gray">
-          <li><a href={SITE.instagram} target="_blank" rel="noopener" class="transition-colors hover:text-accent">Instagram</a></li>
-          <li><a href={SITE.tiktok} target="_blank" rel="noopener" class="transition-colors hover:text-accent">TikTok</a></li>
-        </ul>
-      </div>
-
-      <!-- Idioma solo visible en md+ o en su propia celda si hay espacio -->
-      <div class="col-span-2 md:col-span-1">
-        <h3 class="font-display text-xs font-bold uppercase tracking-widest text-paper">{t.footer.language}</h3>
-        <p class="mt-3 text-sm">
-          <a href={altPath(locale, Astro.url.pathname)} class="text-gray transition-colors hover:text-accent">{t.lang.switch}</a>
-        </p>
-      </div>
-
-    </div>
   </div>
 
-  <div class="border-t border-line">
-    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-5 py-4 text-xs text-gray md:flex-row md:px-8">
-      <span>© {year} {SITE.legalName} — {t.footer.rights}</span>
-      <span class="flex gap-5">
-        <a href={lp('/terminos')} class="transition-colors hover:text-accent">{t.legal.terms}</a>
-        <a href={lp('/privacidad')} class="transition-colors hover:text-accent">{t.legal.privacy}</a>
-      </span>
+  <!-- ── Main grid ──────────────────────────────────────────── -->
+  <div class="site-footer__body">
+
+    <!-- Col 1: Logo + tagline -->
+    <div class="site-footer__brand">
+      <a href={lp('/')} aria-label="BrandUp inicio" class="site-footer__logo">
+        <Logo />
+      </a>
+      <p class="site-footer__tagline">{t.footer.tagline}</p>
+      <div class="site-footer__socials">
+        <a href={SITE.instagram} target="_blank" rel="noopener" class="site-footer__social-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+          Instagram
+        </a>
+        <a href={SITE.tiktok} target="_blank" rel="noopener" class="site-footer__social-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+          </svg>
+          TikTok
+        </a>
+      </div>
     </div>
+
+    <!-- Col 2: Navegación -->
+    <div class="site-footer__col">
+      <h3 class="site-footer__col-title">{t.footer.nav}</h3>
+      <ul class="site-footer__links">
+        {nav.map((item) => (
+          <li><a href={lp(item.href)} class="site-footer__link">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Col 3: Contacto -->
+    <div class="site-footer__col">
+      <h3 class="site-footer__col-title">{t.footer.contact}</h3>
+      <ul class="site-footer__links">
+        <li class="site-footer__link site-footer__link--plain">{SITE.city}</li>
+        <li>
+          <a href={wa('Hola BrandUp, quiero información')} class="site-footer__link" target="_blank" rel="noopener">
+            {SITE.phone}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${SITE.email}`} class="site-footer__link">{SITE.email}</a>
+        </li>
+      </ul>
+      <h3 class="site-footer__col-title" style="margin-top:1.5rem">{t.footer.language}</h3>
+      <a href={altPath(locale, Astro.url.pathname)} class="site-footer__link">{t.lang.switch}</a>
+    </div>
+
   </div>
+
+  <!-- ── Bottom bar ─────────────────────────────────────────── -->
+  <div class="site-footer__bottom">
+    <span>© {year} {SITE.legalName} — {t.footer.rights}</span>
+    <span class="site-footer__legal-links">
+      <a href={lp('/terminos')} class="site-footer__link">{t.legal.terms}</a>
+      <a href={lp('/privacidad')} class="site-footer__link">{t.legal.privacy}</a>
+    </span>
+  </div>
+
 </footer>
+
+<style>
+/* ── Footer shell ──────────────────────────────────────────── */
+.site-footer {
+  background: var(--color-ink);
+  color: var(--color-gray);
+  border-top: 1px solid var(--color-line);
+}
+
+/* ── CTA band ─────────────────────────────────────────────── */
+.site-footer__cta-band {
+  border-bottom: 1px solid var(--color-line);
+}
+.site-footer__cta-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+@media (min-width: 640px) {
+  .site-footer__cta-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2rem;
+  }
+}
+.site-footer__cta-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--color-paper);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.site-footer__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-accent);
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.site-footer__cta-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* ── Main body grid ────────────────────────────────────────── */
+.site-footer__body {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem 2rem;
+}
+@media (min-width: 768px) {
+  .site-footer__body {
+    grid-template-columns: 1.8fr 1fr 1fr;
+    padding: 4rem 2rem;
+    gap: 2rem 4rem;
+  }
+}
+
+/* ── Brand column ──────────────────────────────────────────── */
+.site-footer__brand {
+  grid-column: 1 / -1;
+}
+@media (min-width: 768px) {
+  .site-footer__brand {
+    grid-column: 1;
+  }
+}
+.site-footer__logo {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+.site-footer__tagline {
+  font-size: 0.875rem;
+  color: var(--color-gray);
+  max-width: 26ch;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+.site-footer__socials {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.site-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8125rem;
+  color: var(--color-gray);
+  transition: color 0.18s;
+}
+.site-footer__social-link:hover {
+  color: var(--color-accent);
+}
+
+/* ── Nav / contact columns ─────────────────────────────────── */
+.site-footer__col-title {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  margin-bottom: 0.875rem;
+}
+.site-footer__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.site-footer__link {
+  font-size: 0.875rem;
+  color: var(--color-gray);
+  transition: color 0.18s;
+  text-decoration: none;
+}
+.site-footer__link:hover {
+  color: var(--color-accent);
+}
+.site-footer__link--plain {
+  pointer-events: none;
+}
+
+/* ── Bottom bar ────────────────────────────────────────────── */
+.site-footer__bottom {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: color-mix(in srgb, var(--color-gray) 70%, transparent);
+}
+@media (min-width: 640px) {
+  .site-footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+  }
+}
+.site-footer__legal-links {
+  display: flex;
+  gap: 1.25rem;
+}
+</style>

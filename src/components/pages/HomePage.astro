@@ -1,23 +1,11 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
-import ParticleSphere from '../ParticleSphere.astro';
-import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
-import imgStudio from '../../assets/categories/studio.webp';
 import imgWorksBg from '../../assets/categories/team.webp';
-import logoChacha from '../../assets/logos/chachapollo.webp';
-import logoJdcargo from '../../assets/logos/jdcargo.webp';
-import logoAracnida from '../../assets/logos/aracnida.webp';
-import logoTemplo from '../../assets/logos/templo-maipu.webp';
-import logoBell from '../../assets/logos/bell-college.webp';
-import logoSuperlunch from '../../assets/logos/superlunch.webp';
-
-const clientLogos = [logoChacha, logoJdcargo, logoAracnida, logoTemplo, logoBell, logoSuperlunch];
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -37,38 +25,20 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
 
-  <!-- ════ HERO ════════════════════════════════════════════════════ -->
-  <section class="relative flex min-h-[100svh] flex-col justify-between overflow-hidden px-5 pt-[88px] md:px-8">
-    <div class="hero-aurora" aria-hidden="true"></div>
-
-    <div class="relative z-10 mx-auto flex w-full max-w-[1400px] items-center justify-between pt-6 text-xs font-medium uppercase tracking-[0.14em] text-gray">
-      <span data-reveal>{t.hero.location}</span>
-      <span data-reveal data-delay="0.1">©{new Date().getFullYear()}</span>
-    </div>
-
-    <div class="relative z-10 mx-auto w-full max-w-[1400px]">
-      <p class="hero-eyebrow" data-reveal>
-        <span class="hero-eyebrow__dot" aria-hidden="true"></span>
-        {locale === 'es' ? 'Disponible para nuevos proyectos' : 'Available for new projects'}
-      </p>
-      <h1 class="display-tight font-display text-[17vw] uppercase leading-[0.92] md:text-[12.5vw]">
-        <span class="block" data-reveal-word>{t.hero.line1}</span>
-        <span class="block pl-[8vw] text-accent" data-reveal-word>{t.hero.line2}</span>
-        <span class="block" data-reveal-word>{t.hero.line3}</span>
-      </h1>
-    </div>
-
-    <div class="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-8 pb-10 md:flex-row md:items-end md:justify-between">
-      <p class="max-w-md text-base text-gray md:text-lg" data-reveal data-delay="0.5">{t.hero.subtitle}</p>
-      <div class="flex items-center gap-4" data-reveal data-delay="0.6">
-        <a href={lp('/cotizar')} data-magnetic="0.4" class="rounded-full bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-accent">{t.hero.cta}</a>
-        <a href={lp('/trabajos')} data-magnetic="0.4" class="rounded-full border border-line px-7 py-3.5 text-sm font-medium transition-colors hover:border-accent hover:text-accent">{t.hero.cta2}</a>
-      </div>
-    </div>
-
-    <div class="hero-scroll hidden md:flex" aria-hidden="true">
+  <!-- ════ HERO VIDEO ══════════════════════════════════════════════ -->
+  <section class="hero-video-section">
+    <video
+      class="hero-video__bg"
+      src="/videos/showreel.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+    <div class="hero-video__scrim" aria-hidden="true"></div>
+    <div class="hero-video__scroll" aria-hidden="true">
       <span>{locale === 'es' ? 'Scroll' : 'Scroll'}</span>
-      <span class="hero-scroll__line"></span>
+      <span class="hero-video__scroll-line"></span>
     </div>
   </section>
 
@@ -83,53 +53,6 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
           —&nbsp;
         </span>
       ))}
-    </div>
-  </section>
-
-  <!-- ════ SHOWREEL — pantalla completa ════════════════════════════ -->
-  <div class="showreel-section" id="showreel-trigger" data-reveal>
-    <video
-      class="showreel-inner"
-      id="showreel-bg"
-      src="/videos/showreel.mp4"
-      autoplay
-      muted
-      loop
-      playsinline
-    ></video>
-  </div>
-
-  <!-- ════ LIGHTBOX DEL SHOWREEL ════════════════════════════════════ -->
-  <div class="showreel-lightbox" id="showreel-lightbox" aria-hidden="true">
-    <div class="showreel-lightbox__wrap">
-      <video
-        class="showreel-lightbox__video"
-        id="showreel-modal-video"
-        src="/videos/showreel.mp4"
-        playsinline
-      ></video>
-    </div>
-  </div>
-
-  <!-- ════ STATEMENT — centrado, post-its, swap reversible ═════════ -->
-  <!--
-    FOTO DE FONDO: cuando la tengas, añade al div.statement-bg:
-      style="background-image:url('/img/tu-foto.jpg')"
-    (ya queda sutil al 10% de opacidad).
-  -->
-  <section class="statement-section rule">
-    <div class="statement-bg"></div>
-    <span class="statement-ghost" aria-hidden="true">{locale === 'es' ? 'Páginas Web' : 'Web Design'}</span>
-
-    <div class="statement-inner">
-      <div class="statement-texts">
-        <p class="statement-text--a display-tight font-display text-[clamp(1.8rem,4.5vw,3.6rem)] leading-[1.08]">
-          {t.statement.text}
-        </p>
-        <p class="statement-text--b display-tight font-display text-[clamp(1.8rem,4.5vw,3.6rem)] leading-[1.08]">
-          {t.statement.text2}
-        </p>
-      </div>
     </div>
   </section>
 
@@ -161,7 +84,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
   </section>
 
-  <!-- ════ TRABAJOS — videos full-screen (sticky, sin nombres) ═════ -->
+  <!-- ════ TRABAJOS — videos full-screen ════════════════════════════ -->
   <div class="works-videos">
     {featured.map((p, i) => (
       <a
@@ -190,132 +113,6 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       </a>
     </div>
   </div>
-
-  <!-- ════ STATS + ESFERA 3D ══════════════════════════════════════ -->
-  <section class="stats-section rule">
-    <div class="stats-section__inner">
-
-      <!-- Columna izquierda: números -->
-      <div class="stats-section__left">
-        <div class="stats-section__heading" data-reveal>
-          <p class="stats-section__kicker">{locale === 'es' ? '— En números' : '— By the numbers'}</p>
-          <h2 class="stats-section__heading-title display-tight">
-            {locale === 'es' ? 'Resultados, no promesas.' : 'Results, not promises.'}
-          </h2>
-        </div>
-        <div class="stats-grid">
-          {[
-            { num: 15, suffix: '+', lbl: locale === 'es' ? 'Proyectos entregados' : 'Delivered projects' },
-            { num: 6,  suffix: '',  lbl: locale === 'es' ? 'Industrias' : 'Industries' },
-            { num: 1,   suffix: 'M+', lbl: locale === 'es' ? 'Views en un reel' : 'Views on a reel' },
-            { num: 2,  suffix: '',  lbl: locale === 'es' ? 'Países alcanzados' : 'Countries reached' },
-          ].map((s, i) => (
-            <div class="stat-item" data-reveal data-delay={`${i * 0.1}`}>
-              <span class="stat-val display-tight block font-display text-5xl md:text-7xl" data-counter={s.num} data-suffix={s.suffix}>
-                {s.num}{s.suffix}
-              </span>
-              <span class="stat-lbl">{s.lbl}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Columna derecha: esfera 3D -->
-      <div class="stats-section__right">
-        <ParticleSphere />
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ════ MURO DE LOGOS — marcas que confían ══════════════════════ -->
-  <section class="logos-wall">
-    <div class="logos-wall__inner">
-      <p class="logos-wall__label" data-reveal>
-        {locale === 'es' ? 'Marcas que ya confiaron en nosotros' : 'Brands that already trusted us'}
-      </p>
-      <div class="logos-wall__row" data-reveal data-delay="0.1">
-        {clientLogos.map((l) => (
-          <span class="logos-wall__item">
-            <img src={l.src} alt="" loading="lazy" decoding="async" />
-          </span>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ════ STUDIO — teaser con foto + manifiesto ═══════════════════ -->
-  <section class="studio rule">
-    <div class="studio__inner">
-      <div class="studio__media" data-reveal>
-        <Image
-          src={imgStudio}
-          alt={locale === 'es' ? 'Equipo BrandUp trabajando' : 'BrandUp team at work'}
-          class="studio__img"
-          widths={[600, 1000, 1400]}
-          sizes="(max-width: 900px) 100vw, 600px"
-        />
-        <span class="studio__badge">Santiago · Chile</span>
-      </div>
-      <div class="studio__text">
-        <p class="studio__kicker">{locale === 'es' ? '— El estudio' : '— The studio'}</p>
-        <h2 class="studio__title display-tight" data-reveal-word>
-          {locale === 'es'
-            ? 'Tecnología y publicidad, trabajando juntas.'
-            : 'Technology and advertising, working together.'}
-        </h2>
-        <p class="studio__desc" data-reveal data-delay="0.1">
-          {locale === 'es'
-            ? 'No somos una fábrica de sitios web ni una agencia de humo. Somos un equipo pequeño y senior, obsesionado con que cada peso que inviertes se note en tu negocio.'
-            : 'We are not a website factory or a smoke-and-mirrors agency. We are a small, senior team obsessed with making every peso you invest show up in your business.'}
-        </p>
-        <a href={lp('/nosotros')} data-magnetic="0.3" class="btn-primary">
-          {locale === 'es' ? 'Conoce al equipo' : 'Meet the team'} →
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════ SERVICIOS — acordeón (hover/tap para expandir) ══════════ -->
-  <section class="svc-accordion">
-    <div class="svc-accordion__header">
-      <p class="svc-accordion__kicker">{locale === 'es' ? '— Lo que hacemos' : '— What we do'}</p>
-      <h2 class="svc-accordion__title display-tight" data-split-chars>
-        {locale === 'es' ? 'Encuentra el servicio que necesitas' : 'Find the service you need'}
-      </h2>
-      <p class="svc-accordion__sub">
-        {locale === 'es'
-          ? 'Una agencia creativa y digital para cada etapa de tu marca.'
-          : 'A creative digital agency for every stage of your brand.'}
-      </p>
-    </div>
-
-    <ul class="svc-list">
-      {SERVICES.map((s, i) => (
-        <li class="svc-row" data-svc-row>
-          <button class="svc-row__head" type="button" aria-expanded="false">
-            <span class="svc-row__tag">{pick(s.tag, locale)}</span>
-            <span class="svc-row__title">{pick(s.title, locale)}</span>
-            <span class="svc-row__num">{String(i + 1).padStart(2, '0')}.</span>
-            <span class="svc-row__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-                <line x1="12" y1="5" x2="12" y2="19" class="svc-row__icon-v" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </button>
-          <div class="svc-row__body">
-            <div class="svc-row__body-inner">
-              <p class="svc-row__desc">{pick(s.desc, locale)}</p>
-              <a href={lp(`/servicios/${s.slug}`)} class="svc-row__more">
-                <span>↳</span> {locale === 'es' ? 'Más información' : 'More information'}
-              </a>
-            </div>
-          </div>
-        </li>
-      ))}
-    </ul>
-  </section>
 
   <!-- ════ TESTIMONIOS ══════════════════════════════════════════════ -->
   <section class="rule">
