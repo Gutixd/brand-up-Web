@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import IntroOverlay from '../IntroOverlay.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
 import { PROJECTS } from '../../data/projects';
 import { TESTIMONIALS } from '../../data/testimonials';
@@ -24,6 +25,9 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 ---
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
+
+  <!-- ════ INTRO CINEMÁTICA (una sola vez por sesión) ══════════════ -->
+  <IntroOverlay locale={locale} />
 
   <!-- ════ HERO VIDEO ══════════════════════════════════════════════ -->
   <section class="hero-video-section">

@@ -1231,6 +1231,91 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   .hero-cursor { display: none; }
 }
 
+/* ── Intro cinemática (preloader una sola vez, estilo McCann) ───────── */
+.intro { display: none; }
+.js .intro {
+  display: grid;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  place-items: center;
+  overflow: hidden;
+  background: #f4f4f2;           /* Fase 1: claro */
+  /* sin transición en background → la inversión de color es instantánea */
+}
+.intro.is-dark { background: #0d0d0d; }   /* Fase 3: negro instantáneo */
+
+.intro__stage {
+  text-align: center;
+  padding: 0 5vw;
+}
+.intro__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+  font-size: clamp(3rem, 13vw, 12rem);
+  color: #0d0d0d;               /* Fase 1: negro */
+  transform: scale(22);         /* Fase 1: gigante (solo se ven bordes) */
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.intro.is-dark .intro__title { color: #f8f8f8; }   /* Fase 3: blanco */
+.intro__up { color: var(--color-accent); }         /* "Up" naranja en ambas fases */
+
+.intro__subtitle {
+  margin: 1.5rem 0 0;
+  font-size: clamp(0.68rem, 1.4vw, 0.95rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.72);
+  opacity: 0;
+}
+
+.intro__ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #f8f8f8;
+}
+.intro__burger {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+}
+.intro__burger span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: currentColor;
+}
+.intro__socials {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  display: inline-flex;
+  gap: 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+html.intro-lock,
+html.intro-lock body { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .intro { display: none; }
+}
+
 /* ── Hero eyebrow with pulsing availability dot ──────────────────── */
 .hero-eyebrow {
   display: inline-flex;

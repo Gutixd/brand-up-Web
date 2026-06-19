@@ -377,6 +377,79 @@ function initHeroCursor() {
   };
 }
 
+// ── Intro cinemática — preloader una sola vez por sesión (McCann) ──
+function initIntro() {
+  const intro = document.getElementById('intro');
+  if (!intro) return; // solo existe en home
+
+  const unlock = () => {
+    document.documentElement.classList.remove('intro-lock');
+    lenis?.start();
+  };
+  const skip = () => { intro.remove(); unlock(); };
+
+  // Saltar si ya se vio en esta sesión o si el usuario prefiere menos movimiento
+  let seen = false;
+  try { seen = sessionStorage.getItem('bu_intro_seen') === '1'; } catch { /* storage bloqueado */ }
+  if (seen || reducedMotion()) { skip(); return; }
+
+  const title = intro.querySelector<HTMLElement>('.intro__title');
+  const subtitle = intro.querySelector<HTMLElement>('.intro__subtitle');
+  const ui = intro.querySelectorAll<HTMLElement>('.intro__ui > *');
+  if (!title || !subtitle) { skip(); return; }
+
+  // Bloquear scroll durante la intro
+  document.documentElement.classList.add('intro-lock');
+  lenis?.stop();
+  window.scrollTo(0, 0);
+
+  // Estado inicial (Fase 1) — se aplica ya, aunque la timeline arranque luego
+  gsap.set(title, { scale: 22, transformOrigin: '50% 50%' });
+  gsap.set(subtitle, { y: 26, opacity: 0 });
+  gsap.set(ui, { opacity: 0, y: -8 });
+
+  // Construir y reproducir la coreografía. Solo cuando el documento está visible:
+  // con lagSmoothing(0) (que usa Lenis), arrancar en una pestaña oculta haría
+  // que GSAP saltara al final al volver el foco. Así se ve siempre desde la Fase 1.
+  let started = false;
+  const play = () => {
+    if (started) return;
+    started = true;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        intro.remove();
+        unlock();
+        try { sessionStorage.setItem('bu_intro_seen', '1'); } catch { /* noop */ }
+      },
+    });
+
+    // Fase 2 — zoom-out cinemático: empieza rápido y desacelera (expo.out)
+    tl.to(title, { scale: 1, duration: 1.8, ease: 'expo.out' }, 0.25);
+
+    // Fase 3 — inversión brusca de color + subtítulo, justo al acomodarse
+    tl.add(() => intro.classList.add('is-dark'), 1.9);
+    tl.to(subtitle, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 1.92);
+
+    // Fase 4 — UI (hamburguesa + sociales) con fade-in escalonado
+    tl.to(ui, { opacity: 1, y: 0, duration: 0.5, stagger: 0.14, ease: 'power2.out' }, 2.15);
+
+    // Salida — el overlay se desvanece y revela el hero de video
+    tl.to(intro, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 3.05);
+  };
+
+  if (document.visibilityState === 'visible') {
+    play();
+  } else {
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      document.removeEventListener('visibilitychange', onVisible);
+      play();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+  }
+}
+
 // ── Master setup ───────────────────────────────────────────────────
 function setup() {
   if (reducedMotion()) {
@@ -388,6 +461,7 @@ function setup() {
   }
 
   initLenis();
+  initIntro();
   initWordReveals();
   initFadeReveals();
   initParallax();
