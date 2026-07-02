@@ -377,6 +377,132 @@ function initHeroCursor() {
   };
 }
 
+// ── Reveal de imágenes — clip + zoom-out (polaroids, etc.) ─────────
+function initImgReveals() {
+  document.querySelectorAll<HTMLElement>('[data-img-reveal]').forEach((el) => {
+    const img = el.querySelector('img');
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: el, start: 'top 88%' },
+    });
+    tl.fromTo(el,
+      { clipPath: 'inset(18% 12% 18% 12%)', opacity: 0 },
+      { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 1.1, ease: 'power4.out' },
+      0,
+    );
+    if (img) tl.fromTo(img, { scale: 1.35 }, { scale: 1, duration: 1.5, ease: 'power3.out' }, 0);
+  });
+}
+
+// ── Skew por velocidad de scroll (exagerado, estilo Locomotive) ────
+function initVelocitySkew() {
+  const els = document.querySelectorAll<HTMLElement>('[data-skew]');
+  if (!els.length) return;
+  const proxy = { skew: 0 };
+  const clamp = gsap.utils.clamp(-7, 7);
+  ScrollTrigger.create({
+    start: 0,
+    end: 'max',
+    onUpdate(self) {
+      const v = clamp(self.getVelocity() / -350);
+      if (Math.abs(v) > Math.abs(proxy.skew)) {
+        proxy.skew = v;
+        gsap.to(proxy, {
+          skew: 0, duration: 0.9, ease: 'power3.out', overwrite: true,
+          onUpdate: () => els.forEach((el) => { el.style.transform = `skewY(${proxy.skew}deg)`; }),
+        });
+      }
+    },
+  });
+}
+
+// ── Servicios — preview de imagen que sigue al cursor ──────────────
+let svcPreviewCleanup: (() => void) | null = null;
+
+function initSvcPreview() {
+  svcPreviewCleanup?.();
+  svcPreviewCleanup = null;
+
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (reducedMotion()) return;
+  const rows = document.querySelectorAll<HTMLElement>('[data-svc-img]');
+  if (!rows.length) return;
+
+  const float = document.createElement('div');
+  float.className = 'svc-float';
+  const img = document.createElement('img');
+  img.alt = '';
+  float.appendChild(img);
+  document.body.appendChild(float);
+
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  let mx = 0, my = 0, x = 0, y = 0, px = 0;
+  let rot = 0, scale = 0, target = 0;
+  let raf = 0;
+
+  const tick = () => {
+    x = lerp(x, mx, 0.14);
+    y = lerp(y, my, 0.14);
+    const dx = x - px; px = x;
+    // Rota según la velocidad horizontal — la foto "cuelga" al moverse
+    rot = lerp(rot, Math.max(-14, Math.min(14, dx * 0.9)), 0.12);
+    scale = lerp(scale, target, 0.16);
+    float.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${scale})`;
+    raf = requestAnimationFrame(tick);
+  };
+
+  const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
+  window.addEventListener('mousemove', onMove);
+
+  const enters: Array<[HTMLElement, (e: MouseEvent) => void]> = [];
+  const leaves: Array<[HTMLElement, () => void]> = [];
+  rows.forEach((row) => {
+    const onEnter = (e: MouseEvent) => {
+      const src = row.dataset.svcImg;
+      if (src) img.src = src;
+      if (scale < 0.05) { mx = e.clientX; my = e.clientY; x = px = mx; y = my; }
+      target = 1;
+      float.classList.add('is-on');
+    };
+    const onLeave = () => { target = 0; float.classList.remove('is-on'); };
+    row.addEventListener('mouseenter', onEnter);
+    row.addEventListener('mouseleave', onLeave);
+    enters.push([row, onEnter]);
+    leaves.push([row, onLeave]);
+  });
+
+  raf = requestAnimationFrame(tick);
+  svcPreviewCleanup = () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener('mousemove', onMove);
+    enters.forEach(([r, f]) => r.removeEventListener('mouseenter', f));
+    leaves.forEach(([r, f]) => r.removeEventListener('mouseleave', f));
+    float.remove();
+  };
+}
+
+// ── Street strip — galería horizontal scrubbed (pin) ───────────────
+function initStreetStrip() {
+  const section = document.querySelector<HTMLElement>('.street');
+  const row = section?.querySelector<HTMLElement>('.street__row');
+  if (!section || !row) return;
+  const ghost = section.querySelector<HTMLElement>('.street__ghost');
+
+  const dist = () => Math.max(0, row.scrollWidth - window.innerWidth);
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top top',
+      end: () => `+=${dist() + 350}`,
+      pin: true,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+  tl.to(row, { x: () => -dist(), ease: 'none' }, 0);
+  // El texto fantasma se desliza en sentido contrario (parallax profundo)
+  if (ghost) tl.fromTo(ghost, { x: 80 }, { x: -300, ease: 'none' }, 0);
+}
+
 // ── Intro cinemática — preloader una sola vez por sesión (McCann) ──
 function initIntro() {
   const intro = document.getElementById('intro');
@@ -477,6 +603,10 @@ function setup() {
   initScrollProgress();
   initMagnetic();
   initHeroCursor();
+  initImgReveals();
+  initVelocitySkew();
+  initSvcPreview();
+  initStreetStrip();
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────

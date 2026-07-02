@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
 import { PROJECTS } from '../../data/projects';
+import { SERVICES } from '../../data/services';
 import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
@@ -12,6 +13,7 @@ interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
+const es = locale === 'es';
 
 const featured = PROJECTS.filter((p) => p.featured);
 const testimonials = TESTIMONIALS.map((x) => ({
@@ -21,7 +23,53 @@ const testimonials = TESTIMONIALS.map((x) => ({
   initials: x.initials,
 }));
 
-const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all work';
+const worksAllLabel = es ? 'Ver todos los trabajos' : 'View all work';
+
+// ── Ticker urbano ──────────────────────────────────────────────────
+const tickerWords = es
+  ? ['Branding', 'Contenido', 'Diseño Web', 'E-commerce', 'Publicidad', 'IA', 'Growth']
+  : ['Branding', 'Content', 'Web Design', 'E-commerce', 'Ads', 'AI', 'Growth'];
+const tickerBrand = es
+  ? ['Brand Up©', 'Santiago de Chile', 'Est. 2024', 'Hecho con calle']
+  : ['Brand Up©', 'Santiago, Chile', 'Est. 2024', 'Street-smart work'];
+
+// ── Servicios → imagen de preview flotante ─────────────────────────
+const svcImg: Record<string, string> = {
+  'diseno-web': '/images/urban/svc-web.jpg',
+  'ecommerce': '/images/urban/svc-ecommerce.jpg',
+  'branding': '/images/urban/svc-branding.jpg',
+  'contenido-reels': '/images/urban/svc-reels.jpg',
+  'publicidad-digital': '/images/urban/svc-ads.jpg',
+  'automatizaciones-ia': '/images/urban/svc-ia.jpg',
+  'marketing-growth': '/images/urban/svc-growth.jpg',
+};
+
+// ── Collage del manifiesto (polaroids con parallax) ────────────────
+const collage = [
+  { src: '/images/urban/col-team.jpg',     cap: es ? 'El equipo' : 'The team',     par: -16 },
+  { src: '/images/urban/col-camera.jpg',   cap: es ? 'El craft' : 'The craft',     par: -28 },
+  { src: '/images/urban/col-neon.jpg',     cap: es ? 'La energía' : 'The energy',  par: -10 },
+  { src: '/images/urban/col-sneakers.jpg', cap: es ? 'La calle' : 'The street',    par: -24 },
+  { src: '/images/urban/col-desk.jpg',     cap: es ? 'El estudio' : 'The studio',  par: -14 },
+];
+
+// ── Strip urbano horizontal ────────────────────────────────────────
+const streets = [
+  { src: '/images/urban/street-1.jpg', chip: es ? 'La ciudad' : 'The city' },
+  { src: '/images/urban/street-4.jpg', chip: es ? 'El equipo' : 'The team' },
+  { src: '/images/urban/street-3.jpg', chip: es ? 'La noche' : 'The night' },
+  { src: '/images/urban/street-6.jpg', chip: es ? 'El craft' : 'The craft' },
+  { src: '/images/urban/street-5.jpg', chip: es ? 'Las ideas' : 'The ideas' },
+  { src: '/images/urban/street-2.jpg', chip: es ? 'La escala' : 'The scale' },
+];
+
+// ── Stats ──────────────────────────────────────────────────────────
+const stats = [
+  { val: '15',  suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
+  { val: '267', suffix: 'K', prefix: '',  lbl: es ? 'Views en un reel' : 'Views on one reel' },
+  { val: '300', suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
+  { val: '100', suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
+];
 ---
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
@@ -40,8 +88,15 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       playsinline
     ></video>
     <div class="hero-video__scrim" aria-hidden="true"></div>
+
+    <!-- Créditos estilo film, discretos sobre el video -->
+    <div class="hero-credits" aria-hidden="true">
+      <span>Brand Up® — {es ? 'Agencia creativa digital' : 'Digital creative agency'}</span>
+      <span class="hero-credits__right">Stgo, Chile — Est. 2024</span>
+    </div>
+
     <div class="hero-video__scroll" aria-hidden="true">
-      <span>{locale === 'es' ? 'Scroll' : 'Scroll'}</span>
+      <span>Scroll</span>
       <span class="hero-video__scroll-line"></span>
     </div>
 
@@ -54,27 +109,164 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
     </div>
   </section>
 
+  <!-- ════ TICKER URBANO — doble banda cruzada ═════════════════════ -->
+  <section class="ticker" aria-hidden="true">
+    <div class="ticker__band ticker__band--accent">
+      <div class="marquee-track">
+        {[0, 1].map((copy) => (
+          <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {tickerWords.map((w) => (
+              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="ticker__band ticker__band--dark">
+      <div class="marquee-track marquee-track--reverse marquee-track--slow">
+        {[0, 1].map((copy) => (
+          <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {tickerBrand.map((w) => (
+              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ MANIFIESTO URBANO — tipografía gigante + collage ════════ -->
+  <section class="manifesto">
+    <div class="manifesto__inner">
+      <span class="manifesto__sticker" data-reveal>
+        Est. 2024 ✦ Stgo, Chile
+      </span>
+
+      <h2 class="manifesto__title">
+        <span class="ln" data-split-chars>{es ? 'No somos' : 'Not'}</span>
+        <span class="ln" data-split-chars>{es ? 'una agencia' : 'another'}</span>
+        <span class="ln ln--accent" data-split-chars>{es ? 'más.' : 'agency.'}</span>
+      </h2>
+
+      <p class="manifesto__desc" data-reveal data-delay="0.15">
+        {es
+          ? 'Somos el equipo que convierte marcas comunes en marcas que se notan. Estrategia, diseño y contenido con calle: hecho en Santiago, pensado para vender.'
+          : "We're the team that turns ordinary brands into brands people notice. Strategy, design and street-smart content: made in Santiago, built to sell."}
+      </p>
+
+      <!-- Badge circular giratorio -->
+      <div class="manifesto__badge" aria-hidden="true">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <path id="bu-circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/>
+          </defs>
+          <text class="manifesto__badge-text">
+            <textPath href="#bu-circ">BRAND UP ✦ SANTIAGO ✦ BRAND UP ✦ CRECIMIENTO ✦</textPath>
+          </text>
+          <text x="100" y="116" text-anchor="middle" class="manifesto__badge-star">✦</text>
+        </svg>
+      </div>
+
+      <!-- Collage de polaroids con parallax exagerado -->
+      <div class="manifesto__collage" data-skew>
+        {collage.map((c, i) => (
+          <div class={`polaroid-pos polaroid-pos--${i + 1}`} data-parallax={String(c.par)}>
+            <figure class={`polaroid polaroid--${i + 1}`} data-img-reveal>
+              <img src={c.src} alt={c.cap} loading="lazy" decoding="async" />
+              <figcaption class="polaroid__cap">{c.cap}</figcaption>
+            </figure>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ SERVICIOS URBANOS — lista con preview flotante ══════════ -->
+  <section class="svc-urban">
+    <div class="svc-urban__head">
+      <div>
+        <p class="svc-urban__kicker" data-reveal>— {es ? 'Servicios' : 'Services'}</p>
+        <h2 class="svc-urban__title" data-split-chars>{es ? 'Lo que hacemos' : 'What we do'}</h2>
+      </div>
+      <p class="svc-urban__hint" data-reveal>
+        {es ? 'Pasa el mouse — cada servicio tiene su mundo' : 'Hover — every service has its own world'}
+      </p>
+    </div>
+
+    <div class="svc-urban__list">
+      {SERVICES.map((s) => (
+        <a
+          href={lp(`/servicios/${s.slug}`)}
+          class="svc-u"
+          data-svc-img={svcImg[s.slug]}
+          data-reveal
+        >
+          <span class="svc-u__num">{s.num}</span>
+          <span class="svc-u__title">{pick(s.title, locale)}</span>
+          <span class="svc-u__tag">{pick(s.tag, locale)}</span>
+          <span class="svc-u__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ STRIP URBANO — galería horizontal scrubbed ══════════════ -->
+  <section class="street">
+    <p class="street__kicker">— {es ? 'Cultura Brand Up' : 'Brand Up culture'}</p>
+    <div class="street__ghost" aria-hidden="true">Stgo ✕ Chile</div>
+    <div class="street__row" data-skew>
+      {streets.map((st, i) => (
+        <figure class="street-card">
+          <img src={st.src} alt={st.chip} loading="lazy" decoding="async" />
+          <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <p class="street__hint" aria-hidden="true">{es ? 'Sigue bajando ↓' : 'Keep scrolling ↓'}</p>
+  </section>
+
+  <!-- ════ STATS BAND — números gigantes sobre naranja ═════════════ -->
+  <section class="stats-band">
+    <div class="stats-band__head">
+      <p class="stats-band__kicker" data-reveal>— {es ? 'En números' : 'In numbers'}</p>
+    </div>
+    <div class="stats-band__grid">
+      {stats.map((s) => (
+        <div class="stat-u" data-reveal>
+          <span class="stat-u__val">
+            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>0</span>
+          </span>
+          <span class="stat-u__lbl">{s.lbl}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
   <!-- ════ TRABAJOS — intro "Our Works" ════════════════════════════ -->
   <section class="works-intro">
     <div class="works-intro__bg" style={`background-image:url(${imgWorksBg.src})`}></div>
     <div class="works-intro__scrim"></div>
     <div class="works-intro__content">
       <p class="works-intro__kicker">
-        {locale === 'es' ? '— Portafolio seleccionado 2024–2025' : '— Selected portfolio 2024–2025'}
+        {es ? '— Portafolio seleccionado 2024–2025' : '— Selected portfolio 2024–2025'}
       </p>
       <h2 class="works-intro__title">
-        <span class="ln">{locale === 'es' ? 'Nuestros' : 'Our'}</span>
-        <span class="ln ln--alt">{locale === 'es' ? 'Trabajos' : 'Works'}</span>
+        <span class="ln">{es ? 'Nuestros' : 'Our'}</span>
+        <span class="ln ln--alt">{es ? 'Trabajos' : 'Works'}</span>
       </h2>
       <p class="works-intro__desc">
-        {locale === 'es'
+        {es
           ? 'Marcas reales, resultados medibles. Cada proyecto parte de un objetivo concreto: más ventas, más visibilidad o una identidad que dure. Esto es lo que hemos construido.'
           : 'Real brands, measurable results. Every project starts from a concrete goal: more sales, more visibility or an identity built to last. This is what we\'ve built.'}
       </p>
     </div>
     <div class="works-intro__meta">
       <span class="works-intro__hint">
-        {locale === 'es' ? 'Desplázate para ver' : 'Scroll to explore'}
+        {es ? 'Desplázate para ver' : 'Scroll to explore'}
         <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
           <path d="M6 1v12M1 8l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -98,7 +290,7 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
                 <path d="M8 5v14l11-7z"/>
               </svg>
             </span>
-            <span class="project-video__soon">{locale === 'es' ? 'Video próximamente' : 'Video coming soon'}</span>
+            <span class="project-video__soon">{es ? 'Video próximamente' : 'Video coming soon'}</span>
           </div>
         </div>
       </a>
@@ -126,6 +318,16 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
 
   <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
   <section class="cta-final">
+    <!-- Marquee gigante de fondo -->
+    <div class="cta-final__marquee" aria-hidden="true">
+      <div class="marquee-track marquee-track--slow">
+        {[0, 1].map(() => (
+          <span class="cta-final__marquee-item">
+            {es ? 'Hablemos — Hablemos — Hablemos — ' : "Let's talk — Let's talk — Let's talk — "}
+          </span>
+        ))}
+      </div>
+    </div>
     <div class="cta-final__inner">
       <p class="cta-final__kicker" data-reveal>{t.home.ctaText}</p>
       <h2 class="cta-final__title display-tight" data-split-chars>
@@ -133,10 +335,10 @@ const worksAllLabel = locale === 'es' ? 'Ver todos los trabajos' : 'View all wor
       </h2>
       <div class="cta-final__actions" data-reveal data-delay="0.3">
         <a href={lp('/cotizar')} data-magnetic="0.35" class="cta-final__btn">
-          {locale === 'es' ? 'Empezar ahora' : 'Start now'} →
+          {es ? 'Empezar ahora' : 'Start now'} →
         </a>
         <a href={lp('/trabajos')} class="cta-final__link">
-          {locale === 'es' ? 'Ver nuestros trabajos' : 'See our work'}
+          {es ? 'Ver nuestros trabajos' : 'See our work'}
         </a>
       </div>
     </div>

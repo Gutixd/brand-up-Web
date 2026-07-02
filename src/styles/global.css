@@ -1533,3 +1533,527 @@ html.intro-lock body { overflow: hidden; }
   color: var(--color-gray);
   max-width: 48ch;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   URBAN LAYER — ticker, manifiesto, servicios, street strip, stats
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Hero — créditos estilo film ─────────────────────────────────── */
+.hero-credits {
+  position: absolute;
+  z-index: 2;
+  bottom: 34px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .hero-credits { left: 20px; right: 20px; bottom: 26px; }
+  .hero-credits__right { display: none; }
+}
+
+/* ── Ticker urbano — doble banda cruzada ─────────────────────────── */
+.ticker {
+  position: relative;
+  z-index: 5;
+  background: #0d0d0d;
+  padding-block: clamp(54px, 8vw, 110px);
+  overflow: hidden;
+}
+.ticker__band {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(10px, 1.6vw, 18px);
+}
+.ticker__band--accent {
+  background: var(--color-accent);
+  transform: rotate(-2.2deg) scale(1.06);
+  box-shadow: 0 18px 60px rgba(240, 94, 35, 0.35);
+  z-index: 2;
+}
+.ticker__band--dark {
+  background: #151515;
+  border-block: 1px solid rgba(248, 248, 248, 0.08);
+  transform: rotate(1.6deg) scale(1.06);
+  margin-top: clamp(-18px, -1.4vw, -8px);
+}
+.ticker__seq {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+.ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+  padding-inline: clamp(12px, 1.8vw, 24px);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.2vw, 2.6rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: #140d09;
+}
+.ticker__star { font-size: 0.6em; transform: translateY(-0.05em); }
+.ticker__band--dark .ticker__item {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(248, 248, 248, 0.45);
+}
+.ticker__band--dark .ticker__star { -webkit-text-stroke: 0; color: var(--color-accent); }
+@keyframes marqueeRev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.marquee-track--reverse { animation-name: marqueeRev; }
+
+/* ── Manifiesto urbano ───────────────────────────────────────────── */
+.manifesto {
+  position: relative;
+  background: #f4f4f2;
+  color: #141414;
+  overflow: hidden;
+  padding: clamp(90px, 12vw, 170px) 24px clamp(90px, 12vw, 170px);
+}
+@media (min-width: 768px) { .manifesto { padding-inline: 48px; } }
+.manifesto__inner {
+  position: relative;
+  max-width: 1400px;
+  margin-inline: auto;
+}
+.manifesto__sticker {
+  display: inline-block;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  transform: rotate(-4deg);
+  box-shadow: 0 12px 30px rgba(240, 94, 35, 0.35);
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+.manifesto__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  font-size: clamp(2.9rem, 10.5vw, 10rem);
+}
+.manifesto__title .ln { display: block; }
+.manifesto__title .ln--accent {
+  color: transparent;
+  -webkit-text-stroke: clamp(1.5px, 0.3vw, 3px) var(--color-accent);
+}
+.manifesto__desc {
+  margin-top: clamp(28px, 4vw, 44px);
+  max-width: 52ch;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  line-height: 1.6;
+  color: #4a4a46;
+}
+/* Badge circular giratorio */
+.manifesto__badge {
+  position: absolute;
+  top: clamp(-20px, -1vw, 0px);
+  right: clamp(0px, 4vw, 60px);
+  width: clamp(110px, 14vw, 180px);
+  aspect-ratio: 1;
+  animation: buSpin 16s linear infinite;
+  z-index: 3;
+  pointer-events: none;
+}
+@keyframes buSpin { to { transform: rotate(360deg); } }
+.manifesto__badge-text {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 3.4px;
+  fill: #141414;
+  text-transform: uppercase;
+}
+.manifesto__badge-star { font-size: 34px; fill: var(--color-accent); }
+@media (max-width: 767px) { .manifesto__badge { display: none; } }
+@media (prefers-reduced-motion: reduce) { .manifesto__badge { animation: none; } }
+
+/* Collage de polaroids */
+.manifesto__collage {
+  position: relative;
+  margin-top: clamp(64px, 9vw, 130px);
+  height: clamp(700px, 52vw, 760px);
+}
+.polaroid-pos { position: absolute; will-change: transform; }
+.polaroid-pos--1 { width: 30%; left: 0;    top: 4%; }
+.polaroid-pos--2 { width: 22%; left: 30%;  top: 26%; }
+.polaroid-pos--3 { width: 34%; right: 0;   top: 0; }
+.polaroid-pos--4 { width: 24%; left: 12%;  bottom: 2%; }
+.polaroid-pos--5 { width: 30%; right: 12%; bottom: 0; }
+.polaroid {
+  position: relative;
+  background: #fff;
+  padding: 10px 10px 38px;
+  box-shadow: 0 26px 70px rgba(20, 20, 20, 0.18);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.polaroid--1 { transform: rotate(-5deg); }
+.polaroid--2 { transform: rotate(3.5deg); }
+.polaroid--3 { transform: rotate(2deg); }
+.polaroid--4 { transform: rotate(-3deg); }
+.polaroid--5 { transform: rotate(4.5deg); }
+.polaroid:hover { transform: rotate(0deg) scale(1.04); z-index: 5; }
+/* Cinta adhesiva naranja */
+.polaroid::before {
+  content: '';
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: clamp(60px, 7vw, 100px);
+  height: 26px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: rgba(240, 94, 35, 0.8);
+  box-shadow: 0 3px 8px rgba(20, 20, 20, 0.12);
+  z-index: 2;
+}
+.polaroid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: saturate(1.05);
+}
+.polaroid__cap {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a8a85;
+}
+@media (max-width: 767px) {
+  .manifesto__collage {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 16px;
+  }
+  .polaroid-pos { position: static; width: auto !important; }
+  .polaroid-pos--5 { grid-column: 1 / -1; }
+}
+
+/* ── Servicios urbanos — lista con preview flotante ──────────────── */
+.svc-urban {
+  background: #0d0d0d;
+  color: #f8f8f8;
+  padding: clamp(90px, 11vw, 160px) 0 clamp(80px, 10vw, 140px);
+  position: relative;
+}
+.svc-urban__head {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  margin-bottom: clamp(44px, 6vw, 72px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+@media (min-width: 768px) { .svc-urban__head { padding-inline: 48px; } }
+.svc-urban__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.svc-urban__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7.5vw, 6.5rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.94;
+}
+.svc-urban__hint {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.35);
+  max-width: 24ch;
+  text-align: right;
+  padding-bottom: 10px;
+}
+@media (max-width: 767px) { .svc-urban__hint { display: none; } }
+
+.svc-u {
+  display: grid;
+  grid-template-columns: minmax(44px, 70px) 1fr auto auto;
+  align-items: center;
+  gap: clamp(14px, 3vw, 40px);
+  padding: clamp(22px, 3.4vw, 40px) clamp(24px, 4vw, 48px);
+  border-top: 1px solid rgba(248, 248, 248, 0.1);
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition: background 0.4s ease;
+}
+.svc-u:last-child { border-bottom: 1px solid rgba(248, 248, 248, 0.1); }
+.svc-u:hover { background: rgba(240, 94, 35, 0.07); }
+.svc-u__num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(248, 248, 248, 0.35);
+  font-variant-numeric: tabular-nums;
+}
+.svc-u__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4.4vw, 3.8rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(248, 248, 248, 0.62);
+  transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease,
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-u:hover .svc-u__title {
+  color: var(--color-accent);
+  -webkit-text-stroke-color: var(--color-accent);
+  transform: translateX(16px) skewX(-4deg);
+}
+.svc-u__tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.38);
+}
+.svc-u__arrow {
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(248, 248, 248, 0.2);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(248, 248, 248, 0.6);
+  transition: background 0.35s, border-color 0.35s, color 0.35s,
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-u:hover .svc-u__arrow {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  transform: rotate(45deg) scale(1.08);
+}
+@media (max-width: 767px) {
+  .svc-u { grid-template-columns: 1fr auto; }
+  .svc-u__num, .svc-u__tag { display: none; }
+  .svc-u__arrow { width: 38px; height: 38px; }
+}
+/* En pantallas táctiles el stroke sin hover se lee mal → texto sólido */
+@media (hover: none), (pointer: coarse) {
+  .svc-u__title { color: #f8f8f8; -webkit-text-stroke: 0; }
+}
+
+/* Preview flotante que sigue al cursor */
+.svc-float {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 330px;
+  height: 240px;
+  margin: -120px 0 0 -165px;
+  pointer-events: none;
+  z-index: 80;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+.svc-float.is-on { opacity: 1; }
+.svc-float img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.55);
+}
+@media (hover: none), (pointer: coarse) { .svc-float { display: none; } }
+
+/* ── Street strip — galería horizontal scrubbed ──────────────────── */
+.street {
+  position: relative;
+  background: #0d0d0d;
+  color: #f8f8f8;
+  overflow: hidden;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.street__kicker {
+  position: absolute;
+  top: 34px;
+  left: 32px;
+  z-index: 3;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.street__hint {
+  position: absolute;
+  bottom: 30px;
+  right: 32px;
+  z-index: 3;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.4);
+}
+.street__ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 19vw, 19rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(248, 248, 248, 0.13);
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+.street__row {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 44px);
+  padding-inline: clamp(24px, 6vw, 96px);
+  position: relative;
+  z-index: 2;
+  will-change: transform;
+}
+.street-card {
+  flex: 0 0 auto;
+  width: clamp(240px, 30vw, 430px);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  transform: rotate(var(--tilt, 0deg));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.street-card:nth-child(odd)  { --tilt: -2.2deg; margin-top: 44px; }
+.street-card:nth-child(even) { --tilt: 2deg;   margin-bottom: 44px; }
+.street-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.1) contrast(1.04);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.street-card:hover img { transform: scale(1.09); }
+.street-card__chip {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  background: rgba(13, 13, 13, 0.72);
+  backdrop-filter: blur(6px);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f8f8f8;
+  padding: 8px 14px;
+  border-radius: 99px;
+}
+@media (max-width: 767px) {
+  .street-card { width: 72vw; }
+}
+
+/* ── Stats band — naranja, números gigantes ──────────────────────── */
+.stats-band {
+  position: relative;
+  background: var(--color-accent);
+  color: #140d09;
+  padding: clamp(80px, 10vw, 140px) 24px;
+  clip-path: polygon(0 3.5%, 100% 0, 100% 96.5%, 0 100%);
+  margin-block: -1px;
+}
+@media (min-width: 768px) { .stats-band { padding-inline: 48px; } }
+.stats-band__head {
+  max-width: 1400px;
+  margin-inline: auto;
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+.stats-band__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(20, 13, 9, 0.7);
+}
+.stats-band__grid {
+  max-width: 1400px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 5vw, 56px) 32px;
+}
+@media (min-width: 900px) { .stats-band__grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-u__val {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat-u__lbl {
+  display: block;
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(20, 13, 9, 0.72);
+}
+
+/* ── CTA — marquee gigante de fondo ──────────────────────────────── */
+.cta-final__marquee {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.cta-final__marquee-item {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 14vw, 13rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(248, 248, 248, 0.09);
+}
