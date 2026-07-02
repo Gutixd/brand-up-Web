@@ -5,6 +5,7 @@
 // Failsafes: script inline oculta el overlay si ya se vio (sin flash) y
 // lo elimina si el JS principal nunca llega a animar (bug primera visita).
 import type { Locale } from '../i18n';
+import logoMark from '../assets/brand/logo-icon.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -24,24 +25,9 @@ const letters = ['B', 'r', 'a', 'n', 'd', 'U', 'p'];
   </div>
 
   <div class="intro__stage">
-    <!-- Marca B↑ — mismo path que Logo.tsx -->
+    <!-- Marca B↑ — logo original (assets/brand/logo-icon.webp) -->
     <div class="intro__mark" aria-hidden="true">
-      <svg viewBox="0 0 56 62" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          fill-rule="evenodd"
-          fill="currentColor"
-          d="M 4 4 L 4 58 L 32 58 C 46 58 54 52 54 42 C 54 35 50 30 43 28 C 49 25 52 20 52 13 C 52 7 46 4 33 4 Z M 17 10 L 30 10 C 37 10 40 13 40 17 C 40 21 37 25 30 25 L 17 25 Z M 17 31 L 32 31 C 41 31 44 35 44 40 C 44 45 41 49 32 49 L 17 49 Z"
-        />
-        <path
-          d="M 42 54 C 50 54 54 49 54 42 C 54 35 50 31 44 31 C 44 31 46 35 46 42 C 46 49 44 54 42 54 Z"
-          fill="#f05e23"
-        />
-        <path d="M 46 42 L 46 16" stroke="#f05e23" stroke-width="6" stroke-linecap="round" />
-        <path
-          d="M 36 24 L 46 14 L 56 24"
-          stroke="#f05e23" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"
-        />
-      </svg>
+      <img src={logoMark.src} alt="" width={logoMark.width} height={logoMark.height} decoding="async" />
     </div>
 
     <!-- Wordmark — una letra por span para el spring + sweep -->

@@ -1241,7 +1241,8 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   z-index: 100000;
   place-items: center;
   overflow: hidden;
-  background: #0d0d0d;
+  /* Fondo claro: el logo original (B oscura + flecha naranja) se ve tal cual */
+  background: #f4f4f2;
 }
 
 .intro__stage {
@@ -1252,15 +1253,14 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   text-align: center;
   padding: 0 5vw;
 }
-/* Marca B↑ — estado inicial: invisible, entra con rebote elástico */
+/* Marca B↑ — logo original; estado inicial: invisible, entra con rebote */
 .intro__mark {
-  width: clamp(58px, 8.5vw, 104px);
-  color: #f8f8f8;
+  width: clamp(64px, 9.5vw, 118px);
   opacity: 0;
   transform: scale(0) rotate(-16deg);
   will-change: transform;
 }
-.intro__mark svg { display: block; width: 100%; height: auto; }
+.intro__mark img { display: block; width: 100%; height: auto; }
 /* Wordmark — letras individuales para spring + sweep */
 .intro__word {
   display: flex;
@@ -1269,7 +1269,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   font-size: clamp(3.2rem, 14vw, 10.5rem);
   letter-spacing: 0.015em;
   line-height: 1;
-  color: #f8f8f8;
+  color: #141414;
 }
 .rv-letter {
   position: relative;
@@ -1286,7 +1286,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   opacity: 0;
   pointer-events: none;
 }
-.rv-letter--up .rv-letter__sweep { color: #f8f8f8; }
+.rv-letter--up .rv-letter__sweep { color: #141414; }
 
 .intro__subtitle {
   margin: 1.5rem 0 0;
@@ -1294,7 +1294,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.72);
+  color: rgba(20, 20, 20, 0.62);
   opacity: 0;
 }
 
@@ -1302,7 +1302,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   position: absolute;
   inset: 0;
   pointer-events: none;
-  color: #f8f8f8;
+  color: #141414;
 }
 .intro__burger {
   position: absolute;
