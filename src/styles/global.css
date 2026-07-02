@@ -1984,6 +1984,20 @@ html.intro-lock body { overflow: hidden; }
 }
 @media (max-width: 767px) {
   .street-card { width: 72vw; }
+  .street-card:nth-child(odd)  { --tilt: -1.4deg; margin-top: 20px; }
+  .street-card:nth-child(even) { --tilt: 1.2deg;  margin-bottom: 20px; }
+  .street__ghost { -webkit-text-stroke-width: 1px; }
+  .street__kicker { left: 20px; }
+  .street__hint { right: 20px; }
+  .ticker { padding-block: 40px; }
+  .manifesto { padding-inline: 18px; }
+  .manifesto__collage { gap: 30px 14px; }
+  .polaroid { padding: 7px 7px 30px; }
+  .polaroid::before { height: 20px; top: -10px; }
+  .polaroid__cap { bottom: 8px; left: 10px; font-size: 9px; }
+  .stats-band { clip-path: polygon(0 1.6%, 100% 0, 100% 98.4%, 0 100%); }
+  .svc-u:hover { background: none; }
+  .cta-final__marquee { opacity: 0.7; }
 }
 
 /* ── Stats band — naranja, números gigantes ──────────────────────── */

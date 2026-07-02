@@ -52,7 +52,10 @@ function initFadeReveals() {
 
 // ── Parallax ───────────────────────────────────────────────────────
 function initParallax() {
+  const mobile = window.innerWidth < 768;
   document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+    // En móvil el collage es una grilla estática — el parallax la desordenaría
+    if (mobile && el.closest('.manifesto__collage')) return;
     gsap.to(el, {
       yPercent: parseFloat(el.dataset.parallax ?? '-10'), ease: 'none',
       scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },

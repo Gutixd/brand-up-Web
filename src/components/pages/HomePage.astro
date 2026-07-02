@@ -172,7 +172,12 @@ const stats = [
         {collage.map((c, i) => (
           <div class={`polaroid-pos polaroid-pos--${i + 1}`} data-parallax={String(c.par)}>
             <figure class={`polaroid polaroid--${i + 1}`} data-img-reveal>
-              <img src={c.src} alt={c.cap} loading="lazy" decoding="async" />
+              <img
+                src={c.src}
+                srcset={`${c.src.replace('.jpg', '-sm.jpg')} 800w, ${c.src} 1400w`}
+                sizes="(max-width: 767px) 46vw, 30vw"
+                alt={c.cap} loading="lazy" decoding="async"
+              />
               <figcaption class="polaroid__cap">{c.cap}</figcaption>
             </figure>
           </div>
@@ -221,7 +226,12 @@ const stats = [
     <div class="street__row" data-skew>
       {streets.map((st, i) => (
         <figure class="street-card">
-          <img src={st.src} alt={st.chip} loading="lazy" decoding="async" />
+          <img
+            src={st.src}
+            srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
+            sizes="(max-width: 767px) 72vw, 30vw"
+            alt={st.chip} loading="lazy" decoding="async"
+          />
           <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
         </figure>
       ))}
