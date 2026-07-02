@@ -398,6 +398,7 @@ function initImgReveals() {
 
 // ── Skew por velocidad de scroll (exagerado, estilo Locomotive) ────
 function initVelocitySkew() {
+  if (window.innerWidth < 768) return; // en móvil rompe el scroll nativo del carrusel
   const els = document.querySelectorAll<HTMLElement>('[data-skew]');
   if (!els.length) return;
   const proxy = { skew: 0 };
@@ -485,6 +486,8 @@ function initSvcPreview() {
 
 // ── Street strip — galería horizontal scrubbed (pin) ───────────────
 function initStreetStrip() {
+  // En móvil el strip es un carrusel nativo con snap — sin pin ni scrub
+  if (window.innerWidth < 768) return;
   const section = document.querySelector<HTMLElement>('.street');
   const row = section?.querySelector<HTMLElement>('.street__row');
   if (!section || !row) return;
@@ -506,7 +509,9 @@ function initStreetStrip() {
   if (ghost) tl.fromTo(ghost, { x: 80 }, { x: -300, ease: 'none' }, 0);
 }
 
-// ── Intro cinemática — preloader una sola vez por sesión (McCann) ──
+// ── Intro cinemática — logo real B↑ + letras spring + sweep naranja ─
+// Adaptación GSAP del patrón "RevealText": cada letra entra con spring
+// escalonado (scale 0 → 1 elástico) y luego un barrido naranja las recorre.
 function initIntro() {
   const intro = document.getElementById('intro');
   if (!intro) return; // solo existe en home
@@ -517,33 +522,40 @@ function initIntro() {
   };
   const skip = () => { intro.remove(); unlock(); };
 
-  // Saltar si ya se vio en esta sesión o si el usuario prefiere menos movimiento
+  // Saltar si ya se vio (el script inline pone `hidden`), o con reduced-motion
   let seen = false;
   try { seen = sessionStorage.getItem('bu_intro_seen') === '1'; } catch { /* storage bloqueado */ }
-  if (seen || reducedMotion()) { skip(); return; }
+  if (seen || intro.hasAttribute('hidden') || reducedMotion()) { skip(); return; }
 
-  const title = intro.querySelector<HTMLElement>('.intro__title');
+  const mark = intro.querySelector<HTMLElement>('.intro__mark');
+  const letters = intro.querySelectorAll<HTMLElement>('.rv-letter');
+  const sweeps = intro.querySelectorAll<HTMLElement>('.rv-letter__sweep');
   const subtitle = intro.querySelector<HTMLElement>('.intro__subtitle');
   const ui = intro.querySelectorAll<HTMLElement>('.intro__ui > *');
-  if (!title || !subtitle) { skip(); return; }
+  if (!letters.length || !subtitle) { skip(); return; }
 
   // Bloquear scroll durante la intro
   document.documentElement.classList.add('intro-lock');
   lenis?.stop();
   window.scrollTo(0, 0);
 
-  // Estado inicial (Fase 1) — se aplica ya, aunque la timeline arranque luego
-  gsap.set(title, { scale: 22, transformOrigin: '50% 50%' });
-  gsap.set(subtitle, { y: 26, opacity: 0 });
+  // Estados iniciales (scale/opacity base ya vienen del CSS)
+  gsap.set(subtitle, { y: 24, opacity: 0 });
   gsap.set(ui, { opacity: 0, y: -8 });
 
-  // Construir y reproducir la coreografía. Solo cuando el documento está visible:
-  // con lagSmoothing(0) (que usa Lenis), arrancar en una pestaña oculta haría
-  // que GSAP saltara al final al volver el foco. Así se ve siempre desde la Fase 1.
+  // Watchdog: si la animación no arranca en 8s (pestaña oculta, fuentes,
+  // GSAP lento), se libera la página — nunca dejar al visitante atrapado.
+  const watchdog = window.setTimeout(() => {
+    if (intro.dataset.started !== '1') skip();
+  }, 8000);
+
   let started = false;
   const play = () => {
     if (started) return;
     started = true;
+    if (!intro.isConnected) { unlock(); return; } // el failsafe inline ya lo quitó
+    intro.dataset.started = '1';
+    clearTimeout(watchdog);
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -553,27 +565,41 @@ function initIntro() {
       },
     });
 
-    // Fase 2 — zoom-out cinemático: empieza rápido y desacelera (expo.out)
-    tl.to(title, { scale: 1, duration: 1.8, ease: 'expo.out' }, 0.25);
+    // Marca B↑ — rebote elástico
+    if (mark) tl.to(mark, { scale: 1, opacity: 1, rotate: 0, duration: 1.0, ease: 'elastic.out(1, 0.5)' }, 0.15);
 
-    // Fase 3 — inversión brusca de color + subtítulo, justo al acomodarse
-    tl.add(() => intro.classList.add('is-dark'), 1.9);
-    tl.to(subtitle, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 1.92);
+    // Letras — spring escalonado (RevealText: scale 0 → 1 con rebote)
+    tl.to(letters, { scale: 1, opacity: 1, duration: 0.85, stagger: 0.085, ease: 'elastic.out(1.1, 0.55)' }, 0.3);
 
-    // Fase 4 — UI (hamburguesa + sociales) con fade-in escalonado
-    tl.to(ui, { opacity: 1, y: 0, duration: 0.5, stagger: 0.14, ease: 'power2.out' }, 2.15);
+    // Barrido naranja letra por letra (overlay sweep)
+    tl.to(sweeps, { keyframes: { opacity: [0, 1, 1, 0] }, duration: 0.45, stagger: 0.055, ease: 'power1.inOut' }, 1.45);
 
-    // Salida — el overlay se desvanece y revela el hero de video
-    tl.to(intro, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 3.05);
+    // Subtítulo + UI
+    tl.to(subtitle, { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 1.75);
+    tl.to(ui, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, 1.9);
+
+    // Salida — cortina hacia arriba que revela el hero de video
+    tl.to(intro, { yPercent: -100, duration: 0.9, ease: 'power4.inOut' }, 3.0);
   };
 
+  // Espera la fuente display (máx 700ms) para que las letras no cambien
+  // de tipografía a mitad de animación en la primera visita.
+  const start = () => {
+    const fontsReady = 'fonts' in document
+      ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 700))])
+      : Promise.resolve();
+    fontsReady.then(play);
+  };
+
+  // Solo arrancar con la pestaña visible: con lagSmoothing(0) (Lenis), una
+  // pestaña oculta haría que GSAP saltara al final al recuperar el foco.
   if (document.visibilityState === 'visible') {
-    play();
+    start();
   } else {
     const onVisible = () => {
       if (document.visibilityState !== 'visible') return;
       document.removeEventListener('visibilitychange', onVisible);
-      play();
+      start();
     };
     document.addEventListener('visibilitychange', onVisible);
   }

@@ -1231,8 +1231,9 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   .hero-cursor { display: none; }
 }
 
-/* ── Intro cinemática (preloader una sola vez, estilo McCann) ───────── */
+/* ── Intro cinemática (logo real B↑ + RevealText spring/sweep) ──────── */
 .intro { display: none; }
+.intro[hidden] { display: none !important; }
 .js .intro {
   display: grid;
   position: fixed;
@@ -1240,30 +1241,52 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   z-index: 100000;
   place-items: center;
   overflow: hidden;
-  background: #f4f4f2;           /* Fase 1: claro */
-  /* sin transición en background → la inversión de color es instantánea */
+  background: #0d0d0d;
 }
-.intro.is-dark { background: #0d0d0d; }   /* Fase 3: negro instantáneo */
 
 .intro__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 3.4vw, 34px);
   text-align: center;
   padding: 0 5vw;
 }
-.intro__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.045em;
-  line-height: 0.86;
-  font-size: clamp(3rem, 13vw, 12rem);
-  color: #0d0d0d;               /* Fase 1: negro */
-  transform: scale(22);         /* Fase 1: gigante (solo se ven bordes) */
-  transform-origin: 50% 50%;
+/* Marca B↑ — estado inicial: invisible, entra con rebote elástico */
+.intro__mark {
+  width: clamp(58px, 8.5vw, 104px);
+  color: #f8f8f8;
+  opacity: 0;
+  transform: scale(0) rotate(-16deg);
   will-change: transform;
 }
-.intro.is-dark .intro__title { color: #f8f8f8; }   /* Fase 3: blanco */
-.intro__up { color: var(--color-accent); }         /* "Up" naranja en ambas fases */
+.intro__mark svg { display: block; width: 100%; height: auto; }
+/* Wordmark — letras individuales para spring + sweep */
+.intro__word {
+  display: flex;
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 14vw, 10.5rem);
+  letter-spacing: 0.015em;
+  line-height: 1;
+  color: #f8f8f8;
+}
+.rv-letter {
+  position: relative;
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0);
+  will-change: transform;
+}
+.rv-letter--up .rv-letter__base { color: var(--color-accent); }
+.rv-letter__sweep {
+  position: absolute;
+  inset: 0;
+  color: var(--color-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.rv-letter--up .rv-letter__sweep { color: #f8f8f8; }
 
 .intro__subtitle {
   margin: 1.5rem 0 0;
@@ -1922,6 +1945,11 @@ html.intro-lock body { overflow: hidden; }
   text-transform: uppercase;
   color: rgba(248, 248, 248, 0.4);
 }
+.street__hint--mob { display: none; }
+@media (max-width: 767px) {
+  .street__hint--desk { display: none; }
+  .street__hint--mob { display: inline; }
+}
 .street__ghost {
   position: absolute;
   top: 50%;
@@ -1983,12 +2011,34 @@ html.intro-lock body { overflow: hidden; }
   border-radius: 99px;
 }
 @media (max-width: 767px) {
-  .street-card { width: 72vw; }
-  .street-card:nth-child(odd)  { --tilt: -1.4deg; margin-top: 20px; }
-  .street-card:nth-child(even) { --tilt: 1.2deg;  margin-bottom: 20px; }
-  .street__ghost { -webkit-text-stroke-width: 1px; }
-  .street__kicker { left: 20px; }
-  .street__hint { right: 20px; }
+  /* Street strip móvil: carrusel nativo con snap (sin pin, sin inclinación) */
+  .street { height: auto; display: block; padding: 84px 0 60px; }
+  .street__kicker { position: static; display: block; margin: 0 20px 12px; }
+  .street__ghost {
+    position: static;
+    transform: none;
+    font-size: clamp(2.5rem, 12.5vw, 5rem);
+    margin: 0 20px 24px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(248, 248, 248, 0.3);
+  }
+  .street__row {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 20px 12px;
+    gap: 14px;
+    scrollbar-width: none;
+  }
+  .street__row::-webkit-scrollbar { display: none; }
+  .street-card {
+    width: 76vw;
+    scroll-snap-align: center;
+    margin: 0 !important;
+  }
+  .street-card:nth-child(odd),
+  .street-card:nth-child(even) { --tilt: 0deg; }
+  .street__hint { position: static; display: block; margin: 16px 20px 0; text-align: right; }
   .ticker { padding-block: 40px; }
   .manifesto { padding-inline: 18px; }
   .manifesto__collage { gap: 30px 14px; }
@@ -2071,3 +2121,35 @@ html.intro-lock body { overflow: hidden; }
   color: transparent;
   -webkit-text-stroke: 1px rgba(248, 248, 248, 0.09);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TIPOGRAFÍA POSTER — Anton para los titulares urbanos (coherencia)
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --font-poster: 'Anton', 'Arial Narrow', 'Impact', sans-serif;
+}
+/* Anton solo tiene peso 400 y es condensada: tracking abierto, sin bold
+   sintético y line-height propio. Este bloque va al final para ganar la
+   cascada sobre las reglas de cada sección. */
+.manifesto__title,
+.svc-urban__title,
+.svc-u__title,
+.street__ghost,
+.stat-u__val,
+.works-intro__title,
+.cta-final__title,
+.ticker__item,
+.page-hero__title,
+.intro__word,
+.cta-final__marquee-item {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  letter-spacing: 0.014em;
+}
+.manifesto__title { line-height: 1; }
+.works-intro__title { line-height: 0.98; }
+.cta-final__title { line-height: 1; text-transform: uppercase; }
+.page-hero__title { text-transform: uppercase; line-height: 0.98; }
+.svc-u__title { -webkit-text-stroke-width: 1px; }
+/* El outline de la última línea del manifiesto necesita algo más de grosor */
+.manifesto__title .ln--accent { -webkit-text-stroke-width: clamp(1.5px, 0.26vw, 2.6px); }

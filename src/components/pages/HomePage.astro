@@ -30,8 +30,8 @@ const tickerWords = es
   ? ['Branding', 'Contenido', 'Diseño Web', 'E-commerce', 'Publicidad', 'IA', 'Growth']
   : ['Branding', 'Content', 'Web Design', 'E-commerce', 'Ads', 'AI', 'Growth'];
 const tickerBrand = es
-  ? ['Brand Up©', 'Santiago de Chile', 'Est. 2024', 'Hecho con calle']
-  : ['Brand Up©', 'Santiago, Chile', 'Est. 2024', 'Street-smart work'];
+  ? ['Brand Up©', 'Santiago de Chile', '© 2026', 'Hecho con calle']
+  : ['Brand Up©', 'Santiago, Chile', '© 2026', 'Street-smart work'];
 
 // ── Servicios → imagen de preview flotante ─────────────────────────
 const svcImg: Record<string, string> = {
@@ -92,7 +92,7 @@ const stats = [
     <!-- Créditos estilo film, discretos sobre el video -->
     <div class="hero-credits" aria-hidden="true">
       <span>Brand Up® — {es ? 'Agencia creativa digital' : 'Digital creative agency'}</span>
-      <span class="hero-credits__right">Stgo, Chile — Est. 2024</span>
+      <span class="hero-credits__right">Stgo, Chile — © 2026</span>
     </div>
 
     <div class="hero-video__scroll" aria-hidden="true">
@@ -139,7 +139,7 @@ const stats = [
   <section class="manifesto">
     <div class="manifesto__inner">
       <span class="manifesto__sticker" data-reveal>
-        Est. 2024 ✦ Stgo, Chile
+        Stgo, Chile ✦ © 2026
       </span>
 
       <h2 class="manifesto__title">
@@ -236,7 +236,10 @@ const stats = [
         </figure>
       ))}
     </div>
-    <p class="street__hint" aria-hidden="true">{es ? 'Sigue bajando ↓' : 'Keep scrolling ↓'}</p>
+    <p class="street__hint" aria-hidden="true">
+      <span class="street__hint--desk">{es ? 'Sigue bajando ↓' : 'Keep scrolling ↓'}</span>
+      <span class="street__hint--mob">{es ? 'Desliza →' : 'Swipe →'}</span>
+    </p>
   </section>
 
   <!-- ════ STATS BAND — números gigantes sobre naranja ═════════════ -->
@@ -262,7 +265,7 @@ const stats = [
     <div class="works-intro__scrim"></div>
     <div class="works-intro__content">
       <p class="works-intro__kicker">
-        {es ? '— Portafolio seleccionado 2024–2025' : '— Selected portfolio 2024–2025'}
+        {es ? '— Portafolio seleccionado 2025–2026' : '— Selected portfolio 2025–2026'}
       </p>
       <h2 class="works-intro__title">
         <span class="ln">{es ? 'Nuestros' : 'Our'}</span>
