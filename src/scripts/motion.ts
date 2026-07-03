@@ -484,31 +484,6 @@ function initSvcPreview() {
   };
 }
 
-// ── Street strip — galería horizontal scrubbed (pin) ───────────────
-function initStreetStrip() {
-  // En móvil el strip es un carrusel nativo con snap — sin pin ni scrub
-  if (window.innerWidth < 768) return;
-  const section = document.querySelector<HTMLElement>('.street');
-  const row = section?.querySelector<HTMLElement>('.street__row');
-  if (!section || !row) return;
-  const ghost = section.querySelector<HTMLElement>('.street__ghost');
-
-  const dist = () => Math.max(0, row.scrollWidth - window.innerWidth);
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: 'top top',
-      end: () => `+=${dist() + 350}`,
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-    },
-  });
-  tl.to(row, { x: () => -dist(), ease: 'none' }, 0);
-  // El texto fantasma se desliza en sentido contrario (parallax profundo)
-  if (ghost) tl.fromTo(ghost, { x: 80 }, { x: -300, ease: 'none' }, 0);
-}
-
 // ── Intro cinemática — logo real B↑ + letras spring + sweep naranja ─
 // Adaptación GSAP del patrón "RevealText": cada letra entra con spring
 // escalonado (scale 0 → 1 elástico) y luego un barrido naranja las recorre.
@@ -635,7 +610,6 @@ function setup() {
   initImgReveals();
   initVelocitySkew();
   initSvcPreview();
-  initStreetStrip();
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────

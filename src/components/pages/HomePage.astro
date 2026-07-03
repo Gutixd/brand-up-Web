@@ -219,27 +219,52 @@ const stats = [
     </div>
   </section>
 
-  <!-- ════ STRIP URBANO — galería horizontal scrubbed ══════════════ -->
+  <!-- ════ STRIP URBANO — doble marquee de fotos (sin pin) ═════════ -->
   <section class="street">
-    <p class="street__kicker">— {es ? 'Cultura Brand Up' : 'Brand Up culture'}</p>
-    <div class="street__ghost" aria-hidden="true">Stgo ✕ Chile</div>
-    <div class="street__row" data-skew>
-      {streets.map((st, i) => (
-        <figure class="street-card">
-          <img
-            src={st.src}
-            srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
-            sizes="(max-width: 767px) 72vw, 30vw"
-            alt={st.chip} loading="lazy" decoding="async"
-          />
-          <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
-        </figure>
-      ))}
+    <div class="street__head">
+      <p class="street__kicker" data-reveal>— {es ? 'Cultura Brand Up' : 'Brand Up culture'}</p>
+      <h2 class="street__title" data-reveal data-delay="0.1" aria-label="Santiago, Chile">Stgo ✕ Chile</h2>
     </div>
-    <p class="street__hint" aria-hidden="true">
-      <span class="street__hint--desk">{es ? 'Sigue bajando ↓' : 'Keep scrolling ↓'}</span>
-      <span class="street__hint--mob">{es ? 'Desliza →' : 'Swipe →'}</span>
-    </p>
+    <div class="street__rows" data-skew>
+      <div class="street-marquee">
+        <div class="marquee-track">
+          {[0, 1].map((copy) => (
+            <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {streets.map((st, i) => (
+                <figure class="street-card">
+                  <img
+                    src={st.src}
+                    srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
+                    sizes="(max-width: 767px) 62vw, 27vw"
+                    alt={st.chip} loading="lazy" decoding="async"
+                  />
+                  <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="street-marquee street-marquee--rev">
+        <div class="marquee-track marquee-track--reverse">
+          {[0, 1].map((copy) => (
+            <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {[...streets].reverse().map((st, i) => (
+                <figure class="street-card">
+                  <img
+                    src={st.src}
+                    srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
+                    sizes="(max-width: 767px) 62vw, 27vw"
+                    alt={st.chip} loading="lazy" decoding="async"
+                  />
+                  <figcaption class="street-card__chip">0{6 - i} — {st.chip}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ════ STATS BAND — números gigantes sobre naranja ═════════════ -->
@@ -318,11 +343,10 @@ const stats = [
   </div>
 
   <!-- ════ TESTIMONIOS ══════════════════════════════════════════════ -->
-  <section class="rule">
-    <div class="mx-auto max-w-[1400px] px-5 py-20 md:px-8 md:py-28">
-      <h2 class="display-tight mb-14 font-display text-4xl uppercase md:text-6xl" data-reveal-word>
-        {t.home.testimonialsTitle}
-      </h2>
+  <section class="testis rule">
+    <div class="testis__inner">
+      <p class="testis__kicker" data-reveal>— {es ? 'Testimonios' : 'Testimonials'}</p>
+      <h2 class="testis__title" data-split-chars>{t.home.testimonialsTitle}</h2>
       <div data-reveal>
         <TestimonialCarousel client:visible items={testimonials} />
       </div>
