@@ -1,24 +1,44 @@
 ---
 import Base from '../layouts/Base.astro';
-import { useT } from '../i18n';
 
-const t = useT('es');
+const words = ['Página no encontrada', 'Error 404', 'Te perdiste', 'Página no encontrada', 'Error 404', 'Te perdiste'];
 ---
 
-<Base locale="es" title={`404 — ${t.notFound.title}`} description={t.notFound.text}>
+<Base locale="es" title="404 — Te perdiste (pero con estilo) | BrandUp" description="Esta página no existe, pero tu próxima marca sí. Vuelve al inicio o mira nuestros trabajos.">
   <section class="nf">
-    <div class="nf__glow"></div>
-    <p class="nf__code">404</p>
-    <h1 class="nf__title">{t.notFound.title}</h1>
-    <p class="nf__text">{t.notFound.text}</p>
-    <a href="/" class="btn-primary nf__btn">{t.notFound.back}</a>
+    <!-- Cinta cruzada de fondo -->
+    <div class="nf__tape" aria-hidden="true">
+      <div class="marquee-track">
+        {[0, 1].map(() => (
+          <div class="nf__tape-seq">
+            {words.map((w) => (
+              <span class="nf__tape-item">{w} <span class="nf__tape-star">✦</span></span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <p class="nf__code" aria-hidden="true">
+      <span class="nf__code-solid">4</span><span class="nf__code-stroke">0</span><span class="nf__code-solid">4</span>
+    </p>
+    <h1 class="nf__title">Te perdiste — pero con estilo.</h1>
+    <p class="nf__text">
+      Esta página no existe (o se fue a comprar completos). Lo que sí existe:
+      un equipo en Santiago listo para hacer crecer tu marca.
+    </p>
+    <div class="nf__actions">
+      <a href="/" class="nf__btn">Volver al inicio →</a>
+      <a href="/trabajos" class="nf__link">Ver nuestros trabajos</a>
+    </div>
+    <span class="nf__sticker" aria-hidden="true">Stgo, Chile ✦ Brand Up©</span>
   </section>
 </Base>
 
 <style>
 .nf {
   position: relative;
-  min-height: 86svh;
+  min-height: 92svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,38 +46,114 @@ const t = useT('es');
   text-align: center;
   padding: 24px;
   overflow: hidden;
+  background: #0d0d0d;
+  color: #f8f8f8;
 }
-.nf__glow {
+/* Cinta naranja cruzada al fondo */
+.nf__tape {
   position: absolute;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(240,94,35,0.12) 0%, transparent 65%);
-  pointer-events: none;
+  left: -5%;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%) rotate(-6deg);
+  background: var(--color-accent);
+  padding-block: 14px;
+  overflow: hidden;
+  opacity: 0.92;
+  box-shadow: 0 20px 70px rgba(240, 94, 35, 0.35);
 }
+.nf__tape-seq { display: flex; flex: 0 0 auto; }
+.nf__tape-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding-inline: 18px;
+  white-space: nowrap;
+  font-family: var(--font-poster);
+  font-size: clamp(1.1rem, 2.6vw, 1.9rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #140d09;
+}
+.nf__tape-star { font-size: 0.65em; }
+
 .nf__code {
   position: relative;
-  font-family: var(--font-display);
-  font-size: clamp(6rem, 22vw, 14rem);
-  font-weight: 600;
-  letter-spacing: -0.05em;
+  z-index: 2;
+  font-family: var(--font-poster);
+  font-size: clamp(9rem, 34vw, 24rem);
   line-height: 0.9;
-  color: var(--color-accent);
+  letter-spacing: 0.02em;
+  color: #f8f8f8;
+  text-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+}
+.nf__code-stroke {
+  color: transparent;
+  -webkit-text-stroke: clamp(2px, 0.5vw, 5px) var(--color-accent);
 }
 .nf__title {
   position: relative;
-  margin-top: 8px;
+  z-index: 2;
+  margin-top: clamp(16px, 3vw, 30px);
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--color-paper);
+  font-size: clamp(1.4rem, 3.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .nf__text {
   position: relative;
-  margin-top: 12px;
-  font-size: 1.05rem;
-  color: var(--color-gray);
-  max-width: 40ch;
+  z-index: 2;
+  margin-top: 14px;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: rgba(248, 248, 248, 0.6);
+  max-width: 46ch;
 }
-.nf__btn { position: relative; margin-top: 36px; }
+.nf__actions {
+  position: relative;
+  z-index: 2;
+  margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.nf__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 15px 34px;
+  border-radius: 100px;
+  transition: background 0.3s, transform 0.25s;
+}
+.nf__btn:hover { background: #f8f8f8; color: #0d0d0d; transform: translateY(-2px); }
+.nf__link {
+  font-size: 0.88rem;
+  color: rgba(248, 248, 248, 0.45);
+  border-bottom: 1px solid rgba(248, 248, 248, 0.15);
+  padding-bottom: 2px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.nf__link:hover { color: #f8f8f8; border-color: var(--color-accent); }
+.nf__sticker {
+  position: absolute;
+  z-index: 2;
+  bottom: 30px;
+  right: 30px;
+  background: #f8f8f8;
+  color: #141414;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 15px;
+  transform: rotate(4deg);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 640px) { .nf__sticker { right: 16px; bottom: 18px; } }
 </style>

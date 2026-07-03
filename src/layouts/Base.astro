@@ -84,6 +84,8 @@ const nav = [
     <meta property="og:locale" content={locale === 'es' ? 'es_CL' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- Vercel Web Analytics (activar en el dashboard: Project → Analytics) -->
+    <script defer src="/_vercel/insights/script.js"></script>
     <script>
       // Mark JS availability ASAP so reveal styles only hide content when GSAP will run.
       document.documentElement.classList.add('js');

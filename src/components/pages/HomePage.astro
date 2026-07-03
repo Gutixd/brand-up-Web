@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
@@ -8,6 +9,12 @@ import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import imgWorksBg from '../../assets/categories/team.webp';
+import logoChacha from '../../assets/logos/chachapollo.webp';
+import logoJdcargo from '../../assets/logos/jdcargo.webp';
+import logoAracnida from '../../assets/logos/aracnida.webp';
+import logoTemplo from '../../assets/logos/templo-maipu.webp';
+import logoBell from '../../assets/logos/bell-college.webp';
+import logoSuperlunch from '../../assets/logos/superlunch.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -24,6 +31,16 @@ const testimonials = TESTIMONIALS.map((x) => ({
 }));
 
 const worksAllLabel = es ? 'Ver todos los trabajos' : 'View all work';
+
+// ── Prueba social bajo el hero ─────────────────────────────────────
+const clientLogos = [
+  { img: logoChacha, name: 'El Chacha Pollo' },
+  { img: logoJdcargo, name: 'JD Cargo Logistics' },
+  { img: logoAracnida, name: 'Aracnida Store' },
+  { img: logoTemplo, name: 'Templo Votivo de Maipú' },
+  { img: logoBell, name: 'Bell College' },
+  { img: logoSuperlunch, name: 'Superlunch' },
+];
 
 // ── Ticker urbano ──────────────────────────────────────────────────
 const tickerWords = es
@@ -106,6 +123,26 @@ const stats = [
         <path d="M42 24 L14 11 L22 24 L14 37 Z" fill="var(--color-accent)"
               stroke="var(--color-accent)" stroke-width="2" stroke-linejoin="round"/>
       </svg>
+    </div>
+  </section>
+
+  <!-- ════ PRUEBA SOCIAL — confían en nosotros ═════════════════════ -->
+  <section class="trust" aria-label={es ? 'Marcas que confían en nosotros' : 'Brands that trust us'}>
+    <div class="trust__inner">
+      <p class="trust__label">{es ? 'Confían en nosotros' : 'They trust us'} —</p>
+      <div class="trust__band">
+        <div class="marquee-track marquee-track--slow">
+          {[0, 1].map((copy) => (
+            <div class="trust__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {[...clientLogos, ...clientLogos].map((l, i) => (
+                <span class="trust__item">
+                  <Image src={l.img} alt={copy === 0 && i < clientLogos.length ? l.name : ''} widths={[160]} sizes="110px" />
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 

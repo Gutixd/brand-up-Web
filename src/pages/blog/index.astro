@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+import { BLOG_POSTS } from '../../data/blog';
+
+const fmt = (iso: string) =>
+  new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base
+  locale="es"
+  title="Blog — Marketing digital y diseño web en Chile | BrandUp"
+  description="Guías prácticas de marketing digital, diseño web, SEO local y contenido para negocios chilenos. Precios reales, sin humo."
+>
+  <div class="blog">
+    <header class="blog__head">
+      <p class="blog__kicker" data-reveal>— Blog</p>
+      <h1 class="blog__title" data-split-chars>Ideas que venden</h1>
+      <p class="blog__sub" data-reveal data-delay="0.12">
+        Guías prácticas de marketing, web y contenido para negocios chilenos.
+        Precios reales, cero humo.
+      </p>
+    </header>
+
+    <div class="blog__grid">
+      {BLOG_POSTS.map((post, i) => (
+        <a href={`/blog/${post.slug}`} class="bpost" data-reveal data-delay={`${i * 0.07}`}>
+          <div class="bpost__top">
+            <span class="bpost__tag">{post.tag}</span>
+            <span class="bpost__meta">{fmt(post.date)} · {post.readMin} min</span>
+          </div>
+          <h2 class="bpost__title">{post.title}</h2>
+          <p class="bpost__desc">{post.desc}</p>
+          <span class="bpost__more">Leer artículo <span aria-hidden="true">→</span></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+.blog {
+  background: var(--color-ink);
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 150px 24px 110px;
+}
+@media (min-width: 768px) { .blog { padding: 180px 48px 130px; } }
+.blog__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.blog__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(3rem, 10vw, 8rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  line-height: 0.96;
+  color: var(--color-paper);
+}
+.blog__sub {
+  margin-top: 20px;
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.6;
+  color: var(--color-gray);
+  max-width: 52ch;
+}
+.blog__grid {
+  margin-top: clamp(48px, 7vw, 80px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+@media (min-width: 800px) { .blog__grid { grid-template-columns: 1fr 1fr; } }
+
+.bpost {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 4vw, 40px);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background: #fff;
+  text-decoration: none;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s, border-color 0.4s;
+}
+.bpost:hover {
+  transform: translateY(-6px);
+  border-color: rgba(240, 94, 35, 0.45);
+  box-shadow: 0 28px 70px rgba(35, 35, 35, 0.12);
+}
+.bpost__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.bpost__tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-accent);
+  padding: 6px 13px;
+  border-radius: 99px;
+}
+.bpost__meta { font-size: 12px; color: var(--color-gray); }
+.bpost__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  color: var(--color-paper);
+  transition: color 0.3s;
+}
+.bpost:hover .bpost__title { color: var(--color-accent); }
+.bpost__desc {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-gray);
+  flex: 1;
+}
+.bpost__more {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-paper);
+  transition: gap 0.3s, color 0.3s;
+}
+.bpost:hover .bpost__more { gap: 14px; color: var(--color-accent); }
+</style>

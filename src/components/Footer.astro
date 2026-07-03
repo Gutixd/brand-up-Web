@@ -17,6 +17,8 @@ const nav = [
   { label: t.nav.work,     href: '/trabajos' },
   { label: t.nav.about,    href: '/nosotros' },
   { label: t.nav.contact,  href: '/contacto' },
+  // Blog discreto: solo en el footer y solo en español (SEO local)
+  ...(locale === 'es' ? [{ label: 'Blog', href: '/blog' }] : []),
 ];
 ---
 
