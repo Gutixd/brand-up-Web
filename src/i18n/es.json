@@ -10,28 +10,28 @@
   },
   "meta": {
     "home": {
-      "title": "BrandUp — Agencia creativa digital en Santiago de Chile",
-      "desc": "Agencia creativa full service en Santiago: diseño web, e-commerce, branding, reels y publicidad digital. No vendemos páginas web, construimos crecimiento."
+      "title": "BrandUp — Agencia de Marketing Digital y Diseño Web en Santiago de Chile",
+      "desc": "Agencia de marketing digital en Santiago de Chile: diseño web, e-commerce, branding, reels, publicidad digital y growth. Marcas reales, resultados medibles. Cotiza gratis por WhatsApp."
     },
     "services": {
-      "title": "Servicios — BrandUp Agency",
-      "desc": "Diseño y desarrollo web, e-commerce, branding, reels, publicidad digital y growth marketing en Santiago de Chile."
+      "title": "Servicios de Marketing Digital y Diseño Web en Santiago | BrandUp",
+      "desc": "Diseño y desarrollo web, tiendas online, branding, contenido para redes, Meta Ads y automatizaciones con IA para empresas de Santiago y todo Chile."
     },
     "work": {
-      "title": "Trabajos — BrandUp Agency",
-      "desc": "Proyectos reales de BrandUp: web, branding, contenido y publicidad para marcas chilenas."
+      "title": "Portafolio — Casos reales de marcas chilenas | BrandUp",
+      "desc": "Proyectos reales de BrandUp en Santiago: sitios web que convierten, e-commerce, branding y campañas con más de 1 millón de views generadas."
     },
     "industries": {
       "title": "Industrias — BrandUp Agency",
       "desc": "Experiencia en gastronomía, e-commerce, B2B, educación, salud e instituciones."
     },
     "about": {
-      "title": "Nosotros — BrandUp Agency",
-      "desc": "Conoce a BrandUp: tecnología y publicidad trabajando juntas para hacer crecer marcas en Chile."
+      "title": "Nosotros — Agencia creativa en Santiago de Chile | BrandUp",
+      "desc": "Somos BrandUp: equipo senior de tecnología y publicidad en Santiago de Chile. Diseño, desarrollo y estrategia trabajando en la misma dirección."
     },
     "contact": {
-      "title": "Contacto — BrandUp Agency",
-      "desc": "Hablemos de tu proyecto. Escríbenos por WhatsApp o por el formulario."
+      "title": "Contacto — Agencia de Marketing en Santiago | BrandUp",
+      "desc": "Hablemos de tu proyecto: WhatsApp +56 9 7982 2862 o formulario. Agencia de marketing digital y diseño web en Santiago de Chile."
     },
     "quote": {
       "title": "Cotiza tu proyecto — BrandUp Agency",
@@ -247,10 +247,10 @@
       "Aún no lo sé"
     ],
     "message": "Cuéntanos sobre tu proyecto",
-    "submit": "Enviar",
-    "sending": "Enviando…",
-    "success": "¡Mensaje enviado! Te responderemos a la brevedad.",
-    "error": "Hubo un problema al enviar. Inténtalo de nuevo o escríbenos por WhatsApp.",
+    "submit": "Enviar por WhatsApp",
+    "sending": "Abriendo WhatsApp…",
+    "success": "¡Listo! Se abrió WhatsApp con tu mensaje armado — solo presiona enviar y te respondemos al tiro.",
+    "error": "No se pudo abrir WhatsApp. Escríbenos directo al +56 9 7982 2862.",
     "required": "Este campo es obligatorio",
     "invalidEmail": "Ingresa un email válido"
   },

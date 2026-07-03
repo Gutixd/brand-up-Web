@@ -2057,6 +2057,10 @@ html.intro-lock body { overflow: hidden; }
   text-transform: uppercase;
   color: rgba(20, 13, 9, 0.72);
 }
+/* Números largos (1.000.000+): más chicos y a doble columna en móvil */
+.stat-u--big { grid-column: span 2; }
+@media (min-width: 900px) { .stat-u--big { grid-column: auto; } }
+.stat-u--big .stat-u__val { font-size: clamp(2.5rem, 3.3vw, 3.5rem); }
 
 /* ── Testimonios — sección editorial ─────────────────────────────── */
 .testis { background: var(--color-ink); }

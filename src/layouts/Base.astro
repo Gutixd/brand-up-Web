@@ -20,16 +20,35 @@ const pathname = Astro.url.pathname;
 const alternate = altPath(locale, pathname);
 const canonical = new URL(pathname, Astro.site).href;
 
+// LocalBusiness para SEO local (Santiago de Chile)
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': ['Organization', 'LocalBusiness'],
   name: SITE.legalName,
+  alternateName: 'Brand Up',
+  description:
+    locale === 'es'
+      ? 'Agencia de marketing digital y diseño web en Santiago de Chile: e-commerce, branding, contenido para redes, publicidad digital y automatizaciones con IA.'
+      : 'Digital marketing and web design agency in Santiago, Chile: e-commerce, branding, social content, digital ads and AI automations.',
   url: SITE.domain,
   email: SITE.email,
   telephone: SITE.phone,
-  address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Santiago',
+    addressRegion: 'Región Metropolitana',
+    addressCountry: 'CL',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: -33.4489, longitude: -70.6693 },
+  areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
+  priceRange: '$$',
+  knowsAbout: [
+    'Diseño web', 'E-commerce', 'Branding', 'Marketing digital',
+    'Publicidad digital', 'Contenido para redes sociales', 'SEO',
+  ],
   sameAs: [SITE.instagram, SITE.tiktok],
   logo: `${SITE.domain}/favicon-512.png`,
+  image: `${SITE.domain}/og-image.png`,
 };
 
 const nav = [
@@ -52,8 +71,12 @@ const nav = [
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
     <meta name="generator" content={Astro.generator} />
+    <!-- SEO local -->
+    <meta name="geo.region" content="CL-RM" />
+    <meta name="geo.placename" content="Santiago de Chile" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BrandUp Agency" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

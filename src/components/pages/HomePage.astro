@@ -65,10 +65,10 @@ const streets = [
 
 // ── Stats ──────────────────────────────────────────────────────────
 const stats = [
-  { val: '15',  suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
-  { val: '267', suffix: 'K', prefix: '',  lbl: es ? 'Views en un reel' : 'Views on one reel' },
-  { val: '300', suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
-  { val: '100', suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
+  { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
+  { val: '1000000', suffix: '+', prefix: '',  lbl: es ? 'Views generadas para clientes' : 'Views generated for clients' },
+  { val: '300',     suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
+  { val: '100',     suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
 ];
 ---
 
@@ -274,7 +274,7 @@ const stats = [
     </div>
     <div class="stats-band__grid">
       {stats.map((s) => (
-        <div class="stat-u" data-reveal>
+        <div class={`stat-u${s.val.length > 4 ? ' stat-u--big' : ''}`} data-reveal>
           <span class="stat-u__val">
             {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>0</span>
           </span>

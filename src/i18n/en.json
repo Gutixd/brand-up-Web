@@ -10,15 +10,15 @@
   },
   "meta": {
     "home": {
-      "title": "BrandUp — Digital creative agency in Santiago, Chile",
-      "desc": "Full-service creative agency in Santiago: web design, e-commerce, branding, reels and digital advertising. We don't sell websites, we build growth."
+      "title": "BrandUp — Digital Marketing & Web Design Agency in Santiago, Chile",
+      "desc": "Digital marketing agency in Santiago, Chile: web design, e-commerce, branding, reels, digital ads and growth. Real brands, measurable results."
     },
     "services": {
-      "title": "Services — BrandUp Agency",
+      "title": "Digital Marketing & Web Design Services in Santiago | BrandUp",
       "desc": "Web design and development, e-commerce, branding, reels, digital advertising and growth marketing in Santiago, Chile."
     },
     "work": {
-      "title": "Work — BrandUp Agency",
+      "title": "Portfolio — Real cases from Chilean brands | BrandUp",
       "desc": "Real BrandUp projects: web, branding, content and advertising for Chilean brands."
     },
     "industries": {
@@ -26,11 +26,11 @@
       "desc": "Experience in food & beverage, e-commerce, B2B, education, health and institutions."
     },
     "about": {
-      "title": "About — BrandUp Agency",
+      "title": "About us — Creative agency in Santiago, Chile | BrandUp",
       "desc": "Meet BrandUp: technology and advertising working together to grow brands in Chile."
     },
     "contact": {
-      "title": "Contact — BrandUp Agency",
+      "title": "Contact — Marketing agency in Santiago | BrandUp",
       "desc": "Let's talk about your project. Reach us on WhatsApp or through the form."
     },
     "quote": {
@@ -247,10 +247,10 @@
       "Not sure yet"
     ],
     "message": "Tell us about your project",
-    "submit": "Send",
-    "sending": "Sending…",
-    "success": "Message sent! We'll get back to you shortly.",
-    "error": "Something went wrong. Try again or message us on WhatsApp.",
+    "submit": "Send via WhatsApp",
+    "sending": "Opening WhatsApp…",
+    "success": "Done! WhatsApp opened with your message ready — just press send and we will get back to you fast.",
+    "error": "Could not open WhatsApp. Write to us directly at +56 9 7982 2862.",
     "required": "This field is required",
     "invalidEmail": "Enter a valid email"
   },

@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import PageHero from '../PageHero.astro';
 import CtaBand from '../CtaBand.astro';
 import { useT, type Locale } from '../../i18n';
 
@@ -13,64 +12,127 @@ interface Props {
 }
 const { locale } = Astro.props;
 const t = useT(locale);
+const es = locale === 'es';
 
 const team = [
   { photo: fotoDiego, ...t.about.diego },
   { photo: fotoValentina, ...t.about.valentina },
 ];
-const valuesTitle = locale === 'es' ? 'Principios que no negociamos' : 'Principles we don’t negotiate';
+const valuesTitle = es ? 'Principios que no negociamos' : 'Principles we don’t negotiate';
+
+const tickerWords = es
+  ? ['Estrategia', 'Diseño', 'Tecnología', 'Contenido', 'Resultados']
+  : ['Strategy', 'Design', 'Technology', 'Content', 'Results'];
+
+const stats = [
+  { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
+  { val: '1000000', suffix: '+', prefix: '',  lbl: es ? 'Views generadas' : 'Views generated' },
+  { val: '300',     suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
+  { val: '100',     suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
+];
 ---
 
 <Base locale={locale} title={t.meta.about.title} description={t.meta.about.desc}>
 
-  <PageHero kicker={t.about.kicker} title={t.about.title} intro={t.about.manifesto} />
+  <!-- ════ HERO — manifiesto poster oscuro ═════════════════════════ -->
+  <section class="ab-hero">
+    <div class="ab-hero__inner">
+      <p class="ab-hero__kicker" data-reveal>— {t.about.kicker}</p>
+      <h1 class="ab-hero__title">
+        <span class="ln" data-split-chars>{es ? 'Somos' : 'We are'}</span>
+        <span class="ln ln--stroke" data-split-chars>Brand Up</span>
+      </h1>
+      <p class="ab-hero__intro" data-reveal data-delay="0.2">{t.about.manifesto}</p>
+    </div>
+    <!-- Badge circular giratorio -->
+    <div class="ab-hero__badge" aria-hidden="true">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="ab-circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/>
+        </defs>
+        <text class="ab-hero__badge-text">
+          <textPath href="#ab-circ">BRAND UP ✦ SANTIAGO ✦ BRAND UP ✦ CRECIMIENTO ✦</textPath>
+        </text>
+        <text x="100" y="116" text-anchor="middle" class="ab-hero__badge-star">✦</text>
+      </svg>
+    </div>
+  </section>
 
-  <!-- Equipo -->
-  <section class="page-section--cream">
-    <div class="page-section__inner" style="padding-block: 96px;">
-      <div class="sec-head">
-        <p class="sec-head__kicker">{t.about.teamKicker}</p>
-        <h2 class="sec-head__title">{t.about.teamTitle}</h2>
-      </div>
-      <div class="grid gap-10 md:grid-cols-2">
-        {team.map((m, i) => (
-          <div class="about-member group" data-reveal data-delay={`${i * 0.1}`}>
-            <div class="about-member__photo">
-              <Image
-                src={m.photo}
-                alt={m.name}
-                class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                widths={[480, 720, 900]}
-                sizes="(min-width: 768px) 45vw, 90vw"
-              />
-            </div>
-            <h3 class="about-member__name">{m.name}</h3>
-            <p class="about-member__role">{m.role}</p>
-            <p class="about-member__bio">{m.bio}</p>
+  <!-- ════ TICKER ══════════════════════════════════════════════════ -->
+  <section class="ticker ticker--about" aria-hidden="true">
+    <div class="ticker__band ticker__band--accent">
+      <div class="marquee-track">
+        {[0, 1].map((copy) => (
+          <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {tickerWords.map((w) => (
+              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+            ))}
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Valores -->
-  <section class="page-section">
-    <div class="sec-head">
-      <p class="sec-head__kicker">{t.about.valuesKicker}</p>
-      <h2 class="sec-head__title">{valuesTitle}</h2>
+  <!-- ════ EQUIPO ══════════════════════════════════════════════════ -->
+  <section class="ab-team">
+    <div class="ab-team__inner">
+      <p class="ab-team__kicker" data-reveal>— {t.about.teamKicker}</p>
+      <h2 class="ab-team__title" data-split-chars>{t.about.teamTitle}</h2>
+      <div class="ab-team__grid">
+        {team.map((m, i) => (
+          <div class={`ab-member ab-member--${i + 1}`} data-reveal data-delay={`${i * 0.12}`}>
+            <figure class="ab-member__photo" data-img-reveal>
+              <Image
+                src={m.photo}
+                alt={m.name}
+                widths={[480, 720, 900]}
+                sizes="(min-width: 768px) 45vw, 90vw"
+              />
+              <figcaption class="ab-member__chip">{m.role}</figcaption>
+            </figure>
+            <h3 class="ab-member__name">{m.name}</h3>
+            <p class="ab-member__bio">{m.bio}</p>
+          </div>
+        ))}
+      </div>
     </div>
-    <div class="grid gap-6 md:grid-cols-3">
-      {t.about.values.map((v, i) => (
-        <div class="ed-card" data-reveal data-delay={`${i * 0.08}`}>
-          <span class="ed-card__num">0{i + 1}</span>
-          <h3 class="ed-card__title">{v.t}</h3>
-          <p class="ed-card__desc">{v.d}</p>
+  </section>
+
+  <!-- ════ STATS ═══════════════════════════════════════════════════ -->
+  <section class="stats-band">
+    <div class="stats-band__head">
+      <p class="stats-band__kicker" data-reveal>— {es ? 'En números' : 'In numbers'}</p>
+    </div>
+    <div class="stats-band__grid">
+      {stats.map((s) => (
+        <div class={`stat-u${s.val.length > 4 ? ' stat-u--big' : ''}`} data-reveal>
+          <span class="stat-u__val">
+            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>0</span>
+          </span>
+          <span class="stat-u__lbl">{s.lbl}</span>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- Proceso -->
+  <!-- ════ VALORES — filas urbanas ═════════════════════════════════ -->
+  <section class="ab-values">
+    <div class="ab-values__inner">
+      <p class="ab-values__kicker" data-reveal>— {t.about.valuesKicker}</p>
+      <h2 class="ab-values__title" data-split-chars>{valuesTitle}</h2>
+      <div class="ab-values__list">
+        {t.about.values.map((v, i) => (
+          <div class="ab-value" data-reveal data-delay={`${i * 0.08}`}>
+            <span class="ab-value__num">0{i + 1}</span>
+            <h3 class="ab-value__t">{v.t}</h3>
+            <p class="ab-value__d">{v.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ PROCESO ═════════════════════════════════════════════════ -->
   <section class="page-section--dark">
     <div class="page-section__inner" style="padding-block: 96px;">
       <div class="sec-head">
@@ -95,34 +157,214 @@ const valuesTitle = locale === 'es' ? 'Principios que no negociamos' : 'Principl
 </Base>
 
 <style>
-.about-member__photo {
+/* ── Hero manifiesto ─────────────────────────────────────────────── */
+.ab-hero {
+  position: relative;
+  background: #0d0d0d;
+  color: #f8f8f8;
+  overflow: hidden;
+  padding: clamp(150px, 18vw, 220px) 24px clamp(70px, 9vw, 120px);
+}
+@media (min-width: 768px) { .ab-hero { padding-inline: 48px; } }
+.ab-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 85% -10%, rgba(240,94,35,0.16) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ab-hero__inner { position: relative; max-width: 1400px; margin-inline: auto; }
+.ab-hero__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+}
+.ab-hero__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 13.5vw, 12.5rem);
+  letter-spacing: 0.014em;
+  line-height: 0.94;
+  text-transform: uppercase;
+}
+.ab-hero__title .ln { display: block; }
+.ab-hero__title .ln--stroke {
+  color: transparent;
+  -webkit-text-stroke: clamp(1.5px, 0.26vw, 2.6px) var(--color-accent);
+}
+.ab-hero__intro {
+  margin-top: clamp(28px, 4vw, 44px);
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 1.7vw, 1.3rem);
+  line-height: 1.65;
+  color: rgba(248, 248, 248, 0.62);
+}
+.ab-hero__badge {
+  position: absolute;
+  top: clamp(96px, 12vw, 150px);
+  right: clamp(20px, 5vw, 70px);
+  width: clamp(100px, 13vw, 170px);
+  aspect-ratio: 1;
+  animation: buSpin 16s linear infinite;
+  pointer-events: none;
+}
+.ab-hero__badge-text {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 3.4px;
+  fill: rgba(248, 248, 248, 0.85);
+  text-transform: uppercase;
+}
+.ab-hero__badge-star { font-size: 34px; fill: var(--color-accent); }
+@media (max-width: 860px) { .ab-hero__badge { display: none; } }
+@media (prefers-reduced-motion: reduce) { .ab-hero__badge { animation: none; } }
+
+.ticker--about { padding-block: 0 clamp(40px, 6vw, 70px); }
+
+/* ── Equipo ──────────────────────────────────────────────────────── */
+.ab-team { background: #f4f4f2; }
+.ab-team__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(80px, 10vw, 140px) 24px;
+}
+@media (min-width: 768px) { .ab-team__inner { padding-inline: 48px; } }
+.ab-team__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.ab-team__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 7.5vw, 6rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  line-height: 0.96;
+  color: #141414;
+  margin-bottom: clamp(44px, 6vw, 72px);
+}
+.ab-team__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(40px, 6vw, 72px);
+}
+@media (min-width: 768px) { .ab-team__grid { grid-template-columns: 1fr 1fr; } }
+.ab-member__photo {
+  position: relative;
   overflow: hidden;
   border-radius: 18px;
   aspect-ratio: 4 / 5;
-  border: 1px solid var(--color-line);
+  box-shadow: 0 26px 70px rgba(20, 20, 20, 0.16);
+  transform: rotate(var(--mtilt, 0deg));
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.about-member__name {
-  margin-top: 24px;
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--color-paper);
+.ab-member--1 .ab-member__photo { --mtilt: -1.6deg; }
+.ab-member--2 .ab-member__photo { --mtilt: 1.6deg; }
+.ab-member:hover .ab-member__photo { transform: rotate(0deg) scale(1.015); }
+.ab-member__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.about-member__role {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-accent);
+.ab-member:hover .ab-member__photo img { transform: scale(1.07); }
+.ab-member__chip {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(13, 13, 13, 0.78);
+  backdrop-filter: blur(6px);
+  color: #f8f8f8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 15px;
+  border-radius: 99px;
 }
-.about-member__bio {
-  margin-top: 14px;
-  font-size: 0.95rem;
-  line-height: 1.6;
+.ab-member__name {
+  margin-top: 26px;
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  color: #141414;
+}
+.ab-member__bio {
+  margin-top: 12px;
+  font-size: 0.98rem;
+  line-height: 1.62;
   color: var(--color-gray);
-  max-width: 42ch;
+  max-width: 46ch;
 }
 
+/* ── Valores — filas urbanas ─────────────────────────────────────── */
+.ab-values { background: var(--color-ink); }
+.ab-values__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(80px, 10vw, 140px) 24px;
+}
+@media (min-width: 768px) { .ab-values__inner { padding-inline: 48px; } }
+.ab-values__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.ab-values__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6.5vw, 5.2rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  line-height: 0.98;
+  color: var(--color-paper);
+  margin-bottom: clamp(40px, 6vw, 64px);
+}
+.ab-values__list { border-top: 1px solid var(--color-line); }
+.ab-value {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 40px;
+  padding: clamp(26px, 4vw, 40px) 8px;
+  border-bottom: 1px solid var(--color-line);
+  transition: background 0.35s, padding-inline 0.35s;
+}
+@media (min-width: 900px) {
+  .ab-value { grid-template-columns: 110px 320px 1fr; align-items: baseline; }
+}
+.ab-value:hover { background: #f0ede8; padding-inline: 18px; }
+.ab-value__num {
+  font-family: var(--font-poster);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  color: var(--color-accent);
+  line-height: 1;
+}
+.ab-value__t {
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-paper);
+}
+.ab-value__d {
+  font-size: 0.97rem;
+  line-height: 1.62;
+  color: var(--color-gray);
+  max-width: 60ch;
+}
+
+/* ── Proceso (números Anton) ─────────────────────────────────────── */
 .about-process {
   list-style: none;
   border-top: 1px solid rgba(248,248,248,0.12);
@@ -136,12 +378,12 @@ const valuesTitle = locale === 'es' ? 'Principios que no negociamos' : 'Principl
 }
 @media (min-width: 768px) { .about-process__step { gap: 48px; } }
 .about-process__num {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 600;
+  font-family: var(--font-poster);
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  font-weight: 400;
   color: var(--color-accent);
-  font-variant-numeric: tabular-nums;
   line-height: 1;
+  min-width: 2.2em;
 }
 .about-process__title {
   font-family: var(--font-display);

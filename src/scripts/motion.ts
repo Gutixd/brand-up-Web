@@ -101,7 +101,10 @@ function initCounters() {
       val: target, duration: 1.8, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 85%', once: true },
       onUpdate() {
-        el.textContent = (isFloat ? obj.val.toFixed(1) : Math.round(obj.val).toString()) + suffix;
+        // Números grandes con separador de miles (1.000.000)
+        const loc = document.documentElement.lang === 'en' ? 'en-US' : 'es-CL';
+        const n = isFloat ? obj.val.toFixed(1) : (target >= 1000 ? Math.round(obj.val).toLocaleString(loc) : Math.round(obj.val).toString());
+        el.textContent = n + suffix;
       },
     });
   });
