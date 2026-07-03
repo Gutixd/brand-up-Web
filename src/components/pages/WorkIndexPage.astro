@@ -6,6 +6,13 @@ import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
 import { useT, localePath, type Locale } from '../../i18n';
 
+import logoChacha from '../../assets/logos/chachapollo.webp';
+import logoJdcargo from '../../assets/logos/jdcargo.webp';
+import logoAracnida from '../../assets/logos/aracnida.webp';
+import logoTemplo from '../../assets/logos/templo-maipu.webp';
+import logoBell from '../../assets/logos/bell-college.webp';
+import logoSuperlunch from '../../assets/logos/superlunch.webp';
+
 import imgWeb from '../../assets/categories/web.webp';
 import imgEcom from '../../assets/categories/ecommerce.webp';
 import imgBrand from '../../assets/categories/branding.webp';
@@ -42,6 +49,21 @@ const categories = SERVICES.map((s) => ({
 }));
 
 const total = PROJECTS.length;
+
+const clientLogos = [
+  { img: logoChacha, name: 'El Chacha Pollo' },
+  { img: logoJdcargo, name: 'JD Cargo Logistics' },
+  { img: logoAracnida, name: 'Aracnida Store' },
+  { img: logoTemplo, name: 'Templo Votivo de Maipú' },
+  { img: logoBell, name: 'Bell College' },
+  { img: logoSuperlunch, name: 'Superlunch' },
+];
+
+const metas = [
+  { val: `${total}`, lbl: isEs ? 'Proyectos' : 'Projects' },
+  { val: '7', lbl: isEs ? 'Áreas de servicio' : 'Service areas' },
+  { val: '267K', lbl: isEs ? 'Views en un reel' : 'Views on one reel' },
+];
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
@@ -62,8 +84,32 @@ const total = PROJECTS.length;
             ? 'Elige una categoría para explorar los casos reales de esa área. Marcas reales, resultados medibles.'
             : 'Choose a category to explore real cases from that area. Real brands, measurable results.'}
         </p>
+
+        <!-- Métricas rápidas -->
+        <div class="works-page__metas" data-reveal data-delay="0.18">
+          {metas.map((m) => (
+            <span class="works-page__meta">
+              <strong>{m.val}</strong> {m.lbl}
+            </span>
+          ))}
+        </div>
       </div>
     </header>
+
+    <!-- Cinta de logos de clientes -->
+    <div class="works-logos" aria-label={isEs ? 'Marcas con las que trabajamos' : 'Brands we work with'}>
+      <div class="marquee-track marquee-track--slow">
+        {[0, 1].map((copy) => (
+          <div class="works-logos__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {[...clientLogos, ...clientLogos].map((l, i) => (
+              <span class="works-logos__item">
+                <Image src={l.img} alt={copy === 0 && i < clientLogos.length ? l.name : ''} widths={[200]} sizes="140px" />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
 
     <!-- Grid de categorías con foto -->
     <main class="works-grid">
@@ -153,6 +199,58 @@ const total = PROJECTS.length;
   color: rgba(248, 248, 248, 0.45);
   max-width: 56ch;
 }
+.works-page__metas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-top: 10px;
+}
+.works-page__meta {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.45);
+}
+.works-page__meta strong {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: #f05e23;
+  margin-right: 7px;
+  vertical-align: -2px;
+}
+
+/* ── Cinta de logos de clientes ──────────────────────────────────── */
+.works-logos {
+  overflow: hidden;
+  border-block: 1px solid rgba(248, 248, 248, 0.08);
+  padding-block: 26px;
+  margin-bottom: 52px;
+}
+.works-logos__seq {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: clamp(44px, 6vw, 88px);
+  padding-inline: clamp(22px, 3vw, 44px);
+}
+.works-logos__item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.works-logos__item img {
+  max-height: 40px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+.works-logos__item:hover img { opacity: 0.9; }
 
 /* ── Grid ────────────────────────────────────────────────────────── */
 .works-grid {

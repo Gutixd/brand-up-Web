@@ -11,6 +11,7 @@ interface Props {
 const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
+const es = locale === 'es';
 
 const faqLd = {
   '@context': 'https://schema.org',
@@ -21,7 +22,51 @@ const faqLd = {
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 };
-const moreLabel = locale === 'es' ? 'Ver servicio' : 'View service';
+
+// Foto de cada servicio (mismas imágenes urbanas de la home)
+const svcImg: Record<string, string> = {
+  'diseno-web': '/images/urban/svc-web.jpg',
+  'ecommerce': '/images/urban/svc-ecommerce.jpg',
+  'branding': '/images/urban/svc-branding.jpg',
+  'contenido-reels': '/images/urban/svc-reels.jpg',
+  'publicidad-digital': '/images/urban/svc-ads.jpg',
+  'automatizaciones-ia': '/images/urban/svc-ia.jpg',
+  'marketing-growth': '/images/urban/svc-growth.jpg',
+};
+
+// Proceso de trabajo — para que se entienda cómo operamos
+const steps = [
+  {
+    n: '01',
+    t: es ? 'Diagnóstico' : 'Diagnosis',
+    d: es
+      ? 'Escuchamos tu negocio, tu mercado y tus objetivos. Sin plantillas: cada marca parte de una realidad distinta.'
+      : 'We listen to your business, your market and your goals. No templates: every brand starts from a different reality.',
+  },
+  {
+    n: '02',
+    t: es ? 'Estrategia' : 'Strategy',
+    d: es
+      ? 'Definimos un plan claro con metas medibles: qué haremos, en qué canales y qué resultados esperar.'
+      : 'We define a clear plan with measurable goals: what we will do, on which channels and what results to expect.',
+  },
+  {
+    n: '03',
+    t: es ? 'Producción' : 'Production',
+    d: es
+      ? 'Diseño, contenido, desarrollo y campañas. Todo lo ejecutamos nosotros, con calidad de detalle.'
+      : 'Design, content, development and campaigns. We execute everything ourselves, with attention to detail.',
+  },
+  {
+    n: '04',
+    t: es ? 'Crecimiento' : 'Growth',
+    d: es
+      ? 'Medimos, optimizamos y escalamos lo que funciona. Los números mandan, no las opiniones.'
+      : 'We measure, optimize and scale what works. Numbers rule, not opinions.',
+  },
+];
+
+const moreLabel = es ? 'Ver servicio' : 'View service';
 ---
 
 <Base locale={locale} title={t.meta.services.title} description={t.meta.services.desc}>
@@ -29,19 +74,54 @@ const moreLabel = locale === 'es' ? 'Ver servicio' : 'View service';
 
   <PageHero kicker={t.services.kicker} title={t.services.title} intro={t.services.intro} />
 
-  <!-- Lista editorial de servicios -->
+  <!-- Lista editorial de servicios con foto + entregables -->
   <section class="svc-index">
     {SERVICES.map((s) => (
       <a href={lp(`/servicios/${s.slug}`)} class="svc-index__row" data-reveal>
         <span class="svc-index__num">{s.num}</span>
+
+        <div class="svc-index__media" aria-hidden="true">
+          <img src={svcImg[s.slug]}
+               srcset={`${svcImg[s.slug].replace('.jpg', '-sm.jpg')} 800w, ${svcImg[s.slug]} 1400w`}
+               sizes="(max-width: 899px) 92vw, 240px"
+               alt="" loading="lazy" decoding="async" />
+        </div>
+
         <div class="svc-index__main">
           <h2 class="svc-index__title">{pick(s.title, locale)}</h2>
           <p class="svc-index__short">{pick(s.short, locale)}</p>
+          <div class="svc-index__chips">
+            {(es ? s.items.es : s.items.en).slice(0, 3).map((item) => (
+              <span class="svc-chip">{item}</span>
+            ))}
+          </div>
         </div>
-        <span class="svc-index__tag">{pick(s.tag, locale)}</span>
-        <span class="svc-index__cta">{moreLabel} <span aria-hidden="true">→</span></span>
+
+        <span class="svc-index__go" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+            <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="sr-only">{moreLabel}</span>
       </a>
     ))}
+  </section>
+
+  <!-- Cómo trabajamos — proceso en 4 pasos -->
+  <section class="process">
+    <div class="process__inner">
+      <p class="process__kicker" data-reveal>— {es ? 'Cómo trabajamos' : 'How we work'}</p>
+      <h2 class="process__title" data-split-chars>{es ? 'De la idea al resultado' : 'From idea to result'}</h2>
+      <div class="process__grid">
+        {steps.map((st, i) => (
+          <div class="process-step" data-reveal data-delay={String(i * 0.1)}>
+            <span class="process-step__num">{st.n}</span>
+            <h3 class="process-step__t">{st.t}</h3>
+            <p class="process-step__d">{st.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
   </section>
 
   <!-- FAQ -->
@@ -76,37 +156,61 @@ const moreLabel = locale === 'es' ? 'Ver servicio' : 'View service';
   border-top: 1px solid var(--color-line);
 }
 @media (min-width: 768px) { .svc-index { padding-inline: 48px; } }
+
 .svc-index__row {
   display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 8px 24px;
-  padding: 36px 8px;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  padding: 34px 8px;
   border-bottom: 1px solid var(--color-line);
   text-decoration: none;
-  transition: background 0.35s, padding-inline 0.35s;
+  transition: background 0.35s;
+  position: relative;
 }
-.svc-index__row:hover { background: #f0ede8; padding-inline: 20px; }
 @media (min-width: 900px) {
   .svc-index__row {
-    grid-template-columns: 56px minmax(0,1fr) 160px 160px;
-    gap: 32px;
+    grid-template-columns: 56px 240px minmax(0, 1fr) 64px;
+    gap: 40px;
+    align-items: center;
     padding-block: 40px;
   }
 }
+.svc-index__row:hover { background: #f0ede8; }
+
 .svc-index__num {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--color-gray);
   font-variant-numeric: tabular-nums;
   align-self: start;
   padding-top: 8px;
 }
+@media (max-width: 899px) { .svc-index__num { display: none; } }
+
+/* Foto del servicio — inclinada, se endereza al hover */
+.svc-index__media {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 14px;
+  overflow: hidden;
+  transform: rotate(-2deg);
+  box-shadow: 0 18px 44px rgba(35, 35, 35, 0.14);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-index__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-index__row:hover .svc-index__media { transform: rotate(0deg) scale(1.02); }
+.svc-index__row:hover .svc-index__media img { transform: scale(1.09); }
+
 .svc-index__main { min-width: 0; }
 .svc-index__title {
   font-family: var(--font-poster);
-  font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+  font-size: clamp(1.9rem, 4.6vw, 3.2rem);
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.014em;
@@ -116,37 +220,106 @@ const moreLabel = locale === 'es' ? 'Ver servicio' : 'View service';
 }
 .svc-index__row:hover .svc-index__title {
   color: var(--color-accent);
-  transform: translateX(12px) skewX(-3deg);
+  transform: translateX(10px) skewX(-3deg);
 }
 .svc-index__short {
   margin-top: 10px;
   font-size: 0.98rem;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--color-gray);
-  max-width: 52ch;
+  max-width: 56ch;
 }
-.svc-index__tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-gray);
-  grid-column: 2;
-}
-@media (min-width: 900px) {
-  .svc-index__tag { grid-column: auto; justify-self: start; align-self: center; }
-}
-.svc-index__cta {
-  display: none;
-  align-items: center;
+.svc-index__chips {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-accent);
-  justify-self: end;
-  white-space: nowrap;
-  transition: gap 0.3s;
+  margin-top: 16px;
 }
-.svc-index__row:hover .svc-index__cta { gap: 14px; }
-@media (min-width: 900px) { .svc-index__cta { display: inline-flex; } }
+.svc-chip {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-gray);
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  padding: 6px 13px;
+  background: rgba(255, 255, 255, 0.55);
+  transition: border-color 0.3s, color 0.3s;
+}
+.svc-index__row:hover .svc-chip { border-color: rgba(240, 94, 35, 0.4); color: var(--color-paper); }
+
+.svc-index__go {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  display: none;
+  place-items: center;
+  color: var(--color-gray);
+  justify-self: end;
+  transition: background 0.35s, border-color 0.35s, color 0.35s,
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 900px) { .svc-index__go { display: grid; } }
+.svc-index__row:hover .svc-index__go {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  transform: rotate(45deg) scale(1.08);
+}
+
+/* ── Proceso — banda oscura con 4 pasos ─────────────────────────── */
+.process {
+  background: #0d0d0d;
+  color: #f8f8f8;
+  padding: clamp(80px, 10vw, 140px) 24px;
+}
+@media (min-width: 768px) { .process { padding-inline: 48px; } }
+.process__inner { max-width: 1400px; margin-inline: auto; }
+.process__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+.process__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 6.5vw, 5.4rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  line-height: 0.98;
+  margin-bottom: clamp(44px, 6vw, 72px);
+}
+.process__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 34px 28px;
+}
+@media (min-width: 640px) { .process__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .process__grid { grid-template-columns: repeat(4, 1fr); } }
+.process-step {
+  border-top: 1px solid rgba(248, 248, 248, 0.16);
+  padding-top: 22px;
+}
+.process-step__num {
+  font-family: var(--font-poster);
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  color: var(--color-accent);
+  line-height: 1;
+}
+.process-step__t {
+  margin-top: 14px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.process-step__d {
+  margin-top: 9px;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: rgba(248, 248, 248, 0.55);
+}
 </style>
