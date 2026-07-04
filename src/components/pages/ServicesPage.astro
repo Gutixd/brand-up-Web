@@ -1,8 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PageHero from '../PageHero.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
+import { SITE } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 interface Props {
@@ -22,6 +22,57 @@ const faqLd = {
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 };
+
+// Servicios como datos estructurados (SEO local: cada servicio con área Santiago)
+const servicesLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: SERVICES.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Service',
+      name: pick(s.title, locale),
+      description: pick(s.short, locale),
+      url: `${SITE.domain}${lp(`/servicios/${s.slug}`)}`,
+      areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
+      provider: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+    },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: es ? 'Inicio' : 'Home', item: SITE.domain },
+    { '@type': 'ListItem', position: 2, name: es ? 'Servicios' : 'Services' },
+  ],
+};
+
+// Chips de confianza del hero
+const heroChips = es
+  ? ['Santiago de Chile', 'Respuesta en 24 horas', 'Propuesta con precio cerrado']
+  : ['Santiago, Chile', 'Reply within 24 hours', 'Fixed-price proposal'];
+
+// Prueba de resultado por servicio (casos reales del portafolio)
+const proof: Record<string, { es: string; en: string }> = {
+  'diseno-web': { es: '+120% leads B2B — JD Cargo', en: '+120% B2B leads — JD Cargo' },
+  'ecommerce': { es: '+450% ticket promedio — Aracnida', en: '+450% AOV — Aracnida' },
+  'branding': { es: 'Sistemas gráficos completos', en: 'Complete graphic systems' },
+  'contenido-reels': { es: '+1M de views generadas', en: '+1M views generated' },
+  'publicidad-digital': { es: 'Campañas geolocalizadas en RM', en: 'Geotargeted campaigns' },
+  'automatizaciones-ia': { es: 'Carritos recuperados en automático', en: 'Automated cart recovery' },
+  'marketing-growth': { es: '+300% engagement promedio', en: '+300% average engagement' },
+};
+
+// Enlaces internos al blog (interlinking SEO — solo ES, el blog es en español)
+const seoLinks = [
+  { href: '/blog/cuanto-cuesta-una-pagina-web-en-chile', label: '¿Cuánto cuesta una página web en Chile en 2026?' },
+  { href: '/blog/cuanto-cobra-una-agencia-de-marketing-digital-en-chile', label: '¿Cuánto cobra una agencia de marketing digital en Chile?' },
+  { href: '/blog/como-aparecer-en-google-chile-seo-local', label: 'Cómo aparecer en Google en Chile: guía de SEO local' },
+  { href: '/blog/instagram-para-negocios-chile-reels', label: 'Instagram para negocios: cómo conseguir clientes con reels' },
+];
 
 // Foto de cada servicio (mismas imágenes urbanas de la home)
 const svcImg: Record<string, string> = {
@@ -71,8 +122,29 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
 
 <Base locale={locale} title={t.meta.services.title} description={t.meta.services.desc}>
   <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(servicesLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
-  <PageHero kicker={t.services.kicker} title={t.services.title} intro={t.services.intro} />
+  <!-- Hero propio — H1 con keywords locales + chips de confianza -->
+  <header class="svc-hero">
+    <div class="svc-hero__inner">
+      <p class="svc-hero__kicker" data-reveal>— {t.services.kicker}</p>
+      <h1 class="svc-hero__title">
+        <span class="ln" data-split-chars>{es ? 'Servicios de marketing' : 'Digital marketing &'}</span>
+        <span class="ln" data-split-chars>{es ? 'digital y diseño web' : 'web design services'}</span>
+        <span class="ln ln--accent" data-split-chars>{es ? 'en Santiago.' : 'in Santiago.'}</span>
+      </h1>
+      <p class="svc-hero__intro" data-reveal data-delay="0.18">{t.services.intro}</p>
+      <div class="svc-hero__chips" data-reveal data-delay="0.28">
+        {heroChips.map((c) => (
+          <span class="svc-hero__chip">
+            <span class="svc-hero__chip-dot" aria-hidden="true"></span>
+            {c}
+          </span>
+        ))}
+      </div>
+    </div>
+  </header>
 
   <!-- Lista editorial de servicios con foto + entregables -->
   <section class="svc-index">
@@ -88,7 +160,12 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
         </div>
 
         <div class="svc-index__main">
-          <h2 class="svc-index__title">{pick(s.title, locale)}</h2>
+          <div class="svc-index__topline">
+            <h2 class="svc-index__title">{pick(s.title, locale)}</h2>
+            {proof[s.slug] && (
+              <span class="svc-index__proof">✦ {es ? proof[s.slug].es : proof[s.slug].en}</span>
+            )}
+          </div>
           <p class="svc-index__short">{pick(s.short, locale)}</p>
           <div class="svc-index__chips">
             {(es ? s.items.es : s.items.en).slice(0, 3).map((item) => (
@@ -145,10 +222,185 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
     </div>
   </section>
 
+  {es && (
+    <!-- Bloque SEO local — texto keyword-rich + interlinking al blog -->
+    <section class="svc-seo">
+      <div class="svc-seo__inner">
+        <div class="svc-seo__text">
+          <h2 class="svc-seo__title">Agencia de marketing digital en Santiago de Chile</h2>
+          <p>
+            BrandUp es una agencia de marketing digital y diseño web con base en Santiago,
+            que trabaja con pymes y marcas de toda la Región Metropolitana y Chile. Combinamos
+            estrategia, diseño y tecnología en un solo equipo: sitios web que convierten,
+            tiendas online con pagos integrados, branding memorable, contenido para redes
+            sociales y campañas de publicidad digital medibles.
+          </p>
+          <p>
+            Cada proyecto parte con un objetivo de negocio concreto — más clientes, más ventas,
+            más marca — y una métrica clara para medirlo. Si buscas una agencia en Santiago que
+            hable de resultados y no de likes, hablemos.
+          </p>
+        </div>
+        <div class="svc-seo__links">
+          <p class="svc-seo__links-label">— Guías útiles antes de cotizar</p>
+          {seoLinks.map((l) => (
+            <a href={l.href} class="svc-seo__link">{l.label} <span aria-hidden="true">→</span></a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <CtaBand locale={locale} />
 </Base>
 
 <style>
+/* ── Hero — H1 poster con keywords locales ───────────────────────── */
+.svc-hero {
+  position: relative;
+  background: #0d0d0d;
+  color: #f8f8f8;
+  overflow: hidden;
+  padding: clamp(150px, 17vw, 210px) 24px clamp(64px, 8vw, 100px);
+}
+@media (min-width: 768px) { .svc-hero { padding-inline: 48px; } }
+.svc-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 85% -10%, rgba(240,94,35,0.16) 0%, transparent 60%);
+  pointer-events: none;
+}
+.svc-hero__inner { position: relative; max-width: 1400px; margin-inline: auto; }
+.svc-hero__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+}
+.svc-hero__title {
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 8.2vw, 7.4rem);
+  letter-spacing: 0.014em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+.svc-hero__title .ln { display: block; }
+.svc-hero__title .ln--accent {
+  color: transparent;
+  -webkit-text-stroke: clamp(1.4px, 0.24vw, 2.4px) var(--color-accent);
+}
+.svc-hero__intro {
+  margin-top: clamp(24px, 3.5vw, 38px);
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  line-height: 1.65;
+  color: rgba(248, 248, 248, 0.6);
+}
+.svc-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: clamp(24px, 3.5vw, 36px);
+}
+.svc-hero__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.72);
+  border: 1px solid rgba(248, 248, 248, 0.16);
+  border-radius: 99px;
+  padding: 9px 16px;
+}
+.svc-hero__chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(240, 94, 35, 0.8);
+}
+
+/* ── Prueba de resultado por servicio ────────────────────────────── */
+.svc-index__topline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px 18px;
+  flex-wrap: wrap;
+}
+.svc-index__proof {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* ── Bloque SEO local + interlinking ─────────────────────────────── */
+.svc-seo {
+  background: var(--color-ink);
+  border-top: 1px solid var(--color-line);
+}
+.svc-seo__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(64px, 8vw, 100px) 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 44px;
+}
+@media (min-width: 768px) { .svc-seo__inner { padding-inline: 48px; } }
+@media (min-width: 1000px) {
+  .svc-seo__inner { grid-template-columns: 1.2fr 0.8fr; gap: 72px; }
+}
+.svc-seo__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-paper);
+  margin-bottom: 18px;
+}
+.svc-seo__text p {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--color-gray);
+  margin-bottom: 14px;
+  max-width: 65ch;
+}
+.svc-seo__links {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  align-self: start;
+  border-left: 2px solid var(--color-accent);
+  padding-left: 26px;
+}
+.svc-seo__links-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 4px;
+}
+.svc-seo__link {
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: var(--color-paper);
+  transition: color 0.25s, transform 0.3s;
+  max-width: 46ch;
+}
+.svc-seo__link:hover { color: var(--color-accent); transform: translateX(4px); }
+
 .svc-index {
   max-width: 1400px;
   margin-inline: auto;

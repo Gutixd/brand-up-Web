@@ -152,6 +152,8 @@ function initCharReveals() {
       if (wi < words.length - 1) {
         const space = document.createElement('span');
         space.className = 'char-space';
+        // Espacio real: crawlers y lectores de pantalla leen el texto correcto
+        space.textContent = ' ';
         el.appendChild(space);
       }
     });
