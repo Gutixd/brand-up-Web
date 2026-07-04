@@ -1583,68 +1583,6 @@ html.intro-lock body { overflow: hidden; }
   .hero-credits__right { display: none; }
 }
 
-/* ── Prueba social — logos bajo el hero ──────────────────────────── */
-.trust {
-  background: #0d0d0d;
-  border-bottom: 1px solid rgba(248, 248, 248, 0.07);
-  padding-block: 22px;
-}
-.trust__inner {
-  max-width: 1400px;
-  margin-inline: auto;
-  padding-inline: 24px;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-@media (min-width: 768px) { .trust__inner { padding-inline: 48px; } }
-@media (max-width: 700px) {
-  .trust__inner { flex-direction: column; align-items: flex-start; gap: 16px; }
-}
-.trust__label {
-  flex: 0 0 auto;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.42);
-  white-space: nowrap;
-}
-.trust__band {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  /* Desvanecer los bordes del carrusel */
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-@media (max-width: 700px) { .trust__band { width: 100%; } }
-.trust__seq {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 16px;
-  padding-inline: 8px;
-}
-.trust__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  padding: 6px 14px;
-  background: #f8f8f8;
-  border-radius: 10px;
-  opacity: 0.85;
-  transition: opacity 0.3s;
-}
-.trust__item:hover { opacity: 1; }
-.trust__item img {
-  max-height: 30px;
-  width: auto;
-  max-width: 96px;
-  object-fit: contain;
-}
-
 /* ── Ticker urbano — doble banda cruzada ─────────────────────────── */
 .ticker {
   position: relative;
