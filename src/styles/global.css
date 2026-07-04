@@ -46,6 +46,10 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
 ::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
 
 /* ─── Char split reveal ──────────────────────────────────────────── */
+/* Cada palabra se mantiene entera (no se parte a la mitad); solo se corta
+   entre palabras. Los espacios sí permiten salto de línea. */
+.char-word { display: inline-block; white-space: nowrap; }
+.char-space { display: inline-block; width: 0.28em; }
 .char-container { display: inline-block; overflow: hidden; vertical-align: bottom; }
 .char { display: inline-block; transform: translateY(110%); will-change: transform; }
 

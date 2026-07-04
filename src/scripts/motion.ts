@@ -131,13 +131,28 @@ function initCharReveals() {
   document.querySelectorAll<HTMLElement>('[data-split-chars]').forEach((el) => {
     if (el.dataset.charDone === 'true') return;
     el.dataset.charDone = 'true';
-    const text = el.textContent ?? '';
+    const text = (el.textContent ?? '').trim().replace(/\s+/g, ' ');
     el.innerHTML = '';
-    text.split('').forEach((char) => {
-      if (char === ' ') {
-        el.innerHTML += '<span style="display:inline-block;width:0.28em"></span>';
-      } else {
-        el.innerHTML += `<span class="char-container"><span class="char">${char}</span></span>`;
+    // Agrupamos por palabra: cada palabra es un bloque que NO se parte a la
+    // mitad; solo se permite salto de línea entre palabras.
+    const words = text.split(' ');
+    words.forEach((word, wi) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'char-word';
+      for (const char of word) {
+        const cont = document.createElement('span');
+        cont.className = 'char-container';
+        const inner = document.createElement('span');
+        inner.className = 'char';
+        inner.textContent = char;
+        cont.appendChild(inner);
+        wordSpan.appendChild(cont);
+      }
+      el.appendChild(wordSpan);
+      if (wi < words.length - 1) {
+        const space = document.createElement('span');
+        space.className = 'char-space';
+        el.appendChild(space);
       }
     });
     gsap.to(el.querySelectorAll('.char'), {
