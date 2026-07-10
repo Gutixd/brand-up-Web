@@ -14,7 +14,7 @@ export const SITE = {
   founded: '2024',
   // Search Console: pegar aquí el content="..." de la etiqueta HTML que
   // entrega Google al verificar la propiedad (vacío = no se renderiza).
-  googleSiteVerification: '',
+  googleSiteVerification: 'k9tlLVKcG0z8oEuUAufIHOS7HSeL0g4Qu231vGRQXl8',
 };
 
 export const wa = (msg: string) =>
