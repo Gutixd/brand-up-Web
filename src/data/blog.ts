@@ -208,6 +208,146 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     cta: 'Producimos reels que superaron las 267.000 reproducciones para clientes reales. Hablemos de tu contenido.',
   },
+  {
+    slug: 'como-elegir-agencia-marketing-digital-chile',
+    title: 'Cómo elegir una agencia de marketing digital en Chile (sin quemarte)',
+    desc: 'Checklist 2026 para elegir agencia de marketing en Chile: qué preguntar antes de firmar, señales de alerta, qué exigir en el contrato y cómo comparar propuestas.',
+    tag: 'Marketing',
+    date: '2026-07-04',
+    readMin: 7,
+    intro:
+      'Elegir mal una agencia cuesta caro dos veces: pagas meses de un servicio que no funciona y pierdes el tiempo de mercado que tu competencia sí aprovechó. Esta guía es el checklist que nos gustaría que todos los clientes usaran — incluso para evaluarnos a nosotros.',
+    sections: [
+      {
+        h: 'Las 5 preguntas que debes hacer antes de firmar',
+        list: [
+          '¿Me pueden mostrar un caso con números? (ventas, leads, alcance — no likes ni "presencia de marca").',
+          '¿Quién va a trabajar mi cuenta y cuántas horas al mes le dedica?',
+          '¿Qué métrica vamos a usar para saber si esto funciona, y cuándo la revisamos?',
+          '¿Qué pasa si quiero terminar el contrato? (si hay amarre de 12 meses, pregunta por qué).',
+          '¿El dominio, la web y las cuentas publicitarias quedan a MI nombre?',
+        ],
+      },
+      {
+        h: 'Señales de alerta (corre)',
+        list: [
+          'Prometen resultados garantizados o "viralización" en semanas.',
+          'Hablan de seguidores y likes en vez de clientes y ventas.',
+          'No puedes hablar con nadie que haya trabajado con ellos.',
+          'Su propia presencia digital es mala: web lenta, Instagram muerto.',
+          'La propuesta es idéntica para tu restaurante que para una ferretería.',
+        ],
+      },
+      {
+        h: 'Agencia grande vs. equipo chico: qué conviene a una pyme',
+        p: [
+          'Las agencias grandes tienen procesos y respaldo, pero una pyme suele quedar en manos del practicante mientras paga tarifa de gerente. Los equipos chicos y senior te dan acceso directo a quien hace el trabajo — la pregunta clave no es el tamaño, sino quién toca tu cuenta.',
+          'Nuestra recomendación honesta: elige por casos demostrables en negocios parecidos al tuyo y por la claridad de la propuesta, no por el tamaño de la oficina.',
+        ],
+      },
+      {
+        h: 'Cómo comparar dos propuestas',
+        p: [
+          'Iguala el alcance: ¿cuántas piezas de contenido, cuántas campañas, cuántas horas? Un fee más barato con la mitad del trabajo es más caro. Y exige que ambas incluyan la misma métrica de éxito para poder comparar resultados a los 3 meses.',
+        ],
+      },
+    ],
+    cta: 'Hazle estas mismas preguntas a BrandUp — nos gusta responderlas. Escríbenos por WhatsApp.',
+  },
+  {
+    slug: 'como-vender-online-chile-guia-ecommerce',
+    title: 'Cómo vender online en Chile en 2026: guía completa de e-commerce',
+    desc: 'Todo lo que necesita una tienda online en Chile: Webpay o Mercado Pago, envíos, boleta electrónica, costos reales y los errores que matan las ventas.',
+    tag: 'E-commerce',
+    date: '2026-07-01',
+    readMin: 8,
+    intro:
+      'Vender online en Chile ya no es opcional: tus clientes comparan precios desde el teléfono aunque compren en tu local. Pero montar una tienda que realmente venda involucra decisiones que nadie te explica junto. Aquí está todo en un solo lugar.',
+    sections: [
+      {
+        h: 'Lo mínimo que necesita una tienda online chilena',
+        list: [
+          'Pasarela de pago: Webpay Plus (Transbank) o Mercado Pago — ambas aceptan débito y crédito chileno. Comisiones típicas: 1,5% – 3,5% por venta.',
+          'Envíos: Chilexpress, Starken o Blue Express integrados, con retiro en tienda como opción (en Chile convierte mucho).',
+          'Boleta electrónica: obligatoria ante el SII; se integra con la tienda.',
+          'Fotos reales del producto: la razón nº1 de abandono es no saber qué estás comprando.',
+        ],
+      },
+      {
+        h: 'Los 4 errores que matan las ventas de un e-commerce',
+        list: [
+          'Checkout largo: cada campo extra que pides pierde compradores. Nombre, dirección, pago — nada más.',
+          'Costos de envío sorpresa al final: muéstralos antes, o ofrece envío gratis sobre cierto monto.',
+          'Web lenta en celular: en Chile más del 70% del tráfico de tiendas es móvil.',
+          'Cero seguimiento: sin emails de carrito abandonado dejas plata sobre la mesa (recuperan entre un 5% y un 15% de las ventas perdidas).',
+        ],
+      },
+      {
+        h: '¿Shopify, WooCommerce o desarrollo a medida?',
+        p: [
+          'Shopify es rápido de montar pero pagas mensualidad en dólares y comisiones extra. WooCommerce es flexible pero exige mantención constante. El desarrollo a medida cuesta más al inicio y es más barato a largo plazo: sin mensualidades, velocidad superior y exactamente las funciones que tu negocio necesita.',
+          'La respuesta correcta depende de tu volumen: para validar una idea, cualquier plataforma sirve; para un negocio que ya vende, la velocidad y el control se pagan solos.',
+        ],
+      },
+      {
+        h: 'Cuánto cuesta y cuánto demora',
+        p: [
+          'Una tienda online profesional en Chile cuesta entre $600.000 y $2.500.000 CLP según catálogo e integraciones, y toma de 3 a 8 semanas. Desconfía de "tiendas en 48 horas": ese apuro se paga después en ventas perdidas.',
+        ],
+      },
+    ],
+    cta: 'Construimos e-commerce que aumentaron el ticket promedio +450%. Cotiza tu tienda por WhatsApp.',
+  },
+  {
+    slug: 'google-business-profile-guia-chile',
+    title: 'Google Business Profile: la guía 2026 para negocios chilenos',
+    desc: 'Cómo crear y optimizar tu perfil de Google gratis para aparecer en Maps y búsquedas locales en Chile: categorías, reseñas, fotos y errores comunes.',
+    tag: 'SEO',
+    date: '2026-06-25',
+    readMin: 6,
+    intro:
+      'Cuando alguien busca tu rubro + tu comuna, Google muestra tres negocios en un mapa antes que cualquier página web. Estar en esos tres es gratis — solo requiere hacer bien un perfil que la mayoría de los negocios chilenos tiene abandonado o ni siquiera creó.',
+    sections: [
+      {
+        h: 'Crear el perfil bien desde el día uno',
+        list: [
+          'Entra a business.google.com con la cuenta de Google del negocio (no la personal de alguien que se puede ir).',
+          'Nombre exacto del negocio — sin agregar keywords ("Pizzería Roma", no "Pizzería Roma | La Mejor Pizza de Ñuñoa"): Google suspende perfiles por eso.',
+          'Categoría principal correcta + 2-3 secundarias.',
+          'Si atiendes a domicilio o sin local abierto al público, elige "empresa de servicios en el área" y define tu zona.',
+          'Verifica apenas Google lo pida — sin verificación el perfil no aparece.',
+        ],
+      },
+      {
+        h: 'Optimización: lo que separa a los 3 primeros del resto',
+        list: [
+          'Fotos reales y recientes (mínimo 10): local, productos, equipo. Los perfiles con fotos reciben muchos más clics.',
+          'Horarios siempre al día — incluidos feriados. Un "cerrado" incorrecto destruye confianza.',
+          'Descripción con tu comuna y servicio incluidos de forma natural.',
+          'Responde TODAS las reseñas, buenas y malas. Google lo mide y los clientes lo leen.',
+          'Publica novedades cada 1-2 semanas: ofertas, productos nuevos, fotos.',
+        ],
+      },
+      {
+        h: 'Reseñas: el factor decisivo',
+        p: [
+          'Entre dos negocios similares, gana el que tiene más y mejores reseñas. Las reseñas deben ser de clientes reales — comprar reseñas falsas puede suspender tu perfil de forma permanente, y los clientes las detectan a kilómetros.',
+          'El método que funciona: pedirla justo después de una buena experiencia, por WhatsApp, con el link directo a "escribir reseña". Sin rodeos: "¿Nos ayudas con una reseña en Google? Te toma 1 minuto: [link]".',
+        ],
+      },
+      {
+        h: 'Errores que suspenden perfiles en Chile',
+        list: [
+          'Poner keywords en el nombre del negocio.',
+          'Usar una dirección donde no atiendes realmente.',
+          'Crear múltiples perfiles para el mismo negocio.',
+          'Reseñas falsas o intercambiadas entre negocios.',
+        ],
+      },
+    ],
+    cta: 'Configuramos y optimizamos tu perfil de Google como parte de nuestro servicio de SEO local. Hablemos.',
+  },
 ];
 
 export const getPost = (slug: string) => BLOG_POSTS.find((p) => p.slug === slug);
+

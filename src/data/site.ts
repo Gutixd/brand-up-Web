@@ -12,6 +12,9 @@ export const SITE = {
   instagram: 'https://www.instagram.com/brand.up.cl/',
   tiktok: 'https://www.tiktok.com/@brand.up.cl',
   founded: '2024',
+  // Search Console: pegar aquí el content="..." de la etiqueta HTML que
+  // entrega Google al verificar la propiedad (vacío = no se renderiza).
+  googleSiteVerification: '',
 };
 
 export const wa = (msg: string) =>

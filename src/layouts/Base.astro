@@ -74,6 +74,9 @@ const nav = [
     <!-- SEO local -->
     <meta name="geo.region" content="CL-RM" />
     <meta name="geo.placename" content="Santiago de Chile" />
+    {SITE.googleSiteVerification && (
+      <meta name="google-site-verification" content={SITE.googleSiteVerification} />
+    )}
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="BrandUp Agency" />

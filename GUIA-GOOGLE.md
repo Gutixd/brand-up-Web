@@ -57,5 +57,88 @@ Dashboard de Vercel → proyecto **brand-up-web** → pestaña **Analytics** →
 
 ---
 
+## 4. KIT listo para copiar y pegar (Business Profile)
+
+Todo lo de abajo está redactado para pegar directo en el formulario de
+business.google.com.
+
+### Datos básicos
+
+| Campo | Valor |
+|---|---|
+| Nombre | BrandUp Agency |
+| Categoría principal | Agencia de marketing |
+| Categorías secundarias | Diseñador de sitios web · Agencia de publicidad · Consultor de marketing |
+| Tipo | Empresa de servicios en el área (sin dirección pública) |
+| Zona de servicio | Santiago · Región Metropolitana |
+| Teléfono | +56 9 7982 2862 |
+| Sitio web | https://brandup.cl |
+| Horario | Lun a Vie 9:00–19:00 |
+
+### Descripción del negocio (pegar tal cual, 720 caracteres)
+
+> Agencia de marketing digital y diseño web en Santiago de Chile. Ayudamos
+> a pymes y marcas a crecer con sitios web que convierten, tiendas online,
+> branding, contenido para redes sociales y publicidad digital medible.
+> Somos un equipo chico y senior: la misma persona que te cotiza es la que
+> trabaja tu proyecto. Partimos cada trabajo con un objetivo de negocio
+> concreto —más clientes, más ventas, más marca— y una métrica clara para
+> medirlo. Más de 1 millón de views generadas para nuestros clientes y
+> sitios con velocidad perfecta en Google. Atendemos en toda la Región
+> Metropolitana y Chile. Cotización gratis por WhatsApp, respuesta en
+> menos de 24 horas.
+
+### Servicios para listar en el perfil
+
+1. Diseño y desarrollo web · 2. Tiendas online / E-commerce ·
+3. Branding e identidad visual · 4. Reels y contenido para redes ·
+5. Publicidad digital (Meta y Google Ads) · 6. Automatizaciones con IA ·
+7. Marketing y growth
+
+### 3 primeras publicaciones (una por semana)
+
+**Post 1 — presentación:**
+> Somos BrandUp 🍊 agencia de marketing digital y diseño web en Santiago.
+> Sitios que convierten, contenido que se ve y campañas que se miden.
+> Cotiza gratis por WhatsApp → link en el perfil.
+
+**Post 2 — caso:**
+> Un solo reel bien pensado superó las 260.000 reproducciones para uno de
+> nuestros clientes gastronómicos 📈 Así se ve el contenido con estrategia.
+> ¿Tu negocio ya está en video? Hablemos.
+
+**Post 3 — servicio:**
+> ¿Tu página web carga lenta o no aparece en Google? Hacemos sitios con
+> velocidad perfecta y SEO desde la base. Auditoría gratis de tu web →
+> escríbenos por WhatsApp.
+
+### Fotos que subir (mínimo 10)
+
+- Logo (cuadrado) y portada (el B↑ naranja sobre fondo oscuro)
+- 4-6 capturas de trabajos reales (webs, reels, branding)
+- 2-3 del equipo trabajando
+- 1-2 de resultados (pantallazo del reel con views, analytics)
+
+### Plantilla para pedir reseñas (cuando decidas hacerlo)
+
+> ¡Hola [nombre]! Qué bueno que [resultado: el reel funcionó / la web ya
+> está arriba]. ¿Nos ayudarías con una reseña en Google? Toma 1 minuto y
+> nos sirve muchísimo: [link directo del perfil]
+
+⚠️ Las reseñas deben ser de clientes reales — Google detecta y suspende
+perfiles con reseñas falsas, y es permanente.
+
+---
+
+## 5. Search Console — ya está todo preparado en el código
+
+Cuando crees la propiedad y Google te dé la etiqueta
+`<meta name="google-site-verification" content="XXXX">`:
+pega el valor de `content` en `src/data/site.ts` →
+`googleSiteVerification: 'XXXX'` (o pásamelo y lo dejo yo).
+El sitio ya la renderiza automáticamente en todas las páginas.
+
+---
+
 **Orden sugerido**: Business Profile hoy (verificación tarda días) →
 Analytics (2 clics) → Search Console cuando esté el dominio brandup.cl.
