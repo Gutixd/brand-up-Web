@@ -50,6 +50,11 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
 
     <!-- Columna derecha: formulario -->
     <div class="contact-form-card" data-reveal data-delay="0.15">
+      <!-- Flecha del logo (B↑) flotando en la esquina -->
+      <svg class="contact-form-card__arrow" viewBox="0 0 32 46" fill="none" aria-hidden="true">
+        <path class="cfa-stem" d="M16 42 V10" stroke="#f05e23" stroke-width="6" stroke-linecap="round" />
+        <path class="cfa-head" d="M4 20 16 8 28 20" stroke="#f05e23" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
       <h2 class="contact-form-card__title">
         {locale === 'es' ? 'Cuéntanos tu proyecto' : 'Tell us about your project'}
       </h2>
@@ -136,12 +141,30 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
 .contact-info__link:hover { color: var(--color-accent); }
 
 .contact-form-card {
+  position: relative;
   align-self: start;
   border: 1px solid var(--color-line);
   border-radius: 24px;
   background: #f0ede8;
   padding: 32px;
   box-shadow: 0 28px 80px rgba(35, 35, 35, 0.08);
+}
+/* Flecha del logo flotando — despega en loop suave */
+.contact-form-card__arrow {
+  position: absolute;
+  top: -26px;
+  right: 30px;
+  width: 46px;
+  height: auto;
+  filter: drop-shadow(0 10px 22px rgba(240, 94, 35, 0.4));
+  animation: cfaFloat 2.6s ease-in-out infinite;
+}
+@keyframes cfaFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-12px) rotate(4deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-form-card__arrow { animation: none; }
 }
 @media (min-width: 768px) { .contact-form-card { padding: 44px; } }
 .contact-form-card__title {
