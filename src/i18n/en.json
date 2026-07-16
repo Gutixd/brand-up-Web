@@ -252,7 +252,10 @@
     "success": "Done! WhatsApp opened with your message ready — just press send and we will get back to you fast.",
     "error": "Could not open WhatsApp. Write to us directly at +56 9 7982 2862.",
     "required": "This field is required",
-    "invalidEmail": "Enter a valid email"
+    "invalidEmail": "Enter a valid email",
+    "phone": "Phone / WhatsApp (optional)",
+    "serviceChips": "What do you need?",
+    "note": "Reply within 24 hours · No spam, no strings attached"
   },
   "footer": {
     "tagline": "Full-service creative agency in Santiago, Chile.",

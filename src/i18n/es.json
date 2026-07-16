@@ -252,7 +252,10 @@
     "success": "¡Listo! Se abrió WhatsApp con tu mensaje armado — solo presiona enviar y te respondemos al tiro.",
     "error": "No se pudo abrir WhatsApp. Escríbenos directo al +56 9 7982 2862.",
     "required": "Este campo es obligatorio",
-    "invalidEmail": "Ingresa un email válido"
+    "invalidEmail": "Ingresa un email válido",
+    "phone": "Teléfono / WhatsApp (opcional)",
+    "serviceChips": "¿Qué necesitas?",
+    "note": "Respuesta en menos de 24 horas · Sin spam, sin compromiso"
   },
   "footer": {
     "tagline": "Agencia creativa full service en Santiago de Chile.",

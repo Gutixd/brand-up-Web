@@ -50,8 +50,15 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
 
     <!-- Columna derecha: formulario -->
     <div class="contact-form-card" data-reveal data-delay="0.15">
-      <p class="contact-form-card__hint">{t.contact.or}</p>
-      <ContactForm client:visible labels={t.form} variant={isQuote ? 'quote' : 'contact'} />
+      <h2 class="contact-form-card__title">
+        {locale === 'es' ? 'Cuéntanos tu proyecto' : 'Tell us about your project'}
+      </h2>
+      <p class="contact-form-card__hint">
+        {locale === 'es'
+          ? 'Completa el mini formulario y te llega directo a nuestro WhatsApp.'
+          : 'Fill in the mini form and it lands straight in our WhatsApp.'}
+      </p>
+      <ContactForm client:load labels={t.form} variant={isQuote ? 'quote' : 'contact'} />
     </div>
   </section>
 </Base>
@@ -131,13 +138,23 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
 .contact-form-card {
   align-self: start;
   border: 1px solid var(--color-line);
-  border-radius: 22px;
+  border-radius: 24px;
   background: #f0ede8;
   padding: 32px;
+  box-shadow: 0 28px 80px rgba(35, 35, 35, 0.08);
 }
 @media (min-width: 768px) { .contact-form-card { padding: 44px; } }
+.contact-form-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--color-paper);
+  margin-bottom: 8px;
+}
 .contact-form-card__hint {
-  margin-bottom: 28px;
+  margin-bottom: 30px;
   font-size: 0.9rem;
   color: var(--color-gray);
 }
