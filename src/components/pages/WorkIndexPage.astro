@@ -236,30 +236,32 @@ const metas = [
   gap: clamp(28px, 4vw, 56px);
   padding-inline: clamp(22px, 3vw, 44px);
 }
-/* Chip apagado por defecto (se integra al fondo oscuro, sin blanco que
-   grite); recupera color y brillo al pasar el mouse. */
+/* Logo a color completo, sin caja blanca: marco redondeado casi
+   invisible (funde el fondo propio de cada logo con la cinta oscura)
+   y un halo de color sutil que se enciende al pasar el mouse. */
 .works-logos__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 52px;
-  padding: 7px 16px;
-  background: #e9e6e0;
-  border-radius: 10px;
-  opacity: 0.32;
-  filter: grayscale(1) contrast(0.95);
-  transition: opacity 0.35s ease, filter 0.35s ease, transform 0.35s ease;
+  height: 60px;
+  padding: 8px;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0.88;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
 }
 .works-logos__item:hover {
   opacity: 1;
-  filter: grayscale(0) contrast(1);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 16px 36px rgba(240, 94, 35, 0.28);
 }
 .works-logos__item img {
-  max-height: 36px;
+  height: 100%;
   width: auto;
-  max-width: 120px;
-  object-fit: contain;
+  max-width: 130px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 @media (prefers-reduced-motion: reduce) {
   .works-logos__item { transition: none; }
