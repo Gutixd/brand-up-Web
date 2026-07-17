@@ -243,18 +243,64 @@ function initServicesAccordion() {
   });
 }
 
-// ── Work grid staggered reveal ─────────────────────────────────────
+// ── Work grid — entrada exagerada (rotación + escala desde sesgado) ─
 function initWorkGrid() {
   const items = document.querySelectorAll<HTMLElement>('[data-work-item]');
   if (!items.length) return;
   gsap.fromTo(items,
-    { y: 60, opacity: 0 },
+    // "rotation" (no "rotate"): evita que GSAP use el modo de propiedades
+    // CSS nativas, que entra en conflicto con rotateX/rotateY del tilt 3D
+    { y: 90, opacity: 0, scale: 0.88, rotation: -3, transformOrigin: '50% 100%' },
     {
-      y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
-      stagger: { each: 0.12 },
-      scrollTrigger: { trigger: items[0].closest('section') ?? items[0], start: 'top 85%' },
+      y: 0, opacity: 1, scale: 1, rotation: 0, duration: 1.1, ease: 'expo.out',
+      stagger: { each: 0.14 },
+      scrollTrigger: { trigger: items[0].closest('section') ?? items[0], start: 'top 88%' },
     },
   );
+  // Los números fantasma gigantes entran con leve retraso, tipo sello
+  const ghosts = document.querySelectorAll<HTMLElement>('.wcard-ghost');
+  if (ghosts.length) {
+    gsap.fromTo(ghosts,
+      { opacity: 0, y: 24, scale: 1.15 },
+      {
+        opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out',
+        stagger: { each: 0.14 }, delay: 0.15,
+        scrollTrigger: { trigger: ghosts[0].closest('section') ?? ghosts[0], start: 'top 88%' },
+      },
+    );
+  }
+}
+
+// ── Work cards — tilt 3D magnético + brillo que sigue el cursor ────
+function initWorkTilt() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (reducedMotion()) return;
+  document.querySelectorAll<HTMLElement>('[data-tilt-card]').forEach((card) => {
+    // El tilt anima un wrapper interno (data-tilt-target), no la tarjeta
+    // misma: así nunca comparte nodo con la animación de entrada por
+    // scroll y GSAP no puede pisar un transform con el otro.
+    const target = card.querySelector<HTMLElement>('[data-tilt-target]');
+    if (!target) return;
+    const MAX_TILT = 9; // grados — exagerado pero controlado
+    const rotX = gsap.quickTo(target, 'rotateX', { duration: 0.5, ease: 'power3.out' });
+    const rotY = gsap.quickTo(target, 'rotateY', { duration: 0.5, ease: 'power3.out' });
+    const lift = gsap.quickTo(target, 'z', { duration: 0.5, ease: 'power3.out' });
+
+    const onMove = (e: MouseEvent) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;   // 0..1
+      const py = (e.clientY - r.top) / r.height;   // 0..1
+      rotY(( px - 0.5) * MAX_TILT * 2);
+      rotX((-(py - 0.5)) * MAX_TILT * 2);
+      lift(24);
+      card.style.setProperty('--mx', `${px * 100}%`);
+      card.style.setProperty('--my', `${py * 100}%`);
+    };
+    const onLeave = () => { rotX(0); rotY(0); lift(0); };
+
+    card.addEventListener('mousemove', onMove);
+    card.addEventListener('mouseleave', onLeave);
+  });
 }
 
 // ── Project media — swap to <video> when data-video-src is set ─────
@@ -622,6 +668,7 @@ function setup() {
   initStatementSwap();
   initServicesAccordion();
   initWorkGrid();
+  initWorkTilt();
   initProjectVideos();
   initShowreelLightbox();
   initScrollProgress();
