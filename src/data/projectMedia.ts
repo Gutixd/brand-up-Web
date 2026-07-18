@@ -17,6 +17,8 @@ import aracnidaMobile from '../assets/projects/gallery/aracnida-mobile.webp';
 import aracnidaProduct from '../assets/projects/gallery/aracnida-product.webp';
 import superlunchPackaging from '../assets/projects/gallery/superlunch-packaging.webp';
 import superlunchIcon from '../assets/projects/gallery/superlunch-icon.webp';
+import altitudeDesktop from '../assets/projects/gallery/altitude-desktop.webp';
+import altitudeDns from '../assets/projects/gallery/altitude-dns.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -43,9 +45,9 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'video', ratio: 'wide', label: { es: 'Recorrido del sitio', en: 'Site walkthrough' }, videoSrc: '/videos/jdcargo-tour.mp4' },
   ],
   'altitude': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Sitio migrado (desktop)', en: 'Migrated site (desktop)' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Sitio migrado (desktop)', en: 'Migrated site (desktop)' }, src: altitudeDesktop },
     { kind: 'photo', ratio: 'tall', label: { es: 'Vista móvil', en: 'Mobile view' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Panel / DNS', en: 'Dashboard / DNS' } },
+    { kind: 'photo', ratio: 'square', label: { es: 'Panel / DNS', en: 'Dashboard / DNS' }, src: altitudeDns },
   ],
   'musclecarchile': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Tienda (desktop)', en: 'Store (desktop)' }, src: musclecarHome },

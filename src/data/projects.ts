@@ -148,7 +148,6 @@ export const PROJECTS: Project[] = [
     metrics: [
       { val: '100%', lbl: { es: 'Uptime restaurado', en: 'Uptime restored' } },
     ],
-    link: 'https://altitude.cl',
     featured: false,
   },
   {
@@ -183,7 +182,6 @@ export const PROJECTS: Project[] = [
     metrics: [
       { val: '✓', lbl: { es: 'DNS corregido', en: 'DNS fixed' } },
     ],
-    link: 'https://musclecarchile.cl',
     featured: false,
   },
   {
