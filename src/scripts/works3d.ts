@@ -41,10 +41,9 @@ const VERT = /* glsl */`
   void main() {
     vUv = uv;
     vec3 p = position;
-    // Curva el plano según la velocidad de scroll (efecto "papel al viento")
-    float bend = sin(uv.x * 3.14159) * uVelocity * 0.9;
-    p.z += bend;
-    // Al hover, un leve abombado hacia el usuario
+    // Al hover, un leve abombado hacia el usuario. NO se curva por
+    // velocidad de scroll: eso hacía que las imágenes se "movieran raro"
+    // mientras se scrollea. El plano queda plano y estable en reposo.
     p.z += sin(uv.x * 3.14159) * sin(uv.y * 3.14159) * uHover * 12.0;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
@@ -60,8 +59,9 @@ const FRAG = /* glsl */`
   void main() {
     // Zoom sutil al hover
     vec2 uv = (vUv - 0.5) * (1.0 - uHover * 0.06) + 0.5;
-    // Aberración cromática guiada por hover + velocidad
-    float shift = (uHover * 0.006) + abs(uVelocity) * 0.004;
+    // Aberración cromática SOLO al hover (no por scroll: evita el
+    // "fringing" que hacía ver las imágenes raras al desplazarse).
+    float shift = uHover * 0.006;
     float r = texture2D(uTex, uv + vec2(shift, 0.0)).r;
     float g = texture2D(uTex, uv).g;
     float b = texture2D(uTex, uv - vec2(shift, 0.0)).b;

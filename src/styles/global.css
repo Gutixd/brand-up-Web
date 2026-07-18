@@ -18,13 +18,11 @@ html {
   background: var(--color-ink);
   color: var(--color-paper);
   font-family: var(--font-body);
-  /* La textura .grain es position:fixed y más grande que el viewport
-     a propósito; sin esto, algunos navegadores móviles ensanchan el
-     viewport de layout para "acomodarla", rompiendo TODOS los media
-     queries responsive del sitio. */
-  overflow-x: hidden;
 }
-body { overflow-x: hidden; }
+/* NO usar overflow-x:hidden en html/body: rompe position:sticky (el
+   efecto de videos full-screen de la home depende de ello). El
+   overflow horizontal se contiene recortando cada decoración fixed
+   sobredimensionada en su propio contenedor (ver .grain). */
 
 ::selection { background: var(--color-accent); color: #fff; }
 
@@ -1059,14 +1057,23 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ── Film grain overlay (global) ─────────────────────────────────── */
+/* El contenedor cubre el viewport y recorta la textura sobredimensionada
+   dentro (overflow:hidden aquí NO afecta a html/body, así que no rompe
+   position:sticky ni ensancha el viewport móvil). */
 .grain {
   position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+  overflow: hidden;
+}
+.grain::before {
+  content: '';
+  position: absolute;
   top: -60%;
   left: -60%;
   width: 220%;
   height: 220%;
-  pointer-events: none;
-  z-index: 9996;
   opacity: 0.05;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -1081,7 +1088,7 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
   80%  { transform: translate(3%, 1%); }
   100% { transform: translate(1%, -2%); }
 }
-@media (prefers-reduced-motion: reduce) { .grain { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .grain::before { animation: none; } }
 
 /* ── Scroll progress bar ─────────────────────────────────────────── */
 .scroll-progress {
