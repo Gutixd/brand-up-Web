@@ -10,6 +10,7 @@ import logoTemplo from '../assets/logos/templo-maipu.webp';
 import logoBell from '../assets/logos/bell-college.webp';
 import logoSuperlunch from '../assets/logos/superlunch.webp';
 
+import coverChacha from '../assets/projects/chachapollo.webp';
 import coverJdcargo from '../assets/projects/jdcargo.webp';
 import coverAltitude from '../assets/projects/altitude.webp';
 import coverMusclecarchile from '../assets/projects/musclecarchile.webp';
@@ -49,6 +50,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['contenido-reels'],
     logo: logoChacha,
+    cover: coverChacha,
     gradient: '#f5cc53',
     summary: {
       es: 'Estrategia completa de contenido en Instagram: reels de alto alcance, parrilla constante y una identidad visual que llenó el local.',
