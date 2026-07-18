@@ -8,6 +8,7 @@ import { initWorks3D, destroyWorks3D } from './works3d';
 gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
+let lenisTickerAdded = false;
 
 function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,8 +19,16 @@ function initLenis() {
   if (reducedMotion()) return;
   if (lenis) { lenis.destroy(); lenis = null; }
   lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-  gsap.ticker.add((time) => { lenis?.raf(time * 1000); });
-  gsap.ticker.lagSmoothing(0);
+  // El callback del ticker se registra una sola vez (module scope):
+  // como `lenis` se lee en cada tick, no hace falta re-agregarlo en
+  // cada navegación — eso solo acumulaba callbacks duplicados y
+  // volvía la página cada vez más pesada/errática tras varias
+  // transiciones de página.
+  if (!lenisTickerAdded) {
+    gsap.ticker.add((time) => { lenis?.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    lenisTickerAdded = true;
+  }
   lenis.on('scroll', ScrollTrigger.update);
 }
 
@@ -823,6 +832,34 @@ function setup() {
   initImgReveals();
   initVelocitySkew();
   initSvcPreview();
+  initRevealSafety();
+}
+
+// ── Red de seguridad para los reveals por scroll ────────────────────
+// Los `gsap.from(...)` de esta página dejan los elementos en
+// opacity:0 hasta que su ScrollTrigger dispara. Si las imágenes, el
+// video o la escena WebGL tardan en asentar el layout (o una
+// transición de página deja el scroll ya "pasado" el punto de
+// disparo), el trigger puede no calcularse bien y el elemento queda
+// invisible para siempre — la página se ve "en blanco"/bugueada.
+// Esto la blinda en dos frentes: recalcula los triggers cuando todo
+// terminó de cargar, y fuerza opacidad 1 en cualquier elemento que
+// siga invisible pasado un tiempo prudente, pase lo que pase.
+function initRevealSafety() {
+  const refresh = () => ScrollTrigger.refresh();
+  window.addEventListener('load', refresh, { once: true });
+  if (document.fonts) {
+    document.fonts.ready.then(refresh).catch(() => {});
+  }
+
+  const targets = '.wrow, [data-reveal], [data-reveal-word], [data-work-item], .wcard-ghost';
+  window.setTimeout(() => {
+    document.querySelectorAll<HTMLElement>(targets).forEach((el) => {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.05) {
+        gsap.to(el, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.5, ease: 'power2.out' });
+      }
+    });
+  }, 2600);
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────
