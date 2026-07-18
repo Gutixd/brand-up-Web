@@ -46,7 +46,7 @@ export const PROJECTS: Project[] = [
       es: ['Social Media', 'Contenido & Reels', 'Meta Ads'],
       en: ['Social Media', 'Content & Reels', 'Meta Ads'],
     },
-    serviceSlugs: ['contenido-reels', 'publicidad-digital'],
+    serviceSlugs: ['contenido-reels'],
     logo: logoChacha,
     gradient: '#f5cc53',
     summary: {
@@ -191,7 +191,7 @@ export const PROJECTS: Project[] = [
       es: ['Diseño Web', 'Identidad Visual', 'Estrategia Digital'],
       en: ['Web Design', 'Visual Identity', 'Digital Strategy'],
     },
-    serviceSlugs: ['diseno-web', 'branding'],
+    serviceSlugs: ['diseno-web'],
     cover: coverAseocool,
     gradient: '#d4ecd4',
     summary: {
@@ -226,7 +226,7 @@ export const PROJECTS: Project[] = [
       es: ['E-commerce', 'CRM', 'Email Marketing'],
       en: ['E-commerce', 'CRM', 'Email Marketing'],
     },
-    serviceSlugs: ['ecommerce', 'automatizaciones-ia'],
+    serviceSlugs: ['ecommerce'],
     logo: logoAracnida,
     gradient: '#f49fc5',
     summary: {
@@ -294,7 +294,7 @@ export const PROJECTS: Project[] = [
       es: ['Contenido & Reels', 'Social Media'],
       en: ['Content & Reels', 'Social Media'],
     },
-    serviceSlugs: ['contenido-reels'],
+    serviceSlugs: ['publicidad-digital'],
     logo: logoBell,
     gradient: '#bcd9f0',
     summary: {
