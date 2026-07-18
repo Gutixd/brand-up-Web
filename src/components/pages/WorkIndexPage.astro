@@ -278,7 +278,7 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
   gap: clamp(32px, 5vw, 80px);
   align-items: start;
 }
-@media (max-width: 900px) { .works3d__layout { grid-template-columns: 1fr; gap: 0; } }
+@media (max-width: 900px) { .works3d__layout { grid-template-columns: minmax(0, 1fr); gap: 0; } }
 @media (max-width: 700px) { .works3d__layout { padding-inline: 20px; } }
 
 /* ── Índice lateral (filtro editorial) ────────────────────────────── */
@@ -353,12 +353,13 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
 .wrow {
   display: grid; grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(24px, 4vw, 64px); align-items: center;
+  min-width: 0;
 }
 .wrow--rev { grid-template-columns: 0.95fr 1.05fr; }
 .wrow--rev .wrow__media { order: 2; }
 .wrow--rev .wrow__info { order: 1; }
 @media (max-width: 860px) {
-  .wrow, .wrow--rev { grid-template-columns: 1fr; gap: 22px; }
+  .wrow, .wrow--rev { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .wrow--rev .wrow__media, .wrow--rev .wrow__info { order: initial; }
 }
 

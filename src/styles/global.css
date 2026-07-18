@@ -18,7 +18,13 @@ html {
   background: var(--color-ink);
   color: var(--color-paper);
   font-family: var(--font-body);
+  /* La textura .grain es position:fixed y más grande que el viewport
+     a propósito; sin esto, algunos navegadores móviles ensanchan el
+     viewport de layout para "acomodarla", rompiendo TODOS los media
+     queries responsive del sitio. */
+  overflow-x: hidden;
 }
+body { overflow-x: hidden; }
 
 ::selection { background: var(--color-accent); color: #fff; }
 
