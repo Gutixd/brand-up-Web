@@ -21,8 +21,8 @@ const isEs = locale === 'es';
 
 const total = PROJECTS.length;
 
-// Mismo mapeo que la home: los proyectos "featured" (en orden del array)
-// corresponden 1:1 a los videos work1.mp4…work5.mp4
+// Mapeo de video: los proyectos "featured" (en orden del array) usan
+// work1.mp4…work5.mp4 — mismo criterio que la home.
 const featuredSlugs = PROJECTS.filter((p) => p.featured).map((p) => p.slug);
 const VIDEO_MAP = new Map(featuredSlugs.map((slug, i) => [slug, `/videos/work${i + 1}.mp4`]));
 
@@ -31,13 +31,17 @@ const svcName = (slug: string) => {
   return s ? pick(s.title, locale) : slug;
 };
 
-// Cada proyecto con todo lo que la tarjeta necesita, ya resuelto
-const items = PROJECTS.map((p) => ({
+const items = PROJECTS.map((p, i) => ({
   slug: p.slug,
+  num: String(i + 1).padStart(2, '0'),
   client: p.client,
+  sector: pick(p.sector, locale),
+  year: p.year,
   cover: p.cover,
-  gradient: p.gradient,
+  coverSrc: p.cover?.src ?? null,
   logo: p.logo,
+  logoSrc: p.logo?.src ?? null,
+  gradient: p.gradient,
   video: VIDEO_MAP.get(p.slug) ?? null,
   summary: pick(p.summary, locale),
   serviceSlugs: p.serviceSlugs,
@@ -46,7 +50,7 @@ const items = PROJECTS.map((p) => ({
   href: lp(`/trabajos/${p.slug}`),
 }));
 
-// Filtros: "Todos" + un tab por servicio que tenga al menos un caso
+// Tabs de filtro: "Todos" + un tab por servicio con al menos un caso.
 const filters = [
   { slug: 'all', label: isEs ? 'Todos' : 'All', count: total },
   ...SERVICES.map((s) => ({
@@ -70,39 +74,37 @@ const metas = [
   { val: '7', lbl: isEs ? 'Áreas de servicio' : 'Service areas' },
   { val: '+1M', lbl: isEs ? 'Views generadas' : 'Views generated' },
 ];
+
+const viewLabel = isEs ? 'Ver caso' : 'View case';
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
 
-  <div class="works-page">
+  <div class="works">
 
     <!-- Header editorial -->
-    <header class="works-page__header">
-      <div class="works-page__header-inner">
-        <span class="works-page__kicker" data-reveal>
+    <header class="works__header">
+      <div class="works__header-inner">
+        <p class="works__kicker" data-reveal>
           {isEs ? `Portafolio — ${total} proyectos realizados` : `Portfolio — ${total} completed projects`}
-        </span>
-        <h1 class="works-page__title display-tight" data-reveal-word>
+        </p>
+        <h1 class="works__title" data-reveal-word>
           {isEs ? 'Nuestro Trabajo' : 'Our Work'}
         </h1>
-        <p class="works-page__sub" data-reveal data-delay="0.1">
+        <p class="works__sub" data-reveal data-delay="0.1">
           {isEs
-            ? 'Filtra por servicio o revisa cada proyecto tal cual es: pasa el mouse para ver el trabajo en movimiento.'
-            : 'Filter by service or browse every project as it really is: hover to see the work in motion.'}
+            ? 'Elige un servicio y recorre los proyectos en 3D. Pasa el mouse para ver el trabajo en movimiento.'
+            : 'Pick a service and scroll the projects in 3D. Hover to see the work in motion.'}
         </p>
-
-        <!-- Métricas rápidas -->
-        <div class="works-page__metas" data-reveal data-delay="0.18">
+        <div class="works__metas" data-reveal data-delay="0.18">
           {metas.map((m) => (
-            <span class="works-page__meta">
-              <strong>{m.val}</strong> {m.lbl}
-            </span>
+            <span class="works__meta"><strong>{m.val}</strong> {m.lbl}</span>
           ))}
         </div>
       </div>
     </header>
 
-    <!-- Cinta de logos de clientes -->
+    <!-- Cinta de logos -->
     <div class="works-logos" aria-label={isEs ? 'Marcas con las que trabajamos' : 'Brands we work with'}>
       <div class="marquee-track marquee-track--slow">
         {[0, 1].map((copy) => (
@@ -117,99 +119,80 @@ const metas = [
       </div>
     </div>
 
-    <!-- Tabs de filtro por servicio -->
+    <!-- Tabs de filtro (sticky) -->
     <div class="works-filters-wrap">
-      <div class="works-filters" role="tablist" aria-label={isEs ? 'Filtrar por servicio' : 'Filter by service'} data-reveal>
+      <div class="works-filters" role="tablist" aria-label={isEs ? 'Filtrar por servicio' : 'Filter by service'}>
         {filters.map((f, i) => (
-          <button
-            type="button"
-            class="wfilter"
-            data-filter={f.slug}
-            role="tab"
-            aria-pressed={i === 0 ? 'true' : 'false'}
-          >
+          <button type="button" class="wfilter" data-filter={f.slug} role="tab" aria-pressed={i === 0 ? 'true' : 'false'}>
             {f.label} <span class="wfilter__count">{f.count}</span>
           </button>
         ))}
       </div>
     </div>
 
-    <!-- Grid de proyectos reales — número editorial gigante + tarjeta con
-         tilt 3D magnético + video real en hover -->
-    <main class="works-grid" id="works-grid">
-      {items.map((p, i) => (
-        <div class={`wcard-slot${i % 2 === 1 ? ' wcard-slot--offset' : ''}`} data-project-slot>
-          <span class="wcard-ghost" aria-hidden="true">0{i + 1}</span>
+    <!-- Lista editorial + capa WebGL. El canvas es fijo y dibuja los
+         planos 3D sincronizados a cada .wrow__media. Si WebGL falla,
+         las imágenes del DOM quedan visibles como respaldo. -->
+    <section class="works3d" id="works3d">
+      <canvas class="works3d__canvas" id="works3d-canvas" aria-hidden="true"></canvas>
 
-          <a
-            href={p.href}
-            class="wcard"
-            data-work-item
-            data-tilt-card
-            data-project-card
+      <div class="works3d__list">
+        {items.map((p, i) => (
+          <article
+            class={`wrow${i % 2 === 1 ? ' wrow--rev' : ''}`}
+            data-project-slot
             data-filters={p.serviceSlugs.join(' ')}
           >
-            <div class="wcard__glare" aria-hidden="true"></div>
-            <div class="wcard__tilt" data-tilt-target>
-
-              <div class="wcard__media" data-media data-video-src={p.video ?? undefined}>
-                {p.cover ? (
-                  <Image
-                    src={p.cover}
-                    alt={p.client}
-                    class="wcard__img"
-                    widths={[480, 800, 1400]}
-                    sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 640px"
-                  />
+            <a
+              class="wrow__media"
+              href={p.href}
+              data-webgl-media
+              data-gradient={p.gradient}
+              data-texture={p.coverSrc ?? p.logoSrc ?? ''}
+              data-mode={p.coverSrc ? 'cover' : 'logo'}
+              data-video-src={p.video ?? ''}
+              aria-label={`${viewLabel}: ${p.client}`}
+            >
+              <div class="wrow__media-inner">
+                {p.coverSrc ? (
+                  <Image src={p.cover} alt={p.client} class="wrow__img"
+                    widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
                 ) : (
-                  <div class="wcard__fallback" style={`background:${p.gradient}`}>
-                    {p.logo && (
-                      <Image src={p.logo} alt={p.client} class="wcard__fallback-logo" widths={[220]} sizes="180px" />
-                    )}
+                  <div class="wrow__fallback" style={`background:${p.gradient}`}>
+                    {p.logo && <Image src={p.logo} alt={p.client} class="wrow__fallback-logo" widths={[260]} sizes="200px" />}
                   </div>
                 )}
-                <span class="wcard__overlay" aria-hidden="true"></span>
-
-                <!-- CTA centrado que aparece sobre el video/foto al hover -->
-                <span class="pcard__cta" aria-hidden="true">
-                  {isEs ? 'Ver caso' : 'View case'}
-                  <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-                    <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
               </div>
+              <span class="wrow__cta" aria-hidden="true">
+                {viewLabel}
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+                  <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
 
-              <div class="pcard__info">
-                <div class="pcard__top">
-                  <h2 class="pcard__client">{p.client}</h2>
-                  {p.metric && (
-                    <span class="pcard__metric">
-                      {p.metric.val}
-                      <small>{pick(p.metric.lbl, locale)}</small>
-                    </span>
-                  )}
-                </div>
-                <p class="pcard__summary">{p.summary}</p>
-                <div class="pcard__bottom">
-                  <p class="pcard__services">{p.serviceNames.join(' · ')}</p>
-                  <span class="wcard__arrow" aria-hidden="true">
-                    <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up">
-                      <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                      <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    </svg>
-                    <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up wcard__arrow-up--ghost">
-                      <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                      <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                    </svg>
-                  </span>
-                </div>
+            <div class="wrow__info">
+              <span class="wrow__num" aria-hidden="true">{p.num}</span>
+              <p class="wrow__eyebrow">{p.sector} · {p.year}</p>
+              <a href={p.href} class="wrow__titlelink">
+                <h2 class="wrow__title">{p.client}</h2>
+              </a>
+              <p class="wrow__summary">{p.summary}</p>
+              <div class="wrow__foot">
+                <p class="wrow__services">{p.serviceNames.join(' · ')}</p>
+                {p.metric && (
+                  <span class="wrow__metric">{p.metric.val}<small>{pick(p.metric.lbl, locale)}</small></span>
+                )}
               </div>
-
             </div>
-          </a>
-        </div>
-      ))}
-    </main>
+          </article>
+        ))}
+
+        <p class="works3d__empty" id="works3d-empty" hidden>
+          {isEs ? 'No hay proyectos en esta categoría todavía.' : 'No projects in this category yet.'}
+        </p>
+      </div>
+    </section>
 
   </div>
 
@@ -218,426 +201,201 @@ const metas = [
 </Base>
 
 <style>
-.works-page {
-  background: #0a0a0a;
-  color: #f8f8f8;
+.works { background: #0a0a0a; color: #f6f6f6; }
+
+/* ── Header ───────────────────────────────────────────────────────── */
+.works__header { max-width: 1280px; margin-inline: auto; padding: 150px 32px 52px; }
+@media (max-width: 700px) { .works__header { padding: 120px 20px 40px; } }
+.works__header-inner { display: flex; flex-direction: column; gap: 16px; }
+.works__kicker {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #f05e23;
+}
+.works__title {
+  font-family: var(--font-poster); font-weight: 400;
+  font-size: clamp(3.2rem, 10vw, 9rem); letter-spacing: 0.014em;
+  line-height: 0.94; text-transform: uppercase; color: #f6f6f6;
+}
+.works__sub {
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem); line-height: 1.6;
+  color: rgba(246, 246, 246, 0.46); max-width: 54ch;
+}
+.works__metas { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 10px; }
+.works__meta {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(246, 246, 246, 0.46);
+}
+.works__meta strong {
+  font-family: var(--font-poster); font-weight: 400; font-size: 1.5rem;
+  letter-spacing: 0.02em; color: #f05e23; margin-right: 7px; vertical-align: -2px;
 }
 
-/* ── Header ──────────────────────────────────────────────────────── */
-.works-page__header {
-  max-width: 1280px;
-  margin-inline: auto;
-  padding: 150px 32px 56px;
-}
-@media (max-width: 700px) { .works-page__header { padding: 120px 20px 40px; } }
-.works-page__header-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.works-page__kicker {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #f05e23;
-}
-.works-page__title {
-  font-family: var(--font-poster);
-  font-size: clamp(3.2rem, 10vw, 9rem);
-  font-weight: 400;
-  letter-spacing: 0.014em;
-  line-height: 0.96;
-  text-transform: uppercase;
-  color: #f8f8f8;
-}
-.works-page__sub {
-  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-  line-height: 1.6;
-  color: rgba(248, 248, 248, 0.45);
-  max-width: 56ch;
-}
-.works-page__metas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
-  margin-top: 10px;
-}
-.works-page__meta {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.45);
-}
-.works-page__meta strong {
-  font-family: var(--font-poster);
-  font-weight: 400;
-  font-size: 1.5rem;
-  letter-spacing: 0.02em;
-  color: #f05e23;
-  margin-right: 7px;
-  vertical-align: -2px;
-}
-
-/* ── Cinta de logos de clientes ──────────────────────────────────── */
+/* ── Cinta de logos ───────────────────────────────────────────────── */
 .works-logos {
-  overflow: hidden;
-  border-block: 1px solid rgba(248, 248, 248, 0.08);
-  padding-block: 26px;
-  margin-bottom: 40px;
+  overflow: hidden; border-block: 1px solid rgba(246, 246, 246, 0.08);
+  padding-block: 24px;
 }
 .works-logos__seq {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: clamp(28px, 4vw, 56px);
-  padding-inline: clamp(22px, 3vw, 44px);
+  display: flex; align-items: center; flex: 0 0 auto;
+  gap: clamp(28px, 4vw, 56px); padding-inline: clamp(22px, 3vw, 44px);
 }
 .works-logos__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 60px;
-  padding: 8px;
-  border-radius: 14px;
-  overflow: hidden;
-  opacity: 0.88;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  display: flex; align-items: center; justify-content: center;
+  height: 58px; padding: 8px; border-radius: 14px; overflow: hidden;
+  opacity: 0.85; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
   transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
 }
 .works-logos__item:hover {
-  opacity: 1;
-  transform: translateY(-3px) scale(1.04);
+  opacity: 1; transform: translateY(-3px) scale(1.04);
   box-shadow: 0 16px 36px rgba(240, 94, 35, 0.28);
 }
-.works-logos__item img {
-  height: 100%;
-  width: auto;
-  max-width: 130px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .works-logos__item { transition: none; }
-}
+.works-logos__item img { height: 100%; width: auto; max-width: 128px; object-fit: cover; border-radius: 10px; }
 
-/* ── Filtros ─────────────────────────────────────────────────────── */
+/* ── Filtros (sticky) ─────────────────────────────────────────────── */
 .works-filters-wrap {
-  max-width: 1280px;
-  margin-inline: auto;
-  padding-inline: 32px;
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(10, 10, 10, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(246, 246, 246, 0.08);
 }
-@media (max-width: 700px) { .works-filters-wrap { padding-inline: 20px; } }
 .works-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-bottom: 4px;
+  max-width: 1280px; margin-inline: auto;
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 16px 32px;
 }
-@media (max-width: 700px) {
-  .works-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+@media (max-width: 760px) {
+  .works-filters {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 14px 20px;
+  }
   .works-filters::-webkit-scrollbar { display: none; }
 }
 .wfilter {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid rgba(248, 248, 248, 0.16);
-  background: transparent;
-  color: rgba(248, 248, 248, 0.6);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 10px 18px;
-  border-radius: 999px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid rgba(246, 246, 246, 0.16); background: transparent;
+  color: rgba(246, 246, 246, 0.6); font-size: 13px; font-weight: 600;
+  padding: 10px 18px; border-radius: 999px; white-space: nowrap; cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
 }
-.wfilter:hover { border-color: rgba(248, 248, 248, 0.4); color: #fff; }
+.wfilter:hover { border-color: rgba(246, 246, 246, 0.4); color: #fff; }
 .wfilter[aria-pressed="true"] {
-  background: #f05e23;
-  border-color: #f05e23;
-  color: #fff;
+  background: #f05e23; border-color: #f05e23; color: #fff;
   box-shadow: 0 8px 22px rgba(240, 94, 35, 0.35);
 }
-.wfilter__count {
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0.65;
+.wfilter__count { font-size: 11px; font-weight: 700; opacity: 0.65; }
+
+/* ── Sección lista + canvas WebGL ─────────────────────────────────── */
+.works3d { position: relative; }
+.works3d__canvas {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  z-index: 1; pointer-events: none; opacity: 0;
+  transition: opacity 0.6s ease;
+}
+/* Cuando el JS activa WebGL marca <html class="webgl-on"> */
+:global(html.webgl-on) .works3d__canvas { opacity: 1; }
+
+.works3d__list {
+  position: relative; z-index: 2;
+  max-width: 1280px; margin-inline: auto;
+  padding: clamp(40px, 6vw, 80px) 32px clamp(80px, 10vw, 130px);
+  display: flex; flex-direction: column; gap: clamp(56px, 9vw, 130px);
+}
+@media (max-width: 700px) { .works3d__list { padding-inline: 20px; } }
+
+/* ── Fila de proyecto ─────────────────────────────────────────────── */
+.wrow {
+  display: grid; grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(24px, 4vw, 64px); align-items: center;
+}
+.wrow--rev { grid-template-columns: 0.95fr 1.05fr; }
+.wrow--rev .wrow__media { order: 2; }
+.wrow--rev .wrow__info { order: 1; }
+@media (max-width: 860px) {
+  .wrow, .wrow--rev { grid-template-columns: 1fr; gap: 22px; }
+  .wrow--rev .wrow__media, .wrow--rev .wrow__info { order: initial; }
 }
 
-/* ── Grid ────────────────────────────────────────────────────────── */
-.works-grid {
-  max-width: 1280px;
-  margin-inline: auto;
-  padding: 40px 32px 120px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  perspective: 1600px;
+/* Panel de media — objetivo del plano WebGL */
+.wrow__media {
+  position: relative; display: block; border-radius: 18px;
+  overflow: hidden; aspect-ratio: 4 / 3; background: #141414;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+  text-decoration: none; isolation: isolate;
 }
-@media (max-width: 760px) {
-  .works-grid { grid-template-columns: 1fr; padding: 24px 20px 80px; gap: 16px; }
+.wrow__media-inner { position: absolute; inset: 0; }
+/* Con WebGL activo el panel se vuelve una "ventana" transparente para
+   que el plano 3D del canvas (que va detrás) se vea a través de él. */
+:global(html.webgl-on) .wrow__media { background: transparent; }
+:global(html.webgl-on) .wrow__media-inner { opacity: 0; }
+.wrow__img, .wrow__fallback {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.wrow__media:hover .wrow__img { transform: scale(1.05); }
+.wrow__fallback { display: flex; align-items: center; justify-content: center; }
+.wrow__fallback-logo { width: auto; height: auto; max-width: 58%; max-height: 46%; object-fit: contain; }
 
-/* Slot: contiene el numero fantasma + la tarjeta; el desfase vertical
-   alternado rompe la simetria de grilla estandar (ritmo editorial). */
-.wcard-slot { position: relative; }
-@media (min-width: 761px) {
-  .wcard-slot--offset { margin-top: 56px; }
-}
-
-/* Numero editorial gigante detras de cada tarjeta */
-.wcard-ghost {
-  position: absolute;
-  top: -0.42em;
-  left: -0.06em;
-  z-index: 0;
-  font-family: var(--font-poster);
-  font-weight: 400;
-  font-size: clamp(5rem, 11vw, 9rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(248, 248, 248, 0.14);
-  pointer-events: none;
-  user-select: none;
-}
-
-/* ── Card ────────────────────────────────────────────────────────── */
-.wcard {
-  position: relative;
-  z-index: 1;
-  display: block;
-  min-height: 460px;
-  border-radius: 18px;
-  overflow: hidden;
-  text-decoration: none;
-  color: #f8f8f8;
-  isolation: isolate;
-  background: #161616;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  transition: box-shadow 0.4s ease, opacity 0.35s ease, transform 0.35s ease;
-}
-.wcard:hover { box-shadow: 0 34px 90px rgba(240, 94, 35, 0.16), 0 24px 60px rgba(0, 0, 0, 0.4); }
-@media (max-width: 760px) { .wcard { min-height: 420px; } }
-
-/* Wrapper del tilt 3D — nodo propio, aislado de la animacion de entrada
-   por scroll (que vive en .wcard) para que GSAP nunca pise un transform
-   con el otro al recalcular/hacer refresh. */
-.wcard__tilt {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-/* Brillo que sigue al cursor (posicion via --mx/--my seteadas en JS) */
-.wcard__glare {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  background: radial-gradient(
-    380px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.16),
-    transparent 60%
-  );
-}
-.wcard:hover .wcard__glare { opacity: 1; }
-@media (hover: none) { .wcard__glare { display: none; } }
-
-/* ── Media: foto o video real en hover ──────────────────────────────*/
-.wcard__media {
-  position: relative;
-  flex: 0 0 62%;
-  overflow: hidden;
-  background: #161616;
-}
-.wcard__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.02);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease, opacity 0.5s ease;
-  filter: saturate(0.85) brightness(0.78);
-}
-.wcard__fallback {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.wcard__fallback-logo { max-width: 55%; max-height: 45%; object-fit: contain; }
-.wcard__overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.1) 0%, rgba(10, 10, 10, 0.2) 55%, rgba(10, 10, 10, 0.75) 100%);
-  transition: background 0.5s ease;
-}
-.wcard:hover .wcard__img { transform: scale(1.08); filter: saturate(1) brightness(0.7); }
-.wcard:hover .wcard__overlay {
-  background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.05) 0%, rgba(240, 94, 35, 0.1) 45%, rgba(10, 10, 10, 0.8) 100%);
-}
-/* Video inyectado por JS al hover (desktop) o al entrar en vista (touch) */
-.wcard__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.wcard__media.is-video .wcard__video { opacity: 1; }
-.wcard__media.is-video .wcard__img { opacity: 0; }
-
-/* Pildora "Ver caso" centrada — aparece sobre la foto/video al hover */
-.pcard__cta {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  transform: translate(-50%, -50%) scale(0.85);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(13, 13, 13, 0.82);
-  backdrop-filter: blur(6px);
-  color: #fff;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 11px 20px;
-  border-radius: 999px;
-  border: 1px solid rgba(248, 248, 248, 0.2);
-  opacity: 0;
+.wrow__cta {
+  position: absolute; z-index: 3; bottom: 16px; left: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(13, 13, 13, 0.82); backdrop-filter: blur(6px);
+  color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+  padding: 10px 16px; border-radius: 999px;
+  border: 1px solid rgba(246, 246, 246, 0.18);
+  opacity: 0; transform: translateY(8px);
   transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
 }
-.wcard:hover .pcard__cta { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.wrow__media:hover .wrow__cta { opacity: 1; transform: translateY(0); }
 
-/* ── Info debajo del media ──────────────────────────────────────────*/
-.pcard__info {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 22px 24px 24px;
+/* ── Info ─────────────────────────────────────────────────────────── */
+.wrow__info { min-width: 0; display: flex; flex-direction: column; }
+.wrow__num {
+  font-family: var(--font-poster); font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 3rem); line-height: 1;
+  color: transparent; -webkit-text-stroke: 1.4px rgba(246, 246, 246, 0.22);
+  margin-bottom: 14px;
 }
-.pcard__top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
+.wrow__eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #f05e23; margin-bottom: 12px;
 }
-.pcard__client {
-  font-family: var(--font-poster);
-  font-weight: 400;
-  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
-  text-transform: uppercase;
-  letter-spacing: 0.016em;
-  line-height: 1.04;
-  color: #fff;
+.wrow__titlelink { text-decoration: none; }
+.wrow__title {
+  font-family: var(--font-poster); font-weight: 400;
+  font-size: clamp(2.2rem, 5.2vw, 4rem); text-transform: uppercase;
+  letter-spacing: 0.014em; line-height: 0.98; color: #fff;
+  transition: color 0.3s, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.pcard__metric {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-family: var(--font-poster);
-  font-weight: 400;
-  font-size: 1.15rem;
-  color: #f05e23;
-  line-height: 1.15;
-  text-align: right;
+.wrow__titlelink:hover .wrow__title { color: #f05e23; transform: translateX(8px) skewX(-3deg); }
+.wrow__summary {
+  margin-top: 16px; font-size: clamp(0.95rem, 1.4vw, 1.08rem); line-height: 1.6;
+  color: rgba(246, 246, 246, 0.6); max-width: 46ch;
 }
-.pcard__metric small {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.45);
+.wrow__foot {
+  margin-top: 22px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  border-top: 1px solid rgba(246, 246, 246, 0.1); padding-top: 18px;
 }
-.pcard__summary {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: rgba(248, 248, 248, 0.62);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.wrow__services {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: rgba(246, 246, 246, 0.44);
 }
-.pcard__bottom {
-  margin-top: auto;
-  padding-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.wrow__metric {
+  display: flex; flex-direction: column; align-items: flex-end;
+  font-family: var(--font-poster); font-weight: 400; font-size: 1.5rem;
+  color: #f05e23; line-height: 1.05; text-align: right;
 }
-.pcard__services {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.4);
+.wrow__metric small {
+  font-family: var(--font-body); font-weight: 700; font-size: 9px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(246, 246, 246, 0.44); margin-top: 2px;
 }
 
-/* Flecha B-up: en reposo apunta arriba-derecha; al hover "despega" y
-   una segunda flecha fantasma la releva desde abajo (motivo de marca) */
-.wcard__arrow {
-  position: relative;
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid rgba(248, 248, 248, 0.25);
-  background: rgba(248, 248, 248, 0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: #fff;
-  transition: background 0.35s, border-color 0.35s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.wcard:hover .wcard__arrow {
-  background: #f05e23;
-  border-color: #f05e23;
-  transform: scale(1.08);
-}
-.wcard__arrow-up {
-  position: absolute;
-  width: 15px;
-  height: 18px;
-  transform: rotate(45deg);
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
-}
-.wcard__arrow-up--ghost { opacity: 0; transform: rotate(45deg) translateY(24px); }
-.wcard:hover .wcard__arrow-up:not(.wcard__arrow-up--ghost) {
-  transform: rotate(45deg) translateY(-24px);
-  opacity: 0;
-}
-.wcard:hover .wcard__arrow-up--ghost {
-  transform: rotate(45deg) translateY(0);
-  opacity: 1;
-  transition-delay: 0.08s;
+.works3d__empty {
+  text-align: center; color: rgba(246, 246, 246, 0.5);
+  font-size: 1rem; padding: 60px 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wcard__img, .wcard__arrow, .wcard__overlay, .wcard,
-  .wcard__arrow-up, .wcard__glare, .wcard__video, .pcard__cta { transition: none; }
+  .wrow__img, .wrow__title, .wrow__cta { transition: none; }
 }
 </style>

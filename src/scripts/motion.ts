@@ -3,6 +3,7 @@
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { initWorks3D, destroyWorks3D } from './works3d';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -386,6 +387,8 @@ function initWorkFilters() {
   const slots = document.querySelectorAll<HTMLElement>('[data-project-slot]');
   if (!buttons.length || !slots.length) return;
 
+  const empty = document.getElementById('works3d-empty');
+
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter ?? 'all';
@@ -394,11 +397,13 @@ function initWorkFilters() {
       const toHide: HTMLElement[] = [];
       const toShow: HTMLElement[] = [];
       slots.forEach((slot) => {
-        const card = slot.querySelector<HTMLElement>('[data-project-card]');
-        const tags = (card?.dataset.filters ?? '').split(' ');
+        // data-filters vive en el propio slot (.wrow)
+        const tags = (slot.dataset.filters ?? '').split(' ');
         const match = filter === 'all' || tags.includes(filter);
         if (match) toShow.push(slot); else toHide.push(slot);
       });
+
+      if (empty) empty.hidden = toShow.length > 0;
 
       const tl = gsap.timeline();
       if (toHide.length) {
@@ -413,7 +418,9 @@ function initWorkFilters() {
         { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.04, ease: 'power3.out' },
         toHide.length ? '-=0.08' : 0,
       );
-      ScrollTrigger.refresh();
+      // Deja que el layout se asiente y refresca los triggers; la capa
+      // WebGL relee los rects sola cada frame, así que se adapta al filtro.
+      requestAnimationFrame(() => ScrollTrigger.refresh());
     });
   });
 }
@@ -759,6 +766,7 @@ function setup() {
   initProjectVideos();
   initWorkCardVideos();
   initWorkFilters();
+  initWorks3D();
   initShowreelLightbox();
   initScrollProgress();
   initMagnetic();
@@ -904,4 +912,9 @@ function initShowreelLightbox() {
 document.addEventListener('astro:page-load', () => {
   ScrollTrigger.getAll().forEach((st) => st.kill());
   setup();
+});
+
+// Libera la escena WebGL antes de navegar a otra página (view transitions).
+document.addEventListener('astro:before-swap', () => {
+  destroyWorks3D();
 });
