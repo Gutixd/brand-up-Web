@@ -17,6 +17,7 @@ import coverMusclecarchile from '../assets/projects/musclecarchile.webp';
 import coverAseocool from '../assets/projects/aseocool.webp';
 import coverTemplo from '../assets/projects/templo-maipu.webp';
 import coverAracnida from '../assets/projects/aracnida-store.webp';
+import coverSuperlunch from '../assets/projects/superlunch.webp';
 
 export interface Project {
   slug: string;
@@ -334,6 +335,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['branding'],
     logo: logoSuperlunch,
+    cover: coverSuperlunch,
     gradient: '#f8cfd2',
     summary: {
       es: 'Identidad y piezas gráficas para un servicio de almuerzos, con una imagen apetitosa y directa.',

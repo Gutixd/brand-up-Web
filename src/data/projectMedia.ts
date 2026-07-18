@@ -15,6 +15,8 @@ import musclecarDetail from '../assets/projects/gallery/musclecarchile-detail.we
 import aracnidaHome from '../assets/projects/gallery/aracnida-home.webp';
 import aracnidaMobile from '../assets/projects/gallery/aracnida-mobile.webp';
 import aracnidaProduct from '../assets/projects/gallery/aracnida-product.webp';
+import superlunchPackaging from '../assets/projects/gallery/superlunch-packaging.webp';
+import superlunchIcon from '../assets/projects/gallery/superlunch-icon.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -73,8 +75,7 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'wide', label: { es: 'Detrás de cámara', en: 'Behind the scenes' } },
   ],
   'superlunch': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Identidad aplicada', en: 'Identity applied' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Logo', en: 'Logo' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Menú / pieza gráfica', en: 'Menu / graphic asset' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Packaging aplicado', en: 'Applied packaging' }, src: superlunchPackaging },
+    { kind: 'photo', ratio: 'square', label: { es: 'Ícono de marca', en: 'Brand icon' }, src: superlunchIcon },
   ],
 };
