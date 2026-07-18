@@ -12,6 +12,9 @@ import jdcargoMobile from '../assets/projects/gallery/jdcargo-mobile.webp';
 import jdcargoDetail from '../assets/projects/gallery/jdcargo-detail.webp';
 import musclecarHome from '../assets/projects/gallery/musclecarchile-home.webp';
 import musclecarDetail from '../assets/projects/gallery/musclecarchile-detail.webp';
+import aracnidaHome from '../assets/projects/gallery/aracnida-home.webp';
+import aracnidaMobile from '../assets/projects/gallery/aracnida-mobile.webp';
+import aracnidaProduct from '../assets/projects/gallery/aracnida-product.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -53,10 +56,10 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'wide', label: { es: 'Aplicaciones de marca', en: 'Brand applications' } },
   ],
   'aracnida-store': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Home de la tienda', en: 'Store homepage' } },
-    { kind: 'photo', ratio: 'tall', label: { es: 'Ficha de producto (móvil)', en: 'Product page (mobile)' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Producto destacado', en: 'Featured product' } },
-    { kind: 'video', ratio: 'wide', label: { es: 'Proceso de compra', en: 'Checkout flow' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Home de la tienda', en: 'Store homepage' }, src: aracnidaHome },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Ficha de producto (móvil)', en: 'Product page (mobile)' }, src: aracnidaMobile },
+    { kind: 'photo', ratio: 'square', label: { es: 'Producto destacado', en: 'Featured product' }, src: aracnidaProduct },
+    { kind: 'video', ratio: 'wide', label: { es: 'Proceso de compra', en: 'Checkout flow' }, videoSrc: '/videos/aracnida-compra.mp4' },
   ],
   'templo-votivo-maipu': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Afiche principal', en: 'Main poster' } },
