@@ -10,6 +10,8 @@ import type { L } from './services';
 import jdcargoDesktop from '../assets/projects/gallery/jdcargo-desktop.webp';
 import jdcargoMobile from '../assets/projects/gallery/jdcargo-mobile.webp';
 import jdcargoDetail from '../assets/projects/gallery/jdcargo-detail.webp';
+import musclecarHome from '../assets/projects/gallery/musclecarchile-home.webp';
+import musclecarDetail from '../assets/projects/gallery/musclecarchile-detail.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -41,9 +43,8 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'square', label: { es: 'Panel / DNS', en: 'Dashboard / DNS' } },
   ],
   'musclecarchile': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Tienda (desktop)', en: 'Store (desktop)' } },
-    { kind: 'photo', ratio: 'tall', label: { es: 'Vista móvil', en: 'Mobile view' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Detalle de producto', en: 'Product detail' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Tienda (desktop)', en: 'Store (desktop)' }, src: musclecarHome },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Detalle de producto', en: 'Product detail' }, src: musclecarDetail },
   ],
   'aseocool': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Sitio (desktop)', en: 'Site (desktop)' } },

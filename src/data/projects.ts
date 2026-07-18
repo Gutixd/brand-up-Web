@@ -16,6 +16,7 @@ import coverAltitude from '../assets/projects/altitude.webp';
 import coverMusclecarchile from '../assets/projects/musclecarchile.webp';
 import coverAseocool from '../assets/projects/aseocool.webp';
 import coverTemplo from '../assets/projects/templo-maipu.webp';
+import coverAracnida from '../assets/projects/aracnida-store.webp';
 
 export interface Project {
   slug: string;
@@ -231,6 +232,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['ecommerce'],
     logo: logoAracnida,
+    cover: coverAracnida,
     gradient: '#f49fc5',
     summary: {
       es: 'Tienda online premium con integración de CRM y email marketing para multiplicar el ticket promedio.',
