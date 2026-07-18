@@ -314,31 +314,100 @@ function initWorkTilt() {
 }
 
 // ── Project media — swap to <video> when data-video-src is set ─────
+// Monta/reproduce SOLO el video cercano al viewport y libera (desmonta)
+// los que quedan lejos. En móvil, tener los 5 videos decodificando a la
+// vez —y dos de ellos son 4K— supera el límite de decodificadores del
+// teléfono y algunos salían en negro. El degradado de marca del
+// contenedor queda siempre detrás como respaldo mientras un video
+// carga o si no puede decodificar.
+//
+// Se usa un chequeo manual por scroll (posición de FLUJO en el documento,
+// vía offsetTop) en vez de getBoundingClientRect: los 5 .project-video
+// son `position:sticky; top:0` en el mismo contenedor, así que al final
+// de la sección TODOS se apilan en top:0 y su rect no los distingue.
+// offsetTop es la posición de layout real, inmune al sticky.
 function initProjectVideos() {
+  interface Item {
+    el: HTMLElement; src: string;
+    inner: HTMLElement; placeholder: HTMLElement | null;
+    video: HTMLVideoElement | null;
+    flowTop: number;
+  }
+  const docTop = (el: HTMLElement) => {
+    let t = 0, n: HTMLElement | null = el;
+    while (n) { t += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+    return t;
+  };
+  const items: Item[] = [];
   document.querySelectorAll<HTMLElement>('.project-video[data-video-src]').forEach((el) => {
     const src = el.dataset.videoSrc;
-    if (!src) return;
     const inner = el.querySelector<HTMLElement>('.project-video__inner');
-    if (!inner) return;
-    const video = document.createElement('video');
-    video.src = src;
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.autoplay = false;
-    inner.innerHTML = '';          // remove placeholder + gradient
-    inner.style.background = '#000';
-    inner.appendChild(video);
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 90%',
-      end: 'bottom 10%',
-      onEnter: () => video.play(),
-      onLeave: () => video.pause(),
-      onEnterBack: () => video.play(),
-      onLeaveBack: () => video.pause(),
-    });
+    if (!src || !inner) return;
+    items.push({ el, src, inner, placeholder: inner.querySelector('.project-video__placeholder'), video: null, flowTop: 0 });
   });
+  if (!items.length) return;
+
+  const measure = () => { for (const it of items) it.flowTop = docTop(it.el); };
+  measure();
+
+  const mount = (it: Item) => {
+    if (it.video) return;
+    const v = document.createElement('video');
+    v.src = it.src;
+    v.muted = true; v.loop = true; v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    v.preload = 'auto';
+    v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+    it.inner.appendChild(v);
+    it.video = v;
+    if (it.placeholder) it.placeholder.style.opacity = '0';
+  };
+  const unmount = (it: Item) => {
+    if (!it.video) return;
+    it.video.pause();
+    it.video.removeAttribute('src');
+    it.video.load();          // libera el decoder/buffer en móvil
+    it.video.remove();
+    it.video = null;
+    if (it.placeholder) it.placeholder.style.opacity = '1';
+  };
+
+  const evaluate = () => {
+    const vh = window.innerHeight;
+    const y = window.scrollY;
+    for (const it of items) {
+      // Distancia (en pantallas) entre el scroll actual y el punto donde
+      // este video pasa a estar fijo a pantalla completa.
+      const d = (y - it.flowTop) / vh;
+      // Reproduce SOLO el que ocupa el centro de la pantalla (|d|<0.5),
+      // así nunca hay 2 videos —ni los dos 4K— decodificando a la vez.
+      const visible = d >= -0.5 && d < 0.5;
+      // Monta el actual y sus vecinos inmediatos (transición fluida);
+      // los 4K quedan montados pero pausados = sin presión de decoder.
+      const near = d >= -1.3 && d < 1.3;
+      if (near) mount(it); else unmount(it);
+      if (it.video) {
+        if (visible) it.video.play().catch(() => {});
+        else it.video.pause();
+      }
+    }
+  };
+
+  const connected = () => {
+    // Si esta página ya fue reemplazada por una view-transition, los
+    // elementos están desconectados: nos auto-removemos para no montar
+    // videos en DOM huérfano ni acumular listeners entre navegaciones.
+    if (items[0].el.isConnected) return true;
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('resize', onResize);
+    return false;
+  };
+  const onScroll = () => { if (connected()) evaluate(); };
+  const onResize = () => { if (connected()) { measure(); evaluate(); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onResize, { passive: true });
+  evaluate();                            // estado inicial inmediato
+  window.setTimeout(() => { measure(); evaluate(); }, 500); // por si el layout tardó
 }
 
 // ── /trabajos: video real al hacer hover sobre cada tarjeta ────────
