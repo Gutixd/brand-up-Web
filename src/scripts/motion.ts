@@ -381,18 +381,45 @@ function initWorkCardVideos() {
   });
 }
 
-// ── /trabajos: tabs de filtro por servicio ──────────────────────────
+// ── /trabajos: índice lateral de filtro + marcador deslizante ───────
 function initWorkFilters() {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.wfilter');
-  const slots = document.querySelectorAll<HTMLElement>('[data-project-slot]');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.wfilter'));
+  const slots = Array.from(document.querySelectorAll<HTMLElement>('[data-project-slot]'));
   if (!buttons.length || !slots.length) return;
 
   const empty = document.getElementById('works3d-empty');
+  const marker = document.querySelector<HTMLElement>('.works-index__marker');
+  const isDesktop = () => window.matchMedia('(min-width: 901px)').matches;
+
+  // Desliza el marcador naranja al botón activo (solo índice vertical)
+  function moveMarker(btn: HTMLElement, animate = true) {
+    if (!marker || !isDesktop()) return;
+    const top = btn.offsetTop + btn.offsetHeight * 0.16;
+    const h = btn.offsetHeight * 0.68;
+    if (animate) {
+      gsap.to(marker, { y: top, height: h, duration: 0.5, ease: 'expo.out' });
+    } else {
+      gsap.set(marker, { y: top, height: h });
+    }
+  }
+
+  // Posición inicial del marcador (tras cargar la fuente Anton, que
+  // cambia las alturas). Reintenta con fonts.ready por si acaso.
+  const active = buttons.find((b) => b.getAttribute('aria-pressed') === 'true') ?? buttons[0];
+  requestAnimationFrame(() => moveMarker(active, false));
+  (document as any).fonts?.ready?.then(() => moveMarker(
+    buttons.find((b) => b.getAttribute('aria-pressed') === 'true') ?? buttons[0], false,
+  ));
+  window.addEventListener('resize', () => {
+    const cur = buttons.find((b) => b.getAttribute('aria-pressed') === 'true') ?? buttons[0];
+    moveMarker(cur, false);
+  }, { passive: true });
 
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter ?? 'all';
       buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      moveMarker(btn);
 
       const toHide: HTMLElement[] = [];
       const toShow: HTMLElement[] = [];
@@ -421,6 +448,27 @@ function initWorkFilters() {
       // Deja que el layout se asiente y refresca los triggers; la capa
       // WebGL relee los rects sola cada frame, así que se adapta al filtro.
       requestAnimationFrame(() => ScrollTrigger.refresh());
+    });
+  });
+}
+
+// ── /trabajos: entrada suave al abrir la página ─────────────────────
+function initWorkIntro() {
+  const layout = document.querySelector('.works3d__layout');
+  if (!layout) return;
+
+  // Índice lateral: los servicios caen escalonados
+  gsap.from('.works-index .wfilter', {
+    opacity: 0, x: -18, duration: 0.7, ease: 'power3.out',
+    stagger: 0.05, delay: 0.15,
+  });
+
+  // Cada proyecto entra al hacer scroll (los primeros, al cargar)
+  const rows = gsap.utils.toArray<HTMLElement>('.wrow');
+  rows.forEach((row) => {
+    gsap.from(row, {
+      opacity: 0, y: 60, duration: 1.1, ease: 'expo.out',
+      scrollTrigger: { trigger: row, start: 'top 88%' },
     });
   });
 }
@@ -766,6 +814,7 @@ function setup() {
   initProjectVideos();
   initWorkCardVideos();
   initWorkFilters();
+  initWorkIntro();
   initWorks3D();
   initShowreelLightbox();
   initScrollProgress();

@@ -93,8 +93,8 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
         </h1>
         <p class="works__sub" data-reveal data-delay="0.1">
           {isEs
-            ? 'Elige un servicio y recorre los proyectos en 3D. Pasa el mouse para ver el trabajo en movimiento.'
-            : 'Pick a service and scroll the projects in 3D. Hover to see the work in motion.'}
+            ? 'Cada proyecto es un problema real que resolvimos. Aquí están, tal cual quedaron.'
+            : 'Every project is a real problem we solved. Here they are, exactly as they turned out.'}
         </p>
         <div class="works__metas" data-reveal data-delay="0.18">
           {metas.map((m) => (
@@ -119,22 +119,28 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
       </div>
     </div>
 
-    <!-- Tabs de filtro (sticky) -->
-    <div class="works-filters-wrap">
-      <div class="works-filters" role="tablist" aria-label={isEs ? 'Filtrar por servicio' : 'Filter by service'}>
-        {filters.map((f, i) => (
-          <button type="button" class="wfilter" data-filter={f.slug} role="tab" aria-pressed={i === 0 ? 'true' : 'false'}>
-            {f.label} <span class="wfilter__count">{f.count}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-
     <!-- Lista editorial + capa WebGL. El canvas es fijo y dibuja los
          planos 3D sincronizados a cada .wrow__media. Si WebGL falla,
          las imágenes del DOM quedan visibles como respaldo. -->
     <section class="works3d" id="works3d">
       <canvas class="works3d__canvas" id="works3d-canvas" aria-hidden="true"></canvas>
+
+      <div class="works3d__layout">
+
+      <!-- Índice lateral sticky de servicios (filtro editorial) -->
+      <aside class="works-index">
+        <p class="works-index__label">{isEs ? 'Filtrar por servicio' : 'Filter by service'}</p>
+        <div class="works-index__list" role="tablist"
+             aria-label={isEs ? 'Filtrar por servicio' : 'Filter by service'}>
+          <span class="works-index__marker" aria-hidden="true"></span>
+          {filters.map((f, i) => (
+            <button type="button" class="wfilter" data-filter={f.slug} role="tab" aria-pressed={i === 0 ? 'true' : 'false'}>
+              <span class="wfilter__label">{f.label}</span>
+              <span class="wfilter__count">{f.count}</span>
+            </button>
+          ))}
+        </div>
+      </aside>
 
       <div class="works3d__list">
         {items.map((p, i) => (
@@ -172,7 +178,6 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
             </a>
 
             <div class="wrow__info">
-              <span class="wrow__num" aria-hidden="true">{p.num}</span>
               <p class="wrow__eyebrow">{p.sector} · {p.year}</p>
               <a href={p.href} class="wrow__titlelink">
                 <h2 class="wrow__title">{p.client}</h2>
@@ -191,6 +196,8 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
         <p class="works3d__empty" id="works3d-empty" hidden>
           {isEs ? 'No hay proyectos en esta categoría todavía.' : 'No projects in this category yet.'}
         </p>
+      </div>
+
       </div>
     </section>
 
@@ -251,38 +258,6 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
 }
 .works-logos__item img { height: 100%; width: auto; max-width: 128px; object-fit: cover; border-radius: 10px; }
 
-/* ── Filtros (sticky) ─────────────────────────────────────────────── */
-.works-filters-wrap {
-  position: sticky; top: 0; z-index: 30;
-  background: rgba(10, 10, 10, 0.82);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(246, 246, 246, 0.08);
-}
-.works-filters {
-  max-width: 1280px; margin-inline: auto;
-  display: flex; flex-wrap: wrap; gap: 10px;
-  padding: 16px 32px;
-}
-@media (max-width: 760px) {
-  .works-filters {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 14px 20px;
-  }
-  .works-filters::-webkit-scrollbar { display: none; }
-}
-.wfilter {
-  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
-  border: 1px solid rgba(246, 246, 246, 0.16); background: transparent;
-  color: rgba(246, 246, 246, 0.6); font-size: 13px; font-weight: 600;
-  padding: 10px 18px; border-radius: 999px; white-space: nowrap; cursor: pointer;
-  transition: border-color 0.3s, color 0.3s, background 0.3s;
-}
-.wfilter:hover { border-color: rgba(246, 246, 246, 0.4); color: #fff; }
-.wfilter[aria-pressed="true"] {
-  background: #f05e23; border-color: #f05e23; color: #fff;
-  box-shadow: 0 8px 22px rgba(240, 94, 35, 0.35);
-}
-.wfilter__count { font-size: 11px; font-weight: 700; opacity: 0.65; }
-
 /* ── Sección lista + canvas WebGL ─────────────────────────────────── */
 .works3d { position: relative; }
 .works3d__canvas {
@@ -293,13 +268,86 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
 /* Cuando el JS activa WebGL marca <html class="webgl-on"> */
 :global(html.webgl-on) .works3d__canvas { opacity: 1; }
 
-.works3d__list {
+/* Layout de dos columnas: índice sticky + lista */
+.works3d__layout {
   position: relative; z-index: 2;
   max-width: 1280px; margin-inline: auto;
-  padding: clamp(40px, 6vw, 80px) 32px clamp(80px, 10vw, 130px);
-  display: flex; flex-direction: column; gap: clamp(56px, 9vw, 130px);
+  padding: clamp(36px, 5vw, 68px) 32px clamp(80px, 10vw, 130px);
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
 }
-@media (max-width: 700px) { .works3d__list { padding-inline: 20px; } }
+@media (max-width: 900px) { .works3d__layout { grid-template-columns: 1fr; gap: 0; } }
+@media (max-width: 700px) { .works3d__layout { padding-inline: 20px; } }
+
+/* ── Índice lateral (filtro editorial) ────────────────────────────── */
+.works-index { position: sticky; top: 104px; }
+.works-index__label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(246, 246, 246, 0.4);
+  margin-bottom: 18px; padding-left: 18px;
+}
+.works-index__list { position: relative; display: flex; flex-direction: column; }
+/* Marcador naranja que se desliza al servicio activo */
+.works-index__marker {
+  position: absolute; left: 0; top: 0;
+  width: 3px; height: 0; border-radius: 3px;
+  background: #f05e23; box-shadow: 0 0 14px rgba(240, 94, 35, 0.7);
+  pointer-events: none;
+}
+.wfilter {
+  position: relative; display: flex; align-items: baseline;
+  gap: 8px; width: 100%; text-align: left;
+  border: 0; background: transparent; cursor: pointer;
+  padding: 11px 0 11px 18px;
+  color: rgba(246, 246, 246, 0.52);
+  font-family: var(--font-poster); font-weight: 400;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem); letter-spacing: 0.01em;
+  text-transform: uppercase; line-height: 1.05;
+  transition: color 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wfilter__label { transition: inherit; }
+.wfilter:hover { color: rgba(246, 246, 246, 0.9); transform: translateX(4px); }
+.wfilter[aria-pressed="true"] { color: #fff; transform: translateX(6px); }
+.wfilter__count {
+  font-family: var(--font-body); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.05em; color: rgba(246, 246, 246, 0.32);
+  transition: color 0.3s ease;
+}
+.wfilter[aria-pressed="true"] .wfilter__count { color: #f05e23; }
+
+/* En móvil el índice es una fila horizontal sticky arriba */
+@media (max-width: 900px) {
+  .works-index {
+    top: 0; z-index: 20; margin: 0 -20px 8px;
+    background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(246, 246, 246, 0.08);
+    padding: 12px 20px;
+  }
+  .works-index__label { display: none; }
+  .works-index__list {
+    flex-direction: row; gap: 6px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .works-index__list::-webkit-scrollbar { display: none; }
+  .works-index__marker { display: none; }
+  .wfilter {
+    flex: 0 0 auto; width: auto; padding: 9px 15px;
+    border: 1px solid rgba(246, 246, 246, 0.16); border-radius: 999px;
+    font-size: 0.82rem; white-space: nowrap;
+  }
+  .wfilter:hover, .wfilter[aria-pressed="true"] { transform: none; }
+  .wfilter[aria-pressed="true"] {
+    background: #f05e23; border-color: #f05e23; color: #fff;
+  }
+  .wfilter[aria-pressed="true"] .wfilter__count { color: rgba(255,255,255,0.75); }
+}
+
+.works3d__list {
+  display: flex; flex-direction: column; gap: clamp(56px, 9vw, 120px);
+  padding-top: clamp(0px, 1vw, 12px);
+}
 
 /* ── Fila de proyecto ─────────────────────────────────────────────── */
 .wrow {
@@ -348,12 +396,6 @@ const viewLabel = isEs ? 'Ver caso' : 'View case';
 
 /* ── Info ─────────────────────────────────────────────────────────── */
 .wrow__info { min-width: 0; display: flex; flex-direction: column; }
-.wrow__num {
-  font-family: var(--font-poster); font-weight: 400;
-  font-size: clamp(2rem, 3.4vw, 3rem); line-height: 1;
-  color: transparent; -webkit-text-stroke: 1.4px rgba(246, 246, 246, 0.22);
-  margin-bottom: 14px;
-}
 .wrow__eyebrow {
   font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
   text-transform: uppercase; color: #f05e23; margin-bottom: 12px;
