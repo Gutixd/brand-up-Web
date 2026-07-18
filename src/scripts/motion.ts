@@ -331,6 +331,93 @@ function initProjectVideos() {
   });
 }
 
+// ── /trabajos: video real al hacer hover sobre cada tarjeta ────────
+function initWorkCardVideos() {
+  document.querySelectorAll<HTMLElement>('.wcard__media[data-video-src]').forEach((el) => {
+    const src = el.dataset.videoSrc;
+    if (!src) return;
+    const card = el.closest<HTMLElement>('[data-project-card]');
+    if (!card) return;
+    let video: HTMLVideoElement | null = null;
+    const ensureVideo = () => {
+      if (video) return video;
+      video = document.createElement('video');
+      video.src = src;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = 'none';
+      video.className = 'wcard__video';
+      el.appendChild(video);
+      return video;
+    };
+
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      card.addEventListener('mouseenter', () => {
+        const v = ensureVideo();
+        v.currentTime = 0;
+        v.play().catch(() => {});
+        el.classList.add('is-video');
+      });
+      card.addEventListener('mouseleave', () => {
+        video?.pause();
+        el.classList.remove('is-video');
+      });
+    } else {
+      // Táctil: reproduce mientras la tarjeta está a la vista
+      const v = ensureVideo();
+      el.classList.add('is-video');
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        onEnter: () => v.play().catch(() => {}),
+        onLeave: () => v.pause(),
+        onEnterBack: () => v.play().catch(() => {}),
+        onLeaveBack: () => v.pause(),
+      });
+    }
+  });
+}
+
+// ── /trabajos: tabs de filtro por servicio ──────────────────────────
+function initWorkFilters() {
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.wfilter');
+  const slots = document.querySelectorAll<HTMLElement>('[data-project-slot]');
+  if (!buttons.length || !slots.length) return;
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter ?? 'all';
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+
+      const toHide: HTMLElement[] = [];
+      const toShow: HTMLElement[] = [];
+      slots.forEach((slot) => {
+        const card = slot.querySelector<HTMLElement>('[data-project-card]');
+        const tags = (card?.dataset.filters ?? '').split(' ');
+        const match = filter === 'all' || tags.includes(filter);
+        if (match) toShow.push(slot); else toHide.push(slot);
+      });
+
+      const tl = gsap.timeline();
+      if (toHide.length) {
+        tl.to(toHide, {
+          opacity: 0, y: 14, scale: 0.96, duration: 0.3, stagger: 0.02, ease: 'power2.in',
+          onComplete: () => toHide.forEach((s) => { s.style.display = 'none'; }),
+        });
+      }
+      toShow.forEach((s) => { s.style.display = ''; });
+      tl.fromTo(toShow,
+        { opacity: 0, y: 14, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.04, ease: 'power3.out' },
+        toHide.length ? '-=0.08' : 0,
+      );
+      ScrollTrigger.refresh();
+    });
+  });
+}
+
 // ── Scroll progress bar ────────────────────────────────────────────
 function initScrollProgress() {
   const bar = document.getElementById('scroll-progress');
@@ -670,6 +757,8 @@ function setup() {
   initWorkGrid();
   initWorkTilt();
   initProjectVideos();
+  initWorkCardVideos();
+  initWorkFilters();
   initShowreelLightbox();
   initScrollProgress();
   initMagnetic();

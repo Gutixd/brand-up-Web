@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
-import { useT, localePath, type Locale } from '../../i18n';
+import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import logoChacha from '../../assets/logos/chachapollo.webp';
 import logoJdcargo from '../../assets/logos/jdcargo.webp';
@@ -13,42 +13,48 @@ import logoTemplo from '../../assets/logos/templo-maipu.webp';
 import logoBell from '../../assets/logos/bell-college.webp';
 import logoSuperlunch from '../../assets/logos/superlunch.webp';
 
-import imgWeb from '../../assets/categories/web.webp';
-import imgEcom from '../../assets/categories/ecommerce.webp';
-import imgBrand from '../../assets/categories/branding.webp';
-import imgContent from '../../assets/categories/content.webp';
-import imgAds from '../../assets/categories/ads.webp';
-import imgAi from '../../assets/categories/ai.webp';
-import imgGrowth from '../../assets/categories/growth.webp';
-
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
 const isEs = locale === 'es';
 
-const CAT_IMG: Record<string, ImageMetadata> = {
-  'diseno-web': imgWeb,
-  'ecommerce': imgEcom,
-  'branding': imgBrand,
-  'contenido-reels': imgContent,
-  'publicidad-digital': imgAds,
-  'automatizaciones-ia': imgAi,
-  'marketing-growth': imgGrowth,
+const total = PROJECTS.length;
+
+// Mismo mapeo que la home: los proyectos "featured" (en orden del array)
+// corresponden 1:1 a los videos work1.mp4…work5.mp4
+const featuredSlugs = PROJECTS.filter((p) => p.featured).map((p) => p.slug);
+const VIDEO_MAP = new Map(featuredSlugs.map((slug, i) => [slug, `/videos/work${i + 1}.mp4`]));
+
+const svcName = (slug: string) => {
+  const s = SERVICES.find((x) => x.slug === slug);
+  return s ? pick(s.title, locale) : slug;
 };
 
-const categories = SERVICES.map((s) => ({
-  num: s.num,
-  slug: s.slug,
-  title: isEs ? s.title.es : s.title.en,
-  tag: isEs ? s.tag.es : s.tag.en,
-  short: isEs ? s.short.es : s.short.en,
-  count: PROJECTS.filter((p) => p.serviceSlugs.includes(s.slug)).length,
-  href: lp(`/servicios/${s.slug}/portafolio`),
-  img: CAT_IMG[s.slug],
+// Cada proyecto con todo lo que la tarjeta necesita, ya resuelto
+const items = PROJECTS.map((p) => ({
+  slug: p.slug,
+  client: p.client,
+  cover: p.cover,
+  gradient: p.gradient,
+  logo: p.logo,
+  video: VIDEO_MAP.get(p.slug) ?? null,
+  summary: pick(p.summary, locale),
+  serviceSlugs: p.serviceSlugs,
+  serviceNames: p.serviceSlugs.map(svcName),
+  metric: p.metrics[0],
+  href: lp(`/trabajos/${p.slug}`),
 }));
 
-const total = PROJECTS.length;
+// Filtros: "Todos" + un tab por servicio que tenga al menos un caso
+const filters = [
+  { slug: 'all', label: isEs ? 'Todos' : 'All', count: total },
+  ...SERVICES.map((s) => ({
+    slug: s.slug,
+    label: pick(s.title, locale),
+    count: PROJECTS.filter((p) => p.serviceSlugs.includes(s.slug)).length,
+  })).filter((f) => f.count > 0),
+];
 
 const clientLogos = [
   { img: logoChacha, name: 'El Chacha Pollo' },
@@ -81,8 +87,8 @@ const metas = [
         </h1>
         <p class="works-page__sub" data-reveal data-delay="0.1">
           {isEs
-            ? 'Elige una categoría para explorar los casos reales de esa área. Marcas reales, resultados medibles.'
-            : 'Choose a category to explore real cases from that area. Real brands, measurable results.'}
+            ? 'Filtra por servicio o revisa cada proyecto tal cual es: pasa el mouse para ver el trabajo en movimiento.'
+            : 'Filter by service or browse every project as it really is: hover to see the work in motion.'}
         </p>
 
         <!-- Métricas rápidas -->
@@ -111,64 +117,94 @@ const metas = [
       </div>
     </div>
 
-    <!-- Grid de categorías — números editoriales gigantes + tarjetas con
-         inclinación 3D magnética que sigue el cursor (data-tilt-card) -->
-    <main class="works-grid">
-      {categories.map((cat, i) => (
-        <div class={`wcard-slot${i % 2 === 1 ? ' wcard-slot--offset' : ''}`}>
-          <!-- Número fantasma gigante detrás de la tarjeta -->
-          <span class="wcard-ghost" aria-hidden="true">{cat.num}</span>
+    <!-- Tabs de filtro por servicio -->
+    <div class="works-filters-wrap">
+      <div class="works-filters" role="tablist" aria-label={isEs ? 'Filtrar por servicio' : 'Filter by service'} data-reveal>
+        {filters.map((f, i) => (
+          <button
+            type="button"
+            class="wfilter"
+            data-filter={f.slug}
+            role="tab"
+            aria-pressed={i === 0 ? 'true' : 'false'}
+          >
+            {f.label} <span class="wfilter__count">{f.count}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Grid de proyectos reales — número editorial gigante + tarjeta con
+         tilt 3D magnético + video real en hover -->
+    <main class="works-grid" id="works-grid">
+      {items.map((p, i) => (
+        <div class={`wcard-slot${i % 2 === 1 ? ' wcard-slot--offset' : ''}`} data-project-slot>
+          <span class="wcard-ghost" aria-hidden="true">0{i + 1}</span>
 
           <a
-            href={cat.href}
-            class={`wcard${cat.count === 0 ? ' is-empty' : ''}${i === 0 ? ' wcard--wide' : ''}`}
+            href={p.href}
+            class="wcard"
             data-work-item
             data-tilt-card
+            data-project-card
+            data-filters={p.serviceSlugs.join(' ')}
           >
             <div class="wcard__glare" aria-hidden="true"></div>
-            <!-- Wrapper aparte para el tilt 3D: nunca comparte nodo con la
-                 animación de entrada por scroll (evita que GSAP pise un
-                 transform con el otro al recalcular/hacer refresh) -->
             <div class="wcard__tilt" data-tilt-target>
-              <div class="wcard__media">
-                <Image
-                  src={cat.img}
-                  alt={cat.title}
-                  class="wcard__img"
-                  widths={[480, 800, 1400]}
-                  sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 640px"
-                />
-                <span class="wcard__overlay" aria-hidden="true"></span>
-              </div>
 
-              <div class="wcard__content">
-                <div class="wcard__top">
-                  <span class="wcard__num">{cat.num}</span>
-                  <span class="wcard__tag">{cat.tag}</span>
-                </div>
-
-                <div class="wcard__bottom">
-                  <h2 class="wcard__title">{cat.title}</h2>
-                  <p class="wcard__short">{cat.short}</p>
-                  <div class="wcard__meta">
-                    <span class="wcard__count">
-                      {cat.count > 0
-                        ? `${cat.count} ${isEs ? (cat.count === 1 ? 'caso' : 'casos') : (cat.count === 1 ? 'case' : 'cases')}`
-                        : (isEs ? 'Próximamente' : 'Coming soon')}
-                    </span>
-                    <span class="wcard__arrow" aria-hidden="true">
-                      <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up">
-                        <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                        <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                      </svg>
-                      <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up wcard__arrow-up--ghost">
-                        <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-                        <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                      </svg>
-                    </span>
+              <div class="wcard__media" data-media data-video-src={p.video ?? undefined}>
+                {p.cover ? (
+                  <Image
+                    src={p.cover}
+                    alt={p.client}
+                    class="wcard__img"
+                    widths={[480, 800, 1400]}
+                    sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 640px"
+                  />
+                ) : (
+                  <div class="wcard__fallback" style={`background:${p.gradient}`}>
+                    {p.logo && (
+                      <Image src={p.logo} alt={p.client} class="wcard__fallback-logo" widths={[220]} sizes="180px" />
+                    )}
                   </div>
+                )}
+                <span class="wcard__overlay" aria-hidden="true"></span>
+
+                <!-- CTA centrado que aparece sobre el video/foto al hover -->
+                <span class="pcard__cta" aria-hidden="true">
+                  {isEs ? 'Ver caso' : 'View case'}
+                  <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+                    <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+
+              <div class="pcard__info">
+                <div class="pcard__top">
+                  <h2 class="pcard__client">{p.client}</h2>
+                  {p.metric && (
+                    <span class="pcard__metric">
+                      {p.metric.val}
+                      <small>{pick(p.metric.lbl, locale)}</small>
+                    </span>
+                  )}
+                </div>
+                <p class="pcard__summary">{p.summary}</p>
+                <div class="pcard__bottom">
+                  <p class="pcard__services">{p.serviceNames.join(' · ')}</p>
+                  <span class="wcard__arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up">
+                      <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                      <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    </svg>
+                    <svg viewBox="0 0 24 28" fill="none" class="wcard__arrow-up wcard__arrow-up--ghost">
+                      <path d="M12 24 V4" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                      <path d="M4 11 12 3 20 11" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                    </svg>
+                  </span>
                 </div>
               </div>
+
             </div>
           </a>
         </div>
@@ -249,7 +285,7 @@ const metas = [
   overflow: hidden;
   border-block: 1px solid rgba(248, 248, 248, 0.08);
   padding-block: 26px;
-  margin-bottom: 52px;
+  margin-bottom: 40px;
 }
 .works-logos__seq {
   display: flex;
@@ -258,9 +294,6 @@ const metas = [
   gap: clamp(28px, 4vw, 56px);
   padding-inline: clamp(22px, 3vw, 44px);
 }
-/* Logo a color completo, sin caja blanca: marco redondeado casi
-   invisible (funde el fondo propio de cada logo con la cinta oscura)
-   y un halo de color sutil que se enciende al pasar el mouse. */
 .works-logos__item {
   display: flex;
   align-items: center;
@@ -289,6 +322,52 @@ const metas = [
   .works-logos__item { transition: none; }
 }
 
+/* ── Filtros ─────────────────────────────────────────────────────── */
+.works-filters-wrap {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+@media (max-width: 700px) { .works-filters-wrap { padding-inline: 20px; } }
+.works-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+@media (max-width: 700px) {
+  .works-filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .works-filters::-webkit-scrollbar { display: none; }
+}
+.wfilter {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(248, 248, 248, 0.16);
+  background: transparent;
+  color: rgba(248, 248, 248, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+}
+.wfilter:hover { border-color: rgba(248, 248, 248, 0.4); color: #fff; }
+.wfilter[aria-pressed="true"] {
+  background: #f05e23;
+  border-color: #f05e23;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(240, 94, 35, 0.35);
+}
+.wfilter__count {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
 /* ── Grid ────────────────────────────────────────────────────────── */
 .works-grid {
   max-width: 1280px;
@@ -300,7 +379,7 @@ const metas = [
   perspective: 1600px;
 }
 @media (max-width: 760px) {
-  .works-grid { grid-template-columns: 1fr; padding: 20px 20px 80px; gap: 16px; }
+  .works-grid { grid-template-columns: 1fr; padding: 24px 20px 80px; gap: 16px; }
 }
 
 /* Slot: contiene el numero fantasma + la tarjeta; el desfase vertical
@@ -331,7 +410,7 @@ const metas = [
   position: relative;
   z-index: 1;
   display: block;
-  min-height: 360px;
+  min-height: 460px;
   border-radius: 18px;
   overflow: hidden;
   text-decoration: none;
@@ -339,14 +418,10 @@ const metas = [
   isolation: isolate;
   background: #161616;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  transition: box-shadow 0.4s ease;
+  transition: box-shadow 0.4s ease, opacity 0.35s ease, transform 0.35s ease;
 }
 .wcard:hover { box-shadow: 0 34px 90px rgba(240, 94, 35, 0.16), 0 24px 60px rgba(0, 0, 0, 0.4); }
-.wcard--wide { grid-column: 1 / -1; min-height: 400px; }
-@media (max-width: 760px) {
-  .wcard { min-height: 320px; }
-  .wcard--wide { grid-column: auto; min-height: 320px; }
-}
+@media (max-width: 760px) { .wcard { min-height: 420px; } }
 
 /* Wrapper del tilt 3D — nodo propio, aislado de la animacion de entrada
    por scroll (que vive en .wcard) para que GSAP nunca pise un transform
@@ -355,6 +430,8 @@ const metas = [
   position: absolute;
   inset: 0;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -376,103 +453,156 @@ const metas = [
 .wcard:hover .wcard__glare { opacity: 1; }
 @media (hover: none) { .wcard__glare { display: none; } }
 
+/* ── Media: foto o video real en hover ──────────────────────────────*/
 .wcard__media {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  position: relative;
+  flex: 0 0 62%;
   overflow: hidden;
+  background: #161616;
 }
 .wcard__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transform: scale(1.02);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease, opacity 0.5s ease;
   filter: saturate(0.85) brightness(0.78);
 }
+.wcard__fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wcard__fallback-logo { max-width: 55%; max-height: 45%; object-fit: contain; }
 .wcard__overlay {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.15) 0%, rgba(10, 10, 10, 0.35) 45%, rgba(10, 10, 10, 0.92) 100%);
+    linear-gradient(180deg, rgba(10, 10, 10, 0.1) 0%, rgba(10, 10, 10, 0.2) 55%, rgba(10, 10, 10, 0.75) 100%);
   transition: background 0.5s ease;
 }
-.wcard:hover .wcard__img { transform: scale(1.09); filter: saturate(1) brightness(0.88); }
+.wcard:hover .wcard__img { transform: scale(1.08); filter: saturate(1) brightness(0.7); }
 .wcard:hover .wcard__overlay {
   background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.05) 0%, rgba(240, 94, 35, 0.12) 40%, rgba(10, 10, 10, 0.92) 100%);
+    linear-gradient(180deg, rgba(10, 10, 10, 0.05) 0%, rgba(240, 94, 35, 0.1) 45%, rgba(10, 10, 10, 0.8) 100%);
 }
+/* Video inyectado por JS al hover (desktop) o al entrar en vista (touch) */
+.wcard__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.wcard__media.is-video .wcard__video { opacity: 1; }
+.wcard__media.is-video .wcard__img { opacity: 0; }
 
-/* Content over photo */
-.wcard__content {
+/* Pildora "Ver caso" centrada — aparece sobre la foto/video al hover */
+.pcard__cta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%) scale(0.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 13, 13, 0.82);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(248, 248, 248, 0.2);
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.wcard:hover .pcard__cta { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* ── Info debajo del media ──────────────────────────────────────────*/
+.pcard__info {
   position: relative;
   z-index: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  min-height: inherit;
-  padding: 26px 28px 28px;
+  gap: 10px;
+  padding: 22px 24px 24px;
 }
-.wcard--wide .wcard__content { padding: 32px 36px 34px; }
-
-.wcard__top {
+.pcard__top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 14px;
 }
-.wcard__num {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: rgba(248, 248, 248, 0.6);
-}
-.wcard__tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #fff;
-  background: rgba(240, 94, 35, 0.85);
-  padding: 5px 12px;
-  border-radius: 100px;
-  backdrop-filter: blur(4px);
-}
-
-.wcard__bottom { display: flex; flex-direction: column; gap: 12px; }
-.wcard__title {
+.pcard__client {
   font-family: var(--font-poster);
-  font-size: clamp(1.6rem, 3vw, 2.5rem);
   font-weight: 400;
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
   text-transform: uppercase;
   letter-spacing: 0.016em;
   line-height: 1.04;
   color: #fff;
 }
-.wcard--wide .wcard__title { font-size: clamp(2rem, 4vw, 3.4rem); }
-.wcard__short {
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: rgba(248, 248, 248, 0.7);
-  max-width: 44ch;
+.pcard__metric {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-poster);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: #f05e23;
+  line-height: 1.15;
+  text-align: right;
 }
-.wcard__meta {
+.pcard__metric small {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.45);
+}
+.pcard__summary {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(248, 248, 248, 0.62);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pcard__bottom {
+  margin-top: auto;
+  padding-top: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
+  gap: 12px;
 }
-.wcard__count {
-  font-size: 11px;
+.pcard__services {
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(248, 248, 248, 0.55);
+  color: rgba(248, 248, 248, 0.4);
 }
+
+/* Flecha B-up: en reposo apunta arriba-derecha; al hover "despega" y
+   una segunda flecha fantasma la releva desde abajo (motivo de marca) */
 .wcard__arrow {
   position: relative;
-  width: 46px;
-  height: 46px;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid rgba(248, 248, 248, 0.25);
   background: rgba(248, 248, 248, 0.06);
@@ -488,18 +618,16 @@ const metas = [
   border-color: #f05e23;
   transform: scale(1.08);
 }
-/* Flecha B-up: en reposo apunta arriba-derecha; al hover "despega" y
-   una segunda flecha fantasma la releva desde abajo (motivo de marca) */
 .wcard__arrow-up {
   position: absolute;
-  width: 17px;
-  height: 20px;
+  width: 15px;
+  height: 18px;
   transform: rotate(45deg);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
 }
-.wcard__arrow-up--ghost { opacity: 0; transform: rotate(45deg) translateY(26px); }
+.wcard__arrow-up--ghost { opacity: 0; transform: rotate(45deg) translateY(24px); }
 .wcard:hover .wcard__arrow-up:not(.wcard__arrow-up--ghost) {
-  transform: rotate(45deg) translateY(-26px);
+  transform: rotate(45deg) translateY(-24px);
   opacity: 0;
 }
 .wcard:hover .wcard__arrow-up--ghost {
@@ -508,11 +636,8 @@ const metas = [
   transition-delay: 0.08s;
 }
 
-.wcard.is-empty { opacity: 0.5; pointer-events: none; filter: grayscale(0.4); }
-.wcard.is-empty .wcard__tag { background: rgba(248, 248, 248, 0.2); }
-
 @media (prefers-reduced-motion: reduce) {
   .wcard__img, .wcard__arrow, .wcard__overlay, .wcard,
-  .wcard__arrow-up, .wcard__glare { transition: none; }
+  .wcard__arrow-up, .wcard__glare, .wcard__video, .pcard__cta { transition: none; }
 }
 </style>
