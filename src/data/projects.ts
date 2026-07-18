@@ -14,6 +14,7 @@ import coverJdcargo from '../assets/projects/jdcargo.webp';
 import coverAltitude from '../assets/projects/altitude.webp';
 import coverMusclecarchile from '../assets/projects/musclecarchile.webp';
 import coverAseocool from '../assets/projects/aseocool.webp';
+import coverTemplo from '../assets/projects/templo-maipu.webp';
 
 export interface Project {
   slug: string;
@@ -264,6 +265,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['branding'],
     logo: logoTemplo,
+    cover: coverTemplo,
     gradient: '#f2fbe0',
     summary: {
       es: 'Diseño de campaña gráfica para eventos institucionales, con piezas impresas y digitales coherentes con la identidad del Templo.',
