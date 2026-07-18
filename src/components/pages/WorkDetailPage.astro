@@ -130,17 +130,28 @@ const chapters = [
         <div class="wgal">
           {media.map((slot, i) => (
             <figure class={`wgal__item wgal__item--${slot.ratio}`} data-reveal data-delay={`${(i % 2) * 0.08}`}>
-              <div class="wgal__ph">
-                <span class="wgal__ph-icon" aria-hidden="true">
-                  {slot.kind === 'video' ? (
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-                  )}
-                </span>
-                <span class="wgal__ph-kind">{slot.kind === 'video' ? 'Video' : (isEs ? 'Foto' : 'Photo')}</span>
-                <span class="wgal__ph-label">{pick(slot.label, locale)}</span>
-              </div>
+              {slot.kind === 'photo' && slot.src ? (
+                <div class="wgal__media">
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="wgal__img"
+                    widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+                </div>
+              ) : slot.kind === 'video' && slot.videoSrc ? (
+                <div class="wgal__media">
+                  <video class="wgal__video" src={slot.videoSrc} muted loop playsinline autoplay preload="metadata" />
+                </div>
+              ) : (
+                <div class="wgal__ph">
+                  <span class="wgal__ph-icon" aria-hidden="true">
+                    {slot.kind === 'video' ? (
+                      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                    )}
+                  </span>
+                  <span class="wgal__ph-kind">{slot.kind === 'video' ? 'Video' : (isEs ? 'Foto' : 'Photo')}</span>
+                  <span class="wgal__ph-label">{pick(slot.label, locale)}</span>
+                </div>
+              )}
             </figure>
           ))}
         </div>
@@ -453,6 +464,17 @@ const chapters = [
 .wgal__item--tall { aspect-ratio: 3 / 4; }
 .wgal__item--reel { aspect-ratio: 9 / 16; }
 .wgal__item--square { aspect-ratio: 1 / 1; }
+
+.wgal__media { width: 100%; height: 100%; }
+.wgal__img, .wgal__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wgal__item:hover .wgal__img,
+.wgal__item:hover .wgal__video { transform: scale(1.045); }
 
 .wgal__ph {
   width: 100%;

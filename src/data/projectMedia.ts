@@ -1,8 +1,15 @@
 // Media plan per project — drives the gallery on each project detail page.
 // `ratio`: wide = 16/9 (desktop screenshot), tall = 3/4 (mobile/vertical photo),
 // reel = 9/16 (vertical video), square = 1/1 (logo / product / asset).
-// Each slot renders as an elegant placeholder until a real file is added.
+// Each slot renders as an elegant placeholder until a real file is added:
+// set `src` (photo, imported from src/assets) or `videoSrc` (video, a
+// path under public/) and it swaps in automatically.
+import type { ImageMetadata } from 'astro';
 import type { L } from './services';
+
+import jdcargoDesktop from '../assets/projects/gallery/jdcargo-desktop.webp';
+import jdcargoMobile from '../assets/projects/gallery/jdcargo-mobile.webp';
+import jdcargoDetail from '../assets/projects/gallery/jdcargo-detail.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -11,6 +18,8 @@ export interface MediaSlot {
   kind: MediaKind;
   ratio: MediaRatio;
   label: L;
+  src?: ImageMetadata;
+  videoSrc?: string;
 }
 
 export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
@@ -21,10 +30,10 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'wide', label: { es: 'Ambiente del local', en: 'In-store atmosphere' } },
   ],
   'jd-cargo-logistics': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Home del sitio (desktop)', en: 'Homepage (desktop)' } },
-    { kind: 'photo', ratio: 'tall', label: { es: 'Vista móvil', en: 'Mobile view' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Detalle / formulario', en: 'Detail / form' } },
-    { kind: 'video', ratio: 'wide', label: { es: 'Recorrido del sitio', en: 'Site walkthrough' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Home del sitio (desktop)', en: 'Homepage (desktop)' }, src: jdcargoDesktop },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Vista móvil', en: 'Mobile view' }, src: jdcargoMobile },
+    { kind: 'photo', ratio: 'square', label: { es: 'Detalle del puerto', en: 'Port detail' }, src: jdcargoDetail },
+    { kind: 'video', ratio: 'wide', label: { es: 'Recorrido del sitio', en: 'Site walkthrough' }, videoSrc: '/videos/jdcargo-tour.mp4' },
   ],
   'altitude': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Sitio migrado (desktop)', en: 'Migrated site (desktop)' } },
