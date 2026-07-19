@@ -9,6 +9,9 @@ import logoAracnida from '../assets/logos/aracnida.webp';
 import logoTemplo from '../assets/logos/templo-maipu.webp';
 import logoBell from '../assets/logos/bell-college.webp';
 import logoSuperlunch from '../assets/logos/superlunch.webp';
+import logoMicroterapias from '../assets/logos/microterapias.webp';
+import logoDuocuc from '../assets/logos/duoc-uc.webp';
+import logoBschool from '../assets/logos/bschool.webp';
 
 import coverChacha from '../assets/projects/chachapollo.webp';
 import coverJdcargo from '../assets/projects/jdcargo.webp';
@@ -18,6 +21,10 @@ import coverAseocool from '../assets/projects/aseocool.webp';
 import coverTemplo from '../assets/projects/templo-maipu.webp';
 import coverAracnida from '../assets/projects/aracnida-store.webp';
 import coverSuperlunch from '../assets/projects/superlunch.webp';
+import coverBell from '../assets/projects/gallery/bellcollege-2.webp';
+import coverMicroterapias from '../assets/projects/microterapias.webp';
+import coverDuocuc from '../assets/projects/duoc-uc.webp';
+import coverBschool from '../assets/projects/bschool.webp';
 
 export interface Project {
   slug: string;
@@ -301,6 +308,7 @@ export const PROJECTS: Project[] = [
     },
     serviceSlugs: ['publicidad-digital'],
     logo: logoBell,
+    cover: coverBell,
     gradient: '#bcd9f0',
     summary: {
       es: 'Producción de contenido audiovisual para redes: la vida del colegio contada en formato reel.',
@@ -352,6 +360,107 @@ export const PROJECTS: Project[] = [
       en: 'A consistent brand that streamlines the business’s daily communication.',
     },
     metrics: [{ val: 'Full', lbl: { es: 'Identidad aplicada', en: 'Identity applied' } }],
+    featured: false,
+  },
+  {
+    slug: 'microterapias',
+    client: 'Microterapias',
+    industry: 'salud',
+    sector: { es: 'Bienestar · Salud Mental', en: 'Wellness · Mental Health' },
+    year: '2026',
+    services: {
+      es: ['Contenido & Reels', 'Piezas Gráficas'],
+      en: ['Content & Reels', 'Graphic Assets'],
+    },
+    serviceSlugs: ['contenido-reels'],
+    logo: logoMicroterapias,
+    cover: coverMicroterapias,
+    gradient: '#e4dcf5',
+    summary: {
+      es: 'Contenido y piezas gráficas para una comunidad de bienestar y salud mental, con un tono cercano y visualmente cuidado.',
+      en: 'Content and graphic assets for a wellness and mental health community, with a warm, visually polished tone.',
+    },
+    challenge: {
+      es: 'Hablar de salud mental y microdosis terapéuticas con un lenguaje visual confiable, cercano y libre de estigma.',
+      en: 'Talking about mental health and therapeutic microdosing with a trustworthy, warm, stigma-free visual language.',
+    },
+    approach: {
+      es: 'Diseñamos piezas educativas para redes y producimos contenido en video que explica procesos reales de forma simple y humana.',
+      en: 'We designed educational social assets and produced video content explaining real processes in a simple, human way.',
+    },
+    outcome: {
+      es: 'Una comunidad digital coherente que acompaña a las personas con información clara y una identidad reconocible.',
+      en: 'A coherent digital community that guides people with clear information and a recognizable identity.',
+    },
+    metrics: [{ val: 'Full', lbl: { es: 'Identidad aplicada', en: 'Identity applied' } }],
+    link: 'https://microterapias.cl',
+    featured: false,
+  },
+  {
+    slug: 'duoc-uc',
+    client: 'Duoc UC',
+    industry: 'educacion',
+    sector: { es: 'Educación Superior', en: 'Higher Education' },
+    year: '2026',
+    services: {
+      es: ['Contenido & Reels', 'Producción Audiovisual'],
+      en: ['Content & Reels', 'Video Production'],
+    },
+    serviceSlugs: ['contenido-reels'],
+    cover: coverDuocuc,
+    gradient: '#0d0d0d',
+    summary: {
+      es: 'Producción de reels para la cuenta oficial de Duoc UC, mostrando la vida universitaria y la experiencia estudiantil.',
+      en: 'Reel production for Duoc UC\'s official account, showcasing campus life and the student experience.',
+    },
+    challenge: {
+      es: 'Producir contenido a la altura de una institución con más de 69 mil seguidores, manteniendo cercanía y autenticidad.',
+      en: 'Producing content worthy of an institution with over 69K followers, while keeping it warm and authentic.',
+    },
+    approach: {
+      es: 'Grabamos y editamos reels sobre tours de campus, cuentas anuales y vida estudiantil, pensados para el feed oficial.',
+      en: 'We filmed and edited reels about campus tours, annual events and student life, made for the official feed.',
+    },
+    outcome: {
+      es: 'Contenido que refleja la experiencia real de estudiar en Duoc UC, publicado en su cuenta oficial.',
+      en: 'Content that reflects the real experience of studying at Duoc UC, published on their official account.',
+    },
+    metrics: [{ val: '69,2K', lbl: { es: 'Seguidores de la cuenta', en: 'Account followers' } }],
+    link: 'https://www.instagram.com/duocuc_cl/',
+    featured: false,
+  },
+  {
+    slug: 'bschool',
+    client: 'BSchool',
+    industry: 'educacion',
+    sector: { es: 'Educación Online', en: 'Online Education' },
+    year: '2026',
+    services: {
+      es: ['Piezas Gráficas', 'Manejo de Instagram'],
+      en: ['Graphic Assets', 'Instagram Management'],
+    },
+    serviceSlugs: ['contenido-reels'],
+    logo: logoBschool,
+    cover: coverBschool,
+    gradient: '#f9b208',
+    summary: {
+      es: 'Piezas gráficas y gestión de Instagram para un colegio online, con foco en admisión y comunicación de su propuesta flexible.',
+      en: 'Graphic assets and Instagram management for an online school, focused on admissions and communicating its flexible offer.',
+    },
+    challenge: {
+      es: 'Comunicar la propuesta de un colegio 100% online a familias que buscan flexibilidad sin perder solidez académica.',
+      en: 'Communicating an all-online school\'s offer to families seeking flexibility without losing academic rigor.',
+    },
+    approach: {
+      es: 'Diseñamos piezas de admisión y contenido regular para Instagram, con una línea gráfica clara y coherente en cada publicación.',
+      en: 'We designed admissions assets and regular Instagram content, with a clear, consistent visual line in every post.',
+    },
+    outcome: {
+      es: 'Una comunicación constante y profesional que acompaña el proceso de admisión de BSchool durante todo el año.',
+      en: 'Consistent, professional communication that supports BSchool\'s admissions process year-round.',
+    },
+    metrics: [{ val: 'Full', lbl: { es: 'Gestión de contenido', en: 'Content management' } }],
+    link: 'https://bschool.cl',
     featured: false,
   },
 ];

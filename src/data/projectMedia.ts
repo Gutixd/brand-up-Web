@@ -19,6 +19,21 @@ import superlunchPackaging from '../assets/projects/gallery/superlunch-packaging
 import superlunchIcon from '../assets/projects/gallery/superlunch-icon.webp';
 import altitudeDesktop from '../assets/projects/gallery/altitude-desktop.webp';
 import altitudeDns from '../assets/projects/gallery/altitude-dns.webp';
+import chachaInstagram from '../assets/projects/gallery/chachapollo-instagram.webp';
+import bell1 from '../assets/projects/gallery/bellcollege-1.webp';
+import bell2 from '../assets/projects/gallery/bellcollege-2.webp';
+import bell3 from '../assets/projects/gallery/bellcollege-3.webp';
+import bell4 from '../assets/projects/gallery/bellcollege-4.webp';
+import micro1 from '../assets/projects/gallery/microterapias-1.webp';
+import micro2 from '../assets/projects/gallery/microterapias-2.webp';
+import microInstagram from '../assets/projects/gallery/microterapias-instagram.webp';
+import duocInstagram from '../assets/projects/gallery/duocuc-instagram.webp';
+import duocAdmision from '../assets/projects/gallery/duocuc-admision.webp';
+import duoc3 from '../assets/projects/gallery/duocuc-3.webp';
+import bschool1 from '../assets/projects/gallery/bschool-1.webp';
+import bschool2 from '../assets/projects/gallery/bschool-2.webp';
+import bschool3 from '../assets/projects/gallery/bschool-3.webp';
+import bschool4 from '../assets/projects/gallery/bschool-4.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -33,10 +48,9 @@ export interface MediaSlot {
 
 export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
   'el-chacha-pollo': [
-    { kind: 'video', ratio: 'reel', label: { es: 'Reel destacado', en: 'Featured reel' } },
-    { kind: 'video', ratio: 'reel', label: { es: 'Segundo reel', en: 'Second reel' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Foto del producto', en: 'Product shot' } },
-    { kind: 'photo', ratio: 'wide', label: { es: 'Ambiente del local', en: 'In-store atmosphere' } },
+    { kind: 'video', ratio: 'reel', label: { es: 'Reel destacado', en: 'Featured reel' }, videoSrc: '/videos/chachapollo-reel1.mp4' },
+    { kind: 'video', ratio: 'reel', label: { es: 'Reel de año nuevo', en: 'New Year reel' }, videoSrc: '/videos/chachapollo-reel2.mp4' },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Cuenta de Instagram', en: 'Instagram account' }, src: chachaInstagram },
   ],
   'jd-cargo-logistics': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Home del sitio (desktop)', en: 'Homepage (desktop)' }, src: jdcargoDesktop },
@@ -72,12 +86,32 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'tall', label: { es: 'Material impreso', en: 'Printed material' } },
   ],
   'bell-college': [
-    { kind: 'video', ratio: 'reel', label: { es: 'Reel institucional 1', en: 'Institutional reel 1' } },
-    { kind: 'video', ratio: 'reel', label: { es: 'Reel institucional 2', en: 'Institutional reel 2' } },
-    { kind: 'photo', ratio: 'wide', label: { es: 'Detrás de cámara', en: 'Behind the scenes' } },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Afiche de admisión 2026', en: '2026 admissions poster' }, src: bell1 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza institucional 1', en: 'Institutional asset 1' }, src: bell2 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza institucional 2', en: 'Institutional asset 2' }, src: bell3 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza institucional 3', en: 'Institutional asset 3' }, src: bell4 },
   ],
   'superlunch': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Packaging aplicado', en: 'Applied packaging' }, src: superlunchPackaging },
     { kind: 'photo', ratio: 'square', label: { es: 'Ícono de marca', en: 'Brand icon' }, src: superlunchIcon },
+  ],
+  'microterapias': [
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza educativa 1', en: 'Educational asset 1' }, src: micro1 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza educativa 2', en: 'Educational asset 2' }, src: micro2 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Cuenta de Instagram', en: 'Instagram account' }, src: microInstagram },
+    { kind: 'video', ratio: 'reel', label: { es: 'Contenido en video', en: 'Video content' }, videoSrc: '/videos/microterapias-reel.mp4' },
+  ],
+  'duoc-uc': [
+    { kind: 'photo', ratio: 'tall', label: { es: 'Cuenta oficial @duocuc_cl', en: '@duocuc_cl official account' }, src: duocInstagram },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Cuenta de admisión', en: 'Admissions account' }, src: duocAdmision },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Comunidad Hub House Maipú', en: 'Hub House Maipú community' }, src: duoc3 },
+    { kind: 'video', ratio: 'reel', label: { es: 'Tour de campus', en: 'Campus tour' }, videoSrc: '/videos/duocuc-reel1.mp4' },
+    { kind: 'video', ratio: 'reel', label: { es: 'Cuenta anual', en: 'Annual showcase' }, videoSrc: '/videos/duocuc-reel2.mp4' },
+  ],
+  'bschool': [
+    { kind: 'photo', ratio: 'tall', label: { es: 'Admisión 2026', en: '2026 admissions' }, src: bschool1 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Programa NEE-TEA', en: 'NEE-TEA program' }, src: bschool2 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza de marca 1', en: 'Brand asset 1' }, src: bschool3 },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Pieza de marca 2', en: 'Brand asset 2' }, src: bschool4 },
   ],
 };
