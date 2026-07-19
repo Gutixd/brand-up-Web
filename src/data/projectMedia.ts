@@ -34,6 +34,8 @@ import bschool1 from '../assets/projects/gallery/bschool-1.webp';
 import bschool2 from '../assets/projects/gallery/bschool-2.webp';
 import bschool3 from '../assets/projects/gallery/bschool-3.webp';
 import bschool4 from '../assets/projects/gallery/bschool-4.webp';
+import aseocoolHome from '../assets/projects/gallery/aseocool-home.webp';
+import aseocoolProductos from '../assets/projects/gallery/aseocool-productos.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -68,10 +70,9 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'wide', label: { es: 'Detalle de producto', en: 'Product detail' }, src: musclecarDetail },
   ],
   'aseocool': [
-    { kind: 'photo', ratio: 'wide', label: { es: 'Sitio (desktop)', en: 'Site (desktop)' } },
-    { kind: 'photo', ratio: 'square', label: { es: 'Logo / identidad', en: 'Logo / identity' } },
-    { kind: 'photo', ratio: 'tall', label: { es: 'Vista móvil', en: 'Mobile view' } },
-    { kind: 'photo', ratio: 'wide', label: { es: 'Aplicaciones de marca', en: 'Brand applications' } },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Home del sitio (desktop)', en: 'Homepage (desktop)' }, src: aseocoolHome },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Catálogo de productos', en: 'Product catalog' }, src: aseocoolProductos },
+    { kind: 'video', ratio: 'wide', label: { es: 'Recorrido del sitio', en: 'Site walkthrough' }, videoSrc: '/videos/aseocool-tour.mp4' },
   ],
   'aracnida-store': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Home de la tienda', en: 'Store homepage' }, src: aracnidaHome },

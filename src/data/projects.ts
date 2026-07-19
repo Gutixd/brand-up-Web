@@ -9,6 +9,7 @@ import logoAracnida from '../assets/logos/aracnida.webp';
 import logoTemplo from '../assets/logos/templo-maipu.webp';
 import logoBell from '../assets/logos/bell-college.webp';
 import logoSuperlunch from '../assets/logos/superlunch.webp';
+import logoAseocool from '../assets/logos/aseocool.webp';
 import logoMicroterapias from '../assets/logos/microterapias.webp';
 import logoDuocuc from '../assets/logos/duoc-uc.webp';
 import logoBschool from '../assets/logos/bschool.webp';
@@ -202,6 +203,7 @@ export const PROJECTS: Project[] = [
       en: ['Web Design', 'Visual Identity', 'Digital Strategy'],
     },
     serviceSlugs: ['diseno-web'],
+    logo: logoAseocool,
     cover: coverAseocool,
     gradient: '#d4ecd4',
     summary: {
