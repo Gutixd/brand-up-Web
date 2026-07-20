@@ -535,20 +535,37 @@ function initWorkIntro() {
   const layout = document.querySelector('.works3d__layout');
   if (!layout) return;
 
-  // Índice lateral: los servicios caen escalonados
+  // Índice lateral: los servicios caen escalonados. Ease suave (no
+  // 'expo'/'back', que se sienten como un salto) y sin delay artificial
+  // — arranca junto con la transición de página, no después.
   gsap.from('.works-index .wfilter', {
-    opacity: 0, x: -18, duration: 0.7, ease: 'power3.out',
-    stagger: 0.05, delay: 0.15,
+    opacity: 0, x: -14, duration: 0.6, ease: 'power2.out', stagger: 0.045,
   });
 
-  // Cada proyecto entra al hacer scroll (los primeros, al cargar)
-  const rows = gsap.utils.toArray<HTMLElement>('.wrow');
-  rows.forEach((row) => {
-    gsap.from(row, {
-      opacity: 0, y: 60, duration: 1.1, ease: 'expo.out',
-      scrollTrigger: { trigger: row, start: 'top 88%' },
+  // Los triggers de scroll se crean recién cuando la fuente Anton ya
+  // cargó: si se crean antes, ScrollTrigger mide contra un layout que
+  // todavía va a cambiar de tamaño (texto con la fuente de respaldo),
+  // y el refresh() posterior de initRevealSafety() recalcula las
+  // posiciones a mitad de la animación — eso es el "salto" que se veía.
+  const setupRowReveals = () => {
+    // gsap.to (no .from): el CSS (html.js .wrow) ya deja la fila oculta
+    // desde el primer paint, así que no hay riesgo de un flash
+    // "visible → oculto" mientras se esperaba la fuente.
+    const rows = gsap.utils.toArray<HTMLElement>('.wrow');
+    rows.forEach((row) => {
+      gsap.to(row, {
+        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: row, start: 'top 90%' },
+      });
     });
-  });
+    ScrollTrigger.refresh();
+  };
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(setupRowReveals).catch(setupRowReveals);
+  } else {
+    setupRowReveals();
+  }
 }
 
 // ── Scroll progress bar ────────────────────────────────────────────

@@ -29,8 +29,12 @@ html {
 /* ─── Scroll reveals ─────────────────────────────────────────────── */
 html.js [data-reveal] { opacity: 0; transform: translateY(36px); }
 html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform: translateY(110%); }
+/* /trabajos: oculto por CSS desde el primer paint (igual que [data-reveal]
+   arriba), no por JS — así nunca hay un flash de "visible → oculto"
+   mientras se espera a que la fuente Anton cargue antes de animar. */
+html.js .wrow { opacity: 0; transform: translateY(36px); }
 @media (prefers-reduced-motion: reduce) {
-  html.js [data-reveal], html.js [data-reveal-word] .word { opacity: 1 !important; transform: none !important; }
+  html.js [data-reveal], html.js [data-reveal-word] .word, html.js .wrow { opacity: 1 !important; transform: none !important; }
 }
 
 /* ─── Marquee ────────────────────────────────────────────────────── */
