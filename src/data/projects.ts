@@ -22,9 +22,9 @@ import coverAseocool from '../assets/projects/aseocool.webp';
 import coverTemplo from '../assets/projects/templo-maipu.webp';
 import coverAracnida from '../assets/projects/aracnida-store.webp';
 import coverSuperlunch from '../assets/projects/superlunch.webp';
-import coverBell from '../assets/projects/gallery/bellcollege-2.webp';
 import coverMicroterapias from '../assets/projects/microterapias.webp';
 import coverDuocuc from '../assets/projects/duoc-uc.webp';
+import coverBell from '../assets/projects/bell-college.webp';
 import coverBschool from '../assets/projects/bschool.webp';
 
 export interface Project {
