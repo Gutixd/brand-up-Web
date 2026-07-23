@@ -136,9 +136,7 @@ const chapters = [
                     widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
                 </div>
               ) : slot.kind === 'video' && slot.videoSrc ? (
-                <div class="wgal__media">
-                  <video class="wgal__video" src={slot.videoSrc} muted loop playsinline autoplay preload="metadata" />
-                </div>
+                <div class="wgal__media" data-gal-video-src={slot.videoSrc} />
               ) : (
                 <div class="wgal__ph">
                   <span class="wgal__ph-icon" aria-hidden="true">
@@ -456,8 +454,6 @@ const chapters = [
 .wgal__item {
   break-inside: avoid;
   margin-bottom: 18px;
-  border-radius: 16px;
-  overflow: hidden;
   background: #161616;
 }
 .wgal__item--wide { aspect-ratio: 16 / 9; }
@@ -465,7 +461,17 @@ const chapters = [
 .wgal__item--reel { aspect-ratio: 9 / 16; }
 .wgal__item--square { aspect-ratio: 1 / 1; }
 
-.wgal__media { width: 100%; height: 100%; }
+/* border-radius + overflow van en el contenedor interno (no en .wgal__item,
+   que recibe el transform del reveal) — combinar overflow:hidden con
+   transform en el mismo elemento hace que Safari iOS pinte el <video> en
+   negro tras la animación. */
+.wgal__media {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
 .wgal__img, .wgal__video {
   width: 100%;
   height: 100%;

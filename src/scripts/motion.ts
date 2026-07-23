@@ -410,9 +410,49 @@ function initProjectVideos() {
   window.setTimeout(() => { measure(); evaluate(); }, 500); // por si el layout tardó
 }
 
+// ── Galería de proyecto: monta el <video> solo cuando entra en pantalla ─
+// Igual que initProjectVideos(), pero con IntersectionObserver ya que
+// aquí no son secciones sticky. Evita decodificar 2+ videos a la vez en
+// móvil (causa de pantalla negra) y libera el decoder al salir de vista.
+function initGalleryVideos() {
+  const items = document.querySelectorAll<HTMLElement>('.wgal__media[data-gal-video-src]');
+  if (!items.length) return;
+
+  const mount = (el: HTMLElement) => {
+    if (el.querySelector('video')) return;
+    const src = el.dataset.galVideoSrc;
+    if (!src) return;
+    const v = document.createElement('video');
+    v.className = 'wgal__video';
+    v.src = src;
+    v.muted = true; v.loop = true; v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    v.preload = 'auto';
+    el.appendChild(v);
+    v.play().catch(() => {});
+  };
+  const unmount = (el: HTMLElement) => {
+    const v = el.querySelector('video');
+    if (!v) return;
+    v.pause();
+    v.removeAttribute('src');
+    v.load();
+    v.remove();
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const el = entry.target as HTMLElement;
+      if (entry.isIntersecting) mount(el); else unmount(el);
+    }
+  }, { rootMargin: '200px 0px' });
+
+  items.forEach((el) => io.observe(el));
+}
+
 // ── /trabajos: video real al hacer hover sobre cada tarjeta ────────
 function initWorkCardVideos() {
-  document.querySelectorAll<HTMLElement>('.wcard__media[data-video-src]').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('.wrow__media[data-video-src]').forEach((el) => {
     const src = el.dataset.videoSrc;
     if (!src) return;
     const card = el.closest<HTMLElement>('[data-project-card]');
@@ -907,6 +947,7 @@ function setup() {
   initWorkGrid();
   initWorkTilt();
   initProjectVideos();
+  initGalleryVideos();
   initWorkCardVideos();
   initWorkFilters();
   initWorkIntro();
