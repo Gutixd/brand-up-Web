@@ -1,0 +1,568 @@
+---
+// Landing bespoke para el proyecto "Altitude" (consultoría · migración web).
+// El nombre evoca altura/vuelo, así que toda la página es una escena aérea:
+// cielo con nubes en parallax, un helicóptero animado con rotor girando, y la
+// información presentada como una "ruta de vuelo" vertical con altímetros —
+// NO como tarjetas. Es una de las variantes de diseño únicas por proyecto
+// (ver el dispatcher en WorkDetailPage.astro).
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+}
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// Los 3 capítulos como waypoints de ascenso, con lectura de altímetro.
+const waypoints = [
+  { alt: '0 m',       label: isEs ? 'En tierra' : 'On the ground', h: t.work.challenge, text: pick(p.challenge, locale) },
+  { alt: '3.500 m',   label: isEs ? 'Ascenso'   : 'Climbing',      h: t.work.approach,  text: pick(p.approach, locale) },
+  { alt: '10.000 m',  label: isEs ? 'Crucero'   : 'Cruising',      h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="alt" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — cielo con helicóptero ═══════════════════════════════ -->
+  <section class="alt-hero">
+    <!-- Capas de cielo + nubes en parallax (CSS puro: siempre se mueven) -->
+    <div class="alt-sky" aria-hidden="true">
+      <div class="alt-sun"></div>
+      <div class="alt-clouds alt-clouds--far">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="alt-clouds alt-clouds--mid">
+        <span></span><span></span>
+      </div>
+      <div class="alt-clouds alt-clouds--near">
+        <span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Helicóptero: deriva horizontal + cabeceo suave + rotor girando -->
+    <div class="alt-heli" aria-hidden="true">
+      <div class="alt-heli__bob">
+        <svg viewBox="0 0 240 130" width="240" height="130" role="img" aria-label="Helicóptero">
+          <!-- sombra/estela -->
+          <ellipse class="alt-heli__shadow" cx="120" cy="122" rx="60" ry="6"></ellipse>
+          <!-- cola -->
+          <path d="M118 66 L214 58 L214 66 L120 76 Z" fill="#12283c"/>
+          <rect x="206" y="42" width="6" height="30" rx="3" fill="#12283c"/>
+          <!-- rotor de cola -->
+          <g class="alt-heli__tailrotor" style="transform-origin:209px 50px">
+            <rect x="207" y="34" width="4" height="32" rx="2" fill="var(--accent)"/>
+          </g>
+          <!-- cuerpo -->
+          <path d="M40 62 Q30 44 62 40 L118 40 Q150 42 150 66 Q150 84 120 86 L64 86 Q42 84 40 62 Z" fill="#18344c"/>
+          <!-- cabina de vidrio -->
+          <path d="M52 60 Q46 48 66 46 L92 46 Q96 60 92 70 L60 72 Q52 70 52 60 Z" fill="var(--accent)" opacity="0.85"/>
+          <!-- patín -->
+          <rect x="58" y="98" width="86" height="5" rx="2.5" fill="#12283c"/>
+          <path d="M70 86 L66 98 M132 86 L136 98" stroke="#12283c" stroke-width="4" stroke-linecap="round"/>
+          <!-- mástil -->
+          <rect x="98" y="26" width="6" height="16" rx="2" fill="#12283c"/>
+          <!-- rotor principal (gira) -->
+          <g class="alt-heli__rotor" style="transform-origin:101px 26px">
+            <rect x="16" y="23" width="170" height="6" rx="3" fill="#0f2334"/>
+            <circle cx="101" cy="26" r="7" fill="var(--accent)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="alt-hero__inner">
+      <a href={lp('/trabajos')} class="alt-back">
+        <span aria-hidden="true">&#8592;</span> {t.work.back}
+      </a>
+      <p class="alt-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="alt-hero__title">
+        {p.client.split('').map((ch, i) => (
+          <span class="alt-hero__ch" style={`--i:${i}`}>{ch}</span>
+        ))}
+      </h1>
+      <p class="alt-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="alt-hero__meta">
+        <span class="alt-pill">{p.year}</span>
+        <span class="alt-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="alt-pill alt-pill--link">
+            {isEs ? 'Ver sitio' : 'Visit site'} <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+
+    <!-- HUD altímetro -->
+    <div class="alt-hud" aria-hidden="true">
+      <span class="alt-hud__label">ALT</span>
+      <span class="alt-hud__val" data-altimeter>10.000</span>
+      <span class="alt-hud__unit">m</span>
+    </div>
+    <div class="alt-hero__cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ════ BRIEFING — servicios como tarjeta de embarque ══════════════ -->
+  <section class="alt-brief">
+    <div class="alt-brief__inner">
+      <p class="alt-brief__kicker" data-reveal>{isEs ? 'Plan de vuelo' : 'Flight plan'}</p>
+      <div class="alt-boarding" data-reveal data-delay="0.08">
+        {pick(p.services, locale).map((s, i) => (
+          <div class="alt-boarding__seg">
+            <span class="alt-boarding__code">{s.split(' ').map((w) => w[0]).join('').slice(0, 3).toUpperCase()}</span>
+            <span class="alt-boarding__name">{s}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ RUTA DE VUELO — challenge / approach / outcome como ascenso ═ -->
+  <section class="alt-route" data-alt-route>
+    <div class="alt-route__inner">
+      <p class="alt-route__kicker" data-reveal>{isEs ? 'Bitácora de vuelo' : 'Flight log'}</p>
+
+      <div class="alt-path">
+        <!-- línea de ruta que se "dibuja" con el scroll -->
+        <svg class="alt-path__line" viewBox="0 0 20 1000" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="10" y1="0" x2="10" y2="1000" stroke="var(--accent)" stroke-width="2"
+                stroke-dasharray="6 10" data-alt-line></line>
+        </svg>
+        <!-- avioncito que sigue el scroll por la ruta -->
+        <div class="alt-path__plane" data-alt-plane aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="32" height="32"><path d="M16 2 L20 14 L30 18 L20 20 L18 30 L16 24 L14 30 L12 20 L2 18 L12 14 Z" fill="var(--accent)"/></svg>
+        </div>
+
+        {waypoints.map((w, i) => (
+          <article class={`alt-way alt-way--${i % 2 === 0 ? 'l' : 'r'}`} data-reveal>
+            <div class="alt-way__marker" aria-hidden="true"></div>
+            <div class="alt-way__alt">
+              <span class="alt-way__alt-num">{w.alt}</span>
+              <span class="alt-way__alt-lbl">{w.label}</span>
+            </div>
+            <div class="alt-way__body">
+              <span class="alt-way__h">{w.h}</span>
+              <p class="alt-way__text">{w.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ ALTÍMETRO — métrica como instrumento ═══════════════════════ -->
+  {p.metrics.length > 0 && (
+    <section class="alt-gauge">
+      <div class="alt-gauge__inner">
+        {p.metrics.map((m) => (
+          <div class="alt-dial" data-reveal>
+            <svg viewBox="0 0 200 200" class="alt-dial__svg" aria-hidden="true">
+              <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="10"/>
+              <circle cx="100" cy="100" r="88" fill="none" stroke="var(--accent)" stroke-width="10"
+                      stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"
+                      transform="rotate(-90 100 100)" class="alt-dial__ring"/>
+            </svg>
+            <div class="alt-dial__center">
+              <span class="alt-dial__val">{m.val}</span>
+              <span class="alt-dial__lbl">{pick(m.lbl, locale)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ GALERÍA — ventanillas de cabina ════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="alt-gallery">
+      <div class="alt-gallery__inner">
+        <h2 class="alt-gallery__title" data-reveal>{isEs ? 'A bordo' : 'On board'}</h2>
+        <div class="alt-windows">
+          {media.map((slot) => (
+            <figure class="alt-window" data-reveal>
+              {slot.kind === 'photo' && slot.src ? (
+                <Image src={slot.src} alt={pick(slot.label, locale)} class="alt-window__img"
+                  widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+              ) : (
+                <div class="alt-window__ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="alt-window__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ════ Siguiente proyecto ═════════════════════════════════════════ -->
+  <section class="alt-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="alt-next__link">
+      <span>
+        <span class="alt-next__label">{t.work.next}</span>
+        <span class="alt-next__client">{next.client}</span>
+      </span>
+      <span class="alt-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.alt {
+  --sky-top: #0a1826;
+  --sky-mid: #1c4b73;
+  --sky-low: #5fa0cf;
+  background: #0a1826;
+  color: #eaf3fb;
+}
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.alt-hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.alt-sky {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-low) 100%);
+}
+.alt-sun {
+  position: absolute; left: 50%; top: 30%;
+  width: 460px; height: 460px; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,238,200,0.55) 0%, rgba(255,238,200,0.12) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: altSunPulse 8s ease-in-out infinite;
+}
+@keyframes altSunPulse { 0%,100% { opacity: 0.75; } 50% { opacity: 1; } }
+
+/* Nubes: rectángulos redondeados difusos que cruzan el cielo */
+.alt-clouds span {
+  position: absolute;
+  background: #fff;
+  border-radius: 100px;
+  filter: blur(6px);
+}
+.alt-clouds--far span { opacity: 0.28; height: 26px; }
+.alt-clouds--mid span { opacity: 0.5;  height: 40px; filter: blur(8px); }
+.alt-clouds--near span { opacity: 0.85; height: 60px; filter: blur(10px); }
+.alt-clouds--far span:nth-child(1) { top: 18%; width: 200px; animation: altDrift 46s linear infinite; }
+.alt-clouds--far span:nth-child(2) { top: 30%; width: 150px; animation: altDrift 60s linear infinite 8s; }
+.alt-clouds--far span:nth-child(3) { top: 12%; width: 240px; animation: altDrift 54s linear infinite 20s; }
+.alt-clouds--mid span:nth-child(1) { top: 44%; width: 300px; animation: altDrift 38s linear infinite; }
+.alt-clouds--mid span:nth-child(2) { top: 58%; width: 220px; animation: altDrift 44s linear infinite 12s; }
+.alt-clouds--near span:nth-child(1) { top: 72%; width: 420px; animation: altDrift 30s linear infinite; }
+.alt-clouds--near span:nth-child(2) { top: 86%; width: 320px; animation: altDrift 36s linear infinite 6s; }
+@keyframes altDrift {
+  from { transform: translateX(-140%); }
+  to   { transform: translateX(220%); }
+}
+
+/* Helicóptero */
+.alt-heli {
+  position: absolute; z-index: 1; top: 24%;
+  left: 0;
+  animation: altHeliCross 26s ease-in-out infinite alternate;
+}
+@keyframes altHeliCross {
+  0%   { transform: translateX(6vw); }
+  100% { transform: translateX(64vw); }
+}
+.alt-heli__bob { animation: altHeliBob 4s ease-in-out infinite; }
+@keyframes altHeliBob { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-14px) rotate(1.5deg); } }
+.alt-heli__shadow { fill: rgba(0,0,0,0.18); }
+.alt-heli__rotor { animation: altSpin 0.12s linear infinite; }
+.alt-heli__tailrotor { animation: altSpin 0.09s linear infinite; }
+@keyframes altSpin { to { transform: rotate(360deg); } }
+
+.alt-hero__inner {
+  position: relative; z-index: 3;
+  max-width: 1180px; width: 100%;
+  margin-inline: auto;
+  padding: 0 24px 88px;
+}
+@media (min-width: 768px) { .alt-hero__inner { padding: 0 48px 104px; } }
+.alt-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 26px; font-size: 0.85rem;
+  color: rgba(234,243,251,0.7); transition: gap 0.25s, color 0.2s;
+}
+.alt-back:hover { color: #fff; gap: 12px; }
+.alt-hero__kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: #fff; opacity: 0.85; margin-bottom: 18px;
+}
+.alt-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 15vw, 11rem);
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.82;
+  color: #fff;
+  text-shadow: 0 12px 60px rgba(4,22,40,0.5);
+  display: flex; flex-wrap: wrap;
+}
+.alt-hero__ch {
+  display: inline-block;
+  animation: altCharRise 0.9s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: calc(var(--i) * 0.06s + 0.1s);
+}
+.alt-hero__ch:empty { width: 0.3em; }
+@keyframes altCharRise {
+  from { opacity: 0; transform: translateY(60%) rotate(6deg); }
+  to   { opacity: 1; transform: translateY(0) rotate(0); }
+}
+.alt-hero__tag {
+  margin-top: 26px; max-width: 40ch;
+  font-size: clamp(1rem, 1.8vw, 1.25rem); line-height: 1.5;
+  color: rgba(255,255,255,0.9);
+}
+.alt-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.alt-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; font-weight: 600;
+  color: #fff; background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(8px);
+  padding: 8px 16px; border-radius: 100px;
+}
+.alt-pill--link { transition: background 0.3s; }
+.alt-pill--link:hover { background: var(--accent); }
+
+.alt-hud {
+  position: absolute; z-index: 3; top: 108px; right: 24px;
+  display: flex; align-items: baseline; gap: 6px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  padding: 10px 16px; border-radius: 12px;
+  background: rgba(4,22,40,0.5); border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+}
+@media (min-width: 768px) { .alt-hud { right: 48px; } }
+.alt-hud__label { font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.6); }
+.alt-hud__val { font-size: 1.3rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.alt-hud__unit { font-size: 11px; color: rgba(255,255,255,0.6); }
+.alt-hero__cue {
+  position: absolute; z-index: 3; bottom: 22px; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 46px; background: rgba(255,255,255,0.25); overflow: hidden;
+}
+.alt-hero__cue span {
+  position: absolute; top: 0; left: 0; width: 100%; height: 40%;
+  background: #fff; animation: altCue 1.8s cubic-bezier(0.76,0,0.24,1) infinite;
+}
+@keyframes altCue { 0% { transform: translateY(-110%); } 100% { transform: translateY(260%); } }
+
+/* ════ BRIEFING ═══════════════════════════════════════════════════ */
+.alt-brief { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.08); }
+.alt-brief__inner { max-width: 1180px; margin-inline: auto; padding: 72px 24px; }
+@media (min-width: 768px) { .alt-brief__inner { padding: 96px 48px; } }
+.alt-brief__kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 28px;
+}
+.alt-boarding { display: flex; flex-wrap: wrap; gap: 14px; }
+.alt-boarding__seg {
+  display: flex; flex-direction: column; gap: 6px;
+  border: 1px dashed rgba(255,255,255,0.28);
+  border-radius: 12px; padding: 16px 22px; min-width: 150px;
+  background: rgba(255,255,255,0.03);
+}
+.alt-boarding__code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 1.6rem; font-weight: 700; color: var(--accent); letter-spacing: 0.05em;
+}
+.alt-boarding__name { font-size: 0.9rem; color: rgba(234,243,251,0.75); }
+
+/* ════ RUTA DE VUELO ══════════════════════════════════════════════ */
+.alt-route { background: var(--dark); }
+.alt-route__inner { max-width: 900px; margin-inline: auto; padding: 40px 24px 100px; }
+.alt-route__kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 48px; text-align: center;
+}
+.alt-path { position: relative; padding: 20px 0; }
+.alt-path__line {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 100%;
+}
+.alt-path__line line { transition: stroke-dashoffset 0.1s linear; }
+.alt-path__plane {
+  position: absolute; left: 50%; top: 0; transform: translate(-50%, 0) rotate(180deg);
+  z-index: 3; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  will-change: top;
+}
+.alt-way {
+  position: relative; z-index: 2;
+  width: calc(50% - 40px);
+  padding: 26px 0;
+  margin-bottom: 40px;
+}
+.alt-way--l { margin-right: auto; text-align: right; padding-right: 40px; }
+.alt-way--r { margin-left: auto; text-align: left; padding-left: 40px; }
+.alt-way__marker {
+  position: absolute; top: 34px; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--dark);
+  border: 3px solid var(--accent); box-shadow: 0 0 0 6px rgba(79,143,209,0.15);
+}
+.alt-way--l .alt-way__marker { right: -48px; }
+.alt-way--r .alt-way__marker { left: -48px; }
+.alt-way__alt-num {
+  font-family: var(--font-display); display: block;
+  font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; color: #fff; line-height: 1;
+}
+.alt-way__alt-lbl {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+}
+.alt-way__h {
+  display: block; margin: 16px 0 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(234,243,251,0.5);
+}
+.alt-way__text { font-size: 1.02rem; line-height: 1.6; color: rgba(234,243,251,0.85); }
+@media (max-width: 720px) {
+  .alt-path__line { left: 14px; }
+  .alt-path__plane { left: 14px; }
+  .alt-way { width: 100%; text-align: left; padding: 20px 0 20px 44px; margin-bottom: 24px; }
+  .alt-way--l, .alt-way--r { text-align: left; padding-right: 0; padding-left: 44px; }
+  .alt-way--l .alt-way__marker, .alt-way--r .alt-way__marker { left: 7px; right: auto; }
+}
+
+/* ════ ALTÍMETRO ══════════════════════════════════════════════════ */
+.alt-gauge { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.08); }
+.alt-gauge__inner {
+  max-width: 1180px; margin-inline: auto; padding: 90px 24px;
+  display: flex; flex-wrap: wrap; gap: 48px; justify-content: center;
+}
+.alt-dial { position: relative; width: 220px; height: 220px; }
+.alt-dial__svg { width: 100%; height: 100%; }
+.alt-dial__ring { animation: altRingFill 2s cubic-bezier(0.22,1,0.36,1) forwards; }
+@keyframes altRingFill { from { stroke-dashoffset: 553; } to { stroke-dashoffset: 80; } }
+.alt-dial__center {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; padding: 0 30px;
+}
+.alt-dial__val {
+  font-family: var(--font-display); font-size: 2.6rem; font-weight: 700; color: #fff; line-height: 1;
+}
+.alt-dial__lbl { margin-top: 10px; font-size: 0.85rem; color: rgba(234,243,251,0.7); }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.alt-gallery { background: var(--dark); }
+.alt-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .alt-gallery__inner { padding: 110px 48px; } }
+.alt-gallery__title {
+  font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 44px;
+}
+.alt-windows { display: grid; grid-template-columns: 1fr; gap: 22px; }
+@media (min-width: 720px) { .alt-windows { grid-template-columns: repeat(2, 1fr); } }
+.alt-window {
+  border-radius: 24px; overflow: hidden; position: relative;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #0e2233; aspect-ratio: 4 / 3;
+}
+.alt-window__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.9s cubic-bezier(0.22,1,0.36,1); }
+.alt-window:hover .alt-window__img { transform: scale(1.05); }
+.alt-window__ph {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 24px; text-align: center; color: rgba(234,243,251,0.5); font-size: 0.9rem;
+  background: repeating-linear-gradient(45deg, #0e2233 0 12px, #10283c 12px 24px);
+}
+.alt-window__cap {
+  position: absolute; left: 14px; bottom: 14px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.05em; color: #fff;
+  background: rgba(4,22,40,0.6); border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 12px; border-radius: 100px; backdrop-filter: blur(6px);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.alt-next { background: #0a1826; border-top: 1px solid rgba(255,255,255,0.08); }
+.alt-next__link {
+  max-width: 1180px; margin-inline: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 64px 24px;
+}
+@media (min-width: 768px) { .alt-next__link { padding-inline: 48px; } }
+.alt-next__label { font-size: 0.85rem; color: rgba(234,243,251,0.55); }
+.alt-next__client {
+  display: block; margin-top: 8px;
+  font-family: var(--font-display); font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 700; letter-spacing: -0.035em; color: #fff; transition: color 0.3s;
+}
+.alt-next__link:hover .alt-next__client { color: var(--accent); }
+.alt-next__arrow { font-size: 2.2rem; color: rgba(234,243,251,0.5); transition: transform 0.3s, color 0.3s; }
+.alt-next__link:hover .alt-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-clouds span, .alt-heli, .alt-heli__bob, .alt-heli__rotor, .alt-heli__tailrotor,
+  .alt-sun, .alt-hero__ch, .alt-hero__cue span, .alt-dial__ring { animation: none !important; }
+  .alt-hero__ch { opacity: 1; transform: none; }
+}
+</style>
+
+<script>
+  // Ruta de vuelo: el avioncito sigue el scroll a lo largo de la línea y la
+  // línea se "dibuja". Scroll-driven propio (sin depender de GSAP) para que
+  // funcione aunque la capa global de motion no corra.
+  function initAltRoute() {
+    const section = document.querySelector<HTMLElement>('[data-alt-route]');
+    if (!section) return;
+    const plane = section.querySelector<HTMLElement>('[data-alt-plane]');
+    const line = section.querySelector<SVGLineElement>('[data-alt-line]');
+    const path = section.querySelector<HTMLElement>('.alt-path');
+    if (!plane || !line || !path) return;
+
+    const lineLen = 1000; // viewBox height
+    line.style.strokeDashoffset = String(lineLen);
+
+    const onScroll = () => {
+      if (!section.isConnected) { window.removeEventListener('scroll', onScroll); return; }
+      const rect = path.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // progreso 0..1 mientras la ruta cruza el viewport
+      const prog = Math.max(0, Math.min(1, (vh * 0.75 - rect.top) / (rect.height * 0.9)));
+      plane.style.top = `${prog * rect.height}px`;
+      line.style.strokeDashoffset = String(lineLen * (1 - prog));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // Altímetro del HUD: cuenta hasta 10.000 al cargar.
+  function initAltimeter() {
+    const el = document.querySelector<HTMLElement>('[data-altimeter]');
+    if (!el) return;
+    const target = 10000;
+    const dur = 1600;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('es-CL');
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  const run = () => { initAltRoute(); initAltimeter(); };
+  run();
+  document.addEventListener('astro:page-load', run);
+</script>

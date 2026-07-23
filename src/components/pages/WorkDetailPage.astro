@@ -5,6 +5,13 @@ import CtaBand from '../CtaBand.astro';
 import { PROJECTS, type Project } from '../../data/projects';
 import { PROJECT_MEDIA } from '../../data/projectMedia';
 import { useT, pick, localePath, type Locale } from '../../i18n';
+// Landings bespoke por proyecto: cuando un slug tiene su propio diseño
+// (layout y animaciones únicos, no la plantilla genérica), se despacha aquí.
+import WorkAltitude from './WorkAltitude.astro';
+
+const BESPOKE: Record<string, any> = {
+  altitude: WorkAltitude,
+};
 
 interface Props {
   locale: Locale;
@@ -14,6 +21,8 @@ const { locale, project: p } = Astro.props;
 const t = useT(locale);
 const lp = (path: string) => localePath(locale, path);
 const isEs = locale === 'es';
+
+const Bespoke = BESPOKE[p.slug];
 
 const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
 const next = PROJECTS[(idx + 1) % PROJECTS.length];
@@ -27,6 +36,7 @@ const chapters = [
 ];
 ---
 
+{Bespoke ? <Bespoke locale={locale} project={p} /> : (
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
 
   <!-- Identidad propia de este proyecto: sobreescribe el acento global y
@@ -177,6 +187,7 @@ const chapters = [
 
   <CtaBand locale={locale} />
 </Base>
+)}
 
 <style>
 /* ════ HERO ═══════════════════════════════════════════════════════ */
