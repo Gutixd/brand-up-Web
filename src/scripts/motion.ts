@@ -42,10 +42,31 @@ function initWordReveals() {
         .join(' ');
       el.dataset.split = 'done';
     }
-    gsap.to(el.querySelectorAll('.word'), {
-      y: 0, opacity: 1, duration: 1, ease: 'power4.out', stagger: 0.06,
-      scrollTrigger: { trigger: el, start: 'top 90%' },
-    });
+    const words = el.querySelectorAll('.word');
+    const scrollTrigger = { trigger: el, start: 'top 90%' };
+    // Personalidad por proyecto (/trabajos/[slug]): cada rubro entra con un
+    // gesto distinto en vez del mismo wipe de siempre.
+    switch (el.dataset.wordAnim) {
+      case 'playful':
+        gsap.fromTo(words,
+          { y: '120%', opacity: 0, rotate: -8, scale: 0.75 },
+          { y: '0%', opacity: 1, rotate: 0, scale: 1, duration: 0.9, ease: 'back.out(2.6)', stagger: 0.09, scrollTrigger });
+        break;
+      case 'bold':
+        gsap.fromTo(words,
+          { opacity: 0, scaleY: 1.7, skewX: -14 },
+          { opacity: 1, scaleY: 1, skewX: 0, duration: 0.5, ease: 'power4.out', stagger: 0.05, scrollTrigger });
+        break;
+      case 'industrial':
+        gsap.fromTo(words,
+          { x: '-70%', opacity: 0 },
+          { x: '0%', opacity: 1, duration: 0.65, ease: 'power3.out', stagger: 0.055, scrollTrigger });
+        break;
+      default: // 'editorial' y cualquier otro caso: el wipe original, sobrio
+        gsap.to(words, {
+          y: 0, opacity: 1, duration: 1, ease: 'power4.out', stagger: 0.06, scrollTrigger,
+        });
+    }
   });
 }
 

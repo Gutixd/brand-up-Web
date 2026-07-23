@@ -35,7 +35,7 @@ const chapters = [
   <div style={`--color-accent:${p.theme.accent}; --project-dark:${p.theme.dark}`}>
 
   <!-- ════ HERO editorial ═══════════════════════════════════════════ -->
-  <section class="wd-hero" style={`background:${p.gradient}`}>
+  <section class={`wd-hero wd-hero--${p.flavor}`} style={`background:${p.gradient}`}>
     {p.cover && (
       <Image
         src={p.cover}
@@ -57,7 +57,7 @@ const chapters = [
         <span aria-hidden="true">&#8592;</span> {t.work.back}
       </a>
       <p class="wd-hero__kicker">{pick(p.sector, locale)}</p>
-      <h1 class="wd-hero__title" data-reveal-word>{p.client}</h1>
+      <h1 class="wd-hero__title" data-reveal-word data-word-anim={p.flavor}>{p.client}</h1>
       <div class="wd-hero__meta">
         <span class="wd-hero__pill">{p.year}</span>
         <span class="wd-hero__pill">
@@ -289,6 +289,40 @@ const chapters = [
 }
 @keyframes wdScroll { 0% { transform: translateY(-110%); } 100% { transform: translateY(260%); } }
 @media (max-width: 640px) { .wd-hero__scroll { display: none; } }
+
+/* ════ PERSONALIDAD por rubro — mismo layout, distinto carácter ═══ */
+/* playful (gastronomía casual): título con un leve giro juguetón y
+   kicker en forma de pastilla, como una etiqueta pegada a mano. */
+.wd-hero--playful .wd-hero__title { transform: rotate(-1.4deg); transform-origin: left bottom; }
+.wd-hero--playful .wd-hero__kicker {
+  display: inline-block; background: rgba(255,255,255,0.14);
+  padding: 6px 16px; border-radius: 100px; transform: rotate(-1.5deg);
+}
+
+/* editorial (educación/institucional): más aire, letras más abiertas,
+   look de portada de revista sobria. */
+.wd-hero--editorial .wd-hero__inner { padding-top: 210px; }
+@media (min-width: 768px) { .wd-hero--editorial .wd-hero__inner { padding-top: 240px; } }
+.wd-hero--editorial .wd-hero__kicker { letter-spacing: 0.32em; }
+.wd-hero--editorial .wd-hero__title { font-weight: 600; letter-spacing: -0.02em; }
+
+/* bold (streetwear/automotriz): título itálico y comprimido, scrim más
+   duro para más contraste — pega fuerte, sin sutilezas. */
+.wd-hero--bold .wd-hero__title { font-style: italic; transform: skewX(-3deg); letter-spacing: -0.06em; }
+.wd-hero--bold .wd-hero__scrim { background: linear-gradient(to top, #000 8%, rgba(0,0,0,0.62) 42%, rgba(0,0,0,0.18) 100%); }
+.wd-hero--bold .wd-hero__kicker { color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+
+/* industrial (B2B/servicios): grilla técnica de fondo y kicker en
+   monoespaciada, como una ficha técnica. */
+.wd-hero--industrial { position: relative; }
+.wd-hero--industrial::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+.wd-hero--industrial .wd-hero__kicker { font-family: ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: 0.08em; }
 
 /* ════ OVERVIEW ═══════════════════════════════════════════════════ */
 .wd-overview {
