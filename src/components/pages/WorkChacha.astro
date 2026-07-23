@@ -1,0 +1,466 @@
+---
+// Landing bespoke para "El Chacha Pollo" (gastronomía · redes sociales).
+// Tema apetitoso y juguetón: un completo italiano dibujado a mano (SVG) con
+// vapor subiendo e ingredientes flotando, y la info presentada como MENÚ +
+// RECETA en vez de tarjetas. Reels en marcos de teléfono. Una de las
+// variantes de diseño únicas por proyecto (ver dispatcher en WorkDetailPage).
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+}
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// Reto/solución/resultado como pasos de receta.
+const steps = [
+  { n: '01', h: t.work.challenge, text: pick(p.challenge, locale) },
+  { n: '02', h: t.work.approach,  text: pick(p.approach, locale) },
+  { n: '03', h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="cp" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — completo apetitoso ═════════════════════════════════ -->
+  <section class="cp-hero">
+    <!-- ráfaga gráfica de fondo -->
+    <div class="cp-burst" aria-hidden="true"></div>
+    <div class="cp-dots" aria-hidden="true"></div>
+
+    <!-- partículas de comida flotando (sésamo / ají) -->
+    <div class="cp-particles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- el completo -->
+    <div class="cp-food" aria-hidden="true">
+      <div class="cp-steam">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="cp-food__bob">
+        <svg viewBox="0 0 320 210" width="320" height="210" role="img" aria-label="Completo italiano">
+          <ellipse class="cp-food__shadow" cx="160" cy="188" rx="120" ry="14"/>
+          <!-- pan inferior -->
+          <path d="M40 128 Q34 168 78 172 L242 172 Q286 168 280 128 Q280 112 250 110 L70 110 Q40 112 40 128 Z" fill="#E7AE5E"/>
+          <path d="M52 150 Q120 164 268 146" fill="none" stroke="#CE8B3C" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+          <!-- vienesa -->
+          <rect x="58" y="96" width="204" height="34" rx="17" fill="#C0603A"/>
+          <rect x="58" y="96" width="204" height="15" rx="8" fill="#D4794A"/>
+          <!-- palta (verde) -->
+          <path d="M56 96 Q70 78 96 86 Q116 74 140 84 Q166 72 192 84 Q220 74 246 86 Q266 80 268 96 Q220 108 160 106 Q100 108 56 96 Z" fill="#7CB33A"/>
+          <path d="M56 96 Q70 78 96 86 Q116 74 140 84 Q166 72 192 84 Q220 74 246 86 Q266 80 268 96" fill="none" stroke="#5F9A28" stroke-width="3" opacity="0.5"/>
+          <!-- tomate en cubos -->
+          <rect x="92" y="82" width="15" height="15" rx="3" fill="#E0492F" transform="rotate(12 99 89)"/>
+          <rect x="150" y="86" width="14" height="14" rx="3" fill="#E0492F" transform="rotate(-10 157 93)"/>
+          <rect x="206" y="82" width="15" height="15" rx="3" fill="#E0492F" transform="rotate(18 213 89)"/>
+          <!-- mayo (zigzag blanco) -->
+          <path d="M64 92 Q84 78 104 92 Q124 106 144 92 Q164 78 184 92 Q204 106 224 92 Q244 78 260 92"
+                fill="none" stroke="#FFFDF6" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="cp-hero__inner">
+      <a href={lp('/trabajos')} class="cp-back">
+        <span aria-hidden="true">&#8592;</span> {t.work.back}
+      </a>
+      <p class="cp-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="cp-hero__title">
+        {p.client.split(' ').map((word, wi) => (
+          <span class="cp-hero__word">
+            {word.split('').map((ch, i) => (
+              <span class="cp-hero__ch" style={`--i:${wi * 4 + i}`}>{ch}</span>
+            ))}
+          </span>
+        ))}
+      </h1>
+      <p class="cp-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="cp-hero__meta">
+        <span class="cp-pill">{p.year}</span>
+        <span class="cp-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="cp-pill cp-pill--link">
+            @elchachapollo <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+    <div class="cp-hero__cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ════ MENÚ — resumen + servicios como toppings ══════════════════ -->
+  <section class="cp-menu">
+    <div class="cp-menu__inner">
+      <p class="cp-menu__lead" data-reveal>{pick(p.summary, locale)}</p>
+      <div class="cp-toppings" data-reveal data-delay="0.1">
+        <span class="cp-toppings__label">{isEs ? 'Con todo:' : 'The works:'}</span>
+        {pick(p.services, locale).map((s) => (
+          <span class="cp-topping">{s}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ RECETA — challenge / approach / outcome ═══════════════════ -->
+  <section class="cp-recipe">
+    <div class="cp-recipe__inner">
+      <p class="cp-recipe__kicker" data-reveal>{isEs ? 'La receta' : 'The recipe'}</p>
+      <div class="cp-steps">
+        {steps.map((s) => (
+          <article class="cp-step" data-reveal>
+            <span class="cp-step__num">{s.n}</span>
+            <div class="cp-step__body">
+              <span class="cp-step__h">{s.h}</span>
+              <p class="cp-step__text">{s.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ MARCADOR — métricas ═══════════════════════════════════════ -->
+  {p.metrics.length > 0 && (
+    <section class="cp-score">
+      <div class="cp-score__inner">
+        <p class="cp-score__kicker" data-reveal>{isEs ? 'En números' : 'By the numbers'}</p>
+        <div class="cp-score__grid">
+          {p.metrics.map((m, i) => (
+            <div class="cp-stat" data-reveal data-delay={`${i * 0.1}`}>
+              <span class="cp-stat__val">{m.val}</span>
+              <span class="cp-stat__lbl">{pick(m.lbl, locale)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ════ REELS — en marcos de teléfono ═════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="cp-reels">
+      <div class="cp-reels__inner">
+        <h2 class="cp-reels__title" data-reveal>{isEs ? 'El contenido que llenó el local' : 'The content that filled the place'}</h2>
+        <div class="cp-phones">
+          {media.map((slot) => (
+            <figure class={`cp-phone ${slot.ratio === 'reel' ? 'cp-phone--reel' : 'cp-phone--tall'}`} data-reveal>
+              {slot.kind === 'video' && slot.videoSrc ? (
+                <div class="cp-phone__screen" data-cp-video={slot.videoSrc}></div>
+              ) : slot.kind === 'photo' && slot.src ? (
+                <div class="cp-phone__screen">
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="cp-phone__img"
+                    widths={[320, 640]} sizes="320px" />
+                </div>
+              ) : (
+                <div class="cp-phone__screen cp-phone__screen--ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="cp-phone__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ════ Siguiente proyecto ════════════════════════════════════════ -->
+  <section class="cp-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="cp-next__link">
+      <span>
+        <span class="cp-next__label">{t.work.next}</span>
+        <span class="cp-next__client">{next.client}</span>
+      </span>
+      <span class="cp-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.cp { background: #1b0f04; color: #fff5e6; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.cp-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background:
+    radial-gradient(120% 90% at 50% 8%, #ffd24d 0%, #f7a52e 42%, #e8752c 74%, #b84e12 100%);
+}
+.cp-burst {
+  position: absolute; z-index: 0; left: 50%; top: 34%;
+  width: 130vh; height: 130vh; transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(255,255,255,0.10) 0deg 8deg, transparent 8deg 16deg);
+  animation: cpSpin 60s linear infinite;
+}
+@keyframes cpSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.cp-dots {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.5;
+  background-image: radial-gradient(rgba(255,255,255,0.35) 2px, transparent 2px);
+  background-size: 30px 30px;
+  mask-image: radial-gradient(80% 60% at 50% 30%, #000 0%, transparent 75%);
+}
+
+.cp-particles span {
+  position: absolute; width: 10px; height: 10px; border-radius: 3px;
+  background: #fff; opacity: 0.8;
+}
+.cp-particles span:nth-child(1) { left: 18%; top: 40%; background: #7CB33A; animation: cpFloat 7s ease-in-out infinite; }
+.cp-particles span:nth-child(2) { left: 78%; top: 30%; background: #E0492F; animation: cpFloat 9s ease-in-out infinite 1s; }
+.cp-particles span:nth-child(3) { left: 30%; top: 62%; background: #FFF7E0; border-radius: 50%; animation: cpFloat 6s ease-in-out infinite 0.5s; }
+.cp-particles span:nth-child(4) { left: 68%; top: 66%; background: #7CB33A; animation: cpFloat 8s ease-in-out infinite 2s; }
+.cp-particles span:nth-child(5) { left: 12%; top: 24%; background: #E0492F; border-radius: 50%; animation: cpFloat 10s ease-in-out infinite 1.5s; }
+.cp-particles span:nth-child(6) { left: 86%; top: 52%; background: #FFF7E0; animation: cpFloat 7.5s ease-in-out infinite 0.8s; }
+@keyframes cpFloat {
+  0%,100% { transform: translateY(0) rotate(0); opacity: 0.85; }
+  50% { transform: translateY(-40px) rotate(180deg); opacity: 0.4; }
+}
+
+/* Completo */
+.cp-food {
+  position: absolute; z-index: 1; top: 12%; left: 50%;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 30px 40px rgba(120,50,10,0.45));
+}
+.cp-food__bob { animation: cpBob 4.5s ease-in-out infinite; }
+@keyframes cpBob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-18px) rotate(2deg); } }
+.cp-food__shadow { fill: rgba(120,50,10,0.22); }
+
+.cp-steam {
+  position: absolute; z-index: 2; left: 50%; top: -46px; transform: translateX(-50%);
+  width: 200px; height: 120px;
+}
+.cp-steam span {
+  position: absolute; bottom: 0; width: 14px; height: 90px;
+  background: linear-gradient(to top, rgba(255,255,255,0.6), transparent);
+  border-radius: 50%; filter: blur(4px);
+}
+.cp-steam span:nth-child(1) { left: 40px; animation: cpSteam 3.4s ease-in-out infinite; }
+.cp-steam span:nth-child(2) { left: 96px; animation: cpSteam 3.9s ease-in-out infinite 0.6s; }
+.cp-steam span:nth-child(3) { left: 150px; animation: cpSteam 3.2s ease-in-out infinite 1.1s; }
+@keyframes cpSteam {
+  0% { transform: translateY(20px) scaleX(1); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: translateY(-70px) scaleX(1.6); opacity: 0; }
+}
+
+.cp-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 80px;
+}
+@media (min-width: 768px) { .cp-hero__inner { padding: 0 48px 100px; } }
+.cp-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; font-weight: 600; color: #5a2c0c; transition: gap 0.25s;
+}
+.cp-back:hover { gap: 12px; }
+.cp-hero__kicker {
+  display: inline-block; transform: rotate(-2deg);
+  background: #1b0f04; color: #ffd24d;
+  font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 7px 16px; border-radius: 100px; margin-bottom: 18px;
+}
+.cp-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 13vw, 9.5rem); font-weight: 700;
+  line-height: 0.86; letter-spacing: -0.04em; color: #1b0f04;
+  display: flex; flex-wrap: wrap; gap: 0 0.28em;
+  text-shadow: 3px 3px 0 rgba(255,255,255,0.35);
+}
+.cp-hero__word { display: inline-flex; }
+.cp-hero__ch {
+  display: inline-block;
+  animation: cpPop 0.7s cubic-bezier(0.22,1.4,0.4,1) both;
+  animation-delay: calc(var(--i) * 0.05s + 0.1s);
+}
+@keyframes cpPop {
+  from { opacity: 0; transform: translateY(40%) rotate(-8deg) scale(0.6); }
+  to   { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+.cp-hero__tag {
+  margin-top: 22px; max-width: 40ch;
+  font-size: clamp(1rem, 1.7vw, 1.2rem); line-height: 1.5; color: #4a2408; font-weight: 500;
+}
+.cp-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.cp-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; font-weight: 700; color: #1b0f04;
+  background: rgba(255,255,255,0.55); border: 2px solid #1b0f04;
+  padding: 7px 16px; border-radius: 100px;
+}
+.cp-pill--link { transition: background 0.25s, color 0.25s; }
+.cp-pill--link:hover { background: #1b0f04; color: #ffd24d; }
+.cp-hero__cue {
+  position: absolute; z-index: 3; bottom: 20px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: 44px; background: rgba(27,15,4,0.25); overflow: hidden; border-radius: 2px;
+}
+.cp-hero__cue span {
+  position: absolute; top: 0; left: 0; width: 100%; height: 40%;
+  background: #1b0f04; animation: cpCue 1.8s cubic-bezier(0.76,0,0.24,1) infinite;
+}
+@keyframes cpCue { 0% { transform: translateY(-110%); } 100% { transform: translateY(260%); } }
+
+/* ════ MENÚ ═══════════════════════════════════════════════════════ */
+.cp-menu { background: #FDF3E0; color: #1b0f04; }
+.cp-menu__inner { max-width: 1000px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .cp-menu__inner { padding: 120px 48px; } }
+.cp-menu__lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4vw, 3.1rem); font-weight: 600;
+  line-height: 1.2; letter-spacing: -0.02em; max-width: 24ch;
+}
+.cp-toppings { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 40px; }
+.cp-toppings__label { font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; }
+.cp-topping {
+  font-size: 0.9rem; font-weight: 700; color: #1b0f04;
+  background: #fff; border: 2px solid #1b0f04; border-radius: 100px; padding: 8px 18px;
+  box-shadow: 3px 3px 0 var(--accent);
+}
+
+/* ════ RECETA ═════════════════════════════════════════════════════ */
+.cp-recipe { background: var(--dark); }
+.cp-recipe__inner { max-width: 1000px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .cp-recipe__inner { padding: 110px 48px; } }
+.cp-recipe__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 44px;
+}
+.cp-steps { display: grid; gap: 20px; }
+.cp-step {
+  display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start;
+  padding: 32px; border-radius: 20px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,245,230,0.1);
+  transition: transform 0.35s, border-color 0.35s;
+}
+.cp-step:hover { transform: translateX(8px); border-color: var(--accent); }
+.cp-step__num {
+  font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 700;
+  color: var(--accent); line-height: 0.9;
+}
+.cp-step__h {
+  display: block; margin-bottom: 10px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,245,230,0.5);
+}
+.cp-step__text { font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.6; color: rgba(255,245,230,0.88); }
+
+/* ════ MARCADOR ═══════════════════════════════════════════════════ */
+.cp-score { background: var(--accent); color: #1b0f04; }
+.cp-score__inner { max-width: 1180px; margin-inline: auto; padding: 84px 24px; }
+@media (min-width: 768px) { .cp-score__inner { padding: 104px 48px; } }
+.cp-score__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(27,15,4,0.6); margin-bottom: 40px;
+}
+.cp-score__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px 32px; }
+.cp-stat { border-top: 3px solid rgba(27,15,4,0.25); padding-top: 18px; }
+.cp-stat__val {
+  display: block; font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5.4rem); font-weight: 700; letter-spacing: -0.04em;
+  line-height: 0.9; color: #1b0f04;
+}
+.cp-stat__lbl { display: block; margin-top: 12px; font-size: 0.95rem; font-weight: 600; color: rgba(27,15,4,0.75); }
+
+/* ════ REELS ══════════════════════════════════════════════════════ */
+.cp-reels { background: #1b0f04; }
+.cp-reels__inner { max-width: 1180px; margin-inline: auto; padding: 96px 24px; }
+@media (min-width: 768px) { .cp-reels__inner { padding: 120px 48px; } }
+.cp-reels__title {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #fff5e6; margin-bottom: 52px; max-width: 20ch;
+}
+.cp-phones {
+  display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; align-items: flex-start;
+}
+.cp-phone { width: 240px; margin: 0; }
+.cp-phone__screen {
+  position: relative; border-radius: 26px; overflow: hidden;
+  border: 6px solid #12100e; background: #000;
+  box-shadow: 0 24px 50px rgba(0,0,0,0.5);
+}
+.cp-phone--reel .cp-phone__screen { aspect-ratio: 9 / 16; }
+.cp-phone--tall .cp-phone__screen { aspect-ratio: 3 / 4; }
+.cp-phone__screen :global(video), .cp-phone__img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.cp-phone__screen--ph {
+  display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center;
+  color: rgba(255,245,230,0.5); font-size: 0.9rem;
+  background: repeating-linear-gradient(45deg, #161311 0 12px, #1c1815 12px 24px);
+}
+.cp-phone__cap {
+  margin-top: 14px; text-align: center;
+  font-size: 0.82rem; font-weight: 600; color: rgba(255,245,230,0.65);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.cp-next { background: #150b03; border-top: 1px solid rgba(255,245,230,0.08); }
+.cp-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .cp-next__link { padding-inline: 48px; } }
+.cp-next__label { font-size: 0.85rem; color: rgba(255,245,230,0.55); }
+.cp-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #fff5e6; transition: color 0.3s;
+}
+.cp-next__link:hover .cp-next__client { color: var(--accent); }
+.cp-next__arrow { font-size: 2.2rem; color: rgba(255,245,230,0.5); transition: transform 0.3s, color 0.3s; }
+.cp-next__link:hover .cp-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-burst, .cp-particles span, .cp-food__bob, .cp-steam span, .cp-hero__ch, .cp-hero__cue span { animation: none !important; }
+  .cp-hero__ch { opacity: 1; transform: none; }
+}
+</style>
+
+<script>
+  // Reels: monta el <video> solo cuando entra en pantalla (evita saturar el
+  // decodificador en móvil, mismo criterio que la galería genérica).
+  function initCpReels() {
+    const items = document.querySelectorAll<HTMLElement>('[data-cp-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.cpVideo;
+      if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v);
+      v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video');
+      if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const el = e.target as HTMLElement;
+        if (e.isIntersecting) mount(el); else unmount(el);
+      }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+
+  initCpReels();
+  document.addEventListener('astro:page-load', initCpReels);
+</script>
