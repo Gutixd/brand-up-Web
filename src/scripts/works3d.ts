@@ -81,6 +81,13 @@ export function initWorks3D() {
   const canvas = document.getElementById('works3d-canvas') as HTMLCanvasElement | null;
   if (!section || !canvas) return;
   if (reducedMotion() || !hasWebGL()) return;
+  // En táctil no hay hover (el único motivo de esta capa) y, además, la
+  // barra de direcciones del navegador móvil cambia window.innerHeight
+  // al scrollear sin disparar 'resize' a tiempo: el plano 3D queda
+  // desincronizado del rect real de la foto y "salta" arriba/abajo.
+  // Se deja el fallback DOM (imágenes normales, ya con su propio hover
+  // en CSS) en vez de arriesgar ese desfase.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
   const panels = Array.from(section.querySelectorAll<HTMLElement>('[data-webgl-media]'));
   if (!panels.length) return;
