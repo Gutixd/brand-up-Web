@@ -5,8 +5,7 @@ export const SITE = {
   legalName: 'BrandUp Agency',
   domain: 'https://brandup.cl',
   city: 'Santiago, Chile',
-  // TODO: confirmar email definitivo (encontrado en V11: hola@brandup.cl)
-  email: 'hola@brandup.cl',
+  email: 'brandup.092@gmail.com',
   phone: '+56 9 7982 2862',
   whatsappNumber: '56979822862',
   instagram: 'https://www.instagram.com/brand.up.cl/',
