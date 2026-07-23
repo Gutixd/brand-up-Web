@@ -38,6 +38,11 @@ export interface Project {
   serviceSlugs: string[]; // keys of SERVICES
   logo?: ImageMetadata;
   gradient: string; // cover gradient (CSS)
+  // Identidad visual propia de la landing de este proyecto: accent = color
+  // saturado fiel a la marca real (kickers, botones, banda de métricas);
+  // dark = tono de fondo para la sección de storytelling. Ambos sobreescriben
+  // las variables globales SOLO dentro de esta página (ver WorkDetailPage).
+  theme: { accent: string; dark: string };
   summary: L;
   challenge: L;
   approach: L;
@@ -62,6 +67,7 @@ export const PROJECTS: Project[] = [
     logo: logoChacha,
     cover: coverChacha,
     gradient: '#f5cc53',
+    theme: { accent: '#e8752c', dark: '#1f1206' },
     summary: {
       es: 'Estrategia completa de contenido en Instagram: reels de alto alcance, parrilla constante y una identidad visual que llenó el local.',
       en: 'Complete Instagram content strategy: high-reach reels, a consistent calendar and a visual identity that filled the restaurant.',
@@ -100,6 +106,7 @@ export const PROJECTS: Project[] = [
     logo: logoJdcargo,
     cover: coverJdcargo,
     gradient: '#cbbedc',
+    theme: { accent: '#5b4e91', dark: '#0d0a1a' },
     summary: {
       es: 'Sitio corporativo para una empresa de agenciamiento de carga internacional, orientado a generar cotizaciones y transmitir credibilidad B2B.',
       en: 'Corporate website for an international freight forwarding company, built to generate quotes and convey B2B credibility.',
@@ -137,6 +144,7 @@ export const PROJECTS: Project[] = [
     serviceSlugs: ['diseno-web'],
     cover: coverAltitude,
     gradient: '#c8d8e8',
+    theme: { accent: '#4f8fd1', dark: '#0a1826' },
     summary: {
       es: 'Migración completa del sitio y corrección de DNS para restablecer la presencia digital sin interrupciones.',
       en: 'Full site migration and DNS correction to restore digital presence without interruptions.',
@@ -171,6 +179,7 @@ export const PROJECTS: Project[] = [
     serviceSlugs: ['diseno-web'],
     cover: coverMusclecarchile,
     gradient: '#1a1a2e',
+    theme: { accent: '#d1372f', dark: '#140505' },
     summary: {
       es: 'Migración y corrección de DNS para una tienda de accesorios y cultura muscle car en Chile.',
       en: 'Migration and DNS correction for a muscle car accessories and culture store in Chile.',
@@ -206,6 +215,7 @@ export const PROJECTS: Project[] = [
     logo: logoAseocool,
     cover: coverAseocool,
     gradient: '#d4ecd4',
+    theme: { accent: '#1ea884', dark: '#06201a' },
     summary: {
       es: 'Sitio web completo para empresa de aseo y limpieza profesional, con identidad visual e integración digital.',
       en: 'Complete website for a professional cleaning company, with visual identity and digital integration.',
@@ -242,6 +252,7 @@ export const PROJECTS: Project[] = [
     logo: logoAracnida,
     cover: coverAracnida,
     gradient: '#f49fc5',
+    theme: { accent: '#d1273f', dark: '#120608' },
     summary: {
       es: 'Tienda online premium con integración de CRM y email marketing para multiplicar el ticket promedio.',
       en: 'Premium online store with CRM and email marketing integration to multiply average order value.',
@@ -279,6 +290,7 @@ export const PROJECTS: Project[] = [
     logo: logoTemplo,
     cover: coverTemplo,
     gradient: '#f2fbe0',
+    theme: { accent: '#c9a227', dark: '#1c1607' },
     summary: {
       es: 'Diseño de campaña gráfica para eventos institucionales, con piezas impresas y digitales coherentes con la identidad del Templo.',
       en: 'Graphic campaign design for institutional events, with print and digital assets consistent with the Temple identity.',
@@ -312,6 +324,7 @@ export const PROJECTS: Project[] = [
     logo: logoBell,
     cover: coverBell,
     gradient: '#bcd9f0',
+    theme: { accent: '#2f6fb3', dark: '#0a1826' },
     summary: {
       es: 'Gestión de comunidad en Instagram: publicación de contenido y respuesta de mensajes de apoderados.',
       en: 'Instagram community management: publishing content and responding to messages from parents.',
@@ -345,6 +358,7 @@ export const PROJECTS: Project[] = [
     logo: logoSuperlunch,
     cover: coverSuperlunch,
     gradient: '#f8cfd2',
+    theme: { accent: '#ef6f6f', dark: '#240d0d' },
     summary: {
       es: 'Identidad y piezas gráficas para un servicio de almuerzos, con una imagen apetitosa y directa.',
       en: 'Identity and graphic assets for a lunch service, with an appetizing, direct image.',
@@ -378,6 +392,7 @@ export const PROJECTS: Project[] = [
     logo: logoMicroterapias,
     cover: coverMicroterapias,
     gradient: '#e4dcf5',
+    theme: { accent: '#8b6fd1', dark: '#150f26' },
     summary: {
       es: 'Contenido y piezas gráficas para una comunidad de bienestar y salud mental, con un tono cercano y visualmente cuidado.',
       en: 'Content and graphic assets for a wellness and mental health community, with a warm, visually polished tone.',
@@ -411,6 +426,7 @@ export const PROJECTS: Project[] = [
     serviceSlugs: ['contenido-reels'],
     cover: coverDuocuc,
     gradient: '#0d0d0d',
+    theme: { accent: '#d21f2f', dark: '#170707' },
     summary: {
       es: 'Producción de reels para la cuenta oficial de Duoc UC, mostrando la vida universitaria y la experiencia estudiantil.',
       en: 'Reel production for Duoc UC\'s official account, showcasing campus life and the student experience.',
@@ -445,6 +461,7 @@ export const PROJECTS: Project[] = [
     logo: logoBschool,
     cover: coverBschool,
     gradient: '#f9b208',
+    theme: { accent: '#e0a012', dark: '#1c1404' },
     summary: {
       es: 'Piezas gráficas y gestión de Instagram para un colegio online, con foco en admisión y comunicación de su propuesta flexible.',
       en: 'Graphic assets and Instagram management for an online school, focused on admissions and communicating its flexible offer.',

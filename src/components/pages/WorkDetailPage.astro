@@ -29,6 +29,11 @@ const chapters = [
 
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
 
+  <!-- Identidad propia de este proyecto: sobreescribe el acento global y
+       define el tono oscuro de la sección de historia, fiel a la marca
+       real (logo/rubro). Solo afecta esta página, no el header/footer. -->
+  <div style={`--color-accent:${p.theme.accent}; --project-dark:${p.theme.dark}`}>
+
   <!-- ════ HERO editorial ═══════════════════════════════════════════ -->
   <section class="wd-hero" style={`background:${p.gradient}`}>
     {p.cover && (
@@ -167,6 +172,8 @@ const chapters = [
       <span class="wd-next__arrow" aria-hidden="true">&#8594;</span>
     </a>
   </section>
+
+  </div>
 
   <CtaBand locale={locale} />
 </Base>
@@ -329,7 +336,7 @@ const chapters = [
 
 /* ════ STORYTELLING ═══════════════════════════════════════════════ */
 .wd-story {
-  background: #0e0e0e;
+  background: var(--project-dark, #0e0e0e);
   color: #f8f8f8;
 }
 .wd-story__inner {
