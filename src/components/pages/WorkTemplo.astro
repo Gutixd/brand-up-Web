@@ -1,8 +1,8 @@
 ---
 // Landing bespoke para el "Templo Votivo de Maipú" (institución · eventos).
-// Tema de arquitectura sacra: un rosetón de vitral generado en código que
-// gira lentamente, rayos de luz que entran en diagonal y secciones enmarcadas
-// en arcos. Tono reverente y sobrio, en dorado sobre azul profundo.
+// El protagonista es el TEMPLO mismo: su silueta modernista (arco parabólico,
+// torre y cruz) dibujada en SVG al atardecer, con luz cálida detrás y rayos
+// entrando en diagonal. Paleta azul marino + rojo, tomada del logo real.
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
@@ -21,18 +21,8 @@ const next = PROJECTS[(idx + 1) % PROJECTS.length];
 const title = `${p.client} — ${t.meta.work.title}`;
 const media = PROJECT_MEDIA[p.slug] ?? [];
 
-// ── Rosetón de vitral generado ────────────────────────────────────
-const CX = 160, CY = 160;
-const GLASS = ['#c9a227', '#2f5f9e', '#9e2f3f', '#2f7f6a', '#d8b64a', '#3f4f8f'];
-const wedge = (r: number, i: number, n: number) => {
-  const a0 = ((i * 360) / n - 90) * (Math.PI / 180);
-  const a1 = (((i + 1) * 360) / n - 90) * (Math.PI / 180);
-  const x0 = (CX + r * Math.cos(a0)).toFixed(1), y0 = (CY + r * Math.sin(a0)).toFixed(1);
-  const x1 = (CX + r * Math.cos(a1)).toFixed(1), y1 = (CY + r * Math.sin(a1)).toFixed(1);
-  return `M${CX} ${CY} L${x0} ${y0} A${r} ${r} 0 0 1 ${x1} ${y1} Z`;
-};
-const outerSegs = Array.from({ length: 12 }, (_, i) => ({ d: wedge(148, i, 12), fill: GLASS[i % GLASS.length] }));
-const innerSegs = Array.from({ length: 8 }, (_, i) => ({ d: wedge(78, i, 8), fill: GLASS[(i + 2) % GLASS.length] }));
+// Nervaduras verticales de la fachada (se generan para no repetir markup).
+const RIBS = [86, 108, 130, 230, 252, 274];
 
 const chapters = [
   { h: t.work.challenge, text: pick(p.challenge, locale) },
@@ -50,18 +40,50 @@ const chapters = [
       <span></span><span></span><span></span><span></span>
     </div>
 
-    <div class="tv-rose" aria-hidden="true">
-      <svg viewBox="0 0 320 320">
-        <circle cx={CX} cy={CY} r="152" fill="#0d0a18"/>
-        {outerSegs.map((s) => (
-          <path d={s.d} fill={s.fill} opacity="0.85" stroke="#1c1607" stroke-width="3"/>
+    <!-- El Templo: arco parabólico, torre y cruz -->
+    <div class="tv-temple" aria-hidden="true">
+      <span class="tv-temple__halo"></span>
+      <svg viewBox="0 0 420 268" role="img" aria-label="Templo Votivo de Maipú">
+        <!-- torre -->
+        <rect x="322" y="58" width="48" height="176" rx="3" fill="#cfc7b8"/>
+        <rect x="322" y="58" width="48" height="176" rx="3" fill="url(#tvShade)"/>
+        <rect x="333" y="86" width="7" height="104" rx="3.5" fill="#8f8778"/>
+        <rect x="352" y="86" width="7" height="104" rx="3.5" fill="#8f8778"/>
+        <!-- cruz de la torre -->
+        <rect x="343" y="18" width="6" height="40" rx="3" fill="var(--accent)"/>
+        <rect x="331" y="30" width="30" height="6" rx="3" fill="var(--accent)"/>
+
+        <!-- cuerpo principal: gran arco parabólico -->
+        <path d="M56 234 L56 168 Q182 44 308 168 L308 234 Z" fill="#dcd4c4"/>
+        <path d="M56 234 L56 168 Q182 44 308 168 L308 234 Z" fill="url(#tvShade)"/>
+
+        <!-- nervaduras verticales -->
+        {RIBS.map((x) => (
+          <rect x={x} y="150" width="6" height="84" rx="3" fill="#b3aa99" opacity="0.75"/>
         ))}
-        <circle cx={CX} cy={CY} r="82" fill="#0d0a18" stroke="var(--accent)" stroke-width="3"/>
-        {innerSegs.map((s) => (
-          <path d={s.d} fill={s.fill} opacity="0.9" stroke="#1c1607" stroke-width="2.5"/>
-        ))}
-        <circle cx={CX} cy={CY} r="26" fill="var(--accent)" stroke="#1c1607" stroke-width="3"/>
-        <circle cx={CX} cy={CY} r="152" fill="none" stroke="var(--accent)" stroke-width="5"/>
+
+        <!-- rosetón simple del frontis -->
+        <circle cx="182" cy="132" r="27" fill="#7d93ad"/>
+        <circle cx="182" cy="132" r="27" fill="none" stroke="#b3aa99" stroke-width="4"/>
+        <path d="M182 105 V159 M155 132 H209" stroke="#b3aa99" stroke-width="4"/>
+
+        <!-- portal de entrada -->
+        <path d="M152 234 L152 190 Q182 154 212 190 L212 234 Z" fill="#2b3d52"/>
+        <path d="M152 234 L152 190 Q182 154 212 190 L212 234 Z" fill="none" stroke="#b3aa99" stroke-width="3"/>
+        <rect x="180" y="196" width="4" height="38" fill="#b3aa99" opacity="0.6"/>
+
+        <!-- escalinata -->
+        <rect x="34" y="234" width="352" height="9" rx="3" fill="#c2b9a8"/>
+        <rect x="22" y="243" width="376" height="9" rx="3" fill="#ada494"/>
+        <rect x="10" y="252" width="400" height="9" rx="3" fill="#968d7e"/>
+
+        <defs>
+          <linearGradient id="tvShade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#000" stop-opacity="0.28"/>
+            <stop offset="45%" stop-color="#000" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#000" stop-opacity="0.22"/>
+          </linearGradient>
+        </defs>
       </svg>
     </div>
 
@@ -156,13 +178,14 @@ const chapters = [
 /* ════ HERO ═══════════════════════════════════════════════════════ */
 .tv-hero {
   position: relative; min-height: 100svh; overflow: hidden;
-  display: flex; align-items: flex-end;
-  background: linear-gradient(to bottom, #0d0a18 0%, #16112a 45%, #1c1607 100%);
+  display: flex; align-items: flex-start;
+  /* atardecer sobre Maipú */
+  background: linear-gradient(to bottom, #061428 0%, #0a1f36 42%, #29405c 74%, #7a6a63 100%);
 }
 /* rayos de luz que entran en diagonal */
 .tv-rays span {
   position: absolute; top: -25%; width: 90px; height: 155%;
-  background: linear-gradient(to bottom, rgba(201,162,39,0.22), transparent 72%);
+  background: linear-gradient(to bottom, rgba(255,214,164,0.2), transparent 72%);
   transform: rotate(16deg); filter: blur(9px);
 }
 .tv-rays span:nth-child(1) { left: 12%; animation: tvGlow 7s ease-in-out infinite; }
@@ -171,20 +194,34 @@ const chapters = [
 .tv-rays span:nth-child(4) { left: 84%; width: 68px; animation: tvGlow 10s ease-in-out infinite 0.7s; }
 @keyframes tvGlow { 0%,100% { opacity: 0.35; } 50% { opacity: 0.95; } }
 
-.tv-rose {
-  position: absolute; z-index: 1; top: 9%; left: 50%;
-  width: 400px; height: 400px; transform: translateX(-50%);
-  filter: drop-shadow(0 0 60px rgba(201,162,39,0.35));
-  animation: tvRotate 120s linear infinite;
+/* El Templo, apoyado en la base del hero */
+.tv-temple {
+  position: absolute; z-index: 1; bottom: 0; left: 50%;
+  width: min(760px, 94vw); transform: translateX(-50%);
+  animation: tvArrive 1.6s cubic-bezier(0.22,1,0.36,1) both;
 }
-@media (max-width: 760px) { .tv-rose { width: 260px; height: 260px; top: 12%; } }
-@keyframes tvRotate { to { transform: translateX(-50%) rotate(360deg); } }
+.tv-temple svg { display: block; width: 100%; height: auto; }
+/* Solo desvanecido: si se desplazara, el overflow:hidden del hero le
+   recortaría la escalinata mientras dura la animación. */
+@keyframes tvArrive {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+/* resplandor cálido detrás del templo */
+.tv-temple__halo {
+  position: absolute; left: 50%; bottom: 12%;
+  width: 78%; aspect-ratio: 1; transform: translateX(-50%);
+  border-radius: 50%; z-index: -1;
+  background: radial-gradient(circle, rgba(255,206,150,0.5) 0%, rgba(255,186,120,0.16) 42%, transparent 68%);
+  animation: tvHalo 9s ease-in-out infinite;
+}
+@keyframes tvHalo { 0%,100% { opacity: 0.7; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.07); } }
 
 .tv-hero__inner {
   position: relative; z-index: 3; max-width: 1080px; width: 100%;
-  margin-inline: auto; padding: 0 24px 84px; text-align: center;
+  margin-inline: auto; padding: 128px 24px 0; text-align: center;
 }
-@media (min-width: 768px) { .tv-hero__inner { padding: 0 48px 104px; } }
+@media (min-width: 768px) { .tv-hero__inner { padding: 150px 48px 0; } }
 .tv-back {
   display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
   font-size: 0.85rem; color: rgba(240,232,212,0.65); transition: gap 0.25s, color 0.2s;
@@ -207,11 +244,11 @@ const chapters = [
 .tv-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; justify-content: center; }
 .tv-pill {
   font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
-  border: 1px solid rgba(201,162,39,0.45); padding: 8px 18px; border-radius: 2px;
+  border: 1px solid rgba(199,50,63,0.5); padding: 8px 18px; border-radius: 2px;
 }
 
 /* ════ NAVE ═══════════════════════════════════════════════════════ */
-.tv-nave { background: #14102a; }
+.tv-nave { background: #0d2740; }
 .tv-nave__inner { max-width: 1120px; margin-inline: auto; padding: 92px 24px; }
 @media (min-width: 768px) { .tv-nave__inner { padding: 116px 48px; } }
 .tv-nave__kicker {
@@ -222,15 +259,15 @@ const chapters = [
 @media (min-width: 900px) { .tv-arches { grid-template-columns: repeat(3, 1fr); gap: 26px; } }
 .tv-arch {
   position: relative; padding: 34px 28px 32px; text-align: center;
-  background: linear-gradient(to bottom, rgba(201,162,39,0.08), transparent);
-  border: 1px solid rgba(201,162,39,0.28);
+  background: linear-gradient(to bottom, rgba(199,50,63,0.07), transparent);
+  border: 1px solid rgba(160,180,205,0.25);
   border-radius: 200px 200px 8px 8px;
   transition: border-color 0.4s, transform 0.4s;
 }
 .tv-arch:hover { border-color: var(--accent); transform: translateY(-6px); }
 .tv-arch__top {
   width: 46px; height: 46px; margin: 6px auto 20px;
-  border: 1px solid rgba(201,162,39,0.5);
+  border: 1px solid rgba(199,50,63,0.5);
   border-radius: 50% 50% 0 0; transform: rotate(45deg);
 }
 .tv-arch__h {
@@ -240,7 +277,7 @@ const chapters = [
 .tv-arch__text { font-size: 1rem; line-height: 1.68; color: rgba(240,232,212,0.82); }
 
 /* ════ SELLO ══════════════════════════════════════════════════════ */
-.tv-seal { background: var(--dark); border-top: 1px solid rgba(201,162,39,0.2); }
+.tv-seal { background: var(--dark); border-top: 1px solid rgba(160,180,205,0.18); }
 .tv-seal__inner {
   max-width: 1080px; margin-inline: auto; padding: 78px 24px;
   display: flex; flex-wrap: wrap; gap: 44px; align-items: center; justify-content: space-between;
@@ -261,7 +298,7 @@ const chapters = [
 .tv-metric__lbl { display: block; margin-top: 10px; font-size: 0.85rem; letter-spacing: 0.08em; color: rgba(240,232,212,0.7); }
 
 /* ════ GALERÍA ════════════════════════════════════════════════════ */
-.tv-gallery { background: #14102a; }
+.tv-gallery { background: #0d2740; }
 .tv-gallery__inner { max-width: 1120px; margin-inline: auto; padding: 90px 24px; }
 @media (min-width: 768px) { .tv-gallery__inner { padding: 110px 48px; } }
 .tv-gallery__title {
@@ -273,21 +310,21 @@ const chapters = [
 .tv-panel__glass {
   position: relative; aspect-ratio: 2/3; overflow: hidden;
   border-radius: 140px 140px 6px 6px;
-  border: 2px solid rgba(201,162,39,0.4);
-  background: linear-gradient(150deg, rgba(47,95,158,0.35), rgba(158,47,63,0.28) 45%, rgba(201,162,39,0.3));
+  border: 2px solid rgba(160,180,205,0.35);
+  background: linear-gradient(150deg, rgba(47,95,158,0.32), rgba(199,50,63,0.22) 60%, rgba(255,206,150,0.18));
   display: flex; align-items: center; justify-content: center;
   transition: border-color 0.4s;
 }
 .tv-panel:hover .tv-panel__glass { border-color: var(--accent); }
 .tv-panel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.tv-panel__mark { font-size: 2.4rem; color: rgba(201,162,39,0.6); }
+.tv-panel__mark { font-size: 2.4rem; color: rgba(199,50,63,0.6); }
 .tv-panel__cap {
   margin-top: 14px; text-align: center; font-size: 0.82rem;
   letter-spacing: 0.06em; color: rgba(240,232,212,0.65);
 }
 
 /* ════ NEXT ═══════════════════════════════════════════════════════ */
-.tv-next { background: var(--dark); border-top: 1px solid rgba(201,162,39,0.2); }
+.tv-next { background: var(--dark); border-top: 1px solid rgba(160,180,205,0.18); }
 .tv-next__link {
   max-width: 1120px; margin-inline: auto; display: flex; align-items: center;
   justify-content: space-between; gap: 24px; padding: 64px 24px;
@@ -303,7 +340,8 @@ const chapters = [
 .tv-next__link:hover .tv-next__arrow { transform: translateX(10px); color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
-  .tv-rays span, .tv-rose, .tv-hero__title { animation: none !important; }
-  .tv-hero__title { opacity: 1; transform: none; }
+  .tv-rays span, .tv-temple, .tv-temple__halo, .tv-hero__title { animation: none !important; }
+  .tv-hero__title, .tv-temple { opacity: 1; }
+  .tv-temple { transform: translateX(-50%); }
 }
 </style>

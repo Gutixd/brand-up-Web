@@ -299,7 +299,8 @@ export const PROJECTS: Project[] = [
     logo: logoTemplo,
     cover: coverTemplo,
     gradient: '#f2fbe0',
-    theme: { accent: '#c9a227', dark: '#1c1607' },
+    // Azul marino + rojo tomados del logo real del Templo.
+    theme: { accent: '#c7323f', dark: '#0a1f36' },
     flavor: 'editorial',
     summary: {
       es: 'Diseño de campaña gráfica para eventos institucionales, con piezas impresas y digitales coherentes con la identidad del Templo.',
@@ -439,7 +440,8 @@ export const PROJECTS: Project[] = [
     serviceSlugs: ['contenido-reels'],
     cover: coverDuocuc,
     gradient: '#0d0d0d',
-    theme: { accent: '#d21f2f', dark: '#170707' },
+    // Ámbar/dorado muestreado del logo real de Duoc UC (no rojo).
+    theme: { accent: '#e0a020', dark: '#171410' },
     flavor: 'editorial',
     summary: {
       es: 'Producción de reels para la cuenta oficial de Duoc UC, mostrando la vida universitaria y la experiencia estudiantil.',
@@ -475,7 +477,8 @@ export const PROJECTS: Project[] = [
     logo: logoBschool,
     cover: coverBschool,
     gradient: '#f9b208',
-    theme: { accent: '#e0a012', dark: '#1c1404' },
+    // Verde institucional muestreado del escudo real de BSchool.
+    theme: { accent: '#48843c', dark: '#0f2410' },
     flavor: 'editorial',
     summary: {
       es: 'Piezas gráficas y gestión de Instagram para un colegio online, con foco en admisión y comunicación de su propuesta flexible.',
