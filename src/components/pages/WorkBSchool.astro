@@ -1,0 +1,354 @@
+---
+// Landing bespoke para "BSchool" (colegio 100% online).
+// Tema pantallas y conexión: ventanas de navegador flotando, ondas de wifi
+// que pulsan y un cursor que se mueve. La info va DENTRO de ventanas de
+// navegador (con su barra de título) en vez de tarjetas — el colegio ocurre
+// en pantalla, así que la página también.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const windows = [
+  { tab: isEs ? 'el-desafio'   : 'the-challenge', h: t.work.challenge, text: pick(p.challenge, locale) },
+  { tab: isEs ? 'la-solucion'  : 'the-approach',  h: t.work.approach,  text: pick(p.approach, locale) },
+  { tab: isEs ? 'el-resultado' : 'the-outcome',   h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="bs" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — pantallas conectadas ═══════════════════════════════ -->
+  <section class="bs-hero">
+    <div class="bs-grid" aria-hidden="true"></div>
+
+    <!-- ondas de conexión -->
+    <div class="bs-wifi" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+
+    <!-- ventanas flotando -->
+    <div class="bs-floats" aria-hidden="true">
+      <div class="bs-float bs-float--1">
+        <span class="bs-float__bar"><i></i><i></i><i></i></span>
+        <span class="bs-float__line" style="width:74%"></span>
+        <span class="bs-float__line" style="width:52%"></span>
+        <span class="bs-float__line bs-float__line--accent" style="width:38%"></span>
+      </div>
+      <div class="bs-float bs-float--2">
+        <span class="bs-float__bar"><i></i><i></i><i></i></span>
+        <span class="bs-float__line" style="width:60%"></span>
+        <span class="bs-float__line bs-float__line--accent" style="width:80%"></span>
+      </div>
+      <div class="bs-float bs-float--3">
+        <span class="bs-float__bar"><i></i><i></i><i></i></span>
+        <span class="bs-float__line" style="width:86%"></span>
+        <span class="bs-float__line" style="width:44%"></span>
+      </div>
+    </div>
+
+    <div class="bs-hero__inner">
+      <a href={lp('/trabajos')} class="bs-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="bs-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="bs-hero__title">{p.client}</h1>
+      <p class="bs-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="bs-hero__meta">
+        <span class="bs-pill">{p.year}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="bs-pill bs-pill--link">
+            bschool.cl <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ VENTANAS — la info dentro de navegadores ══════════════════ -->
+  <section class="bs-windows">
+    <div class="bs-windows__inner">
+      <p class="bs-windows__kicker" data-reveal>{isEs ? 'El caso, abierto' : 'The case, opened'}</p>
+      {windows.map((w, i) => (
+        <article class="bs-win" data-reveal data-delay={`${i * 0.09}`}>
+          <header class="bs-win__chrome">
+            <span class="bs-win__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="bs-win__url">bschool.cl/{w.tab}</span>
+          </header>
+          <div class="bs-win__body">
+            <span class="bs-win__h">{w.h}</span>
+            <p class="bs-win__text">{w.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ ESTADO — servicios + métrica ══════════════════════════════ -->
+  <section class="bs-status">
+    <div class="bs-status__inner">
+      <div class="bs-status__tags" data-reveal>
+        {pick(p.services, locale).map((s) => (
+          <span class="bs-tag"><span class="bs-tag__dot" aria-hidden="true"></span>{s}</span>
+        ))}
+      </div>
+      {p.metrics.map((m) => (
+        <div class="bs-status__metric" data-reveal data-delay="0.1">
+          <span class="bs-status__val">{m.val}</span>
+          <span class="bs-status__lbl">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA ═══════════════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="bs-gallery">
+      <div class="bs-gallery__inner">
+        <h2 class="bs-gallery__title" data-reveal>{isEs ? 'Las piezas' : 'The pieces'}</h2>
+        <div class="bs-screens">
+          {media.map((slot) => (
+            <figure class="bs-screen" data-reveal>
+              <span class="bs-screen__bar" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="bs-screen__view">
+                {slot.kind === 'photo' && slot.src ? (
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="bs-screen__img"
+                    widths={[400, 800]} sizes="(max-width: 860px) 88vw, 30vw" />
+                ) : (
+                  <div class="bs-screen__ph"><span>{pick(slot.label, locale)}</span></div>
+                )}
+              </div>
+              <figcaption class="bs-screen__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="bs-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="bs-next__link">
+      <span>
+        <span class="bs-next__label">{t.work.next}</span>
+        <span class="bs-next__client">{next.client}</span>
+      </span>
+      <span class="bs-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.bs { background: var(--dark); color: #fdf3dd; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.bs-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(155deg, #241a05 0%, #3a2a07 48%, #6b4f0c 100%);
+}
+.bs-grid {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.4;
+  background-image:
+    linear-gradient(rgba(224,160,18,0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224,160,18,0.14) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(70% 60% at 60% 40%, #000 0%, transparent 78%);
+}
+.bs-wifi {
+  position: absolute; z-index: 1; top: 24%; right: 16%;
+  width: 20px; height: 20px;
+}
+@media (max-width: 900px) { .bs-wifi { right: 12%; top: 16%; } }
+.bs-wifi span {
+  position: absolute; top: 50%; left: 50%; border-radius: 50%;
+  border: 2px solid rgba(224,160,18,0.55); transform: translate(-50%, -50%);
+  animation: bsPulse 3.2s ease-out infinite;
+}
+.bs-wifi span:nth-child(1) { width: 60px;  height: 60px; }
+.bs-wifi span:nth-child(2) { width: 60px;  height: 60px; animation-delay: 1.05s; }
+.bs-wifi span:nth-child(3) { width: 60px;  height: 60px; animation-delay: 2.1s; }
+@keyframes bsPulse {
+  0%   { width: 20px; height: 20px; opacity: 0.9; }
+  100% { width: 240px; height: 240px; opacity: 0; }
+}
+
+.bs-floats { position: absolute; inset: 0; z-index: 1; }
+.bs-float {
+  position: absolute; width: 240px; padding: 12px;
+  border-radius: 12px; background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(253,243,221,0.18); backdrop-filter: blur(9px);
+  display: flex; flex-direction: column; gap: 9px;
+}
+@media (max-width: 900px) { .bs-float { transform: scale(0.8); } }
+.bs-float--1 { top: 16%; right: 8%;  animation: bsFloat 9s ease-in-out infinite; }
+.bs-float--2 { top: 44%; right: 26%; width: 200px; animation: bsFloat 11s ease-in-out infinite 1.5s; }
+.bs-float--3 { top: 62%; right: 6%;  width: 214px; animation: bsFloat 10s ease-in-out infinite 3s; }
+@media (max-width: 900px) { .bs-float--2, .bs-float--3 { display: none; } }
+@keyframes bsFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-22px) rotate(1.5deg); }
+}
+.bs-float__bar { display: flex; gap: 5px; margin-bottom: 3px; }
+.bs-float__bar i { width: 8px; height: 8px; border-radius: 50%; background: rgba(253,243,221,0.4); }
+.bs-float__line { height: 8px; border-radius: 4px; background: rgba(253,243,221,0.22); }
+.bs-float__line--accent { background: var(--accent); }
+
+.bs-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 88px;
+}
+@media (min-width: 768px) { .bs-hero__inner { padding: 0 48px 106px; } }
+.bs-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; color: rgba(253,243,221,0.7); transition: gap 0.25s, color 0.2s;
+}
+.bs-back:hover { color: #fff; gap: 12px; }
+.bs-hero__kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 18px;
+}
+.bs-hero__title {
+  font-family: var(--font-display); font-size: clamp(3rem, 12vw, 8.5rem);
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.86; color: #fff;
+  animation: bsBoot 0.9s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes bsBoot { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: none; } }
+.bs-hero__tag {
+  margin-top: 24px; max-width: 40ch; font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.6; color: rgba(253,243,221,0.85);
+}
+.bs-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.bs-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 600;
+  color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(253,243,221,0.24);
+  padding: 9px 18px; border-radius: 8px; backdrop-filter: blur(8px);
+}
+.bs-pill--link { transition: background 0.3s, color 0.3s; }
+.bs-pill--link:hover { background: var(--accent); color: #241a05; }
+
+/* ════ VENTANAS ═══════════════════════════════════════════════════ */
+.bs-windows { background: #1a1204; }
+.bs-windows__inner { max-width: 940px; margin-inline: auto; padding: 88px 24px; display: grid; gap: 24px; }
+@media (min-width: 768px) { .bs-windows__inner { padding: 110px 48px; } }
+.bs-windows__kicker {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px;
+}
+.bs-win {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(253,243,221,0.16); background: rgba(255,255,255,0.04);
+  transition: transform 0.35s, border-color 0.35s;
+}
+.bs-win:hover { transform: translateY(-5px); border-color: var(--accent); }
+.bs-win__chrome {
+  display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+  background: rgba(255,255,255,0.06); border-bottom: 1px solid rgba(253,243,221,0.12);
+}
+.bs-win__dots { display: flex; gap: 6px; }
+.bs-win__dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(253,243,221,0.35); }
+.bs-win__dots i:first-child { background: var(--accent); }
+.bs-win__url {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 12px; color: rgba(253,243,221,0.55);
+}
+.bs-win__body { padding: 28px; }
+.bs-win__h {
+  display: block; margin-bottom: 12px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent);
+}
+.bs-win__text { font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.65; color: rgba(253,243,221,0.86); }
+
+/* ════ ESTADO ═════════════════════════════════════════════════════ */
+.bs-status { background: var(--dark); border-top: 1px solid rgba(253,243,221,0.12); }
+.bs-status__inner {
+  max-width: 1080px; margin-inline: auto; padding: 74px 24px;
+  display: flex; flex-wrap: wrap; gap: 34px; align-items: center; justify-content: space-between;
+}
+@media (min-width: 768px) { .bs-status__inner { padding: 92px 48px; } }
+.bs-status__tags { display: flex; flex-wrap: wrap; gap: 12px; }
+.bs-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.92rem; font-weight: 600; color: #fdf3dd;
+  border: 1px solid rgba(253,243,221,0.24); border-radius: 8px; padding: 11px 20px;
+}
+.bs-tag__dot {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--accent);
+  animation: bsBlink 2.6s ease-in-out infinite;
+}
+@keyframes bsBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+.bs-status__metric { text-align: center; }
+.bs-status__val {
+  display: block; font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 700; color: var(--accent); line-height: 1;
+}
+.bs-status__lbl { display: block; margin-top: 10px; font-size: 0.9rem; color: rgba(253,243,221,0.7); }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.bs-gallery { background: #1a1204; }
+.bs-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .bs-gallery__inner { padding: 110px 48px; } }
+.bs-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 44px;
+}
+.bs-screens { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 24px; }
+.bs-screen {
+  margin: 0; border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(253,243,221,0.16); background: rgba(255,255,255,0.04);
+  transition: transform 0.35s, border-color 0.35s;
+}
+.bs-screen:hover { transform: translateY(-5px); border-color: var(--accent); }
+.bs-screen__bar {
+  display: flex; gap: 6px; padding: 11px 14px;
+  background: rgba(255,255,255,0.06); border-bottom: 1px solid rgba(253,243,221,0.12);
+}
+.bs-screen__bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(253,243,221,0.32); }
+.bs-screen__view { aspect-ratio: 3/4; overflow: hidden; background: #241a05; }
+.bs-screen__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bs-screen__ph {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 20px; text-align: center; color: rgba(253,243,221,0.45); font-size: 0.86rem;
+}
+.bs-screen__cap {
+  padding: 13px 16px 16px; font-size: 0.85rem; color: rgba(253,243,221,0.62);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.bs-next { background: var(--dark); border-top: 1px solid rgba(253,243,221,0.12); }
+.bs-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .bs-next__link { padding-inline: 48px; } }
+.bs-next__label { font-size: 0.85rem; color: rgba(253,243,221,0.55); }
+.bs-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #fff; transition: color 0.3s;
+}
+.bs-next__link:hover .bs-next__client { color: var(--accent); }
+.bs-next__arrow { font-size: 2.2rem; color: rgba(253,243,221,0.5); transition: transform 0.3s, color 0.3s; }
+.bs-next__link:hover .bs-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-wifi span, .bs-float, .bs-hero__title, .bs-tag__dot { animation: none !important; }
+  .bs-hero__title { opacity: 1; transform: none; }
+}
+</style>
