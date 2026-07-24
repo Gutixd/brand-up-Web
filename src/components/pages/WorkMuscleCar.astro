@@ -5,6 +5,7 @@
 // va como CAMBIOS DE MARCHA y las métricas como testigos de tablero.
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
 import CtaBand from '../CtaBand.astro';
 import { PROJECTS, type Project } from '../../data/projects';
 import { PROJECT_MEDIA } from '../../data/projectMedia';
@@ -29,6 +30,7 @@ const gears = [
 ---
 
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
 <div class="mc" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
 
   <!-- ════ HERO — asfalto y velocidad ════════════════════════════════ -->

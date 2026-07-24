@@ -1,0 +1,68 @@
+---
+// Datos estructurados para una página de proyecto (caso de estudio).
+// Antes las 12 landings no emitían ningún schema: Google y los asistentes
+// no tenían forma de saber que son casos reales, para qué cliente, de qué
+// rubro ni qué servicios incluyeron. Se emite:
+//   · CreativeWork  → el caso en sí, con su cliente y servicios
+//   · BreadcrumbList → Inicio > Trabajos > Cliente
+import { SITE } from '../../data/site';
+import type { Project } from '../../data/projects';
+import { pick, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+}
+const { locale, project: p } = Astro.props;
+const isEs = locale === 'es';
+const base = isEs ? `${SITE.domain}/trabajos` : `${SITE.domain}/en/trabajos`;
+const url = `${base}/${p.slug}`;
+
+const workLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: `${p.client} — ${pick(p.sector, locale)}`,
+  headline: pick(p.summary, locale),
+  description: pick(p.summary, locale),
+  inLanguage: isEs ? 'es-CL' : 'en',
+  url,
+  dateCreated: p.year,
+  genre: pick(p.sector, locale),
+  keywords: pick(p.services, locale).join(', '),
+  about: { '@type': 'Organization', name: p.client, ...(p.link ? { url: p.link } : {}) },
+  creator: {
+    '@type': 'Organization',
+    name: SITE.legalName,
+    url: SITE.domain,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Santiago',
+      addressRegion: 'Región Metropolitana',
+      addressCountry: 'CL',
+    },
+  },
+  // Las métricas del caso, legibles por máquinas
+  ...(p.metrics.length
+    ? {
+        additionalProperty: p.metrics.map((m) => ({
+          '@type': 'PropertyValue',
+          name: pick(m.lbl, locale),
+          value: m.val,
+        })),
+      }
+    : {}),
+};
+
+const crumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: isEs ? 'Inicio' : 'Home', item: SITE.domain },
+    { '@type': 'ListItem', position: 2, name: isEs ? 'Trabajos' : 'Work', item: base },
+    { '@type': 'ListItem', position: 3, name: p.client, item: url },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(workLd)} />
+<script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />

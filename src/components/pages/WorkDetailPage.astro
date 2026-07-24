@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
 import CtaBand from '../CtaBand.astro';
 import { PROJECTS, type Project } from '../../data/projects';
 import { PROJECT_MEDIA } from '../../data/projectMedia';
@@ -32,6 +33,7 @@ const chapters = [
 ---
 
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
 
   <!-- Identidad propia de este proyecto: sobreescribe el acento global y
        define el tono oscuro de la sección de historia, fiel a la marca

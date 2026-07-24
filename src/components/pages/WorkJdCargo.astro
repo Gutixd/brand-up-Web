@@ -6,6 +6,7 @@
 // un manifiesto de carga. Variante única (ver dispatcher en WorkDetailPage).
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
 import CtaBand from '../CtaBand.astro';
 import { PROJECTS, type Project } from '../../data/projects';
 import { PROJECT_MEDIA } from '../../data/projectMedia';
@@ -30,6 +31,7 @@ const stages = [
 ---
 
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
 <div class="jd" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
 
   <!-- ════ HERO — puerto de noche ════════════════════════════════════ -->

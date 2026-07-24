@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
 import { PROJECTS } from '../../data/projects';
+import { SITE } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import logoChacha from '../../assets/logos/chachapollo.webp';
@@ -76,9 +77,34 @@ const metas = [
 ];
 
 const viewLabel = isEs ? 'Ver caso' : 'View case';
+
+// El índice lista casos reales: se declara como ItemList para que Google y
+// los asistentes entiendan que es un portafolio y puedan enumerar los casos.
+const listLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: isEs ? 'Portafolio de proyectos de BrandUp' : 'BrandUp project portfolio',
+  numberOfItems: PROJECTS.length,
+  itemListElement: PROJECTS.map((pr, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: pr.client,
+    item: `${SITE.domain}${isEs ? '' : '/en'}/trabajos/${pr.slug}`,
+  })),
+};
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: isEs ? 'Inicio' : 'Home', item: SITE.domain },
+    { '@type': 'ListItem', position: 2, name: isEs ? 'Trabajos' : 'Work', item: `${SITE.domain}${isEs ? '' : '/en'}/trabajos` },
+  ],
+};
 ---
 
 <Base locale={locale} title={t.meta.work.title} description={t.meta.work.desc}>
+  <script type="application/ld+json" set:html={JSON.stringify(listLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(crumbsLd)} />
 
   <div class="works">
 

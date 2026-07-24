@@ -64,6 +64,36 @@ const streets = [
 ];
 
 // ── Stats ──────────────────────────────────────────────────────────
+// FAQ de la home: preguntas reales que la gente escribe en Google y en los
+// asistentes con IA sobre agencias en Santiago. Se emite también como
+// FAQPage en JSON-LD (ver faqLd más abajo).
+const homeFaq = es
+  ? [
+      { q: '¿Cuánto cuesta una página web en Santiago de Chile?', a: 'Una landing page va de $150.000 a $400.000 CLP, un sitio corporativo de $350.000 a $900.000 y un e-commerce de $600.000 a $2.500.000. El precio depende de la estrategia, el diseño propio y la optimización, no solo de la cantidad de páginas.' },
+      { q: '¿Qué servicios ofrece BrandUp?', a: 'Diseño y desarrollo web, e-commerce, branding e identidad visual, contenido y reels para redes sociales, publicidad digital (Meta y Google Ads), SEO local y automatizaciones con IA. Trabajamos con negocios de Santiago y toda la Región Metropolitana.' },
+      { q: '¿Trabajan con negocios de todo Chile o solo de Santiago?', a: 'Estamos en Santiago de Chile y trabajamos con clientes de toda la Región Metropolitana y del resto del país. El trabajo se coordina de forma remota, con reuniones por videollamada y entregas digitales.' },
+      { q: '¿Cuánto tardan en entregar un proyecto?', a: 'Una landing toma de 1 a 2 semanas, un sitio corporativo de 3 a 6 semanas y un e-commerce de 6 a 12 semanas. El plazo depende sobre todo de la rapidez con que se entregan textos, fotos y aprobaciones.' },
+      { q: '¿El sitio y las cuentas quedan a mi nombre?', a: 'Sí. El dominio, el sitio web y las cuentas de redes sociales quedan siempre a nombre del cliente. Entregamos los accesos completos y nunca retenemos la propiedad de tus activos digitales.' },
+    ]
+  : [
+      { q: 'How much does a website cost in Santiago, Chile?', a: 'A landing page ranges from CLP $150,000 to $400,000, a corporate site from $350,000 to $900,000, and an e-commerce store from $600,000 to $2,500,000. Price depends on strategy, custom design and optimization, not just the number of pages.' },
+      { q: 'What services does BrandUp offer?', a: 'Web design and development, e-commerce, branding and visual identity, social media content and reels, digital advertising (Meta and Google Ads), local SEO and AI automations. We work with businesses across Santiago and the wider Metropolitan Region.' },
+      { q: 'Do you work with clients outside Santiago?', a: 'We are based in Santiago, Chile and work with clients across the Metropolitan Region and the rest of the country, coordinating remotely through video calls and digital deliverables.' },
+      { q: 'How long does a project take?', a: 'A landing page takes 1–2 weeks, a corporate site 3–6 weeks, and an e-commerce store 6–12 weeks. Timelines depend mostly on how quickly copy, photos and approvals are provided.' },
+      { q: 'Do I own the site and the accounts?', a: 'Yes. The domain, website and social media accounts always stay under the client’s name. We hand over full access and never retain ownership of your digital assets.' },
+    ];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: es ? 'es-CL' : 'en',
+  mainEntity: homeFaq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
 const stats = [
   { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
   { val: '1000000', suffix: '+', prefix: '',  lbl: es ? 'Views generadas para clientes' : 'Views generated for clients' },
@@ -381,4 +411,59 @@ const stats = [
     </div>
   </section>
 
+  <!-- ════ FAQ — respuestas directas (AEO) ═════════════════════════════
+       Van visibles Y como FAQPage en JSON-LD: es el formato que Google y
+       los asistentes con IA extraen para responder a quien pregunta por
+       precios o servicios de agencias en Santiago. -->
+  <section class="home-faq">
+    <div class="home-faq__inner">
+      <p class="home-faq__kicker" data-reveal>FAQ</p>
+      <h2 class="home-faq__title" data-reveal>
+        {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
+      </h2>
+      <div class="home-faq__list">
+        {homeFaq.map((f) => (
+          <details class="home-faq__item">
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+
 </Base>
+
+<style>
+.home-faq { background: var(--color-ink); border-top: 1px solid var(--color-line); }
+.home-faq__inner { max-width: 900px; margin-inline: auto; padding: 90px 24px 110px; }
+@media (min-width: 768px) { .home-faq__inner { padding: 110px 48px 130px; } }
+.home-faq__kicker {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--color-accent); margin-bottom: 14px;
+}
+.home-faq__title {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 600; letter-spacing: -0.03em; color: var(--color-paper); margin-bottom: 34px;
+}
+.home-faq__item { border-bottom: 1px solid var(--color-line); }
+.home-faq__item summary {
+  cursor: pointer; list-style: none; position: relative;
+  padding: 22px 40px 22px 0;
+  font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 600;
+  color: var(--color-paper); transition: color 0.25s;
+}
+.home-faq__item summary::-webkit-details-marker { display: none; }
+.home-faq__item summary::after {
+  content: '+'; position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-size: 1.5rem; color: var(--color-accent); transition: transform 0.3s;
+}
+.home-faq__item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.home-faq__item summary:hover { color: var(--color-accent); }
+.home-faq__item p {
+  padding: 0 4px 24px; max-width: 72ch;
+  font-size: 1rem; line-height: 1.72; color: var(--color-gray);
+}
+</style>
