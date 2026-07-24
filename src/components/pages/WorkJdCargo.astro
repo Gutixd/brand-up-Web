@@ -1,0 +1,431 @@
+---
+// Landing bespoke para "JD Cargo Logistics" (logística B2B · agenciamiento
+// de carga). Tema portuario/industrial: un carguero cruzando el horizonte,
+// contenedores apilados, radar y grilla técnica. La info se presenta como un
+// TRACKING de embarque (origen → tránsito → entregado) y las métricas como
+// un manifiesto de carga. Variante única (ver dispatcher en WorkDetailPage).
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const stages = [
+  { code: 'ORG', st: isEs ? 'Origen'    : 'Origin',     h: t.work.challenge, text: pick(p.challenge, locale) },
+  { code: 'TRN', st: isEs ? 'En tránsito' : 'In transit', h: t.work.approach,  text: pick(p.approach, locale) },
+  { code: 'DLV', st: isEs ? 'Entregado' : 'Delivered',  h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="jd" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — puerto de noche ════════════════════════════════════ -->
+  <section class="jd-hero">
+    <div class="jd-grid" aria-hidden="true"></div>
+    <div class="jd-horizon" aria-hidden="true"></div>
+
+    <!-- radar -->
+    <div class="jd-radar" aria-hidden="true">
+      <span class="jd-radar__ring"></span>
+      <span class="jd-radar__ring jd-radar__ring--2"></span>
+      <span class="jd-radar__sweep"></span>
+    </div>
+
+    <!-- ruta punteada -->
+    <svg class="jd-route" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-20 96 Q300 40 600 66 Q900 92 1220 34" fill="none"
+            stroke="var(--accent)" stroke-width="2" stroke-dasharray="10 12" opacity="0.6"/>
+    </svg>
+
+    <!-- carguero cruzando -->
+    <div class="jd-ship" aria-hidden="true">
+      <div class="jd-ship__wave">
+        <svg viewBox="0 0 300 150" width="300" height="150" role="img" aria-label="Carguero">
+          <!-- humo -->
+          <g class="jd-ship__smoke">
+            <circle cx="196" cy="46" r="9" fill="#fff" opacity="0.16"/>
+            <circle cx="182" cy="30" r="7" fill="#fff" opacity="0.11"/>
+            <circle cx="170" cy="18" r="5" fill="#fff" opacity="0.07"/>
+          </g>
+          <!-- contenedores -->
+          <rect x="44"  y="72" width="34" height="22" rx="2" fill="var(--accent)"/>
+          <rect x="82"  y="72" width="34" height="22" rx="2" fill="#7d6fb5"/>
+          <rect x="120" y="72" width="34" height="22" rx="2" fill="#4a3f78"/>
+          <rect x="44"  y="50" width="34" height="20" rx="2" fill="#4a3f78"/>
+          <rect x="82"  y="50" width="34" height="20" rx="2" fill="var(--accent)"/>
+          <!-- caseta + chimenea -->
+          <rect x="176" y="60" width="40" height="34" rx="3" fill="#2b2450"/>
+          <rect x="188" y="44" width="14" height="18" rx="2" fill="#231d44"/>
+          <rect x="182" y="66" width="8" height="7" rx="1" fill="var(--accent)"/>
+          <rect x="196" y="66" width="8" height="7" rx="1" fill="var(--accent)"/>
+          <!-- casco -->
+          <path d="M26 94 L246 94 L228 122 L48 122 Z" fill="#1c1738"/>
+          <rect x="26" y="90" width="220" height="6" rx="3" fill="var(--accent)" opacity="0.75"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="jd-hero__inner">
+      <a href={lp('/trabajos')} class="jd-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="jd-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="jd-hero__title">
+        {p.client.split(' ').map((w, wi) => (
+          <Fragment><span class="jd-hero__word" style={`--w:${wi}`}>{w}</span>{' '}</Fragment>
+        ))}
+      </h1>
+      <p class="jd-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="jd-hero__meta">
+        <span class="jd-pill">{p.year}</span>
+        <span class="jd-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="jd-pill jd-pill--link">
+            {isEs ? 'Ver sitio' : 'Visit site'} <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ TRACKING ══════════════════════════════════════════════════ -->
+  <section class="jd-track">
+    <div class="jd-track__inner">
+      <p class="jd-track__kicker" data-reveal>{isEs ? 'Seguimiento del proyecto' : 'Project tracking'}</p>
+      <div class="jd-stages">
+        <span class="jd-stages__rail" aria-hidden="true"></span>
+        {stages.map((s, i) => (
+          <article class="jd-stage" data-reveal data-delay={`${i * 0.1}`}>
+            <div class="jd-stage__node" aria-hidden="true"><span></span></div>
+            <span class="jd-stage__code">{s.code}</span>
+            <span class="jd-stage__st">{s.st}</span>
+            <span class="jd-stage__h">{s.h}</span>
+            <p class="jd-stage__text">{s.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ MANIFIESTO — servicios + métricas ═════════════════════════ -->
+  <section class="jd-manifest">
+    <div class="jd-manifest__inner">
+      <div class="jd-manifest__head" data-reveal>
+        <span>{isEs ? 'Manifiesto de carga' : 'Cargo manifest'}</span>
+        <span>{p.year}</span>
+      </div>
+      <ul class="jd-manifest__list">
+        {pick(p.services, locale).map((s, i) => (
+          <li class="jd-manifest__row" data-reveal data-delay={`${i * 0.06}`}>
+            <span class="jd-manifest__idx">{String(i + 1).padStart(2, '0')}</span>
+            <span class="jd-manifest__name">{s}</span>
+            <span class="jd-manifest__ok">&#10003;</span>
+          </li>
+        ))}
+      </ul>
+      {p.metrics.length > 0 && (
+        <div class="jd-figures">
+          {p.metrics.map((m, i) => (
+            <div class="jd-figure" data-reveal data-delay={`${i * 0.08}`}>
+              <span class="jd-figure__val">{m.val}</span>
+              <span class="jd-figure__lbl">{pick(m.lbl, locale)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA — contenedores ════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="jd-gallery">
+      <div class="jd-gallery__inner">
+        <h2 class="jd-gallery__title" data-reveal>{isEs ? 'El sitio en detalle' : 'The site in detail'}</h2>
+        <div class="jd-crates">
+          {media.map((slot) => (
+            <figure class={`jd-crate jd-crate--${slot.ratio}`} data-reveal>
+              {slot.kind === 'photo' && slot.src ? (
+                <Image src={slot.src} alt={pick(slot.label, locale)} class="jd-crate__img"
+                  widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+              ) : slot.kind === 'video' && slot.videoSrc ? (
+                <div class="jd-crate__screen" data-jd-video={slot.videoSrc}></div>
+              ) : (
+                <div class="jd-crate__ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="jd-crate__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="jd-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="jd-next__link">
+      <span>
+        <span class="jd-next__label">{t.work.next}</span>
+        <span class="jd-next__client">{next.client}</span>
+      </span>
+      <span class="jd-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.jd { background: var(--dark); color: #e9e6f5; }
+.jd-mono, .jd-hero__kicker, .jd-stage__code, .jd-manifest__head, .jd-manifest__idx {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.jd-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(to bottom, #0b0820 0%, #171041 45%, #2a1d5c 78%, #3a2a70 100%);
+}
+.jd-grid {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+.jd-horizon {
+  position: absolute; z-index: 0; left: 0; right: 0; bottom: 0; height: 26%;
+  background: linear-gradient(to bottom, rgba(91,78,145,0.35), rgba(11,8,32,0.9));
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.jd-radar {
+  position: absolute; z-index: 1; top: 120px; right: 40px;
+  width: 130px; height: 130px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+@media (max-width: 720px) { .jd-radar { width: 84px; height: 84px; right: 20px; top: 100px; } }
+.jd-radar__ring {
+  position: absolute; inset: 22%; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.14);
+}
+.jd-radar__ring--2 { inset: 42%; }
+.jd-radar__sweep {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg 300deg, rgba(91,78,145,0.55) 340deg, var(--accent) 360deg);
+  animation: jdSweep 3.4s linear infinite;
+}
+@keyframes jdSweep { to { transform: rotate(360deg); } }
+
+.jd-route { position: absolute; z-index: 1; left: 0; right: 0; bottom: 24%; width: 100%; height: 120px; }
+
+.jd-ship {
+  position: absolute; z-index: 2; bottom: 15%;
+  animation: jdSail 34s linear infinite;
+}
+@keyframes jdSail {
+  from { transform: translateX(-24vw); }
+  to   { transform: translateX(112vw); }
+}
+.jd-ship__wave { animation: jdWave 5s ease-in-out infinite; }
+@keyframes jdWave { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-9px) rotate(1deg); } }
+.jd-ship__smoke { animation: jdSmoke 3s ease-in-out infinite; transform-origin: 190px 50px; }
+@keyframes jdSmoke { 0%,100% { opacity: 0.8; transform: translateY(0); } 50% { opacity: 0.35; transform: translateY(-8px); } }
+
+.jd-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 84px;
+}
+@media (min-width: 768px) { .jd-hero__inner { padding: 0 48px 104px; } }
+.jd-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; color: rgba(233,230,245,0.7); transition: gap 0.25s, color 0.2s;
+}
+.jd-back:hover { color: #fff; gap: 12px; }
+.jd-hero__kicker {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+}
+.jd-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 10vw, 7.5rem); font-weight: 700;
+  letter-spacing: -0.045em; line-height: 0.88; color: #fff;
+}
+.jd-hero__word {
+  display: inline-block;
+  animation: jdSlide 0.8s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: calc(var(--w) * 0.11s + 0.1s);
+}
+@keyframes jdSlide { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: none; } }
+.jd-hero__tag {
+  margin-top: 22px; max-width: 44ch; font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.55; color: rgba(233,230,245,0.82);
+}
+.jd-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.jd-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600;
+  color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px; border-radius: 6px; backdrop-filter: blur(8px);
+}
+.jd-pill--link { transition: background 0.3s; }
+.jd-pill--link:hover { background: var(--accent); }
+
+/* ════ TRACKING ═══════════════════════════════════════════════════ */
+.jd-track { background: #0b0820; border-top: 1px solid rgba(255,255,255,0.08); }
+.jd-track__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .jd-track__inner { padding: 110px 48px; } }
+.jd-track__kicker {
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 56px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+.jd-stages { position: relative; display: grid; gap: 44px; }
+@media (min-width: 900px) { .jd-stages { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
+.jd-stages__rail {
+  position: absolute; left: 9px; top: 8px; bottom: 8px; width: 2px;
+  background: linear-gradient(to bottom, var(--accent), rgba(91,78,145,0.15));
+}
+@media (min-width: 900px) {
+  .jd-stages__rail { left: 8px; right: 8px; top: 9px; bottom: auto; width: auto; height: 2px;
+    background: linear-gradient(to right, var(--accent), rgba(91,78,145,0.15)); }
+}
+.jd-stage { position: relative; padding-left: 38px; }
+@media (min-width: 900px) { .jd-stage { padding-left: 0; padding-top: 38px; } }
+.jd-stage__node {
+  position: absolute; left: 0; top: 2px; width: 20px; height: 20px;
+  border-radius: 50%; border: 2px solid var(--accent); background: #0b0820;
+  display: flex; align-items: center; justify-content: center;
+}
+@media (min-width: 900px) { .jd-stage__node { top: 0; } }
+.jd-stage__node span {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  animation: jdPulse 2s ease-out infinite;
+}
+@keyframes jdPulse { 0% { box-shadow: 0 0 0 0 rgba(91,78,145,0.7); } 100% { box-shadow: 0 0 0 12px rgba(91,78,145,0); } }
+.jd-stage__code {
+  display: inline-block; font-size: 11px; letter-spacing: 0.18em;
+  color: var(--accent); border: 1px solid rgba(91,78,145,0.5);
+  padding: 3px 9px; border-radius: 4px; margin-bottom: 12px;
+}
+.jd-stage__st {
+  display: block; font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 700; color: #fff; letter-spacing: -0.02em;
+}
+.jd-stage__h {
+  display: block; margin: 12px 0 8px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase; color: rgba(233,230,245,0.45);
+}
+.jd-stage__text { font-size: 1rem; line-height: 1.6; color: rgba(233,230,245,0.8); }
+
+/* ════ MANIFIESTO ═════════════════════════════════════════════════ */
+.jd-manifest { background: var(--dark); }
+.jd-manifest__inner { max-width: 980px; margin-inline: auto; padding: 80px 24px; }
+@media (min-width: 768px) { .jd-manifest__inner { padding: 100px 48px; } }
+.jd-manifest__head {
+  display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(233,230,245,0.5);
+  border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 14px;
+}
+.jd-manifest__list { list-style: none; }
+.jd-manifest__row {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center;
+  padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.jd-manifest__idx { font-size: 0.85rem; color: var(--accent); }
+.jd-manifest__name { font-size: clamp(1.05rem, 2.4vw, 1.5rem); font-weight: 600; color: #fff; }
+.jd-manifest__ok { color: var(--accent); font-size: 1.1rem; }
+.jd-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 32px; margin-top: 54px; }
+.jd-figure { border-left: 3px solid var(--accent); padding-left: 18px; }
+.jd-figure__val {
+  display: block; font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 700; color: #fff; letter-spacing: -0.03em; line-height: 1;
+}
+.jd-figure__lbl { display: block; margin-top: 10px; font-size: 0.9rem; color: rgba(233,230,245,0.65); }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.jd-gallery { background: #0b0820; }
+.jd-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .jd-gallery__inner { padding: 110px 48px; } }
+.jd-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 44px;
+}
+.jd-crates { display: grid; grid-template-columns: 1fr; gap: 22px; }
+@media (min-width: 760px) { .jd-crates { grid-template-columns: repeat(2, 1fr); } }
+.jd-crate { position: relative; margin: 0; }
+.jd-crate__img, .jd-crate__screen, .jd-crate__ph {
+  width: 100%; display: block; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.14); background: #12102b; overflow: hidden;
+}
+.jd-crate--wide .jd-crate__img, .jd-crate--wide .jd-crate__screen, .jd-crate--wide .jd-crate__ph { aspect-ratio: 16/9; object-fit: cover; }
+.jd-crate--tall .jd-crate__img, .jd-crate--tall .jd-crate__ph { aspect-ratio: 3/4; object-fit: cover; }
+.jd-crate--square .jd-crate__img, .jd-crate--square .jd-crate__ph { aspect-ratio: 1/1; object-fit: cover; }
+.jd-crate__screen :global(video) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.jd-crate__ph {
+  display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center;
+  color: rgba(233,230,245,0.45); font-size: 0.9rem; min-height: 180px;
+  background: repeating-linear-gradient(45deg, #12102b 0 12px, #171442 12px 24px);
+}
+.jd-crate__cap {
+  margin-top: 12px; font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.08em; color: rgba(233,230,245,0.55);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.jd-next { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.08); }
+.jd-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .jd-next__link { padding-inline: 48px; } }
+.jd-next__label { font-size: 0.85rem; color: rgba(233,230,245,0.55); }
+.jd-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #fff; transition: color 0.3s;
+}
+.jd-next__link:hover .jd-next__client { color: var(--accent); }
+.jd-next__arrow { font-size: 2.2rem; color: rgba(233,230,245,0.5); transition: transform 0.3s, color 0.3s; }
+.jd-next__link:hover .jd-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .jd-ship, .jd-ship__wave, .jd-ship__smoke, .jd-radar__sweep, .jd-hero__word, .jd-stage__node span { animation: none !important; }
+  .jd-hero__word { opacity: 1; transform: none; }
+}
+</style>
+
+<script>
+  function initJdVideos() {
+    const items = document.querySelectorAll<HTMLElement>('[data-jd-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.jdVideo; if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v); v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video'); if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+  initJdVideos();
+  document.addEventListener('astro:page-load', initJdVideos);
+</script>

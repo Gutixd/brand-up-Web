@@ -1,0 +1,391 @@
+---
+// Landing bespoke para "MuscleCarChile" (automotriz · migración web).
+// Tema garage/velocidad: asfalto con líneas de velocidad, un muscle car
+// dibujado a mano (SVG) con ruedas girando y velocímetro con aguja. La info
+// va como CAMBIOS DE MARCHA y las métricas como testigos de tablero.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const gears = [
+  { g: '1', h: t.work.challenge, text: pick(p.challenge, locale) },
+  { g: '2', h: t.work.approach,  text: pick(p.approach, locale) },
+  { g: '3', h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="mc" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — asfalto y velocidad ════════════════════════════════ -->
+  <section class="mc-hero">
+    <div class="mc-stripes" aria-hidden="true"></div>
+    <div class="mc-speedlines" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- velocímetro -->
+    <div class="mc-gauge" aria-hidden="true">
+      <svg viewBox="0 0 200 200" width="150" height="150">
+        <circle cx="100" cy="100" r="86" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+        <path d="M100 100 m-64 30 a72 72 0 1 1 128 0" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M100 100 m-64 30 a72 72 0 1 1 128 0" fill="none" stroke="var(--accent)" stroke-width="8"
+              stroke-linecap="round" stroke-dasharray="300" stroke-dashoffset="90" class="mc-gauge__arc"/>
+        <g class="mc-gauge__needle" style="transform-origin:100px 100px">
+          <line x1="100" y1="100" x2="100" y2="42" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <circle cx="100" cy="100" r="9" fill="var(--accent)"/>
+      </svg>
+    </div>
+
+    <!-- el auto -->
+    <div class="mc-car" aria-hidden="true">
+      <svg viewBox="0 0 400 150" width="400" height="150" role="img" aria-label="Muscle car">
+        <!-- carrocería -->
+        <path d="M24 112 L26 86 Q28 74 52 70 L120 66 L165 38 Q178 30 215 30 L268 30 Q292 32 306 52 L352 62 Q378 66 384 86 L386 112 Z" fill="#1c1010"/>
+        <path d="M24 112 L26 86 Q28 74 52 70 L120 66 L165 38 Q178 30 215 30 L268 30 Q292 32 306 52 L352 62 Q378 66 384 86 L386 112 Z" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <!-- ventanas -->
+        <path d="M174 44 L212 39 L262 39 L294 56 L182 58 Z" fill="#3a1414" opacity="0.9"/>
+        <!-- franja lateral -->
+        <rect x="40" y="92" width="330" height="7" rx="3" fill="var(--accent)" opacity="0.8"/>
+        <!-- toma de aire -->
+        <rect x="322" y="54" width="34" height="9" rx="3" fill="#3a1414"/>
+        <!-- faro -->
+        <rect x="374" y="80" width="12" height="9" rx="2" fill="#ffd9a0"/>
+        <!-- ruedas -->
+        <g class="mc-car__wheel" style="transform-origin:95px 112px">
+          <circle cx="95" cy="112" r="27" fill="#0d0707" stroke="#2a1a1a" stroke-width="4"/>
+          <circle cx="95" cy="112" r="12" fill="#241414"/>
+          <rect x="93" y="88" width="4" height="48" rx="2" fill="#3d2626"/>
+          <rect x="71" y="110" width="48" height="4" rx="2" fill="#3d2626"/>
+        </g>
+        <g class="mc-car__wheel" style="transform-origin:310px 112px">
+          <circle cx="310" cy="112" r="27" fill="#0d0707" stroke="#2a1a1a" stroke-width="4"/>
+          <circle cx="310" cy="112" r="12" fill="#241414"/>
+          <rect x="308" y="88" width="4" height="48" rx="2" fill="#3d2626"/>
+          <rect x="286" y="110" width="48" height="4" rx="2" fill="#3d2626"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="mc-hero__inner">
+      <a href={lp('/trabajos')} class="mc-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="mc-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="mc-hero__title">{p.client}</h1>
+      <p class="mc-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="mc-hero__meta">
+        <span class="mc-pill">{p.year}</span>
+        <span class="mc-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="mc-pill mc-pill--link">
+            {isEs ? 'Ver sitio' : 'Visit site'} <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ MARCHAS ═══════════════════════════════════════════════════ -->
+  <section class="mc-gears">
+    <div class="mc-gears__inner">
+      <p class="mc-gears__kicker" data-reveal>{isEs ? 'Cambios de marcha' : 'Shifting gears'}</p>
+      {gears.map((g, i) => (
+        <article class="mc-gear" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="mc-gear__num">{g.g}</span>
+          <div class="mc-gear__body">
+            <span class="mc-gear__h">{g.h}</span>
+            <p class="mc-gear__text">{g.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ TABLERO — servicios + métricas como testigos ══════════════ -->
+  <section class="mc-dash">
+    <div class="mc-dash__inner">
+      <p class="mc-dash__kicker" data-reveal>{isEs ? 'Tablero' : 'Dashboard'}</p>
+      <div class="mc-lights">
+        {pick(p.services, locale).map((s, i) => (
+          <div class="mc-light" data-reveal data-delay={`${i * 0.07}`}>
+            <span class="mc-light__dot" aria-hidden="true"></span>
+            <span class="mc-light__name">{s}</span>
+            <span class="mc-light__st">OK</span>
+          </div>
+        ))}
+        {p.metrics.map((m) => (
+          <div class="mc-light mc-light--hero" data-reveal>
+            <span class="mc-light__dot" aria-hidden="true"></span>
+            <span class="mc-light__name">{pick(m.lbl, locale)}</span>
+            <span class="mc-light__st">{m.val}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA — bahías de garage ════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="mc-gallery">
+      <div class="mc-gallery__inner">
+        <h2 class="mc-gallery__title" data-reveal>{isEs ? 'La tienda' : 'The store'}</h2>
+        <div class="mc-bays">
+          {media.map((slot) => (
+            <figure class="mc-bay" data-reveal>
+              {slot.kind === 'photo' && slot.src ? (
+                <Image src={slot.src} alt={pick(slot.label, locale)} class="mc-bay__img"
+                  widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+              ) : slot.kind === 'video' && slot.videoSrc ? (
+                <div class="mc-bay__screen" data-mc-video={slot.videoSrc}></div>
+              ) : (
+                <div class="mc-bay__ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="mc-bay__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="mc-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="mc-next__link">
+      <span>
+        <span class="mc-next__label">{t.work.next}</span>
+        <span class="mc-next__client">{next.client}</span>
+      </span>
+      <span class="mc-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.mc { background: var(--dark); color: #f4e9e9; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.mc-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: radial-gradient(90% 70% at 50% 100%, #4a1210 0%, #260808 45%, #140505 100%);
+}
+/* franjas de carrera diagonales */
+.mc-stripes {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.16;
+  background: repeating-linear-gradient(115deg, var(--accent) 0 3px, transparent 3px 46px);
+}
+.mc-speedlines { position: absolute; inset: 0; z-index: 1; }
+.mc-speedlines span {
+  position: absolute; height: 2px; border-radius: 2px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.55), transparent);
+}
+.mc-speedlines span:nth-child(1) { top: 22%; width: 240px; animation: mcStreak 1.9s linear infinite; }
+.mc-speedlines span:nth-child(2) { top: 34%; width: 160px; animation: mcStreak 2.4s linear infinite 0.3s; }
+.mc-speedlines span:nth-child(3) { top: 46%; width: 300px; animation: mcStreak 1.6s linear infinite 0.7s; }
+.mc-speedlines span:nth-child(4) { top: 58%; width: 190px; animation: mcStreak 2.1s linear infinite 0.2s; }
+.mc-speedlines span:nth-child(5) { top: 68%; width: 260px; animation: mcStreak 1.75s linear infinite 1s; }
+.mc-speedlines span:nth-child(6) { top: 28%; width: 130px; animation: mcStreak 2.6s linear infinite 1.4s; }
+@keyframes mcStreak {
+  from { transform: translateX(-30vw); opacity: 0; }
+  15% { opacity: 0.9; }
+  to { transform: translateX(120vw); opacity: 0; }
+}
+
+.mc-gauge { position: absolute; z-index: 2; top: 110px; right: 36px; }
+@media (max-width: 760px) { .mc-gauge { transform: scale(0.62); top: 84px; right: 4px; } }
+.mc-gauge__arc { animation: mcArc 2.4s cubic-bezier(0.22,1,0.36,1) forwards; }
+@keyframes mcArc { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 90; } }
+.mc-gauge__needle { animation: mcNeedle 3.6s cubic-bezier(0.5,0,0.3,1) infinite alternate; }
+@keyframes mcNeedle { from { transform: rotate(-118deg); } to { transform: rotate(64deg); } }
+
+.mc-car {
+  position: absolute; z-index: 2; bottom: 20%; left: 50%;
+  transform: translateX(-50%);
+  animation: mcRumble 0.35s ease-in-out infinite alternate;
+  filter: drop-shadow(0 26px 34px rgba(0,0,0,0.6));
+}
+@keyframes mcRumble { from { transform: translateX(-50%) translateY(0); } to { transform: translateX(-50%) translateY(-3px); } }
+.mc-car__wheel { animation: mcSpin 0.55s linear infinite; }
+@keyframes mcSpin { to { transform: rotate(360deg); } }
+
+.mc-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 80px;
+}
+@media (min-width: 768px) { .mc-hero__inner { padding: 0 48px 96px; } }
+.mc-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px;
+  font-size: 0.85rem; color: rgba(244,233,233,0.7); transition: gap 0.25s, color 0.2s;
+}
+.mc-back:hover { color: #fff; gap: 12px; }
+.mc-hero__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+.mc-hero__title {
+  font-family: var(--font-display); font-size: clamp(2.6rem, 11vw, 8rem);
+  font-weight: 700; font-style: italic; letter-spacing: -0.055em; line-height: 0.86;
+  color: #fff; text-transform: uppercase;
+  animation: mcLaunch 0.85s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes mcLaunch {
+  from { opacity: 0; transform: translateX(-90px) skewX(-14deg); }
+  to { opacity: 1; transform: none; }
+}
+.mc-hero__tag {
+  margin-top: 20px; max-width: 42ch; font-size: clamp(1rem, 1.7vw, 1.18rem);
+  line-height: 1.55; color: rgba(244,233,233,0.8);
+}
+.mc-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.mc-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; color: #fff;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.22);
+  padding: 8px 16px; border-radius: 4px;
+}
+.mc-pill--link { transition: background 0.3s; }
+.mc-pill--link:hover { background: var(--accent); }
+
+/* ════ MARCHAS ════════════════════════════════════════════════════ */
+.mc-gears { background: #100404; border-top: 2px solid var(--accent); }
+.mc-gears__inner { max-width: 1080px; margin-inline: auto; padding: 88px 24px; }
+@media (min-width: 768px) { .mc-gears__inner { padding: 110px 48px; } }
+.mc-gears__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 48px;
+}
+.mc-gear {
+  display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start;
+  padding: 34px 0; border-bottom: 1px solid rgba(244,233,233,0.1);
+}
+.mc-gear__num {
+  font-family: var(--font-display); font-style: italic;
+  font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 700; line-height: 0.8;
+  color: transparent; -webkit-text-stroke: 2px var(--accent);
+}
+.mc-gear__h {
+  display: block; margin-bottom: 10px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; color: rgba(244,233,233,0.45);
+}
+.mc-gear__text { font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.6; color: rgba(244,233,233,0.85); }
+
+/* ════ TABLERO ════════════════════════════════════════════════════ */
+.mc-dash { background: var(--dark); }
+.mc-dash__inner { max-width: 1080px; margin-inline: auto; padding: 80px 24px; }
+@media (min-width: 768px) { .mc-dash__inner { padding: 100px 48px; } }
+.mc-dash__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 34px;
+}
+.mc-lights { display: grid; gap: 12px; }
+.mc-light {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+  padding: 20px 24px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(244,233,233,0.1);
+}
+.mc-light--hero { border-color: var(--accent); background: rgba(209,55,47,0.12); }
+.mc-light__dot {
+  width: 12px; height: 12px; border-radius: 50%; background: #46d17a;
+  box-shadow: 0 0 12px rgba(70,209,122,0.8); animation: mcBlink 2.4s ease-in-out infinite;
+}
+@keyframes mcBlink { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+.mc-light__name { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 600; color: #fff; }
+.mc-light__st {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.9rem;
+  font-weight: 700; color: var(--accent);
+}
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.mc-gallery { background: #100404; }
+.mc-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .mc-gallery__inner { padding: 110px 48px; } }
+.mc-gallery__title {
+  font-family: var(--font-display); font-style: italic; text-transform: uppercase;
+  font-size: clamp(1.9rem, 5vw, 3.2rem); font-weight: 700; letter-spacing: -0.03em;
+  color: #fff; margin-bottom: 42px;
+}
+.mc-bays { display: grid; grid-template-columns: 1fr; gap: 22px; }
+@media (min-width: 760px) { .mc-bays { grid-template-columns: repeat(2, 1fr); } }
+.mc-bay { margin: 0; }
+.mc-bay__img, .mc-bay__screen, .mc-bay__ph {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(244,233,233,0.14); background: #1a0909;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), border-color 0.3s;
+}
+.mc-bay:hover .mc-bay__img { transform: scale(1.04); border-color: var(--accent); }
+.mc-bay__screen :global(video) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mc-bay__ph {
+  display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center;
+  color: rgba(244,233,233,0.45); font-size: 0.9rem;
+  background: repeating-linear-gradient(45deg, #1a0909 0 12px, #210d0d 12px 24px);
+}
+.mc-bay__cap {
+  margin-top: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(244,233,233,0.5);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.mc-next { background: var(--dark); border-top: 1px solid rgba(244,233,233,0.1); }
+.mc-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .mc-next__link { padding-inline: 48px; } }
+.mc-next__label { font-size: 0.85rem; color: rgba(244,233,233,0.55); }
+.mc-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display); font-style: italic;
+  text-transform: uppercase; font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700;
+  letter-spacing: -0.04em; color: #fff; transition: color 0.3s;
+}
+.mc-next__link:hover .mc-next__client { color: var(--accent); }
+.mc-next__arrow { font-size: 2.2rem; color: rgba(244,233,233,0.5); transition: transform 0.3s, color 0.3s; }
+.mc-next__link:hover .mc-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-speedlines span, .mc-car, .mc-car__wheel, .mc-gauge__needle, .mc-gauge__arc,
+  .mc-hero__title, .mc-light__dot { animation: none !important; }
+  .mc-hero__title { opacity: 1; transform: none; }
+}
+</style>
+
+<script>
+  function initMcVideos() {
+    const items = document.querySelectorAll<HTMLElement>('[data-mc-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.mcVideo; if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v); v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video'); if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+  initMcVideos();
+  document.addEventListener('astro:page-load', initMcVideos);
+</script>

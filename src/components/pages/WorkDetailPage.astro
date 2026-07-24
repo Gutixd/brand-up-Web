@@ -9,10 +9,14 @@ import { useT, pick, localePath, type Locale } from '../../i18n';
 // (layout y animaciones únicos, no la plantilla genérica), se despacha aquí.
 import WorkAltitude from './WorkAltitude.astro';
 import WorkChacha from './WorkChacha.astro';
+import WorkJdCargo from './WorkJdCargo.astro';
+import WorkMuscleCar from './WorkMuscleCar.astro';
 
 const BESPOKE: Record<string, any> = {
   altitude: WorkAltitude,
   'el-chacha-pollo': WorkChacha,
+  'jd-cargo-logistics': WorkJdCargo,
+  musclecarchile: WorkMuscleCar,
 };
 
 interface Props {
