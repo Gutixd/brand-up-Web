@@ -1,0 +1,349 @@
+---
+// Landing bespoke para "Microterapias" (bienestar · salud mental).
+// El tema es sensible, así que esta página va deliberadamente al revés que
+// el resto: nada de animaciones agresivas. Todo es calma — un círculo que
+// respira a ritmo real (inhala/exhala), manchas suaves que se transforman
+// muy lento y mucho aire entre secciones. La info se lee como un recorrido
+// pausado, no como tarjetas.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const steps = [
+  { h: t.work.challenge, text: pick(p.challenge, locale) },
+  { h: t.work.approach,  text: pick(p.approach, locale) },
+  { h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="mt" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — respiración ════════════════════════════════════════ -->
+  <section class="mt-hero">
+    <div class="mt-blobs" aria-hidden="true">
+      <span class="mt-blob mt-blob--1"></span>
+      <span class="mt-blob mt-blob--2"></span>
+      <span class="mt-blob mt-blob--3"></span>
+    </div>
+
+    <!-- círculo que respira -->
+    <div class="mt-breath" aria-hidden="true">
+      <span class="mt-breath__ring mt-breath__ring--outer"></span>
+      <span class="mt-breath__ring mt-breath__ring--mid"></span>
+      <span class="mt-breath__core"></span>
+      <span class="mt-breath__label mt-breath__label--in">{isEs ? 'inhala' : 'breathe in'}</span>
+      <span class="mt-breath__label mt-breath__label--out">{isEs ? 'exhala' : 'breathe out'}</span>
+    </div>
+
+    <div class="mt-hero__inner">
+      <a href={lp('/trabajos')} class="mt-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="mt-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="mt-hero__title">{p.client}</h1>
+      <p class="mt-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="mt-hero__meta">
+        <span class="mt-pill">{p.year}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="mt-pill mt-pill--link">
+            microterapias.cl <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ RECORRIDO — lectura pausada ═══════════════════════════════ -->
+  <section class="mt-path">
+    <div class="mt-path__inner">
+      {steps.map((s, i) => (
+        <article class="mt-step" data-reveal data-delay={`${i * 0.1}`}>
+          <span class="mt-step__dot" aria-hidden="true"></span>
+          <span class="mt-step__h">{s.h}</span>
+          <p class="mt-step__text">{s.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ SERVICIOS + MÉTRICA ═══════════════════════════════════════ -->
+  <section class="mt-care">
+    <div class="mt-care__inner">
+      <div class="mt-care__tags" data-reveal>
+        {pick(p.services, locale).map((s) => (
+          <span class="mt-tag">{s}</span>
+        ))}
+      </div>
+      {p.metrics.map((m) => (
+        <div class="mt-note" data-reveal data-delay="0.1">
+          <span class="mt-note__val">{m.val}</span>
+          <span class="mt-note__lbl">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA ═══════════════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="mt-gallery">
+      <div class="mt-gallery__inner">
+        <h2 class="mt-gallery__title" data-reveal>{isEs ? 'El contenido' : 'The content'}</h2>
+        <div class="mt-cards">
+          {media.map((slot) => (
+            <figure class={`mt-card mt-card--${slot.ratio}`} data-reveal>
+              <div class="mt-card__frame">
+                {slot.kind === 'photo' && slot.src ? (
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="mt-card__img"
+                    widths={[400, 800]} sizes="(max-width: 860px) 88vw, 30vw" />
+                ) : slot.kind === 'video' && slot.videoSrc ? (
+                  <div class="mt-card__screen" data-mt-video={slot.videoSrc}></div>
+                ) : (
+                  <div class="mt-card__ph"><span>{pick(slot.label, locale)}</span></div>
+                )}
+              </div>
+              <figcaption class="mt-card__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="mt-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="mt-next__link">
+      <span>
+        <span class="mt-next__label">{t.work.next}</span>
+        <span class="mt-next__client">{next.client}</span>
+      </span>
+      <span class="mt-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.mt { background: #f6f3fd; color: #2a2340; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.mt-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: center;
+  background: linear-gradient(170deg, #f8f5ff 0%, #ece5fb 50%, #ded2f6 100%);
+}
+/* manchas suaves que se transforman muy lento */
+.mt-blob {
+  position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.5;
+}
+.mt-blob--1 { width: 460px; height: 460px; top: -8%; right: -6%; background: #c9b4f0; animation: mtDrift1 26s ease-in-out infinite; }
+.mt-blob--2 { width: 380px; height: 380px; bottom: -10%; left: -8%; background: #b9d6f2; animation: mtDrift2 32s ease-in-out infinite; }
+.mt-blob--3 { width: 300px; height: 300px; top: 42%; left: 46%; background: #e3c8f0; animation: mtDrift1 38s ease-in-out infinite 6s; }
+@keyframes mtDrift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-32px, 30px) scale(1.1); }
+}
+@keyframes mtDrift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(36px, -26px) scale(1.08); }
+}
+
+/* Círculo de respiración: 4s inhalar / 4s exhalar, ritmo real */
+.mt-breath {
+  position: absolute; z-index: 1; right: 9%; top: 50%;
+  width: 300px; height: 300px; transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+}
+@media (max-width: 900px) { .mt-breath { right: 50%; top: 22%; transform: translate(50%, 0) scale(0.72); } }
+.mt-breath__ring, .mt-breath__core {
+  position: absolute; border-radius: 50%;
+  animation: mtBreathe 8s ease-in-out infinite;
+}
+.mt-breath__ring--outer { width: 100%; height: 100%; border: 1px solid rgba(139,111,209,0.4); }
+.mt-breath__ring--mid { width: 72%; height: 72%; border: 1px solid rgba(139,111,209,0.55); animation-delay: 0.25s; }
+.mt-breath__core {
+  width: 46%; height: 46%;
+  background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.9), var(--accent));
+  animation-delay: 0.5s; box-shadow: 0 18px 50px rgba(139,111,209,0.35);
+}
+@keyframes mtBreathe {
+  0%, 100% { transform: scale(0.82); }
+  50% { transform: scale(1.08); }
+}
+.mt-breath__label {
+  position: absolute; bottom: -34px; font-size: 0.8rem; letter-spacing: 0.28em;
+  text-transform: uppercase; color: #6b5b96; animation: mtLabel 8s ease-in-out infinite;
+}
+.mt-breath__label--out { animation-delay: 4s; }
+@keyframes mtLabel {
+  0%, 42% { opacity: 1; }
+  50%, 92% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.mt-hero__inner {
+  position: relative; z-index: 2; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 140px 24px 80px;
+}
+@media (min-width: 768px) { .mt-hero__inner { padding: 120px 48px 90px; } }
+@media (min-width: 900px) { .mt-hero__inner { max-width: 1180px; } }
+.mt-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 26px;
+  font-size: 0.85rem; color: #6b5b96; transition: gap 0.25s, color 0.2s;
+}
+.mt-back:hover { gap: 12px; color: var(--accent); }
+.mt-hero__kicker {
+  font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 22px;
+}
+.mt-hero__title {
+  font-family: var(--font-display); font-size: clamp(2.6rem, 8.5vw, 6rem);
+  font-weight: 600; letter-spacing: -0.035em; line-height: 0.98; color: #2a2340;
+  max-width: 14ch;
+  animation: mtFade 1.6s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes mtFade { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.mt-hero__tag {
+  margin-top: 28px; max-width: 38ch; font-size: clamp(1.02rem, 1.7vw, 1.22rem);
+  line-height: 1.75; color: #4a4066;
+  animation: mtFade 1.6s cubic-bezier(0.22,1,0.36,1) 0.25s both;
+}
+.mt-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+.mt-pill {
+  font-size: 0.8rem; font-weight: 600; color: #4a4066;
+  background: rgba(255,255,255,0.7); border: 1px solid rgba(139,111,209,0.3);
+  padding: 9px 20px; border-radius: 100px;
+}
+.mt-pill--link { transition: background 0.3s, color 0.3s; }
+.mt-pill--link:hover { background: var(--accent); color: #fff; }
+
+/* ════ RECORRIDO ══════════════════════════════════════════════════ */
+.mt-path { background: #f6f3fd; }
+.mt-path__inner { max-width: 780px; margin-inline: auto; padding: 110px 24px; }
+@media (min-width: 768px) { .mt-path__inner { padding: 150px 48px; } }
+.mt-step { position: relative; padding: 0 0 92px 44px; }
+.mt-step:last-child { padding-bottom: 0; }
+.mt-step__dot {
+  position: absolute; left: 0; top: 9px; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--accent); opacity: 0.85;
+}
+.mt-step__h {
+  display: block; margin-bottom: 18px; font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--accent);
+}
+.mt-step__text {
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem); line-height: 1.68;
+  color: #352d52; font-weight: 400;
+}
+
+/* ════ CUIDADO ════════════════════════════════════════════════════ */
+.mt-care { background: #ece5fb; }
+.mt-care__inner {
+  max-width: 1000px; margin-inline: auto; padding: 86px 24px;
+  display: flex; flex-wrap: wrap; gap: 36px; align-items: center; justify-content: space-between;
+}
+@media (min-width: 768px) { .mt-care__inner { padding: 104px 48px; } }
+.mt-care__tags { display: flex; flex-wrap: wrap; gap: 12px; }
+.mt-tag {
+  font-size: 0.95rem; color: #3d3460; background: #fff;
+  border: 1px solid rgba(139,111,209,0.3); border-radius: 100px; padding: 11px 24px;
+}
+.mt-note { text-align: center; }
+.mt-note__val {
+  display: block; font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 600; color: var(--accent); line-height: 1;
+}
+.mt-note__lbl { display: block; margin-top: 10px; font-size: 0.88rem; color: #5d5182; }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.mt-gallery { background: #f6f3fd; }
+.mt-gallery__inner { max-width: 1140px; margin-inline: auto; padding: 100px 24px; }
+@media (min-width: 768px) { .mt-gallery__inner { padding: 120px 48px; } }
+.mt-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4.4vw, 2.8rem);
+  font-weight: 600; color: #2a2340; margin-bottom: 48px;
+}
+.mt-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 26px; }
+.mt-card { margin: 0; }
+.mt-card__frame {
+  border-radius: 26px; overflow: hidden; background: #e6dff8;
+  box-shadow: 0 16px 40px rgba(80,60,140,0.12);
+}
+.mt-card--tall .mt-card__frame { aspect-ratio: 3/4; }
+.mt-card--reel .mt-card__frame { aspect-ratio: 9/16; }
+.mt-card--wide .mt-card__frame { aspect-ratio: 16/9; }
+.mt-card--square .mt-card__frame { aspect-ratio: 1/1; }
+.mt-card__img, .mt-card__screen :global(video) {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 1s cubic-bezier(0.22,1,0.36,1);
+}
+.mt-card__screen { width: 100%; height: 100%; }
+.mt-card:hover .mt-card__img { transform: scale(1.03); }
+.mt-card__ph {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 22px; text-align: center; color: #7a6ca3; font-size: 0.88rem;
+}
+.mt-card__cap { margin-top: 14px; font-size: 0.86rem; color: #5d5182; }
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.mt-next { background: var(--dark); }
+.mt-next__link {
+  max-width: 1140px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .mt-next__link { padding-inline: 48px; } }
+.mt-next__label { font-size: 0.85rem; color: rgba(240,236,252,0.6); }
+.mt-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 600; letter-spacing: -0.03em;
+  color: #fff; transition: color 0.3s;
+}
+.mt-next__link:hover .mt-next__client { color: #c9b4f0; }
+.mt-next__arrow { font-size: 2.2rem; color: rgba(240,236,252,0.55); transition: transform 0.3s, color 0.3s; }
+.mt-next__link:hover .mt-next__arrow { transform: translateX(10px); color: #c9b4f0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-blob, .mt-breath__ring, .mt-breath__core, .mt-breath__label,
+  .mt-hero__title, .mt-hero__tag { animation: none !important; }
+  .mt-hero__title, .mt-hero__tag { opacity: 1; transform: none; }
+  .mt-breath__label--out { opacity: 0; }
+}
+</style>
+
+<script>
+  function initMtVideos() {
+    const items = document.querySelectorAll<HTMLElement>('[data-mt-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.mtVideo; if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v); v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video'); if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+  initMtVideos();
+  document.addEventListener('astro:page-load', initMtVideos);
+</script>

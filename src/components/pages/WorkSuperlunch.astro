@@ -1,0 +1,302 @@
+---
+// Landing bespoke para "Superlunch" (gastronomía · delivery).
+// Tema vianda/reparto: un scooter de delivery cruzando el hero y, en vez de
+// secciones apiladas, TODA la información va en una GRILLA BENTO — cada dato
+// en su compartimento, como una lonchera.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="sl" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — reparto en camino ══════════════════════════════════ -->
+  <section class="sl-hero">
+    <div class="sl-dots" aria-hidden="true"></div>
+
+    <!-- scooter de delivery -->
+    <div class="sl-scooter" aria-hidden="true">
+      <span class="sl-scooter__lines"><i></i><i></i><i></i></span>
+      <div class="sl-scooter__hop">
+        <svg viewBox="0 0 300 160" width="290" height="155" role="img" aria-label="Scooter de reparto">
+          <!-- caja de reparto -->
+          <rect x="70" y="44" width="62" height="52" rx="9" fill="#2a0f0f"/>
+          <rect x="79" y="56" width="44" height="9" rx="4" fill="var(--accent)"/>
+          <rect x="79" y="71" width="30" height="7" rx="3" fill="rgba(255,255,255,0.35)"/>
+          <!-- asiento -->
+          <ellipse cx="140" cy="96" rx="32" ry="10" fill="#2a0f0f"/>
+          <!-- plataforma -->
+          <rect x="98" y="106" width="112" height="13" rx="6" fill="#3a1616"/>
+          <!-- carenado + horquilla -->
+          <path d="M208 114 L228 62" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M228 62 L252 55" stroke="#2a0f0f" stroke-width="8" stroke-linecap="round"/>
+          <path d="M186 106 Q206 96 216 74" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round"/>
+          <!-- faro -->
+          <circle cx="234" cy="64" r="7" fill="#ffe9a8"/>
+          <!-- ruedas -->
+          <g class="sl-wheel" style="transform-origin:110px 122px">
+            <circle cx="110" cy="122" r="25" fill="#1a0808" stroke="#3a1616" stroke-width="5"/>
+            <circle cx="110" cy="122" r="9" fill="#4a2020"/>
+            <rect x="108" y="100" width="4" height="44" rx="2" fill="#4a2020"/>
+            <rect x="88" y="120" width="44" height="4" rx="2" fill="#4a2020"/>
+          </g>
+          <g class="sl-wheel" style="transform-origin:228px 122px">
+            <circle cx="228" cy="122" r="25" fill="#1a0808" stroke="#3a1616" stroke-width="5"/>
+            <circle cx="228" cy="122" r="9" fill="#4a2020"/>
+            <rect x="226" y="100" width="4" height="44" rx="2" fill="#4a2020"/>
+            <rect x="206" y="120" width="44" height="4" rx="2" fill="#4a2020"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="sl-hero__inner">
+      <a href={lp('/trabajos')} class="sl-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="sl-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="sl-hero__title">{p.client}</h1>
+      <div class="sl-hero__meta">
+        <span class="sl-pill">{p.year}</span>
+        <span class="sl-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ BENTO — toda la info en compartimentos ════════════════════ -->
+  <section class="sl-bento">
+    <div class="sl-bento__inner">
+      <div class="sl-box sl-box--lead" data-reveal>
+        <span class="sl-box__tag">{isEs ? 'El proyecto' : 'The project'}</span>
+        <p class="sl-box__lead">{pick(p.summary, locale)}</p>
+      </div>
+
+      {p.metrics.map((m) => (
+        <div class="sl-box sl-box--metric" data-reveal data-delay="0.06">
+          <span class="sl-box__val">{m.val}</span>
+          <span class="sl-box__vlbl">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+
+      <div class="sl-box sl-box--a" data-reveal data-delay="0.08">
+        <span class="sl-box__tag">{t.work.challenge}</span>
+        <p class="sl-box__text">{pick(p.challenge, locale)}</p>
+      </div>
+      <div class="sl-box sl-box--b" data-reveal data-delay="0.14">
+        <span class="sl-box__tag">{t.work.approach}</span>
+        <p class="sl-box__text">{pick(p.approach, locale)}</p>
+      </div>
+      <div class="sl-box sl-box--c" data-reveal data-delay="0.2">
+        <span class="sl-box__tag">{t.work.outcome}</span>
+        <p class="sl-box__text">{pick(p.outcome, locale)}</p>
+      </div>
+
+      <div class="sl-box sl-box--serv" data-reveal data-delay="0.24">
+        {pick(p.services, locale).map((s) => (
+          <span class="sl-serv">{s}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA ═══════════════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="sl-gallery">
+      <div class="sl-gallery__inner">
+        <h2 class="sl-gallery__title" data-reveal>{isEs ? 'La marca aplicada' : 'The brand applied'}</h2>
+        <div class="sl-plates">
+          {media.map((slot) => (
+            <figure class={`sl-plate sl-plate--${slot.ratio}`} data-reveal>
+              {slot.kind === 'photo' && slot.src ? (
+                <Image src={slot.src} alt={pick(slot.label, locale)} class="sl-plate__img"
+                  widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+              ) : (
+                <div class="sl-plate__ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="sl-plate__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sl-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="sl-next__link">
+      <span>
+        <span class="sl-next__label">{t.work.next}</span>
+        <span class="sl-next__client">{next.client}</span>
+      </span>
+      <span class="sl-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.sl { background: var(--dark); color: #ffeeee; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.sl-hero {
+  position: relative; min-height: 88svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(160deg, #ff9d9d 0%, var(--accent) 46%, #b83f3f 100%);
+}
+.sl-dots {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.35;
+  background-image: radial-gradient(rgba(255,255,255,0.6) 2.5px, transparent 2.5px);
+  background-size: 26px 26px;
+}
+.sl-scooter {
+  position: absolute; z-index: 1; bottom: 16%;
+  animation: slRide 15s linear infinite;
+}
+@keyframes slRide {
+  from { transform: translateX(-30vw); }
+  to   { transform: translateX(115vw); }
+}
+.sl-scooter__hop { animation: slHop 0.7s ease-in-out infinite; }
+@keyframes slHop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.sl-wheel { animation: slSpin 0.5s linear infinite; }
+@keyframes slSpin { to { transform: rotate(360deg); } }
+.sl-scooter__lines { position: absolute; left: -90px; top: 55%; }
+.sl-scooter__lines i {
+  display: block; height: 4px; border-radius: 3px; margin-bottom: 12px;
+  background: rgba(255,255,255,0.65);
+}
+.sl-scooter__lines i:nth-child(1) { width: 60px; }
+.sl-scooter__lines i:nth-child(2) { width: 86px; }
+.sl-scooter__lines i:nth-child(3) { width: 44px; }
+
+.sl-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 72px;
+}
+@media (min-width: 768px) { .sl-hero__inner { padding: 0 48px 88px; } }
+.sl-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px;
+  font-size: 0.85rem; font-weight: 600; color: #5c1a1a; transition: gap 0.25s;
+}
+.sl-back:hover { gap: 12px; }
+.sl-hero__kicker {
+  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #fff; background: #2a0f0f;
+  padding: 7px 16px; border-radius: 100px; margin-bottom: 18px;
+}
+.sl-hero__title {
+  font-family: var(--font-display); font-size: clamp(3rem, 13vw, 9rem);
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.86; color: #2a0f0f;
+  animation: slBounce 0.85s cubic-bezier(0.22,1.35,0.4,1) both;
+}
+@keyframes slBounce { from { opacity: 0; transform: translateY(46px) scale(0.9); } to { opacity: 1; transform: none; } }
+.sl-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.sl-pill {
+  font-size: 0.8rem; font-weight: 700; color: #2a0f0f;
+  background: rgba(255,255,255,0.6); border: 2px solid #2a0f0f;
+  padding: 7px 16px; border-radius: 100px;
+}
+
+/* ════ BENTO ══════════════════════════════════════════════════════ */
+.sl-bento { background: var(--dark); }
+.sl-bento__inner {
+  max-width: 1180px; margin-inline: auto; padding: 70px 24px;
+  display: grid; grid-template-columns: 1fr; gap: 16px;
+}
+@media (min-width: 768px) { .sl-bento__inner { padding: 94px 48px; } }
+@media (min-width: 900px) {
+  .sl-bento__inner { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .sl-box--lead { grid-column: span 2; }
+}
+.sl-box {
+  border-radius: 22px; padding: 30px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,238,238,0.14);
+  transition: transform 0.35s, border-color 0.35s, background 0.35s;
+}
+.sl-box:hover { transform: translateY(-5px); border-color: var(--accent); background: rgba(239,111,111,0.1); }
+.sl-box__tag {
+  display: block; margin-bottom: 14px; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+}
+.sl-box__lead {
+  font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; color: #fff;
+}
+.sl-box__text { font-size: 1rem; line-height: 1.62; color: rgba(255,238,238,0.82); }
+.sl-box--metric {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; background: var(--accent); border-color: var(--accent);
+}
+.sl-box--metric:hover { background: #f58585; }
+.sl-box__val { font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 700; color: #2a0f0f; line-height: 1; }
+.sl-box__vlbl { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: rgba(42,15,15,0.8); }
+.sl-box--serv { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+@media (min-width: 900px) { .sl-box--serv { grid-column: span 3; } }
+.sl-serv {
+  font-size: 0.92rem; font-weight: 700; color: #fff;
+  border: 2px solid rgba(255,238,238,0.3); border-radius: 100px; padding: 9px 20px;
+}
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.sl-gallery { background: #1c0909; }
+.sl-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 88px 24px; }
+@media (min-width: 768px) { .sl-gallery__inner { padding: 108px 48px; } }
+.sl-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 42px;
+}
+.sl-plates { display: grid; grid-template-columns: 1fr; gap: 24px; }
+@media (min-width: 760px) { .sl-plates { grid-template-columns: repeat(2, 1fr); } }
+.sl-plate { margin: 0; }
+.sl-plate__img, .sl-plate__ph {
+  width: 100%; display: block; border-radius: 20px; overflow: hidden;
+  border: 1px solid rgba(255,238,238,0.14); background: #250c0c;
+  transition: transform 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.sl-plate--wide .sl-plate__img, .sl-plate--wide .sl-plate__ph { aspect-ratio: 16/9; object-fit: cover; }
+.sl-plate--square .sl-plate__img, .sl-plate--square .sl-plate__ph { aspect-ratio: 1/1; object-fit: cover; }
+.sl-plate--tall .sl-plate__img, .sl-plate--tall .sl-plate__ph { aspect-ratio: 3/4; object-fit: cover; }
+.sl-plate:hover .sl-plate__img { transform: scale(1.04); }
+.sl-plate__ph {
+  display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center;
+  color: rgba(255,238,238,0.45); font-size: 0.9rem; min-height: 180px;
+  background: repeating-linear-gradient(45deg, #250c0c 0 12px, #2d1010 12px 24px);
+}
+.sl-plate__cap { margin-top: 12px; font-size: 0.85rem; font-weight: 600; color: rgba(255,238,238,0.6); }
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.sl-next { background: var(--dark); border-top: 1px solid rgba(255,238,238,0.12); }
+.sl-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .sl-next__link { padding-inline: 48px; } }
+.sl-next__label { font-size: 0.85rem; color: rgba(255,238,238,0.55); }
+.sl-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #fff; transition: color 0.3s;
+}
+.sl-next__link:hover .sl-next__client { color: var(--accent); }
+.sl-next__arrow { font-size: 2.2rem; color: rgba(255,238,238,0.5); transition: transform 0.3s, color 0.3s; }
+.sl-next__link:hover .sl-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sl-scooter, .sl-scooter__hop, .sl-wheel, .sl-hero__title { animation: none !important; }
+  .sl-hero__title { opacity: 1; transform: none; }
+}
+</style>
