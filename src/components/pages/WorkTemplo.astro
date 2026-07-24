@@ -1,0 +1,309 @@
+---
+// Landing bespoke para el "Templo Votivo de Maipú" (institución · eventos).
+// Tema de arquitectura sacra: un rosetón de vitral generado en código que
+// gira lentamente, rayos de luz que entran en diagonal y secciones enmarcadas
+// en arcos. Tono reverente y sobrio, en dorado sobre azul profundo.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// ── Rosetón de vitral generado ────────────────────────────────────
+const CX = 160, CY = 160;
+const GLASS = ['#c9a227', '#2f5f9e', '#9e2f3f', '#2f7f6a', '#d8b64a', '#3f4f8f'];
+const wedge = (r: number, i: number, n: number) => {
+  const a0 = ((i * 360) / n - 90) * (Math.PI / 180);
+  const a1 = (((i + 1) * 360) / n - 90) * (Math.PI / 180);
+  const x0 = (CX + r * Math.cos(a0)).toFixed(1), y0 = (CY + r * Math.sin(a0)).toFixed(1);
+  const x1 = (CX + r * Math.cos(a1)).toFixed(1), y1 = (CY + r * Math.sin(a1)).toFixed(1);
+  return `M${CX} ${CY} L${x0} ${y0} A${r} ${r} 0 0 1 ${x1} ${y1} Z`;
+};
+const outerSegs = Array.from({ length: 12 }, (_, i) => ({ d: wedge(148, i, 12), fill: GLASS[i % GLASS.length] }));
+const innerSegs = Array.from({ length: 8 }, (_, i) => ({ d: wedge(78, i, 8), fill: GLASS[(i + 2) % GLASS.length] }));
+
+const chapters = [
+  { h: t.work.challenge, text: pick(p.challenge, locale) },
+  { h: t.work.approach,  text: pick(p.approach, locale) },
+  { h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="tv" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — rosetón y luz ══════════════════════════════════════ -->
+  <section class="tv-hero">
+    <div class="tv-rays" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="tv-rose" aria-hidden="true">
+      <svg viewBox="0 0 320 320">
+        <circle cx={CX} cy={CY} r="152" fill="#0d0a18"/>
+        {outerSegs.map((s) => (
+          <path d={s.d} fill={s.fill} opacity="0.85" stroke="#1c1607" stroke-width="3"/>
+        ))}
+        <circle cx={CX} cy={CY} r="82" fill="#0d0a18" stroke="var(--accent)" stroke-width="3"/>
+        {innerSegs.map((s) => (
+          <path d={s.d} fill={s.fill} opacity="0.9" stroke="#1c1607" stroke-width="2.5"/>
+        ))}
+        <circle cx={CX} cy={CY} r="26" fill="var(--accent)" stroke="#1c1607" stroke-width="3"/>
+        <circle cx={CX} cy={CY} r="152" fill="none" stroke="var(--accent)" stroke-width="5"/>
+      </svg>
+    </div>
+
+    <div class="tv-hero__inner">
+      <a href={lp('/trabajos')} class="tv-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="tv-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="tv-hero__title">{p.client}</h1>
+      <p class="tv-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="tv-hero__meta">
+        <span class="tv-pill">{p.year}</span>
+        <span class="tv-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ NAVE — capítulos en arcos ═════════════════════════════════ -->
+  <section class="tv-nave">
+    <div class="tv-nave__inner">
+      <p class="tv-nave__kicker" data-reveal>{isEs ? 'El encargo' : 'The commission'}</p>
+      <div class="tv-arches">
+        {chapters.map((c, i) => (
+          <article class="tv-arch" data-reveal data-delay={`${i * 0.1}`}>
+            <div class="tv-arch__top" aria-hidden="true"></div>
+            <span class="tv-arch__h">{c.h}</span>
+            <p class="tv-arch__text">{c.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ SERVICIOS + MÉTRICA ═══════════════════════════════════════ -->
+  <section class="tv-seal">
+    <div class="tv-seal__inner">
+      <ul class="tv-services">
+        {pick(p.services, locale).map((s, i) => (
+          <li class="tv-service" data-reveal data-delay={`${i * 0.07}`}>
+            <span class="tv-service__mark" aria-hidden="true">&#10022;</span>{s}
+          </li>
+        ))}
+      </ul>
+      {p.metrics.map((m) => (
+        <div class="tv-metric" data-reveal data-delay="0.1">
+          <span class="tv-metric__val">{m.val}</span>
+          <span class="tv-metric__lbl">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA — paneles de vitral ═══════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="tv-gallery">
+      <div class="tv-gallery__inner">
+        <h2 class="tv-gallery__title" data-reveal>{isEs ? 'Las piezas' : 'The pieces'}</h2>
+        <div class="tv-panels">
+          {media.map((slot, i) => (
+            <figure class="tv-panel" data-reveal data-delay={`${(i % 2) * 0.08}`}>
+              <div class="tv-panel__glass">
+                {slot.kind === 'photo' && slot.src ? (
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="tv-panel__img"
+                    widths={[480, 900]} sizes="(max-width: 860px) 92vw, 30vw" />
+                ) : (
+                  <span class="tv-panel__mark" aria-hidden="true">&#10022;</span>
+                )}
+              </div>
+              <figcaption class="tv-panel__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="tv-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="tv-next__link">
+      <span>
+        <span class="tv-next__label">{t.work.next}</span>
+        <span class="tv-next__client">{next.client}</span>
+      </span>
+      <span class="tv-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.tv { background: var(--dark); color: #f0e8d4; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.tv-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(to bottom, #0d0a18 0%, #16112a 45%, #1c1607 100%);
+}
+/* rayos de luz que entran en diagonal */
+.tv-rays span {
+  position: absolute; top: -25%; width: 90px; height: 155%;
+  background: linear-gradient(to bottom, rgba(201,162,39,0.22), transparent 72%);
+  transform: rotate(16deg); filter: blur(9px);
+}
+.tv-rays span:nth-child(1) { left: 12%; animation: tvGlow 7s ease-in-out infinite; }
+.tv-rays span:nth-child(2) { left: 34%; width: 54px; animation: tvGlow 9s ease-in-out infinite 1.4s; }
+.tv-rays span:nth-child(3) { left: 62%; width: 120px; animation: tvGlow 8s ease-in-out infinite 2.6s; }
+.tv-rays span:nth-child(4) { left: 84%; width: 68px; animation: tvGlow 10s ease-in-out infinite 0.7s; }
+@keyframes tvGlow { 0%,100% { opacity: 0.35; } 50% { opacity: 0.95; } }
+
+.tv-rose {
+  position: absolute; z-index: 1; top: 9%; left: 50%;
+  width: 400px; height: 400px; transform: translateX(-50%);
+  filter: drop-shadow(0 0 60px rgba(201,162,39,0.35));
+  animation: tvRotate 120s linear infinite;
+}
+@media (max-width: 760px) { .tv-rose { width: 260px; height: 260px; top: 12%; } }
+@keyframes tvRotate { to { transform: translateX(-50%) rotate(360deg); } }
+
+.tv-hero__inner {
+  position: relative; z-index: 3; max-width: 1080px; width: 100%;
+  margin-inline: auto; padding: 0 24px 84px; text-align: center;
+}
+@media (min-width: 768px) { .tv-hero__inner { padding: 0 48px 104px; } }
+.tv-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; color: rgba(240,232,212,0.65); transition: gap 0.25s, color 0.2s;
+}
+.tv-back:hover { color: var(--accent); gap: 12px; }
+.tv-hero__kicker {
+  font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 20px;
+}
+.tv-hero__title {
+  font-family: var(--font-display); font-size: clamp(2.2rem, 8vw, 5.6rem);
+  font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; color: #fff;
+  animation: tvRise 1.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes tvRise { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+.tv-hero__tag {
+  margin: 24px auto 0; max-width: 46ch; font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.65; color: rgba(240,232,212,0.78);
+}
+.tv-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; justify-content: center; }
+.tv-pill {
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+  border: 1px solid rgba(201,162,39,0.45); padding: 8px 18px; border-radius: 2px;
+}
+
+/* ════ NAVE ═══════════════════════════════════════════════════════ */
+.tv-nave { background: #14102a; }
+.tv-nave__inner { max-width: 1120px; margin-inline: auto; padding: 92px 24px; }
+@media (min-width: 768px) { .tv-nave__inner { padding: 116px 48px; } }
+.tv-nave__kicker {
+  font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 52px; text-align: center;
+}
+.tv-arches { display: grid; grid-template-columns: 1fr; gap: 30px; }
+@media (min-width: 900px) { .tv-arches { grid-template-columns: repeat(3, 1fr); gap: 26px; } }
+.tv-arch {
+  position: relative; padding: 34px 28px 32px; text-align: center;
+  background: linear-gradient(to bottom, rgba(201,162,39,0.08), transparent);
+  border: 1px solid rgba(201,162,39,0.28);
+  border-radius: 200px 200px 8px 8px;
+  transition: border-color 0.4s, transform 0.4s;
+}
+.tv-arch:hover { border-color: var(--accent); transform: translateY(-6px); }
+.tv-arch__top {
+  width: 46px; height: 46px; margin: 6px auto 20px;
+  border: 1px solid rgba(201,162,39,0.5);
+  border-radius: 50% 50% 0 0; transform: rotate(45deg);
+}
+.tv-arch__h {
+  display: block; margin-bottom: 14px; font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent);
+}
+.tv-arch__text { font-size: 1rem; line-height: 1.68; color: rgba(240,232,212,0.82); }
+
+/* ════ SELLO ══════════════════════════════════════════════════════ */
+.tv-seal { background: var(--dark); border-top: 1px solid rgba(201,162,39,0.2); }
+.tv-seal__inner {
+  max-width: 1080px; margin-inline: auto; padding: 78px 24px;
+  display: flex; flex-wrap: wrap; gap: 44px; align-items: center; justify-content: space-between;
+}
+@media (min-width: 768px) { .tv-seal__inner { padding: 96px 48px; } }
+.tv-services { list-style: none; display: grid; gap: 16px; }
+.tv-service {
+  display: flex; align-items: center; gap: 14px;
+  font-family: var(--font-display); font-size: clamp(1.2rem, 2.6vw, 1.9rem);
+  font-weight: 600; color: #fff; letter-spacing: -0.01em;
+}
+.tv-service__mark { color: var(--accent); font-size: 0.8em; }
+.tv-metric { text-align: center; }
+.tv-metric__val {
+  display: block; font-family: var(--font-display); font-size: clamp(3rem, 7vw, 4.6rem);
+  font-weight: 700; color: var(--accent); line-height: 1;
+}
+.tv-metric__lbl { display: block; margin-top: 10px; font-size: 0.85rem; letter-spacing: 0.08em; color: rgba(240,232,212,0.7); }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.tv-gallery { background: #14102a; }
+.tv-gallery__inner { max-width: 1120px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .tv-gallery__inner { padding: 110px 48px; } }
+.tv-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4.5vw, 2.9rem);
+  font-weight: 600; color: #fff; margin-bottom: 46px; text-align: center;
+}
+.tv-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 24px; }
+.tv-panel { margin: 0; }
+.tv-panel__glass {
+  position: relative; aspect-ratio: 2/3; overflow: hidden;
+  border-radius: 140px 140px 6px 6px;
+  border: 2px solid rgba(201,162,39,0.4);
+  background: linear-gradient(150deg, rgba(47,95,158,0.35), rgba(158,47,63,0.28) 45%, rgba(201,162,39,0.3));
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.4s;
+}
+.tv-panel:hover .tv-panel__glass { border-color: var(--accent); }
+.tv-panel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-panel__mark { font-size: 2.4rem; color: rgba(201,162,39,0.6); }
+.tv-panel__cap {
+  margin-top: 14px; text-align: center; font-size: 0.82rem;
+  letter-spacing: 0.06em; color: rgba(240,232,212,0.65);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.tv-next { background: var(--dark); border-top: 1px solid rgba(201,162,39,0.2); }
+.tv-next__link {
+  max-width: 1120px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .tv-next__link { padding-inline: 48px; } }
+.tv-next__label { font-size: 0.85rem; color: rgba(240,232,212,0.55); }
+.tv-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 3.2rem); font-weight: 600; color: #fff; transition: color 0.3s;
+}
+.tv-next__link:hover .tv-next__client { color: var(--accent); }
+.tv-next__arrow { font-size: 2.2rem; color: rgba(240,232,212,0.5); transition: transform 0.3s, color 0.3s; }
+.tv-next__link:hover .tv-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-rays span, .tv-rose, .tv-hero__title { animation: none !important; }
+  .tv-hero__title { opacity: 1; transform: none; }
+}
+</style>

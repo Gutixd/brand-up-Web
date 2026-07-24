@@ -1,0 +1,315 @@
+---
+// Landing bespoke para "Bell College" (educación · community management).
+// Tema cuaderno escolar: toda la página es una hoja con líneas azules y
+// margen rojo, con una campana que se mece y emite ondas de sonido. La info
+// va como anotaciones de cuaderno y las fotos como polaroids pegadas con
+// cinta adhesiva.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const notes = [
+  { n: 'I',   h: t.work.challenge, text: pick(p.challenge, locale) },
+  { n: 'II',  h: t.work.approach,  text: pick(p.approach, locale) },
+  { n: 'III', h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="bc" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — portada del cuaderno ═══════════════════════════════ -->
+  <section class="bc-hero">
+    <span class="bc-margin" aria-hidden="true"></span>
+
+    <!-- campana que suena -->
+    <div class="bc-bell" aria-hidden="true">
+      <span class="bc-bell__wave"></span>
+      <span class="bc-bell__wave bc-bell__wave--2"></span>
+      <svg viewBox="0 0 100 110" width="96" height="106" class="bc-bell__svg">
+        <path d="M50 12 C70 12 78 30 78 52 C78 68 84 76 88 82 L12 82 C16 76 22 68 22 52 C22 30 30 12 50 12 Z"
+              fill="var(--accent)"/>
+        <rect x="8" y="82" width="84" height="9" rx="4.5" fill="#1d4f85"/>
+        <circle cx="50" cy="8" r="6" fill="#1d4f85"/>
+        <circle cx="50" cy="97" r="7" fill="#1d4f85"/>
+        <path d="M36 34 C40 24 46 20 50 20" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="bc-hero__inner">
+      <a href={lp('/trabajos')} class="bc-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="bc-hero__kicker">{pick(p.sector, locale)} &middot; {p.year}</p>
+      <h1 class="bc-hero__title">{p.client}</h1>
+      <p class="bc-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="bc-hero__meta">
+        {pick(p.services, locale).map((s) => (
+          <span class="bc-chip">{s}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ ANOTACIONES ═══════════════════════════════════════════════ -->
+  <section class="bc-notes">
+    <span class="bc-margin" aria-hidden="true"></span>
+    <div class="bc-notes__inner">
+      <p class="bc-notes__kicker" data-reveal>{isEs ? 'Apuntes del proyecto' : 'Project notes'}</p>
+      {notes.map((c, i) => (
+        <article class="bc-note" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="bc-note__num">{c.n}</span>
+          <div>
+            <span class="bc-note__h">{c.h}</span>
+            <p class="bc-note__text">{c.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ NOTA FINAL — métrica como calificación ════════════════════ -->
+  {p.metrics.length > 0 && (
+    <section class="bc-grade">
+      <div class="bc-grade__inner">
+        {p.metrics.map((m) => (
+          <div class="bc-grade__stamp" data-reveal>
+            <span class="bc-grade__val">{m.val}</span>
+            <span class="bc-grade__lbl">{pick(m.lbl, locale)}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ GALERÍA — polaroids pegadas ═══════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="bc-gallery">
+      <span class="bc-margin" aria-hidden="true"></span>
+      <div class="bc-gallery__inner">
+        <h2 class="bc-gallery__title" data-reveal>{isEs ? 'Piezas publicadas' : 'Published pieces'}</h2>
+        <div class="bc-board">
+          {media.map((slot, i) => (
+            <figure class={`bc-photo bc-photo--${i % 3}`} data-reveal data-delay={`${(i % 3) * 0.07}`}>
+              <span class="bc-photo__tape" aria-hidden="true"></span>
+              <div class="bc-photo__frame">
+                {slot.kind === 'photo' && slot.src ? (
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="bc-photo__img"
+                    widths={[400, 800]} sizes="(max-width: 860px) 88vw, 30vw" />
+                ) : (
+                  <div class="bc-photo__ph"><span>{pick(slot.label, locale)}</span></div>
+                )}
+              </div>
+              <figcaption class="bc-photo__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="bc-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="bc-next__link">
+      <span>
+        <span class="bc-next__label">{t.work.next}</span>
+        <span class="bc-next__client">{next.client}</span>
+      </span>
+      <span class="bc-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+/* Hoja de cuaderno: líneas azules + margen rojo, en toda la página */
+.bc {
+  color: #12304d;
+  background-color: #fdfaf0;
+  background-image: repeating-linear-gradient(
+    to bottom, transparent 0 33px, rgba(47,111,179,0.22) 33px 34px
+  );
+}
+.bc-margin {
+  position: absolute; top: 0; bottom: 0; left: 58px; width: 2px;
+  background: rgba(209,60,60,0.45);
+}
+@media (max-width: 720px) { .bc-margin { left: 26px; } }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.bc-hero {
+  position: relative; min-height: 100svh; display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.bc-bell {
+  position: absolute; z-index: 2; top: 120px; right: 8%;
+  display: flex; align-items: flex-start; justify-content: center;
+}
+@media (max-width: 760px) { .bc-bell { top: 100px; right: 6%; transform: scale(0.72); } }
+.bc-bell__svg { transform-origin: 50px 8px; animation: bcSwing 2.6s ease-in-out infinite; }
+@keyframes bcSwing {
+  0%, 100% { transform: rotate(-13deg); }
+  50% { transform: rotate(13deg); }
+}
+.bc-bell__wave {
+  position: absolute; top: 22px; left: 50%; width: 150px; height: 150px;
+  margin-left: -75px; border-radius: 50%;
+  border: 2px solid rgba(47,111,179,0.5);
+  animation: bcRing 2.6s ease-out infinite;
+}
+.bc-bell__wave--2 { animation-delay: 1.3s; }
+@keyframes bcRing {
+  0% { transform: scale(0.4); opacity: 0; }
+  25% { opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.bc-hero__inner {
+  position: relative; z-index: 3; max-width: 1120px; width: 100%;
+  margin-inline: auto; padding: 0 24px 90px 84px;
+}
+@media (min-width: 768px) { .bc-hero__inner { padding: 0 48px 110px 110px; } }
+.bc-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; font-weight: 600; color: #4a6f92; transition: gap 0.25s;
+}
+.bc-back:hover { gap: 12px; color: var(--accent); }
+.bc-hero__kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #d13c3c; margin-bottom: 16px;
+}
+.bc-hero__title {
+  font-family: var(--font-display); font-size: clamp(2.8rem, 11vw, 7.5rem);
+  font-weight: 700; letter-spacing: -0.04em; line-height: 0.9; color: var(--dark);
+  display: inline-block; position: relative;
+  animation: bcWrite 1s cubic-bezier(0.22,1,0.36,1) both;
+}
+/* subrayado "a mano" que se dibuja */
+.bc-hero__title::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -12px; height: 7px;
+  background: var(--accent); border-radius: 4px; transform-origin: left center;
+  animation: bcUnderline 1s cubic-bezier(0.22,1,0.36,1) 0.55s both;
+}
+@keyframes bcWrite { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes bcUnderline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.bc-hero__tag {
+  margin-top: 36px; max-width: 44ch; font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.65; color: #2c5375;
+}
+.bc-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.bc-chip {
+  font-size: 0.82rem; font-weight: 700; color: var(--accent);
+  border: 2px solid var(--accent); border-radius: 100px; padding: 7px 18px;
+  background: rgba(47,111,179,0.07);
+}
+
+/* ════ ANOTACIONES ════════════════════════════════════════════════ */
+.bc-notes { position: relative; }
+.bc-notes__inner { max-width: 1000px; margin-inline: auto; padding: 84px 24px 84px 84px; }
+@media (min-width: 768px) { .bc-notes__inner { padding: 104px 48px 104px 110px; } }
+.bc-notes__kicker {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: #d13c3c; margin-bottom: 40px;
+}
+.bc-note {
+  display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: start;
+  padding: 26px 0 30px; border-bottom: 2px dashed rgba(47,111,179,0.28);
+}
+.bc-note:last-child { border-bottom: none; }
+.bc-note__num {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  font-weight: 700; color: var(--accent); min-width: 46px;
+}
+.bc-note__h {
+  display: block; margin-bottom: 8px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase; color: #d13c3c;
+}
+.bc-note__text { font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.72; color: #22496b; }
+
+/* ════ CALIFICACIÓN ═══════════════════════════════════════════════ */
+.bc-grade { background: transparent; }
+.bc-grade__inner {
+  max-width: 1000px; margin-inline: auto; padding: 20px 24px 90px 84px;
+  display: flex; flex-wrap: wrap; gap: 28px;
+}
+@media (min-width: 768px) { .bc-grade__inner { padding-left: 110px; padding-right: 48px; } }
+.bc-grade__stamp {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 26px 40px; text-align: center;
+  border: 4px solid #d13c3c; border-radius: 14px; color: #d13c3c;
+  transform: rotate(-6deg); background: rgba(209,60,60,0.05);
+}
+.bc-grade__val { font-family: var(--font-display); font-size: 2.6rem; font-weight: 700; line-height: 1; }
+.bc-grade__lbl { margin-top: 8px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.bc-gallery { position: relative; }
+.bc-gallery__inner { max-width: 1120px; margin-inline: auto; padding: 20px 24px 100px 84px; }
+@media (min-width: 768px) { .bc-gallery__inner { padding: 20px 48px 120px 110px; } }
+.bc-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4.6vw, 2.9rem);
+  font-weight: 700; color: var(--dark); margin-bottom: 48px;
+}
+.bc-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 36px 26px; }
+.bc-photo {
+  position: relative; margin: 0; padding: 12px 12px 0;
+  background: #fff; box-shadow: 0 10px 26px rgba(18,48,77,0.16);
+  transition: transform 0.35s;
+}
+.bc-photo--0 { transform: rotate(-2deg); }
+.bc-photo--1 { transform: rotate(1.6deg); }
+.bc-photo--2 { transform: rotate(-1deg); }
+.bc-photo:hover { transform: rotate(0deg) translateY(-6px); }
+.bc-photo__tape {
+  position: absolute; top: -12px; left: 50%; width: 86px; height: 26px;
+  margin-left: -43px; transform: rotate(-3deg);
+  background: rgba(224,214,160,0.75); border-left: 1px dashed rgba(0,0,0,0.12);
+  border-right: 1px dashed rgba(0,0,0,0.12);
+}
+.bc-photo__frame { aspect-ratio: 3/4; overflow: hidden; background: #eef3f7; }
+.bc-photo__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bc-photo__ph {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 20px; text-align: center; font-size: 0.85rem; color: #6d8aa3;
+}
+.bc-photo__cap {
+  padding: 14px 4px 18px; text-align: center; font-size: 0.85rem;
+  font-weight: 600; color: #4a6f92;
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.bc-next { background: var(--dark); }
+.bc-next__link {
+  max-width: 1120px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .bc-next__link { padding-inline: 48px; } }
+.bc-next__label { font-size: 0.85rem; color: rgba(240,246,252,0.6); }
+.bc-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #fff; transition: color 0.3s;
+}
+.bc-next__link:hover .bc-next__client { color: #8fc2f0; }
+.bc-next__arrow { font-size: 2.2rem; color: rgba(240,246,252,0.55); transition: transform 0.3s, color 0.3s; }
+.bc-next__link:hover .bc-next__arrow { transform: translateX(10px); color: #8fc2f0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-bell__svg, .bc-bell__wave, .bc-hero__title, .bc-hero__title::after { animation: none !important; }
+  .bc-hero__title { opacity: 1; transform: none; }
+  .bc-hero__title::after { transform: scaleX(1); }
+}
+</style>
