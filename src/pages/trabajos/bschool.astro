@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkBSchool from '../../components/pages/WorkBSchool.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('bschool')!;
+---
+
+<WorkBSchool locale="es" project={project} />

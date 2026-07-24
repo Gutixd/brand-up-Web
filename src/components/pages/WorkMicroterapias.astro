@@ -109,7 +109,7 @@ const steps = [
                   <Image src={slot.src} alt={pick(slot.label, locale)} class="mt-card__img"
                     widths={[400, 800]} sizes="(max-width: 860px) 88vw, 30vw" />
                 ) : slot.kind === 'video' && slot.videoSrc ? (
-                  <div class="mt-card__screen" data-mt-video={slot.videoSrc}></div>
+                  <div class="mt-card__screen" data-lazy-video={slot.videoSrc}></div>
                 ) : (
                   <div class="mt-card__ph"><span>{pick(slot.label, locale)}</span></div>
                 )}
@@ -323,27 +323,3 @@ const steps = [
 }
 </style>
 
-<script>
-  function initMtVideos() {
-    const items = document.querySelectorAll<HTMLElement>('[data-mt-video]');
-    if (!items.length) return;
-    const mount = (el: HTMLElement) => {
-      if (el.querySelector('video')) return;
-      const src = el.dataset.mtVideo; if (!src) return;
-      const v = document.createElement('video');
-      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
-      v.setAttribute('playsinline', ''); v.preload = 'auto';
-      el.appendChild(v); v.play().catch(() => {});
-    };
-    const unmount = (el: HTMLElement) => {
-      const v = el.querySelector('video'); if (!v) return;
-      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
-    };
-    const io = new IntersectionObserver((es) => {
-      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
-    }, { rootMargin: '250px 0px' });
-    items.forEach((el) => io.observe(el));
-  }
-  initMtVideos();
-  document.addEventListener('astro:page-load', initMtVideos);
-</script>

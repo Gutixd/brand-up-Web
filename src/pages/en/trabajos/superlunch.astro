@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkSuperlunch from '../../../components/pages/WorkSuperlunch.astro';
+import { getProject } from '../../../data/projects';
+
+const project = getProject('superlunch')!;
+---
+
+<WorkSuperlunch locale="en" project={project} />

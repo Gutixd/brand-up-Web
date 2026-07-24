@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkChacha from '../../../components/pages/WorkChacha.astro';
+import { getProject } from '../../../data/projects';
+
+const project = getProject('el-chacha-pollo')!;
+---
+
+<WorkChacha locale="en" project={project} />

@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkDuocUC from '../../components/pages/WorkDuocUC.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('duoc-uc')!;
+---
+
+<WorkDuocUC locale="es" project={project} />

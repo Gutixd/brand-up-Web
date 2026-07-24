@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkJdCargo from '../../../components/pages/WorkJdCargo.astro';
+import { getProject } from '../../../data/projects';
+
+const project = getProject('jd-cargo-logistics')!;
+---
+
+<WorkJdCargo locale="en" project={project} />

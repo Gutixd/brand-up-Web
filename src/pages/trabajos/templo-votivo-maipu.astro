@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkTemplo from '../../components/pages/WorkTemplo.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('templo-votivo-maipu')!;
+---
+
+<WorkTemplo locale="es" project={project} />

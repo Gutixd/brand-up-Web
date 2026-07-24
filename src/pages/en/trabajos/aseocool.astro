@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkAseoCool from '../../../components/pages/WorkAseoCool.astro';
+import { getProject } from '../../../data/projects';
+
+const project = getProject('aseocool')!;
+---
+
+<WorkAseoCool locale="en" project={project} />

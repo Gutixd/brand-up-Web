@@ -160,7 +160,7 @@ const steps = [
           {media.map((slot) => (
             <figure class={`cp-phone ${slot.ratio === 'reel' ? 'cp-phone--reel' : 'cp-phone--tall'}`} data-reveal>
               {slot.kind === 'video' && slot.videoSrc ? (
-                <div class="cp-phone__screen" data-cp-video={slot.videoSrc}></div>
+                <div class="cp-phone__screen" data-lazy-video={slot.videoSrc}></div>
               ) : slot.kind === 'photo' && slot.src ? (
                 <div class="cp-phone__screen">
                   <Image src={slot.src} alt={pick(slot.label, locale)} class="cp-phone__img"
@@ -431,36 +431,3 @@ const steps = [
 }
 </style>
 
-<script>
-  // Reels: monta el <video> solo cuando entra en pantalla (evita saturar el
-  // decodificador en móvil, mismo criterio que la galería genérica).
-  function initCpReels() {
-    const items = document.querySelectorAll<HTMLElement>('[data-cp-video]');
-    if (!items.length) return;
-    const mount = (el: HTMLElement) => {
-      if (el.querySelector('video')) return;
-      const src = el.dataset.cpVideo;
-      if (!src) return;
-      const v = document.createElement('video');
-      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
-      v.setAttribute('playsinline', ''); v.preload = 'auto';
-      el.appendChild(v);
-      v.play().catch(() => {});
-    };
-    const unmount = (el: HTMLElement) => {
-      const v = el.querySelector('video');
-      if (!v) return;
-      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
-    };
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        const el = e.target as HTMLElement;
-        if (e.isIntersecting) mount(el); else unmount(el);
-      }
-    }, { rootMargin: '250px 0px' });
-    items.forEach((el) => io.observe(el));
-  }
-
-  initCpReels();
-  document.addEventListener('astro:page-load', initCpReels);
-</script>

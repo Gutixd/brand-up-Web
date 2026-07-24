@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkBellCollege from '../../components/pages/WorkBellCollege.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('bell-college')!;
+---
+
+<WorkBellCollege locale="es" project={project} />

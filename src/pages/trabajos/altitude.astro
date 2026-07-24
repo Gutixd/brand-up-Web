@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkAltitude from '../../components/pages/WorkAltitude.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('altitude')!;
+---
+
+<WorkAltitude locale="es" project={project} />

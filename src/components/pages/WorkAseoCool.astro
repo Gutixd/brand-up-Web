@@ -120,7 +120,7 @@ const checks = [
                   <Image src={slot.src} alt={pick(slot.label, locale)} class="ac-card__img"
                     widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
                 ) : slot.kind === 'video' && slot.videoSrc ? (
-                  <div class="ac-card__screen" data-ac-video={slot.videoSrc}></div>
+                  <div class="ac-card__screen" data-lazy-video={slot.videoSrc}></div>
                 ) : (
                   <div class="ac-card__ph"><span>{pick(slot.label, locale)}</span></div>
                 )}
@@ -339,27 +339,3 @@ const checks = [
 }
 </style>
 
-<script>
-  function initAcVideos() {
-    const items = document.querySelectorAll<HTMLElement>('[data-ac-video]');
-    if (!items.length) return;
-    const mount = (el: HTMLElement) => {
-      if (el.querySelector('video')) return;
-      const src = el.dataset.acVideo; if (!src) return;
-      const v = document.createElement('video');
-      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
-      v.setAttribute('playsinline', ''); v.preload = 'auto';
-      el.appendChild(v); v.play().catch(() => {});
-    };
-    const unmount = (el: HTMLElement) => {
-      const v = el.querySelector('video'); if (!v) return;
-      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
-    };
-    const io = new IntersectionObserver((es) => {
-      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
-    }, { rootMargin: '250px 0px' });
-    items.forEach((el) => io.observe(el));
-  }
-  initAcVideos();
-  document.addEventListener('astro:page-load', initAcVideos);
-</script>

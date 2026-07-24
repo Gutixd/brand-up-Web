@@ -5,35 +5,10 @@ import CtaBand from '../CtaBand.astro';
 import { PROJECTS, type Project } from '../../data/projects';
 import { PROJECT_MEDIA } from '../../data/projectMedia';
 import { useT, pick, localePath, type Locale } from '../../i18n';
-// Landings bespoke por proyecto: cuando un slug tiene su propio diseño
-// (layout y animaciones únicos, no la plantilla genérica), se despacha aquí.
-import WorkAltitude from './WorkAltitude.astro';
-import WorkChacha from './WorkChacha.astro';
-import WorkJdCargo from './WorkJdCargo.astro';
-import WorkMuscleCar from './WorkMuscleCar.astro';
-import WorkAseoCool from './WorkAseoCool.astro';
-import WorkAracnida from './WorkAracnida.astro';
-import WorkTemplo from './WorkTemplo.astro';
-import WorkBellCollege from './WorkBellCollege.astro';
-import WorkSuperlunch from './WorkSuperlunch.astro';
-import WorkMicroterapias from './WorkMicroterapias.astro';
-import WorkDuocUC from './WorkDuocUC.astro';
-import WorkBSchool from './WorkBSchool.astro';
 
-const BESPOKE: Record<string, any> = {
-  altitude: WorkAltitude,
-  'el-chacha-pollo': WorkChacha,
-  'jd-cargo-logistics': WorkJdCargo,
-  musclecarchile: WorkMuscleCar,
-  aseocool: WorkAseoCool,
-  'aracnida-store': WorkAracnida,
-  'templo-votivo-maipu': WorkTemplo,
-  'bell-college': WorkBellCollege,
-  superlunch: WorkSuperlunch,
-  microterapias: WorkMicroterapias,
-  'duoc-uc': WorkDuocUC,
-  bschool: WorkBSchool,
-};
+// Plantilla GENÉRICA de proyecto. Los proyectos con diseño propio tienen su
+// propia ruta en src/pages/trabajos/<slug>.astro (ver BESPOKE_WORK_SLUGS):
+// así cada página compila solo su CSS en vez de arrastrar el de las 12.
 
 interface Props {
   locale: Locale;
@@ -43,8 +18,6 @@ const { locale, project: p } = Astro.props;
 const t = useT(locale);
 const lp = (path: string) => localePath(locale, path);
 const isEs = locale === 'es';
-
-const Bespoke = BESPOKE[p.slug];
 
 const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
 const next = PROJECTS[(idx + 1) % PROJECTS.length];
@@ -58,7 +31,6 @@ const chapters = [
 ];
 ---
 
-{Bespoke ? <Bespoke locale={locale} project={p} /> : (
 <Base locale={locale} title={title} description={pick(p.summary, locale)}>
 
   <!-- Identidad propia de este proyecto: sobreescribe el acento global y
@@ -173,7 +145,7 @@ const chapters = [
                     widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
                 </div>
               ) : slot.kind === 'video' && slot.videoSrc ? (
-                <div class="wgal__media" data-gal-video-src={slot.videoSrc} />
+                <div class="wgal__media" data-lazy-video={slot.videoSrc} />
               ) : (
                 <div class="wgal__ph">
                   <span class="wgal__ph-icon" aria-hidden="true">
@@ -209,7 +181,6 @@ const chapters = [
 
   <CtaBand locale={locale} />
 </Base>
-)}
 
 <style>
 /* ════ HERO ═══════════════════════════════════════════════════════ */
@@ -546,7 +517,7 @@ const chapters = [
   overflow: hidden;
   position: relative;
 }
-.wgal__img, .wgal__video {
+.wgal__img, .wgal__media :global(.lazy-video) {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -554,7 +525,7 @@ const chapters = [
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .wgal__item:hover .wgal__img,
-.wgal__item:hover .wgal__video { transform: scale(1.045); }
+.wgal__item:hover .wgal__media :global(.lazy-video) { transform: scale(1.045); }
 
 .wgal__ph {
   width: 100%;

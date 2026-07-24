@@ -1,9 +1,15 @@
 ---
+// Plantilla genérica para proyectos SIN diseño propio. Los que sí lo tienen
+// viven en su propia ruta (src/pages/trabajos/<slug>.astro) para no arrastrar
+// el CSS de todas las landings en un solo bundle — ver data/bespokeWork.ts.
 import WorkDetailPage from '../../components/pages/WorkDetailPage.astro';
 import { PROJECTS } from '../../data/projects';
+import { isBespokeWork } from '../../data/bespokeWork';
 
 export function getStaticPaths() {
-  return PROJECTS.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+  return PROJECTS
+    .filter((p) => !isBespokeWork(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
 }
 
 const { project } = Astro.props;
