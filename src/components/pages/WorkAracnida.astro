@@ -1,0 +1,396 @@
+---
+// Landing bespoke para "Aracnida Store" (e-commerce).
+// Tema cómic: trama de puntos halftone, una telaraña geométrica que se
+// dibuja sola, una araña que baja de su hilo, y la info en VIÑETAS de cómic
+// con las métricas como estallidos. Todo geometría propia (sin usar arte de
+// terceros): la telaraña y la araña se generan aquí.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// Telaraña geométrica generada: 12 radios y 5 anillos.
+const CX = 200, CY = 200;
+const SPOKES = Array.from({ length: 12 }, (_, i) => (i * 30 * Math.PI) / 180);
+const RINGS = [42, 80, 118, 156, 194];
+const pt = (a: number, r: number) => [CX + r * Math.cos(a), CY + r * Math.sin(a)];
+const spokeLines = SPOKES.map((a) => {
+  const [x, y] = pt(a, 194);
+  return { x2: x.toFixed(1), y2: y.toFixed(1) };
+});
+const ringPolys = RINGS.map((r) =>
+  SPOKES.map((a) => pt(a, r).map((n) => n.toFixed(1)).join(',')).join(' ')
+);
+
+const panels = [
+  { n: '01', h: t.work.challenge, text: pick(p.challenge, locale) },
+  { n: '02', h: t.work.approach,  text: pick(p.approach, locale) },
+  { n: '03', h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="ar" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — cómic ══════════════════════════════════════════════ -->
+  <section class="ar-hero">
+    <div class="ar-halftone" aria-hidden="true"></div>
+
+    <!-- telaraña que se dibuja -->
+    <svg class="ar-web" viewBox="0 0 400 400" aria-hidden="true">
+      {spokeLines.map((l) => (
+        <line x1={CX} y1={CY} x2={l.x2} y2={l.y2} class="ar-web__line"/>
+      ))}
+      {ringPolys.map((pts) => (
+        <polygon points={pts} class="ar-web__ring"/>
+      ))}
+    </svg>
+
+    <!-- araña colgando -->
+    <div class="ar-spider" aria-hidden="true">
+      <span class="ar-spider__thread"></span>
+      <svg viewBox="0 0 80 70" width="58" height="51" class="ar-spider__body">
+        <g stroke="#0f0406" stroke-width="4" stroke-linecap="round" fill="none">
+          <path d="M30 34 L12 22 L4 30"/>
+          <path d="M30 40 L10 38 L2 46"/>
+          <path d="M30 46 L12 54 L6 64"/>
+          <path d="M50 34 L68 22 L76 30"/>
+          <path d="M50 40 L70 38 L78 46"/>
+          <path d="M50 46 L68 54 L74 64"/>
+        </g>
+        <ellipse cx="40" cy="42" rx="17" ry="15" fill="#160709"/>
+        <circle cx="40" cy="25" r="10" fill="#1d090c"/>
+        <circle cx="36" cy="23" r="2.6" fill="var(--accent)"/>
+        <circle cx="44" cy="23" r="2.6" fill="var(--accent)"/>
+        <path d="M33 44 L47 44 M36 50 L44 50" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="ar-hero__inner">
+      <a href={lp('/trabajos')} class="ar-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="ar-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="ar-hero__title">{p.client}</h1>
+      <p class="ar-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="ar-hero__meta">
+        <span class="ar-pill">{p.year}</span>
+        <span class="ar-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="ar-pill ar-pill--link">
+            {isEs ? 'Ver tienda' : 'Visit store'} <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ VIÑETAS ═══════════════════════════════════════════════════ -->
+  <section class="ar-panels">
+    <div class="ar-panels__inner">
+      <p class="ar-panels__kicker" data-reveal>{isEs ? 'La historia' : 'The story'}</p>
+      <div class="ar-grid">
+        {panels.map((c, i) => (
+          <article class="ar-panel" data-reveal data-delay={`${i * 0.09}`}>
+            <span class="ar-panel__num">{c.n}</span>
+            <span class="ar-panel__h">{c.h}</span>
+            <p class="ar-panel__text">{c.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ ESTALLIDOS — métricas ═════════════════════════════════════ -->
+  {p.metrics.length > 0 && (
+    <section class="ar-bursts">
+      <div class="ar-bursts__inner">
+        {p.metrics.map((m, i) => (
+          <div class="ar-burst" data-reveal data-delay={`${i * 0.12}`}>
+            <span class="ar-burst__val">{m.val}</span>
+            <span class="ar-burst__lbl">{pick(m.lbl, locale)}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ SERVICIOS ═════════════════════════════════════════════════ -->
+  <section class="ar-tags">
+    <div class="ar-tags__inner" data-reveal>
+      {pick(p.services, locale).map((s) => (
+        <span class="ar-tag">{s}</span>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA ═══════════════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="ar-gallery">
+      <div class="ar-gallery__inner">
+        <h2 class="ar-gallery__title" data-reveal>{isEs ? 'La tienda por dentro' : 'Inside the store'}</h2>
+        <div class="ar-strip">
+          {media.map((slot) => (
+            <figure class={`ar-frame ar-frame--${slot.ratio}`} data-reveal>
+              {slot.kind === 'photo' && slot.src ? (
+                <Image src={slot.src} alt={pick(slot.label, locale)} class="ar-frame__img"
+                  widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+              ) : slot.kind === 'video' && slot.videoSrc ? (
+                <div class="ar-frame__screen" data-ar-video={slot.videoSrc}></div>
+              ) : (
+                <div class="ar-frame__ph"><span>{pick(slot.label, locale)}</span></div>
+              )}
+              <figcaption class="ar-frame__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="ar-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="ar-next__link">
+      <span>
+        <span class="ar-next__label">{t.work.next}</span>
+        <span class="ar-next__client">{next.client}</span>
+      </span>
+      <span class="ar-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.ar { background: var(--dark); color: #f6ecec; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.ar-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: radial-gradient(80% 70% at 78% 18%, #45101a 0%, #26090f 45%, #120608 100%);
+}
+.ar-halftone {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.5;
+  background-image: radial-gradient(rgba(209,39,63,0.55) 2.2px, transparent 2.2px);
+  background-size: 16px 16px;
+  mask-image: radial-gradient(70% 60% at 75% 25%, #000 0%, transparent 72%);
+}
+.ar-web {
+  position: absolute; z-index: 1; top: -130px; right: -110px;
+  width: 520px; height: 520px; color: rgba(255,255,255,0.3);
+  animation: arWebTurn 90s linear infinite;
+}
+@media (max-width: 760px) { .ar-web { width: 330px; height: 330px; top: -80px; right: -80px; } }
+@keyframes arWebTurn { to { transform: rotate(360deg); } }
+.ar-web__line, .ar-web__ring {
+  fill: none; stroke: rgba(255,255,255,0.28); stroke-width: 1.6;
+  stroke-dasharray: 620; stroke-dashoffset: 620;
+  animation: arWebDraw 2.6s ease-out forwards;
+}
+.ar-web__ring { stroke: rgba(209,39,63,0.6); animation-delay: 0.5s; }
+@keyframes arWebDraw { to { stroke-dashoffset: 0; } }
+
+.ar-spider {
+  position: absolute; z-index: 2; top: 0; left: 16%;
+  display: flex; flex-direction: column; align-items: center;
+  animation: arDrop 5.5s ease-in-out infinite;
+}
+@media (max-width: 760px) { .ar-spider { left: 8%; } }
+@keyframes arDrop {
+  0%, 100% { transform: translateY(-30px); }
+  50% { transform: translateY(40px); }
+}
+.ar-spider__thread { width: 2px; height: 190px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.45)); }
+.ar-spider__body { animation: arSway 3.4s ease-in-out infinite; transform-origin: 50% -180px; }
+@keyframes arSway { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+
+.ar-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 84px;
+}
+@media (min-width: 768px) { .ar-hero__inner { padding: 0 48px 104px; } }
+.ar-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; color: rgba(246,236,236,0.7); transition: gap 0.25s, color 0.2s;
+}
+.ar-back:hover { color: #fff; gap: 12px; }
+.ar-hero__kicker {
+  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #fff; background: var(--accent);
+  padding: 6px 14px; border-radius: 4px; margin-bottom: 18px; transform: rotate(-1.5deg);
+}
+.ar-hero__title {
+  font-family: var(--font-display); font-size: clamp(2.9rem, 12vw, 8.5rem);
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.85;
+  color: #fff; text-transform: uppercase;
+  text-shadow: 5px 5px 0 var(--accent), 9px 9px 0 rgba(0,0,0,0.5);
+  animation: arSlam 0.7s cubic-bezier(0.2,1.5,0.4,1) both;
+}
+@keyframes arSlam {
+  from { opacity: 0; transform: scale(1.5) rotate(-3deg); }
+  to { opacity: 1; transform: none; }
+}
+.ar-hero__tag {
+  margin-top: 26px; max-width: 42ch; font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.55; color: rgba(246,236,236,0.85);
+}
+.ar-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.ar-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em; color: #fff;
+  background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.3);
+  padding: 7px 16px; border-radius: 4px;
+}
+.ar-pill--link { transition: background 0.25s, border-color 0.25s; }
+.ar-pill--link:hover { background: var(--accent); border-color: var(--accent); }
+
+/* ════ VIÑETAS ════════════════════════════════════════════════════ */
+.ar-panels { background: #0d0406; }
+.ar-panels__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .ar-panels__inner { padding: 112px 48px; } }
+.ar-panels__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 44px;
+}
+.ar-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+@media (min-width: 900px) { .ar-grid { grid-template-columns: repeat(3, 1fr); } }
+.ar-panel {
+  position: relative; padding: 34px 28px 30px;
+  background: #17080b; border: 3px solid #f6ecec; border-radius: 2px;
+  box-shadow: 8px 8px 0 var(--accent);
+  transition: transform 0.3s;
+}
+.ar-panel:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0 var(--accent); }
+.ar-panel__num {
+  position: absolute; top: -18px; left: 20px;
+  font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+  color: #fff; background: var(--accent); padding: 4px 14px; border: 3px solid #f6ecec;
+}
+.ar-panel__h {
+  display: block; margin-bottom: 12px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent);
+}
+.ar-panel__text { font-size: 1rem; line-height: 1.6; color: rgba(246,236,236,0.86); }
+
+/* ════ ESTALLIDOS ═════════════════════════════════════════════════ */
+.ar-bursts { background: var(--dark); }
+.ar-bursts__inner {
+  max-width: 1080px; margin-inline: auto; padding: 84px 24px;
+  display: flex; flex-wrap: wrap; gap: 44px; justify-content: center;
+}
+.ar-burst {
+  width: 210px; height: 210px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; padding: 26px;
+  background: var(--accent); color: #fff;
+  clip-path: polygon(50% 0%, 61% 16%, 79% 9%, 80% 28%, 98% 30%, 88% 46%, 100% 60%,
+                     82% 68%, 86% 87%, 67% 83%, 57% 100%, 44% 85%, 25% 92%,
+                     24% 73%, 5% 68%, 16% 52%, 2% 38%, 20% 30%, 15% 11%, 36% 15%);
+  animation: arThrob 3.4s ease-in-out infinite;
+}
+.ar-burst:nth-child(2) { animation-delay: 0.8s; }
+@keyframes arThrob { 0%,100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.06) rotate(2deg); } }
+.ar-burst__val { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; line-height: 1; }
+.ar-burst__lbl { margin-top: 8px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ════ SERVICIOS ══════════════════════════════════════════════════ */
+.ar-tags { background: #0d0406; }
+.ar-tags__inner {
+  max-width: 1080px; margin-inline: auto; padding: 0 24px 84px;
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+}
+.ar-tag {
+  font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+  color: #f6ecec; border: 2px solid rgba(246,236,236,0.4); padding: 9px 20px; border-radius: 3px;
+}
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.ar-gallery { background: var(--dark); }
+.ar-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .ar-gallery__inner { padding: 112px 48px; } }
+.ar-gallery__title {
+  font-family: var(--font-display); text-transform: uppercase;
+  font-size: clamp(1.9rem, 5vw, 3.2rem); font-weight: 700; letter-spacing: -0.03em;
+  color: #fff; margin-bottom: 44px; text-shadow: 3px 3px 0 var(--accent);
+}
+.ar-strip { display: grid; grid-template-columns: 1fr; gap: 24px; }
+@media (min-width: 760px) { .ar-strip { grid-template-columns: repeat(2, 1fr); } }
+.ar-frame { margin: 0; }
+.ar-frame__img, .ar-frame__screen, .ar-frame__ph {
+  width: 100%; display: block; border: 3px solid #f6ecec; background: #1a080b; overflow: hidden;
+}
+.ar-frame--wide .ar-frame__img, .ar-frame--wide .ar-frame__screen, .ar-frame--wide .ar-frame__ph { aspect-ratio: 16/9; object-fit: cover; }
+.ar-frame--tall .ar-frame__img, .ar-frame--tall .ar-frame__ph { aspect-ratio: 3/4; object-fit: cover; }
+.ar-frame--square .ar-frame__img, .ar-frame--square .ar-frame__ph { aspect-ratio: 1/1; object-fit: cover; }
+.ar-frame__screen :global(video) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ar-frame__ph {
+  display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center;
+  color: rgba(246,236,236,0.45); font-size: 0.9rem; min-height: 180px;
+  background: repeating-linear-gradient(45deg, #1a080b 0 12px, #200b0f 12px 24px);
+}
+.ar-frame__cap {
+  margin-top: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(246,236,236,0.55);
+}
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.ar-next { background: #0d0406; border-top: 1px solid rgba(246,236,236,0.12); }
+.ar-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .ar-next__link { padding-inline: 48px; } }
+.ar-next__label { font-size: 0.85rem; color: rgba(246,236,236,0.55); }
+.ar-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display); text-transform: uppercase;
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.04em;
+  color: #fff; transition: color 0.3s;
+}
+.ar-next__link:hover .ar-next__client { color: var(--accent); }
+.ar-next__arrow { font-size: 2.2rem; color: rgba(246,236,236,0.5); transition: transform 0.3s, color 0.3s; }
+.ar-next__link:hover .ar-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-web, .ar-web__line, .ar-web__ring, .ar-spider, .ar-spider__body,
+  .ar-hero__title, .ar-burst { animation: none !important; }
+  .ar-hero__title { opacity: 1; transform: none; }
+  .ar-web__line, .ar-web__ring { stroke-dashoffset: 0; }
+}
+</style>
+
+<script>
+  function initArVideos() {
+    const items = document.querySelectorAll<HTMLElement>('[data-ar-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.arVideo; if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v); v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video'); if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+  initArVideos();
+  document.addEventListener('astro:page-load', initArVideos);
+</script>

@@ -1,0 +1,365 @@
+---
+// Landing bespoke para "AseoCool" (servicios de aseo y limpieza).
+// A diferencia del resto del portafolio (mayormente oscuro), esta página es
+// LUMINOSA: menta y blanco, burbujas de jabón subiendo, destellos y un
+// barrido de brillo, para que se sienta literalmente limpia. La info va como
+// una LISTA DE CHEQUEO y las métricas como sello de calidad.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = `${p.client} — ${t.meta.work.title}`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+const checks = [
+  { h: t.work.challenge, text: pick(p.challenge, locale) },
+  { h: t.work.approach,  text: pick(p.approach, locale) },
+  { h: t.work.outcome,   text: pick(p.outcome, locale) },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+<div class="ac" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — limpio y luminoso ══════════════════════════════════ -->
+  <section class="ac-hero">
+    <div class="ac-shine" aria-hidden="true"></div>
+
+    <!-- burbujas de jabón -->
+    <div class="ac-bubbles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- destellos -->
+    <div class="ac-sparks" aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="ac-spark ac-spark--1"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" class="ac-spark ac-spark--2"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" class="ac-spark ac-spark--3"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" class="ac-spark ac-spark--4"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="currentColor"/></svg>
+    </div>
+
+    <div class="ac-hero__inner">
+      <a href={lp('/trabajos')} class="ac-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      <p class="ac-hero__kicker">{pick(p.sector, locale)}</p>
+      <h1 class="ac-hero__title">{p.client}</h1>
+      <p class="ac-hero__tag">{pick(p.summary, locale)}</p>
+      <div class="ac-hero__meta">
+        <span class="ac-pill">{p.year}</span>
+        <span class="ac-pill">{pick(p.services, locale).length} {isEs ? 'servicios' : 'services'}</span>
+        {p.link && (
+          <a href={p.link} target="_blank" rel="noopener" class="ac-pill ac-pill--link">
+            aseocool.cl <span aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CHECKLIST ═════════════════════════════════════════════════ -->
+  <section class="ac-check">
+    <div class="ac-check__inner">
+      <p class="ac-check__kicker" data-reveal>{isEs ? 'Lo que dejamos impecable' : 'What we made spotless'}</p>
+      <ul class="ac-list">
+        {checks.map((c, i) => (
+          <li class="ac-item" data-reveal data-delay={`${i * 0.09}`}>
+            <span class="ac-item__box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="17" height="17">
+                <path d="M4 12.5 L9.5 18 L20 6.5" fill="none" stroke="currentColor" stroke-width="3.2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div class="ac-item__body">
+              <span class="ac-item__h">{c.h}</span>
+              <p class="ac-item__text">{c.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ════ SELLO — servicios + métrica ═══════════════════════════════ -->
+  <section class="ac-seal">
+    <div class="ac-seal__inner">
+      <div class="ac-seal__badges" data-reveal>
+        {pick(p.services, locale).map((s) => (
+          <span class="ac-badge">{s}</span>
+        ))}
+      </div>
+      {p.metrics.map((m) => (
+        <div class="ac-stamp" data-reveal data-delay="0.12">
+          <span class="ac-stamp__val">{m.val}</span>
+          <span class="ac-stamp__lbl">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ GALERÍA ═══════════════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="ac-gallery">
+      <div class="ac-gallery__inner">
+        <h2 class="ac-gallery__title" data-reveal>{isEs ? 'El proyecto en pantalla' : 'The project on screen'}</h2>
+        <div class="ac-cards">
+          {media.map((slot) => (
+            <figure class={`ac-card ac-card--${slot.ratio}`} data-reveal>
+              <div class="ac-card__frame">
+                {slot.kind === 'photo' && slot.src ? (
+                  <Image src={slot.src} alt={pick(slot.label, locale)} class="ac-card__img"
+                    widths={[480, 900, 1400]} sizes="(max-width: 860px) 92vw, 46vw" />
+                ) : slot.kind === 'video' && slot.videoSrc ? (
+                  <div class="ac-card__screen" data-ac-video={slot.videoSrc}></div>
+                ) : (
+                  <div class="ac-card__ph"><span>{pick(slot.label, locale)}</span></div>
+                )}
+              </div>
+              <figcaption class="ac-card__cap">{pick(slot.label, locale)}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="ac-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="ac-next__link">
+      <span>
+        <span class="ac-next__label">{t.work.next}</span>
+        <span class="ac-next__client">{next.client}</span>
+      </span>
+      <span class="ac-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+</div>
+
+  <CtaBand locale={locale} />
+</Base>
+
+<style>
+.ac { background: #f2fbf8; color: #06201a; }
+
+/* ════ HERO ═══════════════════════════════════════════════════════ */
+.ac-hero {
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+  background: linear-gradient(165deg, #ffffff 0%, #d8f5ec 42%, #a8e6d6 78%, #7fd9c4 100%);
+}
+/* barrido de brillo, como vidrio recién pulido */
+.ac-shine {
+  position: absolute; z-index: 1; top: -30%; left: -40%;
+  width: 45%; height: 170%; transform: rotate(18deg);
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.85), transparent);
+  animation: acShine 6.5s ease-in-out infinite;
+}
+@keyframes acShine {
+  0% { left: -45%; opacity: 0; }
+  18% { opacity: 1; }
+  55% { left: 105%; opacity: 0; }
+  100% { left: 105%; opacity: 0; }
+}
+.ac-bubbles span {
+  position: absolute; bottom: -80px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.35) 38%, rgba(30,168,132,0.14) 70%);
+  border: 1px solid rgba(255,255,255,0.7);
+}
+.ac-bubbles span:nth-child(1) { left: 8%;  width: 54px; height: 54px; animation: acRise 13s linear infinite; }
+.ac-bubbles span:nth-child(2) { left: 20%; width: 30px; height: 30px; animation: acRise 10s linear infinite 1.5s; }
+.ac-bubbles span:nth-child(3) { left: 33%; width: 72px; height: 72px; animation: acRise 16s linear infinite 3s; }
+.ac-bubbles span:nth-child(4) { left: 47%; width: 24px; height: 24px; animation: acRise 9s  linear infinite 0.8s; }
+.ac-bubbles span:nth-child(5) { left: 61%; width: 60px; height: 60px; animation: acRise 14s linear infinite 2.2s; }
+.ac-bubbles span:nth-child(6) { left: 74%; width: 38px; height: 38px; animation: acRise 11s linear infinite 4s; }
+.ac-bubbles span:nth-child(7) { left: 86%; width: 66px; height: 66px; animation: acRise 15s linear infinite 1s; }
+.ac-bubbles span:nth-child(8) { left: 94%; width: 26px; height: 26px; animation: acRise 8.5s linear infinite 5s; }
+@keyframes acRise {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 0.9; }
+  50%  { transform: translateY(-55vh) translateX(22px); }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-115vh) translateX(-14px); opacity: 0; }
+}
+.ac-sparks { position: absolute; inset: 0; z-index: 2; color: #fff; }
+.ac-spark { position: absolute; width: 30px; height: 30px; opacity: 0; }
+.ac-spark--1 { top: 22%; left: 14%; animation: acTwinkle 3.2s ease-in-out infinite; }
+.ac-spark--2 { top: 34%; left: 78%; width: 22px; height: 22px; animation: acTwinkle 3.8s ease-in-out infinite 0.9s; }
+.ac-spark--3 { top: 58%; left: 62%; width: 38px; height: 38px; animation: acTwinkle 4.4s ease-in-out infinite 1.8s; }
+.ac-spark--4 { top: 16%; left: 52%; width: 18px; height: 18px; animation: acTwinkle 2.9s ease-in-out infinite 2.4s; }
+@keyframes acTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+  50% { opacity: 0.95; transform: scale(1) rotate(90deg); }
+}
+
+.ac-hero__inner {
+  position: relative; z-index: 3; max-width: 1180px; width: 100%;
+  margin-inline: auto; padding: 0 24px 84px;
+}
+@media (min-width: 768px) { .ac-hero__inner { padding: 0 48px 104px; } }
+.ac-back {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px;
+  font-size: 0.85rem; font-weight: 600; color: #0c5e4b; transition: gap 0.25s;
+}
+.ac-back:hover { gap: 12px; }
+.ac-hero__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+}
+.ac-hero__title {
+  font-family: var(--font-display); font-size: clamp(3rem, 12vw, 8.5rem);
+  font-weight: 700; letter-spacing: -0.05em; line-height: 0.86; color: #06201a;
+  animation: acDrop 1s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes acDrop { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
+.ac-hero__tag {
+  margin-top: 22px; max-width: 42ch; font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.55; color: #0d3d33; font-weight: 500;
+}
+.ac-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.ac-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700;
+  color: #06201a; background: rgba(255,255,255,0.8); border: 1.5px solid rgba(6,32,26,0.16);
+  padding: 8px 16px; border-radius: 100px; backdrop-filter: blur(6px);
+}
+.ac-pill--link { transition: background 0.25s, color 0.25s, border-color 0.25s; }
+.ac-pill--link:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ════ CHECKLIST ══════════════════════════════════════════════════ */
+.ac-check { background: #fff; }
+.ac-check__inner { max-width: 940px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .ac-check__inner { padding: 116px 48px; } }
+.ac-check__kicker {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 44px;
+}
+.ac-list { list-style: none; display: grid; gap: 18px; }
+.ac-item {
+  display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: start;
+  padding: 30px; border-radius: 20px; background: #f2fbf8;
+  border: 1px solid rgba(30,168,132,0.22);
+  transition: transform 0.35s, box-shadow 0.35s;
+}
+.ac-item:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(30,168,132,0.16); }
+.ac-item__box {
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 11px;
+  background: var(--accent); color: #fff; flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(30,168,132,0.35);
+}
+.ac-item__h {
+  display: block; margin-bottom: 8px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.15em; text-transform: uppercase; color: #0c5e4b;
+}
+.ac-item__text { font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.6; color: #123f36; }
+
+/* ════ SELLO ══════════════════════════════════════════════════════ */
+.ac-seal { background: var(--accent); color: #fff; }
+.ac-seal__inner {
+  max-width: 1080px; margin-inline: auto; padding: 76px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;
+}
+@media (min-width: 768px) { .ac-seal__inner { padding: 92px 48px; } }
+.ac-seal__badges { display: flex; flex-wrap: wrap; gap: 12px; max-width: 60%; }
+@media (max-width: 700px) { .ac-seal__badges { max-width: 100%; } }
+.ac-badge {
+  font-size: 0.9rem; font-weight: 700; color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.55); border-radius: 100px; padding: 9px 20px;
+}
+.ac-stamp {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 168px; height: 168px; border-radius: 50%; text-align: center; padding: 16px;
+  border: 3px dashed rgba(255,255,255,0.75);
+  animation: acStampSpin 26s linear infinite;
+}
+@keyframes acStampSpin { to { transform: rotate(360deg); } }
+.ac-stamp__val { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1; }
+.ac-stamp__lbl { margin-top: 8px; font-size: 0.78rem; font-weight: 600; opacity: 0.9; }
+
+/* ════ GALERÍA ════════════════════════════════════════════════════ */
+.ac-gallery { background: #f2fbf8; }
+.ac-gallery__inner { max-width: 1180px; margin-inline: auto; padding: 90px 24px; }
+@media (min-width: 768px) { .ac-gallery__inner { padding: 112px 48px; } }
+.ac-gallery__title {
+  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.03em; color: #06201a; margin-bottom: 44px;
+}
+.ac-cards { display: grid; grid-template-columns: 1fr; gap: 26px; }
+@media (min-width: 760px) { .ac-cards { grid-template-columns: repeat(2, 1fr); } }
+.ac-card { margin: 0; }
+.ac-card__frame {
+  position: relative; border-radius: 20px; overflow: hidden; background: #fff;
+  border: 1px solid rgba(6,32,26,0.1); box-shadow: 0 14px 34px rgba(6,32,26,0.08);
+}
+.ac-card--wide .ac-card__frame { aspect-ratio: 16/9; }
+.ac-card--tall .ac-card__frame { aspect-ratio: 3/4; }
+.ac-card--square .ac-card__frame { aspect-ratio: 1/1; }
+.ac-card__img, .ac-card__screen :global(video) {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.ac-card__screen { width: 100%; height: 100%; }
+.ac-card:hover .ac-card__img { transform: scale(1.05); }
+.ac-card__ph {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  padding: 24px; text-align: center; color: #4d8579; font-size: 0.9rem;
+  background: repeating-linear-gradient(45deg, #eaf7f3 0 12px, #e0f2ec 12px 24px);
+}
+.ac-card__cap { margin-top: 12px; font-size: 0.85rem; font-weight: 600; color: #0c5e4b; }
+
+/* ════ NEXT ═══════════════════════════════════════════════════════ */
+.ac-next { background: #fff; border-top: 1px solid rgba(6,32,26,0.1); }
+.ac-next__link {
+  max-width: 1180px; margin-inline: auto; display: flex; align-items: center;
+  justify-content: space-between; gap: 24px; padding: 64px 24px;
+}
+@media (min-width: 768px) { .ac-next__link { padding-inline: 48px; } }
+.ac-next__label { font-size: 0.85rem; color: #4d8579; }
+.ac-next__client {
+  display: block; margin-top: 8px; font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.035em;
+  color: #06201a; transition: color 0.3s;
+}
+.ac-next__link:hover .ac-next__client { color: var(--accent); }
+.ac-next__arrow { font-size: 2.2rem; color: #4d8579; transition: transform 0.3s, color 0.3s; }
+.ac-next__link:hover .ac-next__arrow { transform: translateX(10px); color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-shine, .ac-bubbles span, .ac-spark, .ac-hero__title, .ac-stamp { animation: none !important; }
+  .ac-hero__title { opacity: 1; transform: none; }
+  .ac-spark { opacity: 0.6; }
+}
+</style>
+
+<script>
+  function initAcVideos() {
+    const items = document.querySelectorAll<HTMLElement>('[data-ac-video]');
+    if (!items.length) return;
+    const mount = (el: HTMLElement) => {
+      if (el.querySelector('video')) return;
+      const src = el.dataset.acVideo; if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.muted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('playsinline', ''); v.preload = 'auto';
+      el.appendChild(v); v.play().catch(() => {});
+    };
+    const unmount = (el: HTMLElement) => {
+      const v = el.querySelector('video'); if (!v) return;
+      v.pause(); v.removeAttribute('src'); v.load(); v.remove();
+    };
+    const io = new IntersectionObserver((es) => {
+      for (const e of es) { const el = e.target as HTMLElement; if (e.isIntersecting) mount(el); else unmount(el); }
+    }, { rootMargin: '250px 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+  initAcVideos();
+  document.addEventListener('astro:page-load', initAcVideos);
+</script>
