@@ -6,6 +6,7 @@
     "industries": "Industrias",
     "about": "Nosotros",
     "contact": "Contacto",
+    "faq": "Preguntas frecuentes",
     "quote": "Cotiza tu proyecto"
   },
   "meta": {
@@ -44,6 +45,10 @@
     "privacy": {
       "title": "Política de Privacidad — BrandUp Agency",
       "desc": "Cómo BrandUp Agency trata tus datos personales."
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes — Agencia de Marketing Digital en Santiago | BrandUp",
+      "desc": "Resolvemos las dudas más comunes sobre precios, plazos, servicios y cómo elegir agencia de marketing digital y diseño web en Santiago de Chile."
     }
   },
   "hero": {

@@ -429,6 +429,9 @@ const stats = [
           </details>
         ))}
       </div>
+      <a href={lp('/faq')} class="home-faq__more">
+        {es ? 'Ver todas las preguntas frecuentes →' : 'See all frequently asked questions →'}
+      </a>
     </div>
   </section>
 
@@ -466,4 +469,10 @@ const stats = [
   padding: 0 4px 24px; max-width: 72ch;
   font-size: 1rem; line-height: 1.72; color: var(--color-gray);
 }
+.home-faq__more {
+  display: inline-block; margin-top: 32px;
+  font-size: 0.9375rem; font-weight: 600; color: var(--color-accent);
+  transition: color 0.2s;
+}
+.home-faq__more:hover { color: var(--color-paper); }
 </style>

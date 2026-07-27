@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../PageHero.astro';
+import { FAQ_CATEGORIES } from '../../data/faq';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = useT(locale);
+const lp = (p: string) => localePath(locale, p);
+const es = locale === 'es';
+
+const allItems = FAQ_CATEGORIES.flatMap((c) => c.items);
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: es ? 'es-CL' : 'en',
+  mainEntity: allItems.map((item) => ({
+    '@type': 'Question',
+    name: pick(item.q, locale),
+    acceptedAnswer: { '@type': 'Answer', text: pick(item.a, locale) },
+  })),
+};
+---
+
+<Base locale={locale} title={t.meta.faq.title} description={t.meta.faq.desc}>
+  <PageHero
+    kicker={es ? 'Preguntas frecuentes' : 'FAQ'}
+    title={es ? 'Todo lo que quieres saber antes de contratar' : 'Everything you want to know before hiring us'}
+    intro={es
+      ? 'Precios, plazos, servicios y cómo elegir agencia: respuestas directas, sin letra chica.'
+      : 'Pricing, timelines, services and how to choose an agency: direct answers, no fine print.'}
+  />
+
+  <section class="faq-page">
+    <div class="faq-page__inner">
+      {FAQ_CATEGORIES.map((cat) => (
+        <div class="faq-page__group" data-reveal>
+          <h2 class="faq-page__group-title">{pick(cat.label, locale)}</h2>
+          <div class="faq-page__list">
+            {cat.items.map((item) => (
+              <details class="faq-page__item">
+                <summary>{pick(item.q, locale)}</summary>
+                <p>{pick(item.a, locale)}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div class="faq-page__cta" data-reveal>
+        <p class="faq-page__cta-text">
+          {es ? '¿No encontraste tu respuesta?' : "Didn't find your answer?"}
+        </p>
+        <a href={lp('/contacto')} class="faq-page__cta-btn">
+          {es ? 'Escríbenos directamente →' : 'Reach out directly →'}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+</Base>
+
+<style>
+.faq-page { background: var(--color-ink); }
+.faq-page__inner { max-width: 900px; margin-inline: auto; padding: 0 24px 120px; }
+@media (min-width: 768px) { .faq-page__inner { padding: 0 48px 140px; } }
+
+.faq-page__group { margin-top: 64px; }
+.faq-page__group:first-child { margin-top: 0; }
+.faq-page__group-title {
+  font-family: var(--font-display); font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  font-weight: 600; letter-spacing: -0.02em; color: var(--color-accent);
+  margin-bottom: 22px;
+}
+.faq-page__list { display: flex; flex-direction: column; }
+.faq-page__item { border-bottom: 1px solid var(--color-line); }
+.faq-page__item summary {
+  cursor: pointer; list-style: none; position: relative;
+  padding: 22px 40px 22px 0;
+  font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 600;
+  color: var(--color-paper); transition: color 0.25s;
+}
+.faq-page__item summary::-webkit-details-marker { display: none; }
+.faq-page__item summary::after {
+  content: '+'; position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-size: 1.5rem; color: var(--color-accent); transition: transform 0.3s;
+}
+.faq-page__item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.faq-page__item summary:hover { color: var(--color-accent); }
+.faq-page__item p {
+  padding: 0 4px 24px; max-width: 72ch;
+  font-size: 1rem; line-height: 1.72; color: var(--color-gray);
+}
+
+.faq-page__cta {
+  margin-top: 80px; padding-top: 48px; border-top: 1px solid var(--color-line);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 18px;
+}
+@media (min-width: 640px) {
+  .faq-page__cta { flex-direction: row; align-items: center; justify-content: space-between; }
+}
+.faq-page__cta-text {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.7rem);
+  font-weight: 600; color: var(--color-paper); letter-spacing: -0.02em;
+}
+.faq-page__cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0.85rem 1.85rem; border-radius: 9999px;
+  background: var(--color-accent); color: #fff;
+  font-size: 0.9rem; font-weight: 600; white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+.faq-page__cta-btn:hover { background: var(--color-paper); color: var(--color-ink); }
+</style>

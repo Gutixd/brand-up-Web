@@ -6,6 +6,7 @@
     "industries": "Industries",
     "about": "About",
     "contact": "Contact",
+    "faq": "FAQ",
     "quote": "Start a project"
   },
   "meta": {
@@ -44,6 +45,10 @@
     "privacy": {
       "title": "Privacy Policy — BrandUp Agency",
       "desc": "How BrandUp Agency handles your personal data."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions — Digital Marketing Agency in Santiago | BrandUp",
+      "desc": "Answers to the most common questions about pricing, timelines, services and how to choose a digital marketing and web design agency in Santiago, Chile."
     }
   },
   "hero": {
