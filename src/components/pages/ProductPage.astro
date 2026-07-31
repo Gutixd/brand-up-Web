@@ -25,9 +25,6 @@ const includes = es ? p.includes.es : p.includes.en;
 const waMsg = es
   ? `Hola BrandUp, quiero comprar la placa NFC para reseñas de Google (${p.priceLabel}).`
   : `Hi BrandUp, I want to buy the NFC Google review stand (${p.priceLabel}).`;
-const waMsgPack = es
-  ? `Hola BrandUp, quiero el pack de 2 placas NFC para reseñas de Google (${p.pricePack2Label}).`
-  : `Hi BrandUp, I want the 2-pack of NFC Google review stands (${p.pricePack2Label}).`;
 
 const gallery = [
   { img: imgCafeDia, alt: es ? 'Placa NFC de reseñas sobre la barra de una cafetería' : 'NFC review stand on a coffee shop counter' },
@@ -194,25 +191,20 @@ const faqLd = {
       </div>
 
       <div class="pd-buy__cards" data-reveal data-delay="0.1">
-        <div class="pd-card">
-          <p class="pd-card__label">{es ? '1 placa' : '1 stand'}</p>
-          <p class="pd-card__price">{p.priceLabel}</p>
-          <p class="pd-card__note">{es ? 'Ideal para un local' : 'Ideal for one location'}</p>
-          <a href={wa(waMsg)} target="_blank" rel="noopener" class="pd-btn pd-btn--solid pd-btn--full">
-            {es ? 'Comprar' : 'Buy'} →
-          </a>
-        </div>
-
         <div class="pd-card pd-card--alt">
-          <p class="pd-card__label">
-            {es ? 'Pack 2 placas' : '2-stand pack'}
-            <span class="pd-card__tag">{es ? 'Ahorra $5.000' : 'Save $5,000'}</span>
+          <p class="pd-card__label">{name}</p>
+          <p class="pd-card__price">{p.priceLabel}</p>
+          <p class="pd-card__note">
+            {es
+              ? 'Pago único. Sin suscripción ni costos mensuales. Envío incluido en la Región Metropolitana.'
+              : 'One-time payment. No subscription or monthly costs. Free shipping within the Metropolitan Region.'}
           </p>
-          <p class="pd-card__price">{p.pricePack2Label}</p>
-          <p class="pd-card__note">{es ? 'Para dos mesones o dos sucursales' : 'For two counters or two branches'}</p>
-          <a href={wa(waMsgPack)} target="_blank" rel="noopener" class="pd-btn pd-btn--outline pd-btn--full">
-            {es ? 'Comprar pack' : 'Buy pack'} →
+          <a href={wa(waMsg)} target="_blank" rel="noopener" data-magnetic="0.25" class="pd-btn pd-btn--solid pd-btn--full">
+            {es ? 'Comprar por WhatsApp' : 'Buy via WhatsApp'} →
           </a>
+          <p class="pd-card__foot">
+            {es ? 'Te respondemos el mismo día hábil' : 'We reply the same business day'}
+          </p>
         </div>
       </div>
     </div>
@@ -292,8 +284,6 @@ const faqLd = {
 }
 .pd-btn--solid { background: var(--color-accent); color: #fff; }
 .pd-btn--solid:hover { background: var(--color-paper); color: var(--color-ink); }
-.pd-btn--outline { border: 1.5px solid var(--color-paper); color: var(--color-paper); }
-.pd-btn--outline:hover { background: var(--color-paper); color: var(--color-ink); }
 .pd-btn--ghost { color: var(--color-paper); border: 1px solid var(--color-line); }
 .pd-btn--ghost:hover { border-color: var(--color-accent); color: var(--color-accent); }
 .pd-btn--full { width: 100%; margin-top: 18px; }
@@ -414,28 +404,31 @@ const faqLd = {
 .pd-list__check {
   color: var(--color-accent); font-weight: 700; flex-shrink: 0; padding-top: 1px;
 }
-.pd-buy__cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
-@media (min-width: 560px) { .pd-buy__cards { grid-template-columns: 1fr 1fr; } }
+.pd-buy__cards { position: sticky; top: 100px; }
+@media (max-width: 899px) { .pd-buy__cards { position: static; } }
 .pd-card {
-  padding: 30px 26px; border-radius: 20px; background: var(--color-mist);
+  padding: 34px 30px; border-radius: 22px; background: var(--color-mist);
   border: 1px solid var(--color-line);
   display: flex; flex-direction: column;
+  box-shadow: 0 16px 44px rgba(35, 35, 35, 0.07);
 }
 .pd-card--alt { border-color: var(--color-accent); }
 .pd-card__label {
   font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--color-gray); margin-bottom: 12px;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-}
-.pd-card__tag {
-  padding: 3px 9px; border-radius: 9999px; background: var(--color-accent);
-  color: #fff; font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: none;
 }
 .pd-card__price {
-  font-family: var(--font-display); font-size: clamp(1.9rem, 4vw, 2.4rem);
-  font-weight: 700; letter-spacing: -0.03em; color: var(--color-paper);
+  font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.2rem);
+  font-weight: 700; letter-spacing: -0.035em; line-height: 1; color: var(--color-paper);
 }
-.pd-card__note { margin-top: 8px; font-size: 0.875rem; color: var(--color-gray); flex: 1; }
+.pd-card__note {
+  margin-top: 14px; font-size: 0.9375rem; line-height: 1.6;
+  color: var(--color-gray); max-width: 34ch;
+}
+.pd-card__foot {
+  margin-top: 14px; text-align: center;
+  font-size: 0.8125rem; color: var(--color-gray);
+}
 
 /* ── FAQ ────────────────────────────────────────────────────────── */
 .pd-faq { padding: 80px 24px; background: var(--color-ink); }

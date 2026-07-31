@@ -8,11 +8,9 @@ import type { L } from './services';
 export const PRODUCT = {
   slug: 'placa-nfc-google',
   price: 24990,
-  pricePack2: 44990,
   // Editar aquí si cambias el precio: se propaga a toda la página y al
   // JSON-LD de Product que lee Google.
   priceLabel: '$24.990',
-  pricePack2Label: '$44.990',
   currency: 'CLP',
 
   name: {
