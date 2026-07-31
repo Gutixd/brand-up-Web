@@ -96,6 +96,10 @@ const nav = [
   <!-- ── Bottom bar ─────────────────────────────────────────── -->
   <div class="site-footer__bottom">
     <span>© {year} {SITE.legalName} — {t.footer.rights}</span>
+    <span class="site-footer__made">
+      {locale === 'es' ? 'Hecho por' : 'Made by'}
+      <a href={lp('/')} class="site-footer__made-link">brandup.cl</a>
+    </span>
     <span class="site-footer__legal-links">
       <a href={lp('/terminos')} class="site-footer__link">{t.legal.terms}</a>
       <a href={lp('/privacidad')} class="site-footer__link">{t.legal.privacy}</a>
@@ -268,5 +272,25 @@ const nav = [
 .site-footer__legal-links {
   display: flex;
   gap: 1.25rem;
+}
+
+/* ── Firma "Hecho por brandup.cl" ──────────────────────────── */
+.site-footer__made {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  order: 3;
+}
+@media (min-width: 640px) {
+  .site-footer__made { order: 0; }
+}
+.site-footer__made-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+.site-footer__made-link:hover {
+  color: var(--color-paper);
 }
 </style>
