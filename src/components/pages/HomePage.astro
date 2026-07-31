@@ -109,14 +109,40 @@ const stats = [
 
   <!-- ════ HERO VIDEO ══════════════════════════════════════════════ -->
   <section class="hero-video-section">
+    <!-- El reel es 16:9. En un hero vertical de celular, `object-fit: cover`
+         recortaba ~74% del ancho y cortaba los carteles de texto y el logo,
+         así que existe una versión nativa 9:16 (mismos beats, otro encuadre). -->
     <video
       class="hero-video__bg"
-      src="/videos/showreel.mp4"
       autoplay
       muted
       loop
       playsinline
     ></video>
+    <script is:inline>
+      // OJO: no usar <source media="...">. Chrome IGNORA ese atributo dentro
+      // de <video> y se queda siempre con la primera fuente, así que el
+      // escritorio terminaba cargando la vertical. La fuente se elige acá,
+      // antes de que arranque la descarga, para no bajar los dos archivos.
+      (function () {
+        var mq = window.matchMedia('(max-aspect-ratio: 1/1)');
+        function pickHeroVideo() {
+          var v = document.querySelector('.hero-video__bg');
+          if (!v) return;
+          var src = mq.matches
+            ? '/videos/showreel-vertical.mp4'
+            : '/videos/showreel.mp4';
+          if (v.getAttribute('src') === src) return;
+          v.src = src;
+          v.load();
+        }
+        pickHeroVideo();
+        // El sitio usa ClientRouter: al volver al inicio hay que reevaluar.
+        document.addEventListener('astro:page-load', pickHeroVideo);
+        // Y si el teléfono rota, cambia el encuadre correcto.
+        mq.addEventListener('change', pickHeroVideo);
+      })();
+    </script>
     <div class="hero-video__scrim" aria-hidden="true"></div>
 
     <!-- Créditos estilo film, discretos sobre el video -->
