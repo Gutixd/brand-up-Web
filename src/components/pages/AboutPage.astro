@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { useT, type Locale } from '../../i18n';
+import { SITE } from '../../data/site';
 
 import fotoDiego from '../../assets/team/diego.webp';
 import fotoValentina from '../../assets/team/valentina.webp';
@@ -19,6 +20,52 @@ const team = [
   { photo: fotoValentina, ...t.about.valentina },
 ];
 const valuesTitle = es ? 'Principios que no negociamos' : 'Principles we don’t negotiate';
+
+// ── E-E-A-T: personas reales detrás de la agencia ──────────────────
+// Google y los motores con IA ponderan la autoría verificable. Declarar
+// al equipo como Person (con cargo y áreas de expertise) es la señal de
+// autoridad que casi ninguna agencia chica declara en su schema.
+const abs = (path: string) => new URL(path, SITE.domain).href;
+const aboutLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  inLanguage: es ? 'es-CL' : 'en',
+  mainEntity: {
+    '@type': 'Organization',
+    name: SITE.legalName,
+    url: SITE.domain,
+    email: SITE.email,
+    telephone: SITE.phone,
+    foundingDate: SITE.founded,
+    areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
+    employee: [
+      {
+        '@type': 'Person',
+        name: t.about.diego.name,
+        jobTitle: t.about.diego.role,
+        description: t.about.diego.bio,
+        image: abs(fotoDiego.src),
+        knowsAbout: [
+          'Desarrollo web', 'E-commerce', 'Rendimiento web',
+          'Automatización', 'Integraciones', 'Inteligencia artificial aplicada',
+        ],
+        worksFor: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+      },
+      {
+        '@type': 'Person',
+        name: t.about.valentina.name,
+        jobTitle: t.about.valentina.role,
+        description: t.about.valentina.bio,
+        image: abs(fotoValentina.src),
+        knowsAbout: [
+          'Branding', 'Dirección creativa', 'Contenido para redes sociales',
+          'Estrategia de marca', 'Publicidad digital',
+        ],
+        worksFor: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+      },
+    ],
+  },
+};
 
 const tickerWords = es
   ? ['Estrategia', 'Diseño', 'Tecnología', 'Contenido', 'Resultados']
@@ -154,6 +201,8 @@ const stats = [
   </section>
 
   <CtaBand locale={locale} />
+
+  <script type="application/ld+json" set:html={JSON.stringify(aboutLd)} />
 </Base>
 
 <style>
