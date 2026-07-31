@@ -7,6 +7,7 @@
     "about": "Nosotros",
     "contact": "Contacto",
     "faq": "Preguntas frecuentes",
+    "product": "Tienda",
     "quote": "Cotiza tu proyecto"
   },
   "meta": {
@@ -49,6 +50,10 @@
     "faq": {
       "title": "Preguntas Frecuentes — Agencia de Marketing Digital en Santiago | BrandUp",
       "desc": "Resolvemos las dudas más comunes sobre precios, plazos, servicios y cómo elegir agencia de marketing digital y diseño web en Santiago de Chile."
+    },
+    "product": {
+      "title": "Placa NFC para Reseñas de Google — $24.990 | BrandUp Chile",
+      "desc": "Placa NFC con base para que tus clientes dejen reseñas en Google con solo acercar el teléfono. Pago único, sin suscripción, configurada y enviada desde Santiago."
     }
   },
   "hero": {

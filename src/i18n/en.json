@@ -7,6 +7,7 @@
     "about": "About",
     "contact": "Contact",
     "faq": "FAQ",
+    "product": "Shop",
     "quote": "Start a project"
   },
   "meta": {
@@ -49,6 +50,10 @@
     "faq": {
       "title": "Frequently Asked Questions — Digital Marketing Agency in Santiago | BrandUp",
       "desc": "Answers to the most common questions about pricing, timelines, services and how to choose a digital marketing and web design agency in Santiago, Chile."
+    },
+    "product": {
+      "title": "NFC Stand for Google Reviews — CLP $24,990 | BrandUp Chile",
+      "desc": "NFC stand so your customers can leave Google reviews by simply tapping their phone. One-time payment, no subscription, configured and shipped from Santiago."
     }
   },
   "hero": {
