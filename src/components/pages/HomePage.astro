@@ -10,21 +10,33 @@ import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import imgWorksBg from '../../assets/categories/team.webp';
 
-// Collage y strip: se arman con la PORTADA de cada proyecto (PROJECTS.cover),
-// no con capturas sueltas de la galería.
+// Collage y strip: piezas de TRABAJO real (sitios, gráficas, packaging).
+// Nada de logos sueltos ni capturas de perfil de Instagram.
 //
-// Las portadas están todas encuadradas a 1600x1200 (4:3), que es justo el
-// aspecto de .polaroid img y .street-card. Así entran sin recorte y la
-// composición se mantiene igual en escritorio y en celular.
-//
-// Antes acá había capturas de galería con aspectos de 0.49 a 1.69: las
-// verticales (los perfiles de Instagram) perdían ~60% del alto al recortarse
-// a 4:3 y quedaba visible justo la franja de botones "Seguir / Mensaje".
-const cover = (slug: string) => {
-  const p = PROJECTS.find((x) => x.slug === slug);
-  if (!p?.cover) throw new Error(`Falta portada del proyecto "${slug}"`);
-  return { img: p.cover, name: p.client };
-};
+// Los archivos de src/assets/strip/ están pre-recortados a 1600x1200 (4:3),
+// que es justo el aspecto de .polaroid img y .street-card, así que entran
+// sin recorte y se ven igual en escritorio y en celular. El encuadre se
+// eligió pieza por pieza (las gráficas verticales se cortan desde arriba
+// para conservar el titular).
+import wAltitudeWeb from '../../assets/strip/altitude-desktop.webp';
+import wAracnidaWeb from '../../assets/strip/aracnida-home.webp';
+import wAseocoolWeb from '../../assets/strip/aseocool-home.webp';
+import wJdcargoWeb from '../../assets/strip/jdcargo-desktop.webp';
+import wMusclecarWeb from '../../assets/strip/musclecarchile-home.webp';
+import wSuperlunchPack from '../../assets/strip/superlunch-packaging.webp';
+
+import wBell2 from '../../assets/strip/bellcollege-2.webp';
+import wBschool1 from '../../assets/strip/bschool-1.webp';
+import wMicro1 from '../../assets/strip/microterapias-1.webp';
+import wAracnidaProd from '../../assets/strip/aracnida-product.webp';
+import wJdcargoPort from '../../assets/strip/jdcargo-detail.webp';
+import wBschool3 from '../../assets/strip/bschool-3.webp';
+
+import wBell1 from '../../assets/strip/bellcollege-1.webp';
+import wBschool2 from '../../assets/strip/bschool-2.webp';
+import wMicro2 from '../../assets/strip/microterapias-2.webp';
+import wAracnidaMobile from '../../assets/strip/aracnida-mobile.webp';
+import wAseocoolProd from '../../assets/strip/aseocool-productos.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -63,53 +75,35 @@ const svcImg: Record<string, string> = {
 
 // ── Collage del manifiesto (polaroids con parallax) — trabajo real ─
 const collage = [
-  { slug: 'superlunch',         par: -16 },
-  { slug: 'aracnida-store',     par: -28 },
-  { slug: 'jd-cargo-logistics', par: -10 },
-  { slug: 'microterapias',      par: -24 },
-  { slug: 'bell-college',       par: -14 },
-].map(({ slug, par }) => ({ ...cover(slug), par }));
+  { img: wBell1,         name: 'Bell College',   par: -16 },
+  { img: wBschool2,      name: 'BSchool',        par: -28 },
+  { img: wMicro2,        name: 'Microterapias',  par: -10 },
+  { img: wAracnidaMobile, name: 'Aracnida Store', par: -24 },
+  { img: wAseocoolProd,  name: 'AseoCool',       par: -14 },
+];
 
 // ── Strip urbano horizontal — trabajo real ──────────────────────────
-const streets = [
-  'bschool',
-  'aseocool',
-  'el-chacha-pollo',
-  'musclecarchile',
-  'altitude',
-  'duoc-uc',
-].map(cover);
+// Dos filas con piezas DISTINTAS: arriba sitios web y packaging, abajo
+// gráficas de campaña y producto. Antes ambas filas repetían las mismas 6.
+const streetsTop = [
+  { img: wAltitudeWeb,    name: 'Altitude' },
+  { img: wAracnidaWeb,    name: 'Aracnida Store' },
+  { img: wAseocoolWeb,    name: 'AseoCool' },
+  { img: wJdcargoWeb,     name: 'JD Cargo Logistics' },
+  { img: wMusclecarWeb,   name: 'MuscleCarChile' },
+  { img: wSuperlunchPack, name: 'Superlunch' },
+];
+
+const streetsBottom = [
+  { img: wBell2,        name: 'Bell College' },
+  { img: wBschool1,     name: 'BSchool' },
+  { img: wMicro1,       name: 'Microterapias' },
+  { img: wAracnidaProd, name: 'Aracnida Store' },
+  { img: wJdcargoPort,  name: 'JD Cargo Logistics' },
+  { img: wBschool3,     name: 'BSchool' },
+];
 
 // ── Stats ──────────────────────────────────────────────────────────
-// FAQ de la home: preguntas reales que la gente escribe en Google y en los
-// asistentes con IA sobre agencias en Santiago. Se emite también como
-// FAQPage en JSON-LD (ver faqLd más abajo).
-const homeFaq = es
-  ? [
-      { q: '¿Cuánto cuesta una página web en Santiago de Chile?', a: 'Una landing page va de $150.000 a $400.000 CLP, un sitio corporativo de $350.000 a $900.000 y un e-commerce de $600.000 a $2.500.000. El precio depende de la estrategia, el diseño propio y la optimización, no solo de la cantidad de páginas.' },
-      { q: '¿Qué servicios ofrece BrandUp?', a: 'Diseño y desarrollo web, e-commerce, branding e identidad visual, contenido y reels para redes sociales, publicidad digital (Meta y Google Ads), SEO local y automatizaciones con IA. Trabajamos con negocios de Santiago y toda la Región Metropolitana.' },
-      { q: '¿Trabajan con negocios de todo Chile o solo de Santiago?', a: 'Estamos en Santiago de Chile y trabajamos con clientes de toda la Región Metropolitana y del resto del país. El trabajo se coordina de forma remota, con reuniones por videollamada y entregas digitales.' },
-      { q: '¿Cuánto tardan en entregar un proyecto?', a: 'Una landing toma de 1 a 2 semanas, un sitio corporativo de 3 a 6 semanas y un e-commerce de 6 a 12 semanas. El plazo depende sobre todo de la rapidez con que se entregan textos, fotos y aprobaciones.' },
-      { q: '¿El sitio y las cuentas quedan a mi nombre?', a: 'Sí. El dominio, el sitio web y las cuentas de redes sociales quedan siempre a nombre del cliente. Entregamos los accesos completos y nunca retenemos la propiedad de tus activos digitales.' },
-    ]
-  : [
-      { q: 'How much does a website cost in Santiago, Chile?', a: 'A landing page ranges from CLP $150,000 to $400,000, a corporate site from $350,000 to $900,000, and an e-commerce store from $600,000 to $2,500,000. Price depends on strategy, custom design and optimization, not just the number of pages.' },
-      { q: 'What services does BrandUp offer?', a: 'Web design and development, e-commerce, branding and visual identity, social media content and reels, digital advertising (Meta and Google Ads), local SEO and AI automations. We work with businesses across Santiago and the wider Metropolitan Region.' },
-      { q: 'Do you work with clients outside Santiago?', a: 'We are based in Santiago, Chile and work with clients across the Metropolitan Region and the rest of the country, coordinating remotely through video calls and digital deliverables.' },
-      { q: 'How long does a project take?', a: 'A landing page takes 1–2 weeks, a corporate site 3–6 weeks, and an e-commerce store 6–12 weeks. Timelines depend mostly on how quickly copy, photos and approvals are provided.' },
-      { q: 'Do I own the site and the accounts?', a: 'Yes. The domain, website and social media accounts always stay under the client’s name. We hand over full access and never retain ownership of your digital assets.' },
-    ];
-
-const faqLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  inLanguage: es ? 'es-CL' : 'en',
-  mainEntity: homeFaq.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
 
 const stats = [
   { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
@@ -304,7 +298,7 @@ const stats = [
         <div class="marquee-track">
           {[0, 1].map((copy) => (
             <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
-              {streets.map((st, i) => (
+              {streetsTop.map((st, i) => (
                 <figure class="street-card">
                   <Image
                     src={st.img}
@@ -324,7 +318,7 @@ const stats = [
         <div class="marquee-track marquee-track--reverse">
           {[0, 1].map((copy) => (
             <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
-              {[...streets].reverse().map((st, i) => (
+              {streetsBottom.map((st, i) => (
                 <figure class="street-card">
                   <Image
                     src={st.img}
@@ -457,68 +451,11 @@ const stats = [
     </div>
   </section>
 
-  <!-- ════ FAQ — respuestas directas (AEO) ═════════════════════════════
-       Van visibles Y como FAQPage en JSON-LD: es el formato que Google y
-       los asistentes con IA extraen para responder a quien pregunta por
-       precios o servicios de agencias en Santiago. -->
-  <section class="home-faq">
-    <div class="home-faq__inner">
-      <p class="home-faq__kicker" data-reveal>FAQ</p>
-      <h2 class="home-faq__title" data-reveal>
-        {es ? 'Preguntas frecuentes' : 'Frequently asked questions'}
-      </h2>
-      <div class="home-faq__list">
-        {homeFaq.map((f) => (
-          <details class="home-faq__item">
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
-      </div>
-      <a href={lp('/faq')} class="home-faq__more">
-        {es ? 'Ver todas las preguntas frecuentes →' : 'See all frequently asked questions →'}
-      </a>
-    </div>
-  </section>
-
-  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+  <!-- El FAQ vive en /faq, no acá. Se quitó también su FAQPage en JSON-LD:
+       el schema tiene que corresponder a contenido visible en la página, y
+       /faq ya lo emite con las 13 preguntas completas. -->
 
 </Base>
 
 <style>
-.home-faq { background: var(--color-ink); border-top: 1px solid var(--color-line); }
-.home-faq__inner { max-width: 900px; margin-inline: auto; padding: 90px 24px 110px; }
-@media (min-width: 768px) { .home-faq__inner { padding: 110px 48px 130px; } }
-.home-faq__kicker {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--color-accent); margin-bottom: 14px;
-}
-.home-faq__title {
-  font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3.2rem);
-  font-weight: 600; letter-spacing: -0.03em; color: var(--color-paper); margin-bottom: 34px;
-}
-.home-faq__item { border-bottom: 1px solid var(--color-line); }
-.home-faq__item summary {
-  cursor: pointer; list-style: none; position: relative;
-  padding: 22px 40px 22px 0;
-  font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 600;
-  color: var(--color-paper); transition: color 0.25s;
-}
-.home-faq__item summary::-webkit-details-marker { display: none; }
-.home-faq__item summary::after {
-  content: '+'; position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-  font-size: 1.5rem; color: var(--color-accent); transition: transform 0.3s;
-}
-.home-faq__item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
-.home-faq__item summary:hover { color: var(--color-accent); }
-.home-faq__item p {
-  padding: 0 4px 24px; max-width: 72ch;
-  font-size: 1rem; line-height: 1.72; color: var(--color-gray);
-}
-.home-faq__more {
-  display: inline-block; margin-top: 32px;
-  font-size: 0.9375rem; font-weight: 600; color: var(--color-accent);
-  transition: color 0.2s;
-}
-.home-faq__more:hover { color: var(--color-paper); }
 </style>

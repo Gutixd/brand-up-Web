@@ -274,13 +274,17 @@ export const PROJECTS: Project[] = [
       es: 'Rediseñamos el flujo de compra para reducir fricción, integramos un CRM y automatizamos campañas de email que recuperan carritos y fidelizan.',
       en: 'We redesigned the purchase flow to reduce friction, integrated a CRM and automated email campaigns that recover carts and build loyalty.',
     },
+    // Cifras reales de los dos primeros meses de operación (jul–ago 2026),
+    // sacadas de los pedidos de la tienda. Antes acá había "+450% ticket
+    // promedio" y "+95% recompra", que no correspondían a ningún dato medido.
     outcome: {
-      es: 'Un e-commerce que no solo convierte mejor, sino que aumenta cuánto gasta cada cliente y vuelve a venderles solo.',
-      en: 'An e-commerce that not only converts better, but increases what each customer spends and resells to them on its own.',
+      es: 'En sus dos primeros meses de operación la tienda vendió $417.880 con un ticket promedio de $37.989. De 12 pedidos iniciados se pagaron 11: 92% de conversión. Y el ritmo se aceleró — de unos $7.700 diarios en julio a unos $36.000 en los primeros días de agosto. Un dato que ya está guiando decisiones: los pedidos con despacho a domicilio promedian $58.228, más del doble que los de retiro en tienda ($26.424).',
+      en: 'In its first two months the store sold CLP $417,880 with an average order value of $37,989. Of 12 orders started, 11 were paid: a 92% conversion rate. And the pace accelerated — from about $7,700 a day in July to about $36,000 in the first days of August. One insight already shaping decisions: delivery orders average $58,228, more than double in-store pickup ($26,424).',
     },
     metrics: [
-      { val: '+450%', lbl: { es: 'Ticket promedio', en: 'Average order value' } },
-      { val: '+95%', lbl: { es: 'Recompra', en: 'Repurchase' } },
+      { val: '$417.880', lbl: { es: 'Vendido en 2 meses', en: 'Sold in 2 months' } },
+      { val: '92%', lbl: { es: 'De los pedidos se pagan', en: 'Of orders get paid' } },
+      { val: '$37.989', lbl: { es: 'Ticket promedio', en: 'Average order value' } },
     ],
     link: 'https://aracnidastore.com',
     featured: true,
