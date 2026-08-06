@@ -95,14 +95,19 @@ const faqLd = {
       </div>
 
       <div class="pd-hero__media" data-reveal data-delay="0.1">
-        <Image
-          src={imgHero}
-          alt={es ? 'Placa NFC para reseñas de Google de BrandUp' : 'BrandUp NFC stand for Google reviews'}
+        <!-- Video generado a partir de la foto real del producto: el póster es
+             esa misma foto, así que si el video no carga se ve igual. -->
+        <video
           class="pd-hero__img"
-          widths={[480, 800, 1120]}
-          sizes="(max-width: 900px) 92vw, 46vw"
-          loading="eager"
-        />
+          poster={imgHero.src}
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-label={es ? 'Placa NFC para reseñas de Google de BrandUp' : 'BrandUp NFC stand for Google reviews'}
+        >
+          <source src="/videos/placa-nfc.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </section>

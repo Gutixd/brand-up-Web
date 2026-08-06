@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
 import TestimonialCarousel from '../TestimonialCarousel';
@@ -8,6 +9,22 @@ import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import imgWorksBg from '../../assets/categories/team.webp';
+
+// Collage y strip: material REAL de cada cliente. Antes eran fotos de stock
+// de Unsplash rotuladas con estos mismos nombres, lo que daba a entender que
+// ese trabajo era nuestro. Estos archivos sí salen de los proyectos.
+import colSuperlunch from '../../assets/projects/gallery/superlunch-packaging.webp';
+import colAracnida from '../../assets/projects/gallery/aracnida-product.webp';
+import colJdcargo from '../../assets/projects/gallery/jdcargo-desktop.webp';
+import colMicroterapias from '../../assets/projects/gallery/microterapias-1.webp';
+import colBell from '../../assets/projects/gallery/bellcollege-1.webp';
+
+import stBschool from '../../assets/projects/gallery/bschool-1.webp';
+import stAseocool from '../../assets/projects/gallery/aseocool-home.webp';
+import stChacha from '../../assets/projects/gallery/chachapollo-instagram.webp';
+import stMusclecar from '../../assets/projects/gallery/musclecarchile-home.webp';
+import stAltitude from '../../assets/projects/gallery/altitude-desktop.webp';
+import stDuoc from '../../assets/projects/gallery/duocuc-instagram.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -46,21 +63,21 @@ const svcImg: Record<string, string> = {
 
 // ── Collage del manifiesto (polaroids con parallax) — trabajo real ─
 const collage = [
-  { src: '/images/urban/col-team.jpg',     cap: 'Superlunch',     par: -16 },
-  { src: '/images/urban/col-camera.jpg',   cap: 'Aracnida Store', par: -28 },
-  { src: '/images/urban/col-neon.jpg',     cap: 'JD Cargo',       par: -10 },
-  { src: '/images/urban/col-sneakers.jpg', cap: 'Microterapias',  par: -24 },
-  { src: '/images/urban/col-desk.jpg',     cap: 'Bell College',   par: -14 },
+  { img: colSuperlunch,    cap: 'Superlunch',     par: -16 },
+  { img: colAracnida,      cap: 'Aracnida Store', par: -28 },
+  { img: colJdcargo,       cap: 'JD Cargo',       par: -10 },
+  { img: colMicroterapias, cap: 'Microterapias',  par: -24 },
+  { img: colBell,          cap: 'Bell College',   par: -14 },
 ];
 
 // ── Strip urbano horizontal — trabajo real ──────────────────────────
 const streets = [
-  { src: '/images/urban/street-1.jpg', chip: 'BSchool' },
-  { src: '/images/urban/street-4.jpg', chip: 'AseoCool' },
-  { src: '/images/urban/street-3.jpg', chip: 'El Chacha Pollo' },
-  { src: '/images/urban/street-6.jpg', chip: 'MuscleCarChile' },
-  { src: '/images/urban/street-5.jpg', chip: 'Altitude' },
-  { src: '/images/urban/street-2.jpg', chip: 'Duoc UC' },
+  { img: stBschool,    chip: 'BSchool' },
+  { img: stAseocool,   chip: 'AseoCool' },
+  { img: stChacha,     chip: 'El Chacha Pollo' },
+  { img: stMusclecar,  chip: 'MuscleCarChile' },
+  { img: stAltitude,   chip: 'Altitude' },
+  { img: stDuoc,       chip: 'Duoc UC' },
 ];
 
 // ── Stats ──────────────────────────────────────────────────────────
@@ -228,11 +245,12 @@ const stats = [
         {collage.map((c, i) => (
           <div class={`polaroid-pos polaroid-pos--${i + 1}`} data-parallax={String(c.par)}>
             <figure class={`polaroid polaroid--${i + 1}`} data-img-reveal>
-              <img
-                src={c.src}
-                srcset={`${c.src.replace('.jpg', '-sm.jpg')} 800w, ${c.src} 1400w`}
+              <Image
+                src={c.img}
+                alt={`Trabajo de BrandUp para ${c.cap}`}
+                widths={[420, 800]}
                 sizes="(max-width: 767px) 46vw, 30vw"
-                alt={c.cap} loading="lazy" decoding="async"
+                loading="lazy"
               />
               <figcaption class="polaroid__cap">{c.cap}</figcaption>
             </figure>
@@ -288,11 +306,12 @@ const stats = [
             <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
               {streets.map((st, i) => (
                 <figure class="street-card">
-                  <img
-                    src={st.src}
-                    srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
+                  <Image
+                    src={st.img}
+                    alt={`Trabajo de BrandUp para ${st.chip}`}
+                    widths={[420, 800]}
                     sizes="(max-width: 767px) 62vw, 27vw"
-                    alt={st.chip} loading="lazy" decoding="async"
+                    loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
                 </figure>
@@ -307,11 +326,12 @@ const stats = [
             <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
               {[...streets].reverse().map((st, i) => (
                 <figure class="street-card">
-                  <img
-                    src={st.src}
-                    srcset={`${st.src.replace('.jpg', '-sm.jpg')} 800w, ${st.src} 1400w`}
+                  <Image
+                    src={st.img}
+                    alt={`Trabajo de BrandUp para ${st.chip}`}
+                    widths={[420, 800]}
                     sizes="(max-width: 767px) 62vw, 27vw"
-                    alt={st.chip} loading="lazy" decoding="async"
+                    loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{6 - i} — {st.chip}</figcaption>
                 </figure>
