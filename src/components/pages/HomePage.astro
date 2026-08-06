@@ -10,21 +10,21 @@ import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import imgWorksBg from '../../assets/categories/team.webp';
 
-// Collage y strip: material REAL de cada cliente. Antes eran fotos de stock
-// de Unsplash rotuladas con estos mismos nombres, lo que daba a entender que
-// ese trabajo era nuestro. Estos archivos sí salen de los proyectos.
-import colSuperlunch from '../../assets/projects/gallery/superlunch-packaging.webp';
-import colAracnida from '../../assets/projects/gallery/aracnida-product.webp';
-import colJdcargo from '../../assets/projects/gallery/jdcargo-desktop.webp';
-import colMicroterapias from '../../assets/projects/gallery/microterapias-1.webp';
-import colBell from '../../assets/projects/gallery/bellcollege-1.webp';
-
-import stBschool from '../../assets/projects/gallery/bschool-1.webp';
-import stAseocool from '../../assets/projects/gallery/aseocool-home.webp';
-import stChacha from '../../assets/projects/gallery/chachapollo-instagram.webp';
-import stMusclecar from '../../assets/projects/gallery/musclecarchile-home.webp';
-import stAltitude from '../../assets/projects/gallery/altitude-desktop.webp';
-import stDuoc from '../../assets/projects/gallery/duocuc-instagram.webp';
+// Collage y strip: se arman con la PORTADA de cada proyecto (PROJECTS.cover),
+// no con capturas sueltas de la galería.
+//
+// Las portadas están todas encuadradas a 1600x1200 (4:3), que es justo el
+// aspecto de .polaroid img y .street-card. Así entran sin recorte y la
+// composición se mantiene igual en escritorio y en celular.
+//
+// Antes acá había capturas de galería con aspectos de 0.49 a 1.69: las
+// verticales (los perfiles de Instagram) perdían ~60% del alto al recortarse
+// a 4:3 y quedaba visible justo la franja de botones "Seguir / Mensaje".
+const cover = (slug: string) => {
+  const p = PROJECTS.find((x) => x.slug === slug);
+  if (!p?.cover) throw new Error(`Falta portada del proyecto "${slug}"`);
+  return { img: p.cover, name: p.client };
+};
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -63,22 +63,22 @@ const svcImg: Record<string, string> = {
 
 // ── Collage del manifiesto (polaroids con parallax) — trabajo real ─
 const collage = [
-  { img: colSuperlunch,    cap: 'Superlunch',     par: -16 },
-  { img: colAracnida,      cap: 'Aracnida Store', par: -28 },
-  { img: colJdcargo,       cap: 'JD Cargo',       par: -10 },
-  { img: colMicroterapias, cap: 'Microterapias',  par: -24 },
-  { img: colBell,          cap: 'Bell College',   par: -14 },
-];
+  { slug: 'superlunch',         par: -16 },
+  { slug: 'aracnida-store',     par: -28 },
+  { slug: 'jd-cargo-logistics', par: -10 },
+  { slug: 'microterapias',      par: -24 },
+  { slug: 'bell-college',       par: -14 },
+].map(({ slug, par }) => ({ ...cover(slug), par }));
 
 // ── Strip urbano horizontal — trabajo real ──────────────────────────
 const streets = [
-  { img: stBschool,    chip: 'BSchool' },
-  { img: stAseocool,   chip: 'AseoCool' },
-  { img: stChacha,     chip: 'El Chacha Pollo' },
-  { img: stMusclecar,  chip: 'MuscleCarChile' },
-  { img: stAltitude,   chip: 'Altitude' },
-  { img: stDuoc,       chip: 'Duoc UC' },
-];
+  'bschool',
+  'aseocool',
+  'el-chacha-pollo',
+  'musclecarchile',
+  'altitude',
+  'duoc-uc',
+].map(cover);
 
 // ── Stats ──────────────────────────────────────────────────────────
 // FAQ de la home: preguntas reales que la gente escribe en Google y en los
@@ -247,12 +247,12 @@ const stats = [
             <figure class={`polaroid polaroid--${i + 1}`} data-img-reveal>
               <Image
                 src={c.img}
-                alt={`Trabajo de BrandUp para ${c.cap}`}
+                alt={`Trabajo de BrandUp para ${c.name}`}
                 widths={[420, 800]}
                 sizes="(max-width: 767px) 46vw, 30vw"
                 loading="lazy"
               />
-              <figcaption class="polaroid__cap">{c.cap}</figcaption>
+              <figcaption class="polaroid__cap">{c.name}</figcaption>
             </figure>
           </div>
         ))}
@@ -308,12 +308,12 @@ const stats = [
                 <figure class="street-card">
                   <Image
                     src={st.img}
-                    alt={`Trabajo de BrandUp para ${st.chip}`}
+                    alt={`Trabajo de BrandUp para ${st.name}`}
                     widths={[420, 800]}
                     sizes="(max-width: 767px) 62vw, 27vw"
                     loading="lazy"
                   />
-                  <figcaption class="street-card__chip">0{i + 1} — {st.chip}</figcaption>
+                  <figcaption class="street-card__chip">0{i + 1} — {st.name}</figcaption>
                 </figure>
               ))}
             </div>
@@ -328,12 +328,12 @@ const stats = [
                 <figure class="street-card">
                   <Image
                     src={st.img}
-                    alt={`Trabajo de BrandUp para ${st.chip}`}
+                    alt={`Trabajo de BrandUp para ${st.name}`}
                     widths={[420, 800]}
                     sizes="(max-width: 767px) 62vw, 27vw"
                     loading="lazy"
                   />
-                  <figcaption class="street-card__chip">0{6 - i} — {st.chip}</figcaption>
+                  <figcaption class="street-card__chip">0{6 - i} — {st.name}</figcaption>
                 </figure>
               ))}
             </div>
