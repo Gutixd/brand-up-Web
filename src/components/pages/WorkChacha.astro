@@ -23,7 +23,11 @@ const isEs = locale === 'es';
 
 const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
 const next = PROJECTS[(idx + 1) % PROJECTS.length];
-const title = `${p.client} — ${t.meta.work.title}`;
+// Antes se pegaba `t.meta.work.title` completo, que es el título de la
+// página de listado: el título quedaba de ~68 caracteres y Google lo cortaba.
+const title = locale === 'es'
+  ? `${p.client} — Caso real | BrandUp`
+  : `${p.client} — Case study | BrandUp`;
 const media = PROJECT_MEDIA[p.slug] ?? [];
 
 // Reto/solución/resultado como pasos de receta.

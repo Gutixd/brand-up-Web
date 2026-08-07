@@ -120,6 +120,15 @@ const stats = [
   <!-- ════ INTRO CINEMÁTICA (una sola vez por sesión) ══════════════ -->
   <IntroOverlay locale={locale} />
 
+  <!-- El hero es un video sin titular, así que la home quedaba sin <h1>:
+       la página más importante del sitio sin su encabezado principal.
+       Va oculto a la vista pero lo leen Google y los lectores de pantalla. -->
+  <h1 class="solo-lectores">
+    {es
+      ? 'BrandUp — Agencia de marketing digital y diseño web en Santiago de Chile'
+      : 'BrandUp — Digital marketing and web design agency in Santiago, Chile'}
+  </h1>
+
   <!-- ════ HERO VIDEO ══════════════════════════════════════════════ -->
   <section class="hero-video-section">
     <!-- El reel es 16:9. En un hero vertical de celular, `object-fit: cover`

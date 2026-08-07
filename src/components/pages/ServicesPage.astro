@@ -153,9 +153,13 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
         <span class="svc-index__num">{s.num}</span>
 
         <div class="svc-index__media" aria-hidden="true">
+          <!-- width/height explícitos: sin ellos el navegador no sabe cuánto
+               espacio reservar y la lista salta al cargar cada imagen. Son
+               las medidas reales de los svc-*.jpg (1400x933). -->
           <img src={svcImg[s.slug]}
                srcset={`${svcImg[s.slug].replace('.jpg', '-sm.jpg')} 800w, ${svcImg[s.slug]} 1400w`}
                sizes="(max-width: 899px) 92vw, 240px"
+               width="1400" height="933"
                alt="" loading="lazy" decoding="async" />
         </div>
 

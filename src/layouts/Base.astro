@@ -6,7 +6,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../data/site';
-import { useT, altPath, type Locale } from '../i18n';
+import { useT, altPath, hasAlternate, type Locale } from '../i18n';
 
 interface Props {
   locale: Locale;
@@ -68,7 +68,11 @@ const nav = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={locale === 'es' ? 'en' : 'es'} href={new URL(alternate, Astro.site).href} />
+    {/* Solo si la traducción existe: el blog es solo en español, y anunciar
+        un alternate hacia /en/blog/... mandaba a Google a URLs inexistentes. */}
+    {hasAlternate(pathname) && (
+      <link rel="alternate" hreflang={locale === 'es' ? 'en' : 'es'} href={new URL(alternate, Astro.site).href} />
+    )}
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/favicon-180.png" />
     <meta name="generator" content={Astro.generator} />

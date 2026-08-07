@@ -55,7 +55,10 @@ const faqLd = post.faq?.length
 const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
 ---
 
-<Base locale="es" title={`${post.title} | BrandUp`} description={post.desc}>
+{/* Sin el sufijo "| BrandUp": sumaba 11 caracteres a títulos que ya rozaban
+    el límite de Google y terminaban cortados. En un artículo lo que importa
+    posicionar es el tema, no la marca. */}
+<Base locale="es" title={post.title} description={post.desc}>
   <script type="application/ld+json" set:html={JSON.stringify(articleLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
   {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}

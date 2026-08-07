@@ -23,8 +23,27 @@ export function localePath(locale: Locale, path: string): string {
   return locale === 'es' ? clean : `/en${clean === '/' ? '' : clean}`;
 }
 
-/** Same page in the other language. */
+/**
+ * Rutas que existen SOLO en español: el blog no está traducido y la 404 no
+ * tiene versión /en. Sin esto, `altPath` generaba igual un `/en/blog/...`,
+ * y ese enlace terminaba en el `hreflang` y en el botón de idioma: Google
+ * rastreaba 21 URLs que no existen y al usuario el botón "EN" lo dejaba en
+ * una página rota.
+ */
+const SOLO_ES = [/^\/blog(\/|$)/, /^\/404(\/|$)/];
+
+/** ¿Esta página tiene versión en el otro idioma? */
+export function hasAlternate(pathname: string): boolean {
+  const base = pathname.replace(/^\/en/, '') || '/';
+  return !SOLO_ES.some((re) => re.test(base));
+}
+
+/**
+ * Misma página en el otro idioma. Si no existe traducción, manda a la
+ * portada del otro idioma en vez de a una URL inventada.
+ */
 export function altPath(locale: Locale, pathname: string): string {
+  if (!hasAlternate(pathname)) return locale === 'es' ? '/en' : '/';
   if (locale === 'es') {
     return `/en${pathname === '/' ? '' : pathname.replace(/\/$/, '')}` || '/en';
   }
