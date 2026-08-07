@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { BLOG_POSTS, type BlogPost } from '../../data/blog';
+import { coverFor } from '../../data/blogCovers';
 import { SITE, wa } from '../../data/site';
 
 export function getStaticPaths() {
@@ -67,6 +69,17 @@ const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
       </div>
       <h1 class="art__title" data-reveal>{post.title}</h1>
       <p class="art__intro" data-reveal data-delay="0.1">{post.intro}</p>
+      <!-- Portada por categoría: decorativa, por eso alt vacío — el titular
+           de arriba ya cuenta de qué trata el artículo. -->
+      <figure class="art__cover" data-reveal data-delay="0.16">
+        <Image
+          src={coverFor(post.tag)}
+          alt=""
+          widths={[720, 1100]}
+          sizes="(max-width: 900px) 92vw, 820px"
+          loading="eager"
+        />
+      </figure>
     </header>
 
     <div class="art__body">
@@ -169,6 +182,15 @@ const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
   line-height: 1.65;
   color: #4a4a46;
 }
+.art__cover {
+  margin-top: clamp(30px, 4vw, 44px);
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: var(--color-ink-2);
+}
+.art__cover img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
 .art__body { margin-top: clamp(36px, 5vw, 56px); }
 .art__section { margin-bottom: 38px; }
 .art__section h2 {

@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { BLOG_POSTS } from '../../data/blog';
+import { coverFor } from '../../data/blogCovers';
 
 const fmt = (iso: string) =>
   new Date(iso + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -24,6 +26,15 @@ const fmt = (iso: string) =>
     <div class="blog__grid">
       {BLOG_POSTS.map((post, i) => (
         <a href={`/blog/${post.slug}`} class="bpost" data-reveal data-delay={`${i * 0.07}`}>
+          <div class="bpost__cover">
+            <Image
+              src={coverFor(post.tag)}
+              alt=""
+              widths={[400, 760]}
+              sizes="(max-width: 767px) 92vw, 32vw"
+              loading={i < 3 ? 'eager' : 'lazy'}
+            />
+          </div>
           <div class="bpost__top">
             <span class="bpost__tag">{post.tag}</span>
             <span class="bpost__meta">{fmt(post.date)} · {post.readMin} min</span>
@@ -87,6 +98,25 @@ const fmt = (iso: string) =>
   text-decoration: none;
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s, border-color 0.4s;
 }
+
+/* La portada sangra hasta los bordes de la tarjeta: el margen negativo
+   cancela el padding del .bpost para que la imagen llegue al filo. */
+.bpost__cover {
+  margin: calc(-1 * clamp(26px, 4vw, 40px));
+  margin-bottom: clamp(22px, 3vw, 30px);
+  border-radius: 19px 19px 0 0;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: var(--color-ink-2);
+}
+.bpost__cover img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bpost:hover .bpost__cover img { transform: scale(1.05); }
 .bpost:hover {
   transform: translateY(-6px);
   border-color: rgba(240, 94, 35, 0.45);
