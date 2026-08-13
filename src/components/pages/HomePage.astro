@@ -61,8 +61,8 @@ const tickerWords = es
   ? ['Branding', 'Contenido', 'Diseño Web', 'E-commerce', 'Publicidad', 'IA', 'Growth']
   : ['Branding', 'Content', 'Web Design', 'E-commerce', 'Ads', 'AI', 'Growth'];
 const tickerBrand = es
-  ? ['Brand Up©', 'Santiago de Chile', '© 2026', 'Hecho con calle']
-  : ['Brand Up©', 'Santiago, Chile', '© 2026', 'Street-smart work'];
+  ? ['Brand Up©', 'Santiago de Chile', '© 2026', 'Hecho en Santiago']
+  : ['Brand Up©', 'Santiago, Chile', '© 2026', 'Made in Santiago'];
 
 // ── Servicios → imagen de preview flotante ─────────────────────────
 const svcImg: Record<string, string> = {
@@ -194,7 +194,7 @@ const stats = [
         {[0, 1].map((copy) => (
           <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
             {tickerWords.map((w) => (
-              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+              <span class="ticker__item">{w}</span>
             ))}
           </div>
         ))}
@@ -205,7 +205,7 @@ const stats = [
         {[0, 1].map((copy) => (
           <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
             {tickerBrand.map((w) => (
-              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+              <span class="ticker__item">{w}</span>
             ))}
           </div>
         ))}
@@ -217,7 +217,7 @@ const stats = [
   <section class="manifesto">
     <div class="manifesto__inner">
       <span class="manifesto__sticker" data-reveal>
-        Stgo, Chile ✦ © 2026
+        Stgo, Chile · © 2026
       </span>
 
       <h2 class="manifesto__title">
@@ -228,8 +228,8 @@ const stats = [
 
       <p class="manifesto__desc" data-reveal data-delay="0.15">
         {es
-          ? 'Somos el equipo que convierte marcas comunes en marcas que se notan. Estrategia, diseño y contenido con calle: hecho en Santiago, pensado para vender.'
-          : "We're the team that turns ordinary brands into brands people notice. Strategy, design and street-smart content: made in Santiago, built to sell."}
+          ? 'Somos el equipo que convierte marcas comunes en marcas que se notan. Estrategia, diseño y contenido con carácter: hecho en Santiago, pensado para vender.'
+          : "We're the team that turns ordinary brands into brands people notice. Strategy, design and content with character: made in Santiago, built to sell."}
       </p>
 
       <!-- Badge circular giratorio -->
@@ -239,9 +239,8 @@ const stats = [
             <path id="bu-circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/>
           </defs>
           <text class="manifesto__badge-text">
-            <textPath href="#bu-circ">BRAND UP ✦ SANTIAGO ✦ BRAND UP ✦ CRECIMIENTO ✦</textPath>
+            <textPath href="#bu-circ">BRAND UP · SANTIAGO · BRAND UP · CRECIMIENTO ·</textPath>
           </text>
-          <text x="100" y="116" text-anchor="middle" class="manifesto__badge-star">✦</text>
         </svg>
       </div>
 

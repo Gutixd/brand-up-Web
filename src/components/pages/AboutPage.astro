@@ -98,9 +98,8 @@ const stats = [
           <path id="ab-circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/>
         </defs>
         <text class="ab-hero__badge-text">
-          <textPath href="#ab-circ">BRAND UP ✦ SANTIAGO ✦ BRAND UP ✦ CRECIMIENTO ✦</textPath>
+          <textPath href="#ab-circ">BRAND UP · SANTIAGO · BRAND UP · CRECIMIENTO ·</textPath>
         </text>
-        <text x="100" y="116" text-anchor="middle" class="ab-hero__badge-star">✦</text>
       </svg>
     </div>
   </section>
@@ -112,7 +111,7 @@ const stats = [
         {[0, 1].map((copy) => (
           <div class="ticker__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
             {tickerWords.map((w) => (
-              <span class="ticker__item">{w} <span class="ticker__star">✦</span></span>
+              <span class="ticker__item">{w}</span>
             ))}
           </div>
         ))}
@@ -267,7 +266,6 @@ const stats = [
   fill: rgba(248, 248, 248, 0.85);
   text-transform: uppercase;
 }
-.ab-hero__badge-star { font-size: 34px; fill: var(--color-accent); }
 @media (max-width: 860px) { .ab-hero__badge { display: none; } }
 @media (prefers-reduced-motion: reduce) { .ab-hero__badge { animation: none; } }
 

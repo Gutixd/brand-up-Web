@@ -1,8 +1,8 @@
 // WebGL layer for /trabajos — Three.js planes synced to each project's
 // DOM media panel. Each plane bends with scroll velocity and reacts to
-// hover (color/RGB shift + swap to a looping video texture for featured
-// projects). Degrades gracefully: if WebGL is unavailable, reduced
-// motion is requested, or anything throws, the DOM images stay visible.
+// hover (color/RGB shift). Degrades gracefully: if WebGL is unavailable,
+// reduced motion is requested, or anything throws, the DOM images stay
+// visible.
 import * as THREE from 'three';
 
 interface Item {
@@ -10,9 +10,6 @@ interface Item {
   mesh: THREE.Mesh;
   mat: THREE.ShaderMaterial;
   baseTex: THREE.Texture;
-  videoSrc: string;
-  video: HTMLVideoElement | null;
-  videoTex: THREE.VideoTexture | null;
   hover: number;            // eased 0..1
   hoverTarget: number;
 }
@@ -144,37 +141,16 @@ export function initWorks3D() {
 
     const item: Item = {
       el, mesh, mat, baseTex,
-      videoSrc: el.dataset.videoSrc || '',
-      video: null, videoTex: null,
       hover: 0, hoverTarget: 0,
     };
 
     if (canHover) {
-      el.addEventListener('mouseenter', () => {
-        item.hoverTarget = 1;
-        if (item.videoSrc) ensureVideo(item);
-      });
-      el.addEventListener('mouseleave', () => {
-        item.hoverTarget = 0;
-        item.video?.pause();
-      });
+      el.addEventListener('mouseenter', () => { item.hoverTarget = 1; });
+      el.addEventListener('mouseleave', () => { item.hoverTarget = 0; });
     }
 
     return item;
   });
-
-  function ensureVideo(item: Item) {
-    if (item.video) { item.video.play().catch(() => {}); return; }
-    const v = document.createElement('video');
-    v.src = item.videoSrc;
-    v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
-    v.crossOrigin = 'anonymous';
-    item.video = v;
-    const vt = new THREE.VideoTexture(v);
-    vt.colorSpace = THREE.SRGBColorSpace;
-    item.videoTex = vt;
-    v.play().then(() => { item.mat.uniforms.uTex.value = vt; }).catch(() => {});
-  }
 
   // ── Posicionar cada plano sobre el rect de su panel DOM ───────────
   function layout(item: Item) {
@@ -210,7 +186,6 @@ export function initWorks3D() {
       item.hover += (item.hoverTarget - item.hover) * 0.12;
       item.mat.uniforms.uHover.value = item.hover;
       item.mat.uniforms.uVelocity.value = velNorm;
-      if (item.videoTex) item.videoTex.needsUpdate = true;
     }
     renderer!.render(scene, camera);
     // Recién cuando el primer frame ya se pintó, ocultamos las imágenes
@@ -239,9 +214,7 @@ export function initWorks3D() {
     window.removeEventListener('resize', onResize);
     document.documentElement.classList.remove('webgl-on');
     items.forEach((it) => {
-      it.video?.pause();
       it.baseTex.dispose();
-      it.videoTex?.dispose();
       it.mat.dispose();
     });
     geo.dispose();

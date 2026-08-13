@@ -472,55 +472,6 @@ function initLazyVideos() {
   items.forEach((el) => io.observe(el));
 }
 
-// ── /trabajos: video real al hacer hover sobre cada tarjeta ────────
-function initWorkCardVideos() {
-  document.querySelectorAll<HTMLElement>('.wrow__media[data-video-src]').forEach((el) => {
-    const src = el.dataset.videoSrc;
-    if (!src) return;
-    const card = el.closest<HTMLElement>('[data-project-card]');
-    if (!card) return;
-    let video: HTMLVideoElement | null = null;
-    const ensureVideo = () => {
-      if (video) return video;
-      video = document.createElement('video');
-      video.src = src;
-      video.muted = true;
-      video.loop = true;
-      video.playsInline = true;
-      video.preload = 'none';
-      video.className = 'wcard__video';
-      el.appendChild(video);
-      return video;
-    };
-
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      card.addEventListener('mouseenter', () => {
-        const v = ensureVideo();
-        v.currentTime = 0;
-        v.play().catch(() => {});
-        el.classList.add('is-video');
-      });
-      card.addEventListener('mouseleave', () => {
-        video?.pause();
-        el.classList.remove('is-video');
-      });
-    } else {
-      // Táctil: reproduce mientras la tarjeta está a la vista
-      const v = ensureVideo();
-      el.classList.add('is-video');
-      ScrollTrigger.create({
-        trigger: card,
-        start: 'top 80%',
-        end: 'bottom 20%',
-        onEnter: () => v.play().catch(() => {}),
-        onLeave: () => v.pause(),
-        onEnterBack: () => v.play().catch(() => {}),
-        onLeaveBack: () => v.pause(),
-      });
-    }
-  });
-}
-
 // ── /trabajos: índice lateral de filtro + marcador deslizante ───────
 function initWorkFilters() {
   const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.wfilter'));
@@ -970,7 +921,6 @@ function setup() {
   initWorkTilt();
   initProjectVideos();
   initLazyVideos();
-  initWorkCardVideos();
   initWorkFilters();
   initWorkIntro();
   initWorks3D();

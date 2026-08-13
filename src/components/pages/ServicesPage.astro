@@ -167,7 +167,7 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
           <div class="svc-index__topline">
             <h2 class="svc-index__title">{pick(s.title, locale)}</h2>
             {proof[s.slug] && (
-              <span class="svc-index__proof">✦ {es ? proof[s.slug].es : proof[s.slug].en}</span>
+              <span class="svc-index__proof">{es ? proof[s.slug].es : proof[s.slug].en}</span>
             )}
           </div>
           <p class="svc-index__short">{pick(s.short, locale)}</p>

@@ -12,7 +12,7 @@ const words = ['Página no encontrada', 'Error 404', 'Te perdiste', 'Página no 
         {[0, 1].map(() => (
           <div class="nf__tape-seq">
             {words.map((w) => (
-              <span class="nf__tape-item">{w} <span class="nf__tape-star">✦</span></span>
+              <span class="nf__tape-item">{w}</span>
             ))}
           </div>
         ))}
@@ -31,7 +31,7 @@ const words = ['Página no encontrada', 'Error 404', 'Te perdiste', 'Página no 
       <a href="/" class="nf__btn">Volver al inicio →</a>
       <a href="/trabajos" class="nf__link">Ver nuestros trabajos</a>
     </div>
-    <span class="nf__sticker" aria-hidden="true">Stgo, Chile ✦ Brand Up©</span>
+    <span class="nf__sticker" aria-hidden="true">Stgo, Chile · Brand Up©</span>
   </section>
 </Base>
 
@@ -75,7 +75,6 @@ const words = ['Página no encontrada', 'Error 404', 'Te perdiste', 'Página no 
   letter-spacing: 0.02em;
   color: #140d09;
 }
-.nf__tape-star { font-size: 0.65em; }
 
 .nf__code {
   position: relative;

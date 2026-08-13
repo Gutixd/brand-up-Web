@@ -22,11 +22,6 @@ const isEs = locale === 'es';
 
 const total = PROJECTS.length;
 
-// Mapeo de video: los proyectos "featured" (en orden del array) usan
-// work1.mp4…work5.mp4 — mismo criterio que la home.
-const featuredSlugs = PROJECTS.filter((p) => p.featured).map((p) => p.slug);
-const VIDEO_MAP = new Map(featuredSlugs.map((slug, i) => [slug, `/videos/work${i + 1}.mp4`]));
-
 const svcName = (slug: string) => {
   const s = SERVICES.find((x) => x.slug === slug);
   return s ? pick(s.title, locale) : slug;
@@ -43,7 +38,6 @@ const items = PROJECTS.map((p, i) => ({
   logo: p.logo,
   logoSrc: p.logo?.src ?? null,
   gradient: p.gradient,
-  video: VIDEO_MAP.get(p.slug) ?? null,
   summary: pick(p.summary, locale),
   serviceSlugs: p.serviceSlugs,
   serviceNames: p.serviceSlugs.map(svcName),
@@ -182,7 +176,6 @@ const crumbsLd = {
               data-gradient={p.gradient}
               data-texture={p.coverSrc ?? p.logoSrc ?? ''}
               data-mode={p.coverSrc ? 'cover' : 'logo'}
-              data-video-src={p.video ?? ''}
               aria-label={`${viewLabel}: ${p.client}`}
             >
               <div class="wrow__media-inner">

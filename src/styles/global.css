@@ -1659,12 +1659,10 @@ html.intro-lock body { overflow: hidden; }
   letter-spacing: -0.02em;
   color: #140d09;
 }
-.ticker__star { font-size: 0.6em; transform: translateY(-0.05em); }
 .ticker__band--dark .ticker__item {
   color: transparent;
   -webkit-text-stroke: 1px rgba(248, 248, 248, 0.45);
 }
-.ticker__band--dark .ticker__star { -webkit-text-stroke: 0; color: var(--color-accent); }
 @keyframes marqueeRev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 .marquee-track--reverse { animation-name: marqueeRev; }
 
@@ -1734,7 +1732,6 @@ html.intro-lock body { overflow: hidden; }
   fill: #141414;
   text-transform: uppercase;
 }
-.manifesto__badge-star { font-size: 34px; fill: var(--color-accent); }
 @media (max-width: 767px) { .manifesto__badge { display: none; } }
 @media (prefers-reduced-motion: reduce) { .manifesto__badge { animation: none; } }
 
