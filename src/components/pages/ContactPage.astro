@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import PageHero from '../PageHero.astro';
 import ContactForm from '../ContactForm';
-import { SITE, wa } from '../../data/site';
+import { SITE, wa, WA_MSG } from '../../data/site';
 import { useT, type Locale } from '../../i18n';
 
 interface Props {
@@ -14,7 +14,7 @@ const t = useT(locale);
 const isQuote = variant === 'quote';
 const page = isQuote ? t.quote : t.contact;
 const meta = isQuote ? t.meta.quote : t.meta.contact;
-const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi BrandUp, I want a project quote';
+const waMsg = WA_MSG[locale].quote;
 ---
 
 <Base locale={locale} title={meta.title} description={meta.desc}>
@@ -63,7 +63,7 @@ const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi
           ? 'Completa el mini formulario y te llega directo a nuestro WhatsApp.'
           : 'Fill in the mini form and it lands straight in our WhatsApp.'}
       </p>
-      <ContactForm client:load labels={t.form} variant={isQuote ? 'quote' : 'contact'} />
+      <ContactForm client:load labels={t.form} variant={isQuote ? 'quote' : 'contact'} locale={locale} />
     </div>
   </section>
 </Base>

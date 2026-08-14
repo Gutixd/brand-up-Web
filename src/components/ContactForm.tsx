@@ -30,14 +30,32 @@ interface Props {
   labels: FormLabels;
   /** 'quote' shows budget chips too; 'contact' is the short version */
   variant?: 'contact' | 'quote';
+  /** Idioma del mensaje que se arma para WhatsApp */
+  locale?: 'es' | 'en';
 }
+
+// Rótulos del mensaje que llega al WhatsApp de la agencia. Antes estaban
+// fijos en español, así que una consulta desde /en llegaba mezclada.
+const WA_LABELS = {
+  es: {
+    head: 'Nueva solicitud desde brandup.cl',
+    name: 'Nombre', email: 'Email', phone: 'Teléfono',
+    service: 'Servicio', budget: 'Presupuesto', project: 'Proyecto',
+  },
+  en: {
+    head: 'New enquiry from brandup.cl',
+    name: 'Name', email: 'Email', phone: 'Phone',
+    service: 'Service', budget: 'Budget', project: 'Project',
+  },
+} as const;
 
 const input =
   'w-full rounded-xl border border-line bg-white px-4 py-3.5 text-sm text-paper placeholder:text-gray/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all';
 
 const label = 'mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-gray';
 
-export default function ContactForm({ labels, variant = 'contact' }: Props) {
+export default function ContactForm({ labels, variant = 'contact', locale = 'es' }: Props) {
+  const L = WA_LABELS[locale];
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState('');
@@ -60,13 +78,13 @@ export default function ContactForm({ labels, variant = 'contact' }: Props) {
     setStatus('sending');
     try {
       const get = (k: string) => String(data.get(k) ?? '').trim();
-      const lines: string[] = ['*Nueva solicitud desde brandup.cl*', ''];
-      lines.push(`*Nombre:* ${get('name')}`);
-      lines.push(`*Email:* ${get('email')}`);
-      if (get('phone')) lines.push(`*Teléfono:* ${get('phone')}`);
-      if (service) lines.push(`*Servicio:* ${service}`);
-      if (budget) lines.push(`*Presupuesto:* ${budget}`);
-      lines.push('', '*Proyecto:*', get('message'));
+      const lines: string[] = [`*${L.head}*`, ''];
+      lines.push(`*${L.name}:* ${get('name')}`);
+      lines.push(`*${L.email}:* ${get('email')}`);
+      if (get('phone')) lines.push(`*${L.phone}:* ${get('phone')}`);
+      if (service) lines.push(`*${L.service}:* ${service}`);
+      if (budget) lines.push(`*${L.budget}:* ${budget}`);
+      lines.push('', `*${L.project}:*`, get('message'));
 
       const url = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
       const win = window.open(url, '_blank', 'noopener');

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { PRODUCT } from '../../data/product';
-import { SITE, wa } from '../../data/site';
+import { SITE, wa, WA_MSG } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import imgHero from '../../assets/producto/placa-hero.webp';
@@ -22,9 +22,7 @@ const name = pick(p.name, locale);
 const faq = es ? p.faq.es : p.faq.en;
 const includes = es ? p.includes.es : p.includes.en;
 
-const waMsg = es
-  ? `Hola BrandUp, quiero comprar la placa NFC para reseñas de Google (${p.priceLabel}).`
-  : `Hi BrandUp, I want to buy the NFC Google review stand (${p.priceLabel}).`;
+const waMsg = WA_MSG[locale].product(p.priceLabel);
 
 const gallery = [
   { img: imgCafeDia, alt: es ? 'Placa NFC de reseñas sobre la barra de una cafetería' : 'NFC review stand on a coffee shop counter' },

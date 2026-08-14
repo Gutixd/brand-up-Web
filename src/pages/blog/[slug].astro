@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { BLOG_POSTS, type BlogPost } from '../../data/blog';
 import { coverFor } from '../../data/blogCovers';
-import { SITE, wa } from '../../data/site';
+import { SITE, wa, WA_MSG } from '../../data/site';
 
 export function getStaticPaths() {
   return BLOG_POSTS.map((post) => ({ params: { slug: post.slug }, props: { post } }));
@@ -120,7 +120,7 @@ const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
       <!-- CTA -->
       <aside class="art__cta" data-reveal>
         <p class="art__cta-text">{post.cta}</p>
-        <a href={wa('Hola BrandUp, leí el blog y quiero cotizar')} target="_blank" rel="noopener" class="art__cta-btn">
+        <a href={wa(WA_MSG.es.blog)} target="_blank" rel="noopener" class="art__cta-btn">
           Cotizar por WhatsApp →
         </a>
       </aside>

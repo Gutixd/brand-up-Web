@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo';
-import { SITE, wa } from '../data/site';
+import { SITE, wa, WA_MSG } from '../data/site';
 import { useT, localePath, altPath, type Locale } from '../i18n';
 
 interface Props {
@@ -79,7 +79,7 @@ const nav = [
       <ul class="site-footer__links">
         <li class="site-footer__link site-footer__link--plain">{SITE.city}</li>
         <li>
-          <a href={wa('Hola BrandUp, quiero información')} class="site-footer__link" target="_blank" rel="noopener">
+          <a href={wa(WA_MSG[locale].info)} class="site-footer__link" target="_blank" rel="noopener">
             {SITE.phone}
           </a>
         </li>

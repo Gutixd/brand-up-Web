@@ -1,5 +1,5 @@
 ---
-import { wa } from '../data/site';
+import { wa, WA_MSG } from '../data/site';
 import { useT, localePath, type Locale } from '../i18n';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 const { locale } = Astro.props;
 const t = useT(locale);
-const waMsg = locale === 'es' ? 'Hola BrandUp, quiero cotizar un proyecto' : 'Hi BrandUp, I want a project quote';
+const waMsg = WA_MSG[locale].quote;
 ---
 
 <section class="cta-final">
