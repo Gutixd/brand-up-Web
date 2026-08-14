@@ -92,8 +92,18 @@ const nav = [
     <meta property="og:locale" content={locale === 'es' ? 'es_CL' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <!-- Vercel Web Analytics (activar en el dashboard: Project → Analytics) -->
+    <!-- Vercel Web Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Google Analytics 4 — propiedad "BrandUp - brandup.cl" -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLSQ7KWZF8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(...args: unknown[]) { dataLayer.push(args); }
+      // @ts-ignore — gtag() espera argumentos variádicos
+      gtag('js', new Date());
+      // @ts-ignore
+      gtag('config', 'G-XLSQ7KWZF8');
+    </script>
     <script>
       // Mark JS availability ASAP so reveal styles only hide content when GSAP will run.
       document.documentElement.classList.add('js');
