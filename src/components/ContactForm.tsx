@@ -86,6 +86,18 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
       if (budget) lines.push(`*${L.budget}:* ${budget}`);
       lines.push('', `*${L.project}:*`, get('message'));
 
+      // Guarda una copia en Formspree (no bloquea el envío por WhatsApp si falla).
+      if (SITE.formspreeId) {
+        data.set('service', service);
+        data.set('budget', budget);
+        data.set('_subject', L.head);
+        fetch(`https://formspree.io/f/${SITE.formspreeId}`, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        }).catch(() => {});
+      }
+
       const url = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`;
       const win = window.open(url, '_blank', 'noopener');
       if (!win) window.location.href = url;

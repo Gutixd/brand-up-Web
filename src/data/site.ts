@@ -14,6 +14,9 @@ export const SITE = {
   // Search Console: pegar aquí el content="..." de la etiqueta HTML que
   // entrega Google al verificar la propiedad (vacío = no se renderiza).
   googleSiteVerification: 'LOm1za6n0YKvNQGvIXNDMmH9LAuAQhkIwNTzXDWdr-A',
+  // Formulario de contacto: ID de Formspree (formspree.io/forms/<id>/integration).
+  // Vacío = el formulario solo abre WhatsApp, sin guardar copia.
+  formspreeId: '',
 };
 
 export const wa = (msg: string) =>
