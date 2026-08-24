@@ -16,7 +16,7 @@ export const SITE = {
   googleSiteVerification: 'LOm1za6n0YKvNQGvIXNDMmH9LAuAQhkIwNTzXDWdr-A',
   // Formulario de contacto: ID de Formspree (formspree.io/forms/<id>/integration).
   // Vacío = el formulario solo abre WhatsApp, sin guardar copia.
-  formspreeId: '',
+  formspreeId: 'mljrkvan',
 };
 
 export const wa = (msg: string) =>
