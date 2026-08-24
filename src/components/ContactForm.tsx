@@ -95,6 +95,9 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
           method: 'POST',
           body: data,
           headers: { Accept: 'application/json' },
+          // La página navega a WhatsApp justo después: sin keepalive el
+          // navegador cancela este POST a medio camino si no hubo popup.
+          keepalive: true,
         }).catch(() => {});
       }
 
