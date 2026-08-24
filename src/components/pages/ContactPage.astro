@@ -60,8 +60,8 @@ const waMsg = WA_MSG[locale].quote;
       </h2>
       <p class="contact-form-card__hint">
         {locale === 'es'
-          ? 'Completa el mini formulario y te llega directo a nuestro WhatsApp.'
-          : 'Fill in the mini form and it lands straight in our WhatsApp.'}
+          ? 'Completa el mini formulario y te respondemos dentro del día hábil.'
+          : 'Fill in the mini form and we will get back to you within one business day.'}
       </p>
       <ContactForm client:load labels={t.form} variant={isQuote ? 'quote' : 'contact'} locale={locale} />
     </div>
