@@ -1739,18 +1739,25 @@ html.intro-lock body { overflow: hidden; }
 .manifesto__collage {
   position: relative;
   margin-top: clamp(64px, 9vw, 130px);
-  height: clamp(700px, 52vw, 760px);
+  /* Alto proporcional al ancho: como las tarjetas miden un % del ancho,
+     su altura escala igual y la caja nunca queda corta ni con un vacío. */
+  aspect-ratio: 1338 / 582;
 }
 .polaroid-pos { position: absolute; will-change: transform; }
-.polaroid-pos--1 { width: 30%; left: 0;    top: 4%; }
-.polaroid-pos--2 { width: 22%; left: 30%;  top: 26%; }
-.polaroid-pos--3 { width: 34%; right: 0;   top: 0; }
-.polaroid-pos--4 { width: 24%; left: 12%;  bottom: 2%; }
-.polaroid-pos--5 { width: 30%; right: 12%; bottom: 0; }
+/* Las piezas son verticales (gráficas 4:5 y capturas de celular), así que
+   las tarjetas son más angostas y altas que antes. Van en zigzag —alta,
+   baja, alta, baja, alta— para repartir el peso a lo ancho sin taparse. */
+.polaroid-pos--1 { width: 20%; left: 1%;  top: 4%; }
+.polaroid-pos--2 { width: 17%; left: 23%; top: 38%; }
+.polaroid-pos--3 { width: 21%; left: 41%; top: 0; }
+.polaroid-pos--4 { width: 17%; left: 63%; top: 40%; }
+.polaroid-pos--5 { width: 19%; left: 80%; top: 6%; }
 .polaroid {
   position: relative;
   background: #fff;
-  padding: 10px 10px 38px;
+  /* El marco escala con el ancho: con padding fijo, en tablet el borde
+     inferior quedaba enorme frente a una foto ya pequeña. */
+  padding: clamp(6px, 0.75vw, 10px) clamp(6px, 0.75vw, 10px) clamp(22px, 2.9vw, 38px);
   box-shadow: 0 26px 70px rgba(20, 20, 20, 0.18);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -1773,11 +1780,14 @@ html.intro-lock body { overflow: hidden; }
   box-shadow: 0 3px 8px rgba(20, 20, 20, 0.12);
   z-index: 2;
 }
+/* Sin aspect-ratio fijo: cada pieza conserva su proporción real. Forzar
+   4:3 recortaba el remate de las gráficas verticales (el "2026" de Bell
+   College, el "100% Online" de BSchool) y partía las tarjetas de producto
+   de las capturas de celular. */
 .polaroid img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
   filter: saturate(1.05);
 }
 .polaroid__cap {
@@ -1796,9 +1806,16 @@ html.intro-lock body { overflow: hidden; }
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 26px 16px;
+    align-items: start;
   }
   .polaroid-pos { position: static; width: auto !important; }
-  .polaroid-pos--5 { grid-column: 1 / -1; }
+  /* La quinta queda sola en la última fila: centrada y a media caja, para
+     que no se vea desproporcionada ahora que las piezas son verticales. */
+  .polaroid-pos--5 {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 50% !important;
+  }
 }
 
 /* ── Servicios urbanos — lista con preview flotante ──────────────── */

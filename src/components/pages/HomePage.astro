@@ -15,11 +15,12 @@ import imgWorksBg from '../../assets/categories/works-bg.webp';
 // Collage y strip: piezas de TRABAJO real (sitios, gráficas, packaging).
 // Nada de logos sueltos ni capturas de perfil de Instagram.
 //
-// Los archivos de src/assets/strip/ están pre-recortados a 1600x1200 (4:3),
-// que es justo el aspecto de .polaroid img y .street-card, así que entran
-// sin recorte y se ven igual en escritorio y en celular. El encuadre se
-// eligió pieza por pieza (las gráficas verticales se cortan desde arriba
-// para conservar el titular).
+// Los archivos horizontales del strip están a 1600x1200 (4:3), que es el
+// aspecto de .street-card, así que entran sin recorte.
+//
+// Las 5 piezas del collage NO se recortan a 4:3: son verticales (gráficas
+// 4:5 y capturas de celular) y forzarlas al horizontal les cortaba el
+// remate. Van con su proporción real; .polaroid img usa height:auto.
 import wAltitudeWeb from '../../assets/strip/altitude-desktop.webp';
 import wAracnidaWeb from '../../assets/strip/aracnida-home.webp';
 import wAseocoolWeb from '../../assets/strip/aseocool-home.webp';
@@ -253,7 +254,7 @@ const stats = [
                 src={c.img}
                 alt={`Trabajo de BrandUp para ${c.name}`}
                 widths={[420, 800]}
-                sizes="(max-width: 767px) 46vw, 30vw"
+                sizes="(max-width: 767px) 46vw, 24vw"
                 loading="lazy"
               />
               <figcaption class="polaroid__cap">{c.name}</figcaption>
