@@ -1998,8 +1998,15 @@ html.intro-lock body { overflow: hidden; }
   gap: clamp(14px, 2vw, 26px);
 }
 .street-marquee { overflow: hidden; }
-.street-marquee .marquee-track { animation-duration: 48s; }
-.street-marquee--rev .marquee-track { animation-duration: 62s; }
+/* 4 copias de la secuencia y desplazamiento de -25% (en vez de 2 y -50%).
+   Al dejar de forzar 4:3, la fila de abajo quedó más angosta —son piezas
+   verticales— y con solo 2 copias asomaba un hueco al final del ciclo en
+   pantallas anchas. La velocidad no cambia: sigue recorriendo una
+   secuencia completa en el mismo tiempo. */
+@keyframes streetMarquee { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+@keyframes streetMarqueeRev { from { transform: translateX(-25%); } to { transform: translateX(0); } }
+.street-marquee .marquee-track { animation-name: streetMarquee; animation-duration: 48s; }
+.street-marquee--rev .marquee-track { animation-name: streetMarqueeRev; animation-duration: 62s; }
 .street-marquee:hover .marquee-track { animation-play-state: paused; }
 .street-seq {
   display: flex;
@@ -2007,10 +2014,13 @@ html.intro-lock body { overflow: hidden; }
   gap: clamp(14px, 2vw, 26px);
   padding-inline: clamp(7px, 1vw, 13px);
 }
+/* Altura fija y ancho según la proporción real de cada pieza: la fila
+   queda alineada y nada se recorta. Antes todas se forzaban a 4:3, y las
+   gráficas verticales de la fila de abajo perdían el logo y el remate. */
 .street-card {
   flex: 0 0 auto;
-  width: clamp(230px, 27vw, 400px);
-  aspect-ratio: 4 / 3;
+  height: clamp(210px, 19vw, 300px);
+  width: auto;
   overflow: hidden;
   border-radius: 10px;
   position: relative;
@@ -2020,9 +2030,9 @@ html.intro-lock body { overflow: hidden; }
 .street-card:nth-child(odd)  { --tilt: -1.5deg; }
 .street-card:nth-child(even) { --tilt: 1.3deg; }
 .street-card img {
-  width: 100%;
+  display: block;
   height: 100%;
-  object-fit: cover;
+  width: auto;
   filter: saturate(1.1) contrast(1.04);
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -2042,8 +2052,8 @@ html.intro-lock body { overflow: hidden; }
   border-radius: 99px;
 }
 @media (max-width: 767px) {
-  /* Street marquee móvil: cards más chicas, título con stroke fino */
-  .street-card { width: 62vw; }
+  /* Street marquee móvil: título con stroke fino. El alto de las cards ya
+     lo resuelve el clamp de .street-card, y el ancho va por proporción. */
   .street__title { -webkit-text-stroke-width: 1px; }
   .ticker { padding-block: 40px; }
   .manifesto { padding-inline: 18px; }

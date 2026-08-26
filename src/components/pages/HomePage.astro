@@ -15,12 +15,11 @@ import imgWorksBg from '../../assets/categories/works-bg.webp';
 // Collage y strip: piezas de TRABAJO real (sitios, gráficas, packaging).
 // Nada de logos sueltos ni capturas de perfil de Instagram.
 //
-// Los archivos horizontales del strip están a 1600x1200 (4:3), que es el
-// aspecto de .street-card, así que entran sin recorte.
-//
-// Las 5 piezas del collage NO se recortan a 4:3: son verticales (gráficas
-// 4:5 y capturas de celular) y forzarlas al horizontal les cortaba el
-// remate. Van con su proporción real; .polaroid img usa height:auto.
+// Ninguna pieza se recorta a un aspecto fijo: todas conservan su
+// proporción real, porque forzarlas a 4:3 les cortaba el remate (el logo
+// de BSchool, el "2026" de Bell College, tarjetas de producto partidas).
+// El collage usa .polaroid img con height:auto; el marquee usa
+// .street-card con alto fijo y ancho automático.
 import wAltitudeWeb from '../../assets/strip/altitude-desktop.webp';
 import wAracnidaWeb from '../../assets/strip/aracnida-home.webp';
 import wAseocoolWeb from '../../assets/strip/aseocool-home.webp';
@@ -307,15 +306,15 @@ const stats = [
     <div class="street__rows" data-skew>
       <div class="street-marquee">
         <div class="marquee-track">
-          {[0, 1].map((copy) => (
-            <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {[0, 1, 2, 3].map((copy) => (
+            <div class="street-seq" aria-hidden={copy > 0 ? 'true' : undefined}>
               {streetsTop.map((st, i) => (
                 <figure class="street-card">
                   <Image
                     src={st.img}
                     alt={`Trabajo de BrandUp para ${st.name}`}
                     widths={[420, 800]}
-                    sizes="(max-width: 767px) 62vw, 27vw"
+                    sizes="(max-width: 767px) 70vw, 28vw"
                     loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{i + 1} — {st.name}</figcaption>
@@ -327,15 +326,15 @@ const stats = [
       </div>
       <div class="street-marquee street-marquee--rev">
         <div class="marquee-track marquee-track--reverse">
-          {[0, 1].map((copy) => (
-            <div class="street-seq" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {[0, 1, 2, 3].map((copy) => (
+            <div class="street-seq" aria-hidden={copy > 0 ? 'true' : undefined}>
               {streetsBottom.map((st, i) => (
                 <figure class="street-card">
                   <Image
                     src={st.img}
                     alt={`Trabajo de BrandUp para ${st.name}`}
                     widths={[420, 800]}
-                    sizes="(max-width: 767px) 62vw, 27vw"
+                    sizes="(max-width: 767px) 70vw, 28vw"
                     loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{6 - i} — {st.name}</figcaption>
