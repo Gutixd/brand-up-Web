@@ -18,6 +18,9 @@ const BY_TAG: Record<string, ImageMetadata> = {
   'Marketing': cMarketing,
   'Diseño Web': cDisenoWeb,
   'Social Media': cSocial,
+  // Pendiente: portada propia. Por ahora reutiliza la de redes sociales,
+  // que es donde corren las campañas de las que hablan estos artículos.
+  'Publicidad': cSocial,
   'SEO': cSeo,
   'SEO Local': cSeoLocal,
   'E-commerce': cEcommerce,

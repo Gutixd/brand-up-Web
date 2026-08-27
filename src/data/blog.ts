@@ -1043,6 +1043,438 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     cta: 'Desarrollamos e-commerce pensados para convertir, no solo para verse bien. Cuéntanos qué vendes.',
   },
+  {
+    slug: 'cuanto-cuesta-la-publicidad-en-instagram-en-chile',
+    title: '¿Cuánto cuesta hacer publicidad en Instagram en Chile? (2026)',
+    desc: 'Cuánto cuesta pautar en Instagram y Facebook en Chile: presupuesto mínimo real, costo por mil impresiones, qué se paga aparte y cuándo esperar resultados.',
+    tag: 'Publicidad',
+    date: '2026-07-28',
+    readMin: 6,
+    intro:
+      'Meta te deja partir con muy poca plata al día, y por eso mucha gente cree que con $20.000 al mes va a llenar el negocio. La plataforma no miente, pero tampoco te cuenta la parte incómoda: hay un piso bajo el cual la pauta no alcanza a aprender y el dinero se evapora.',
+    answer:
+      'En Chile, un presupuesto realista para que una campaña en Instagram deje aprendizajes útiles parte alrededor de $100.000 a $150.000 CLP al mes en pauta, más el costo de gestión si lo hace una agencia. Con menos de $50.000 mensuales es posible pautar, pero difícilmente se sale de la fase de aprendizaje y los resultados son erráticos.',
+    sections: [
+      {
+        h: 'Qué estás pagando exactamente',
+        p: [
+          'En publicidad digital nunca pagas "un anuncio". Pagas por llegar a personas, y el precio lo define una subasta: cuánta gente quiere mostrarle algo al mismo público que tú, en el mismo momento.',
+          'Por eso el mismo presupuesto rinde distinto en marzo que en diciembre, y distinto si le hablas a "mujeres de Santiago" que a "dueños de restaurante de Maipú".',
+        ],
+      },
+      {
+        h: 'Los costos referenciales en Chile',
+        list: [
+          'Costo por mil impresiones (CPM): habitualmente entre $1.500 y $6.000 CLP, según rubro, público y época del año.',
+          'Costo por clic: suele moverse entre $80 y $400 CLP en campañas de tráfico bien armadas.',
+          'Mínimo diario que exige Meta: es muy bajo (del orden de uno o dos dólares por conjunto de anuncios), pero no es un mínimo recomendable.',
+          'Gestión profesional: entre $150.000 y $400.000 CLP mensuales, o un porcentaje de la inversión. Se cobra aparte de la pauta.',
+        ],
+      },
+      {
+        h: 'Por qué un presupuesto muy chico se pierde',
+        p: [
+          'Meta necesita acumular resultados para aprender a quién mostrarle tu anuncio. Mientras no junta suficientes conversiones, reparte casi al azar. Si tu presupuesto solo alcanza para un puñado de impresiones diarias, la campaña vive permanentemente en esa fase ciega.',
+          'A eso se suma un error muy común: repartir $50.000 entre cinco campañas distintas. Cada una queda con $10.000 y ninguna aprende. Es preferible una sola campaña con todo el presupuesto que cinco a medio morir.',
+        ],
+      },
+      {
+        h: 'Cuánto tarda en verse el retorno',
+        p: [
+          'Las primeras 48 a 72 horas son de aprendizaje: los números de ese período no sirven para juzgar nada. Una lectura razonable se tiene recién a las dos o tres semanas, y una decisión de fondo (escalar o cerrar) al mes.',
+          'Si alguien te promete ventas garantizadas la primera semana, está vendiendo humo o está por gastar tu presupuesto en clics baratos que no compran.',
+        ],
+      },
+      {
+        h: 'La pauta amplifica, no arregla',
+        p: [
+          'Pautar hacia un perfil abandonado o hacia una web lenta es la forma más rápida de quemar plata. La publicidad multiplica lo que ya tienes: si el destino no convence, multiplica el rechazo.',
+          'Antes de invertir, revisa que el perfil esté vivo, que haya alguien respondiendo los mensajes y que el enlace lleve a una página que cargue rápido en celular.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Cuál es el presupuesto mínimo para pautar en Instagram en Chile?',
+        a: 'Técnicamente puedes partir con montos muy bajos, pero para que la campaña salga de la fase de aprendizaje y entregue datos confiables conviene contar con al menos $100.000 a $150.000 CLP mensuales de pauta.',
+      },
+      {
+        q: '¿El costo de la agencia incluye el presupuesto de publicidad?',
+        a: 'Normalmente no. La pauta se paga directamente a Meta con tu tarjeta y la agencia cobra aparte por estrategia, creatividades y optimización. Conviene dejarlo por escrito antes de partir.',
+      },
+      {
+        q: '¿Conviene usar el botón "Promocionar publicación"?',
+        a: 'Sirve para dar alcance a un contenido puntual, pero no permite configurar objetivos de conversión, públicos ni pruebas de creatividades. Para campañas con objetivo de venta conviene usar el administrador de anuncios.',
+      },
+    ],
+    cta: 'Armamos y gestionamos tus campañas en Instagram y Facebook con reportes claros. Cuéntanos tu rubro y te decimos con cuánto conviene partir.',
+  },
+  {
+    slug: 'google-ads-o-meta-ads-cual-conviene-en-chile',
+    title: 'Google Ads o Meta Ads: ¿cuál conviene en Chile?',
+    desc: 'Comparación honesta entre Google Ads y Meta Ads para negocios en Chile: cuándo conviene cada uno según tu rubro, costos referenciales y cómo combinarlos.',
+    tag: 'Publicidad',
+    date: '2026-08-04',
+    readMin: 7,
+    intro:
+      'No es una pelea de plataformas: son dos momentos distintos del cliente. En Google aparecen personas que ya están buscando lo que vendes. En Instagram y Facebook interrumpes a alguien que no te estaba buscando. Eso cambia todo.',
+    answer:
+      'Si tu servicio se busca activamente en Google (gasfíter, abogado, dentista, página web, mudanzas), conviene partir por Google Ads, porque llegas a gente con intención de compra inmediata. Si tu producto entra por los ojos y se compra por impulso (ropa, comida, accesorios, belleza), conviene partir por Meta Ads.',
+    sections: [
+      {
+        h: 'La diferencia de fondo: intención',
+        p: [
+          'Cuando alguien escribe "gasfíter de urgencia Maipú" en Google, tiene el problema ahora. No hay que convencerlo de que necesita el servicio: solo hay que aparecer y dar confianza. Por eso los clics de Google cuestan más, pero cierran más.',
+          'En Meta, en cambio, la persona estaba viendo cumpleaños y memes. Tu anuncio es una interrupción. Necesitas una imagen o video que detenga el scroll y una oferta clara, porque nadie llegó buscándote.',
+        ],
+      },
+      {
+        h: 'Cuándo conviene Google Ads',
+        list: [
+          'Vendes un servicio que la gente busca cuando tiene el problema: salud, legal, reparaciones, mudanzas, cerrajería, servicios profesionales.',
+          'Tu ticket es medio o alto y aguanta un costo por clic más caro.',
+          'Puedes responder rápido: en búsquedas de urgencia gana el que contesta primero.',
+          'Tienes una página de destino específica, no la portada genérica del sitio.',
+        ],
+      },
+      {
+        h: 'Cuándo conviene Meta Ads',
+        list: [
+          'Tu producto se entiende con una foto o un video: ropa, comida, decoración, belleza, accesorios.',
+          'La compra es por impulso o de ticket bajo.',
+          'Tienes material visual propio y constante, o puedes producirlo.',
+          'Quieres construir marca y audiencia, no solo cerrar la venta de hoy.',
+        ],
+      },
+      {
+        h: 'Costos referenciales en Chile',
+        list: [
+          'Google Ads: el costo por clic en rubros competitivos suele moverse entre $500 y $2.500 CLP; en nichos con poca competencia puede ser bastante menor.',
+          'Meta Ads: el costo por clic suele ser más bajo, entre $80 y $400 CLP, pero con mucha menor intención de compra.',
+          'Presupuesto de entrada razonable: alrededor de $150.000 CLP mensuales en Google Ads y desde $100.000 CLP en Meta Ads.',
+          'Comparar costo por clic entre plataformas no sirve: lo único comparable es el costo por cliente conseguido.',
+        ],
+      },
+      {
+        h: 'Dos requisitos antes de invertir en cualquiera de las dos',
+        p: [
+          'Primero, un destino específico. Mandar el tráfico pagado a la portada del sitio es de los errores más caros que existen: la persona buscó algo concreto y aterriza en un menú. Necesitas una página que hable exactamente de lo que prometió el anuncio.',
+          'Segundo, medición instalada. Sin eventos de conversión configurados (clic a WhatsApp, formulario enviado, compra), no sabrás qué campaña trae clientes y cuál solo trae visitas. Vas a estar decidiendo a ciegas.',
+        ],
+      },
+      {
+        h: 'Lo que hacemos en la práctica',
+        p: [
+          'Cuando el presupuesto es acotado, no recomendamos dividirlo entre ambas plataformas: se parte por la que calce con tu rubro, se le da tiempo suficiente para aprender y recién cuando funciona se abre la segunda.',
+          'La combinación más potente aparece después: Google para capturar a quien ya te busca, y Meta para volver a mostrarte a quien visitó tu sitio y no compró.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Qué es mejor para una pyme chilena, Google Ads o Meta Ads?',
+        a: 'Depende de si tu servicio se busca o se descubre. Servicios de urgencia y ticket alto rinden mejor en Google Ads; productos visuales de compra por impulso rinden mejor en Meta Ads. Con presupuesto acotado conviene partir por una sola.',
+      },
+      {
+        q: '¿Puedo hacer las dos al mismo tiempo?',
+        a: 'Sí, pero solo si el presupuesto alcanza para que ambas salgan de la fase de aprendizaje. Repartir un presupuesto chico entre dos plataformas suele dar peores resultados que concentrarlo en una.',
+      },
+      {
+        q: '¿Necesito una página web para hacer publicidad?',
+        a: 'Para Google Ads sí, es indispensable. En Meta Ads puedes dirigir el tráfico a WhatsApp o a tu perfil de Instagram, aunque una página de destino propia casi siempre convierte mejor y permite medir.',
+      },
+    ],
+    cta: 'Te decimos cuál de las dos conviene para tu rubro antes de que gastes un peso. Escríbenos y lo revisamos juntos.',
+  },
+  {
+    slug: 'cuanto-cuesta-un-reel-publicitario-en-chile',
+    title: '¿Cuánto cuesta un reel o video publicitario en Chile?',
+    desc: 'Precios reales de producción de reels y videos para redes en Chile 2026: rangos por tipo de producción, qué incluye cada uno y cuándo conviene un pack mensual.',
+    tag: 'Contenido',
+    date: '2026-08-08',
+    readMin: 5,
+    intro:
+      'Un reel puede costar $25.000 o $600.000 y ambos precios pueden ser justos. La diferencia no está en la duración del video, sino en cuánta cabeza y cuánta producción hay detrás.',
+    answer:
+      'En Chile, un reel grabado con celular y editado profesionalmente suele costar entre $30.000 y $80.000 CLP por pieza. Con producción audiovisual (cámara, iluminación, guion y dirección) los valores parten alrededor de $150.000 CLP y pueden superar los $500.000 según locación y talento.',
+    sections: [
+      {
+        h: 'Los rangos según tipo de producción',
+        list: [
+          'Edición de material que tú grabas: $15.000 – $40.000 CLP por reel. Tú envías el crudo, la agencia edita, subtitula y musicaliza.',
+          'Grabación con celular más edición: $30.000 – $80.000 CLP. Alguien va al local, graba y entrega la pieza terminada.',
+          'Producción audiovisual: desde $150.000 CLP. Incluye guion, cámara, sonido, iluminación y postproducción.',
+          'Pack mensual (entre 4 y 12 piezas): $180.000 – $700.000 CLP, normalmente más conveniente por pieza.',
+        ],
+      },
+      {
+        h: 'Qué debería incluir el precio',
+        list: [
+          'Idea y guion, no solo grabar lo que se te ocurra en el momento.',
+          'Formato vertical listo para Reels, TikTok y Shorts.',
+          'Subtítulos incrustados: la mayoría ve los videos sin sonido.',
+          'Música con licencia o del catálogo de la plataforma.',
+          'Al menos una ronda de cambios.',
+          'Los archivos originales, para que el material quede tuyo.',
+        ],
+      },
+      {
+        h: 'Por qué el pack mensual suele convenir',
+        p: [
+          'Un reel suelto rara vez mueve la aguja. Lo que construye audiencia es la constancia, y ahí el pack mensual gana por dos motivos: baja el precio por pieza y permite grabar varias en una sola jornada.',
+          'Además, publicar seguido permite ver qué formato funciona en tu rubro y ajustar. Con una pieza al mes no hay datos suficientes para aprender nada.',
+        ],
+      },
+      {
+        h: 'Producción cara no significa mejor resultado',
+        p: [
+          'En redes, el video que se ve "muy publicitario" suele rendir peor que el grabado con celular en el local. La gente reconoce el aviso y sigue de largo.',
+          'La producción alta se justifica cuando el video va a ser el creativo principal de una campaña pagada con presupuesto grande, o cuando la marca necesita transmitir un nivel determinado. Para el día a día del feed, la constancia rinde más que el fierro.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Cuánto cuesta un reel para Instagram en Chile?',
+        a: 'Entre $30.000 y $80.000 CLP por pieza si se graba con celular y se edita profesionalmente. Con producción audiovisual completa los valores parten cerca de $150.000 CLP.',
+      },
+      {
+        q: '¿Cuántos reels al mes necesito?',
+        a: 'Para sostener una cuenta activa, entre 4 y 8 piezas mensuales suele ser un buen punto de partida. Más importante que la cantidad es mantener el ritmo en el tiempo.',
+      },
+      {
+        q: '¿Puedo grabar yo y que la agencia solo edite?',
+        a: 'Sí, y es la opción más económica. Funciona bien si alguien del equipo puede grabar con buena luz y siguiendo un guion. La agencia entrega la pauta de qué grabar para que el material sirva.',
+      },
+    ],
+    cta: 'Producimos reels con guion, edición y subtítulos, listos para publicar. Cuéntanos tu rubro y te pasamos un pack a medida.',
+  },
+  {
+    slug: 'como-hacer-un-reel-que-venda',
+    title: 'Cómo hacer un reel que venda: estructura, guion y errores',
+    desc: 'La estructura que hace que un reel retenga y venda: los primeros 3 segundos, el desarrollo, el cierre con llamado a la acción y los errores que matan el alcance.',
+    tag: 'Contenido',
+    date: '2026-08-13',
+    readMin: 6,
+    intro:
+      'La mayoría de los reels de negocios fallan en el mismo punto: los primeros tres segundos. No es un problema de cámara ni de edición, es un problema de guion.',
+    answer:
+      'Un reel que vende sigue tres bloques: un gancho en los primeros 3 segundos que interrumpe el scroll, un desarrollo breve que entrega algo útil o muestra el producto en uso, y un cierre con un llamado a la acción concreto. El formato es vertical 9:16, con subtítulos incrustados, porque la mayoría lo ve sin sonido.',
+    sections: [
+      {
+        h: 'Los primeros 3 segundos deciden todo',
+        p: [
+          'La plataforma mide cuánta gente se queda. Si tu video pierde a la mayoría en el primer par de segundos, deja de mostrarlo, por bueno que sea el resto.',
+          'Empezar con el logo, con "hola, les queríamos contar que..." o con una toma lenta del local es la forma más rápida de perder a todo el mundo. El gancho tiene que aparecer antes de que la persona decida deslizar.',
+        ],
+        list: [
+          'Parte con el resultado o el problema, no con la introducción.',
+          'Muestra movimiento en el primer cuadro: una mano, un corte, algo cambiando.',
+          'Pon el texto clave arriba, escrito, desde el primer segundo.',
+          'Si es un producto, que se vea en uso de inmediato.',
+        ],
+      },
+      {
+        h: 'La estructura que funciona',
+        list: [
+          'Gancho (0 a 3 segundos): la promesa, el problema o el resultado final.',
+          'Desarrollo (3 a 20 segundos): el paso a paso, el producto en acción o el argumento. Un solo mensaje, no cinco.',
+          'Cierre (últimos segundos): qué quieres que haga la persona, dicho de forma concreta.',
+        ],
+        p: [
+          'Un error típico es querer contar todo el catálogo en un video. Un reel, un mensaje. Si tienes cinco cosas que decir, son cinco reels.',
+        ],
+      },
+      {
+        h: 'El llamado a la acción tiene que ser específico',
+        p: [
+          '"Síguenos para más contenido" no vende nada. "Escríbenos por WhatsApp y te cotizamos hoy" o "comenta la palabra PRECIO y te lo enviamos" sí genera acción, porque le dice a la persona exactamente qué hacer.',
+          'Y algo básico que muchos negocios olvidan: si el cierre invita a escribir, tiene que haber alguien respondiendo. Un reel que funciona y un buzón abandonado es plata perdida.',
+        ],
+      },
+      {
+        h: 'Errores que matan el alcance',
+        list: [
+          'Subir el video con marca de agua de otra plataforma: las redes penalizan el contenido reciclado con logo ajeno.',
+          'Grabar en horizontal y luego rellenar los costados con barras.',
+          'Video sin subtítulos: se pierde a todo el que ve sin sonido.',
+          'Poner texto importante en la zona que tapa la interfaz de la app.',
+          'Música de moda sin relación con lo que muestras: no salva un guion débil.',
+          'Publicar cinco reels en una semana y luego desaparecer un mes.',
+        ],
+      },
+      {
+        h: 'Cómo saber si funcionó',
+        p: [
+          'Los seguidores nuevos no son el mejor indicador. Mira la retención (cuánta gente llega al final), los guardados y los mensajes que llegaron. Un reel con menos vistas pero muchos mensajes vale más que uno viral que no generó ninguna consulta.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Cuánto debe durar un reel?',
+        a: 'Para contenido de negocio, entre 15 y 30 segundos suele ser el rango más efectivo. Lo importante no es la duración sino que la gente llegue al final: es preferible un video de 12 segundos completo que uno de 60 que nadie termina.',
+      },
+      {
+        q: '¿Necesito una cámara profesional para hacer reels?',
+        a: 'No. Un celular actual con buena luz es suficiente para la mayoría de los negocios. Importa mucho más el guion, la luz y el audio que la cámara.',
+      },
+      {
+        q: '¿Es mejor publicar reels o fotos?',
+        a: 'El video tiene más alcance en cuentas que están creciendo, porque las plataformas lo distribuyen a personas que no te siguen. Las fotos siguen sirviendo para catálogo y para la gente que ya llegó a tu perfil.',
+      },
+    ],
+    cta: 'Escribimos el guion, grabamos y editamos tus reels para que dejen de ser adorno y empiecen a traer consultas. Hablemos.',
+  },
+  {
+    slug: 'por-que-mis-anuncios-en-meta-no-funcionan',
+    title: 'Por qué tus anuncios en Meta no funcionan (7 causas reales)',
+    desc: 'Las razones más comunes por las que una campaña en Instagram o Facebook no trae ventas en Chile, y cómo corregir cada una sin subir el presupuesto.',
+    tag: 'Publicidad',
+    date: '2026-08-18',
+    readMin: 6,
+    intro:
+      'Casi siempre que revisamos una cuenta que "no funciona", el problema no es la plataforma ni el presupuesto. Son errores de configuración y de criterio que se repiten una y otra vez.',
+    answer:
+      'Las causas más frecuentes son el presupuesto repartido entre demasiadas campañas, apagar los anuncios antes de que la plataforma termine de aprender, un creativo que no detiene el scroll, un destino que no convierte y no tener configurados los eventos de conversión para saber qué está pasando.',
+    sections: [
+      {
+        h: '1. Repartiste el presupuesto en demasiadas campañas',
+        p: [
+          'Es el error más común. Con $80.000 al mes en cuatro campañas, cada una recibe $20.000 y ninguna junta los resultados necesarios para que el sistema aprenda a quién mostrarle el anuncio.',
+          'Concentra: una campaña, un objetivo, todo el presupuesto. Recién cuando esa funciona se abre la siguiente.',
+        ],
+      },
+      {
+        h: '2. Apagaste la campaña antes de tiempo',
+        p: [
+          'Los primeros días son de aprendizaje y los números son malos casi siempre. Mucha gente ve eso, se asusta y apaga. Al día siguiente crea otra campaña, que vuelve a empezar de cero, y repite el ciclo.',
+          'Da al menos dos semanas antes de juzgar, y evita editar la campaña todos los días: cada cambio importante reinicia el aprendizaje.',
+        ],
+      },
+      {
+        h: '3. El creativo no detiene el scroll',
+        p: [
+          'En Meta el creativo pesa más que la segmentación. Una foto de catálogo con el logo encima compite contra videos de amigos y memes: pierde siempre.',
+          'Lo que funciona es el producto en uso, personas reales, movimiento en el primer segundo y texto legible en pantalla. Y conviene tener al menos tres versiones distintas compitiendo, no una sola.',
+        ],
+      },
+      {
+        h: '4. El público está mal definido',
+        p: [
+          'Los dos extremos fallan. Un público de 20.000 personas se satura en días y la gente ve tu anuncio hasta el cansancio. Un público de "todo Chile, 18 a 65" es tan amplio que el presupuesto se diluye.',
+          'En negocios locales, el radio geográfico suele importar más que los intereses: no sirve llegar a alguien de Antofagasta si atiendes en Maipú.',
+        ],
+      },
+      {
+        h: '5. El destino no convierte',
+        p: [
+          'El anuncio puede ser perfecto y aun así no vender si la persona aterriza en una web lenta, en una portada genérica o en un WhatsApp que nadie contesta.',
+          'Prueba tú mismo el recorrido completo desde el celular, como si fueras un cliente. La mayoría de las veces el problema aparece ahí.',
+        ],
+      },
+      {
+        h: '6. No tienes medición instalada',
+        p: [
+          'Sin el píxel y los eventos de conversión configurados, Meta no sabe qué es una venta para ti, y por lo tanto no puede optimizar hacia eso. Termina buscando clics baratos de gente que nunca iba a comprar.',
+          'Sin medición tampoco puedes saber qué anuncio funcionó. Estás decidiendo por intuición.',
+        ],
+      },
+      {
+        h: '7. Estás mirando las métricas equivocadas',
+        p: [
+          'Los "me gusta" y el alcance no pagan sueldos. Las métricas que importan son el costo por consulta, el costo por cliente conseguido y cuánto te deja ese cliente.',
+          'Una campaña con pocas vistas pero que trae consultas que cierran es mejor que una con cien mil impresiones y cero mensajes.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Cuánto tiempo hay que esperar antes de apagar una campaña?',
+        a: 'Al menos dos semanas con el presupuesto estable y sin ediciones mayores. Los primeros días corresponden a la fase de aprendizaje y sus resultados no son representativos.',
+      },
+      {
+        q: '¿Sirve subir el presupuesto si no está funcionando?',
+        a: 'Casi nunca. Si el creativo o el destino son el problema, más presupuesto solo hace que pierdas plata más rápido. Primero se corrige la causa y después se escala.',
+      },
+      {
+        q: '¿Cuántos anuncios conviene tener activos?',
+        a: 'Entre tres y cinco creatividades distintas dentro de un mismo conjunto, para que la plataforma encuentre cuál rinde mejor. Tener uno solo no permite comparar nada.',
+      },
+    ],
+    cta: 'Revisamos tu cuenta publicitaria y te decimos qué está fallando, sin compromiso. Escríbenos y lo vemos.',
+  },
+  {
+    slug: 'medidas-y-formatos-de-video-para-redes-sociales',
+    title: 'Medidas y formatos de video para redes sociales (guía 2026)',
+    desc: 'Resoluciones, proporciones y zonas seguras para Reels, TikTok, Shorts y feed. La guía práctica para que tus videos no salgan cortados ni con texto tapado.',
+    tag: 'Contenido',
+    date: '2026-08-22',
+    readMin: 5,
+    intro:
+      'Grabar en el formato equivocado es el error más caro y más fácil de evitar: obliga a recortar, deja el texto tapado por la interfaz o llena la pantalla de barras negras.',
+    answer:
+      'Para Reels, TikTok y Shorts el formato es vertical 9:16 a 1080 × 1920 píxeles. Para el feed de Instagram conviene el vertical 4:5 a 1080 × 1350, que ocupa más pantalla que el cuadrado. Graba siempre en vertical y deja libres los bordes superior e inferior, donde la aplicación pone sus botones.',
+    sections: [
+      {
+        h: 'Las medidas que necesitas',
+        list: [
+          'Reels, TikTok, Shorts y stories: vertical 9:16, 1080 × 1920 px.',
+          'Feed de Instagram (recomendado): vertical 4:5, 1080 × 1350 px.',
+          'Feed cuadrado: 1:1, 1080 × 1080 px.',
+          'YouTube horizontal: 16:9, 1920 × 1080 px.',
+          'Graba a 30 cuadros por segundo salvo que vayas a usar cámara lenta.',
+        ],
+      },
+      {
+        h: 'Las zonas seguras: el error que más se ve',
+        p: [
+          'La aplicación superpone su propia interfaz sobre tu video: arriba el nombre de la cuenta, abajo la descripción, y a la derecha los botones de me gusta y compartir.',
+          'Como regla práctica, deja libres unos 250 píxeles arriba y unos 400 abajo, y no pongas nada importante en la franja derecha. Si tu texto o el precio queda ahí, nadie lo va a leer.',
+        ],
+      },
+      {
+        h: 'Duración recomendada',
+        list: [
+          'Contenido de negocio: entre 15 y 30 segundos funciona mejor que los videos largos.',
+          'Tutoriales o paso a paso: hasta 60 segundos, si el ritmo se mantiene.',
+          'Anuncios pagados: entre 10 y 20 segundos, con el mensaje clave en los primeros 3.',
+          'Los límites máximos de cada plataforma cambian seguido; lo que no cambia es que la gente abandona rápido.',
+        ],
+      },
+      {
+        h: 'Exportación: cómo evitar que se vea mal',
+        list: [
+          'Formato MP4 con códec H.264, que es el que todas las plataformas aceptan sin recomprimir de más.',
+          'Audio AAC. Revisa siempre que el video tenga audio, aunque sea ambiente: los videos mudos rinden peor.',
+          'Sube el archivo original, no uno reenviado por WhatsApp: la aplicación lo comprime y se nota.',
+          'Nunca subas un video con la marca de agua de otra plataforma.',
+        ],
+      },
+      {
+        h: 'Un solo rodaje, varios formatos',
+        p: [
+          'Conviene grabar en vertical dejando aire alrededor del sujeto. Con ese margen puedes recortar después a 4:5 o a 1:1 sin que quede nadie sin cabeza.',
+          'Lo que sí conviene rehacer para cada plataforma es el gancho inicial y los subtítulos: el mismo video con otro arranque rinde distinto en TikTok que en Instagram.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: '¿Qué medida tiene un reel de Instagram?',
+        a: 'Vertical 9:16, a 1080 × 1920 píxeles. Es la misma medida que usan TikTok, YouTube Shorts y las stories.',
+      },
+      {
+        q: '¿Por qué mi video sale cortado o con barras negras?',
+        a: 'Porque fue grabado en horizontal o en una proporción distinta a la que usa la plataforma. Al subirlo, la aplicación recorta el centro o rellena los costados. La solución es grabar directamente en vertical.',
+      },
+      {
+        q: '¿Puedo subir el mismo video a Instagram y TikTok?',
+        a: 'Sí, siempre que exportes el archivo limpio, sin marca de agua de la otra plataforma. Conviene adaptar el gancho de los primeros segundos y volver a poner los subtítulos.',
+      },
+    ],
+    cta: 'Si prefieres no pelear con formatos, nosotros producimos y entregamos las piezas listas para cada red. Cuéntanos qué necesitas.',
+  },
 ];
 
 export const getPost = (slug: string) => BLOG_POSTS.find((p) => p.slug === slug);

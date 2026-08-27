@@ -527,7 +527,7 @@ const ALL_PROJECTS: Project[] = [
     slug: 'full-stock',
     client: 'Full Stock',
     industry: 'ecommerce',
-    sector: { es: 'E-commerce', en: 'E-commerce' },
+    sector: { es: 'E-commerce · Distribuidora de abarrotes', en: 'E-commerce · Grocery distributor' },
     year: '2026',
     services: {
       es: ['Diseño Web', 'E-commerce'],
