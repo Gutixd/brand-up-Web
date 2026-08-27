@@ -19,7 +19,7 @@ export const SITE = {
   formspreeId: 'mljrkvan',
   // Meta Ads: ID del píxel (Administrador de eventos > Orígenes de datos).
   // Vacío = no se renderiza el píxel ni se disparan eventos de conversión.
-  metaPixelId: '',
+  metaPixelId: '3246537428868858',
 };
 
 export const wa = (msg: string) =>
