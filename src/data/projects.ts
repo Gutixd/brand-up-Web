@@ -53,9 +53,16 @@ export interface Project {
   metrics: { val: string; lbl: L }[];
   link?: string;
   featured: boolean;
+  /**
+   * Proyecto en preparación: no se publica en ninguna parte del sitio
+   * (portafolio, industrias, servicios, sitemap ni JSON-LD) hasta que se
+   * borre esta línea. Sirve para dejar la ficha lista mientras llegan las
+   * imágenes y los textos.
+   */
+  draft?: boolean;
 }
 
-export const PROJECTS: Project[] = [
+const ALL_PROJECTS: Project[] = [
   {
     slug: 'el-chacha-pollo',
     client: 'El Chacha Pollo',
@@ -504,6 +511,154 @@ export const PROJECTS: Project[] = [
     link: 'https://bschool.cl',
     featured: false,
   },
+
+  // ── En preparación ────────────────────────────────────────────────
+  // Fichas creadas por adelantado. Datos duros (cliente, rubro, servicios,
+  // link) ya cargados; faltan portada, logo y textos. Mientras tengan
+  // `draft: true` NO aparecen en el sitio.
+  //
+  // Para publicar una: completar summary/challenge/approach/outcome,
+  // agregar cover + logo y borrar la línea `draft: true`. Si se publica
+  // sin textos, el build falla a propósito (ver validación al final).
+  //
+  // Pendiente en todas: cover, logo, gradient/theme reales (los actuales
+  // son provisionales), metrics y confirmar el año.
+  {
+    slug: 'full-stock',
+    client: 'Full Stock',
+    industry: 'ecommerce',
+    sector: { es: 'E-commerce', en: 'E-commerce' },
+    year: '2026',
+    services: {
+      es: ['Diseño Web', 'E-commerce'],
+      en: ['Web Design', 'E-commerce'],
+    },
+    serviceSlugs: ['ecommerce', 'diseno-web'],
+    gradient: '#2b6cb0',
+    theme: { accent: '#2b6cb0', dark: '#0d1b2a' },
+    flavor: 'bold',
+    summary: { es: '', en: '' },
+    challenge: { es: '', en: '' },
+    approach: { es: '', en: '' },
+    outcome: { es: '', en: '' },
+    metrics: [],
+    featured: false,
+    draft: true,
+  },
+  {
+    slug: 'terapia-deportiva',
+    client: 'Terapia Deportiva',
+    industry: 'medios',
+    sector: { es: 'Medios · Fútbol chileno', en: 'Media · Chilean football' },
+    year: '2026',
+    services: {
+      es: ['Diseño Web'],
+      en: ['Web Design'],
+    },
+    serviceSlugs: ['diseno-web'],
+    gradient: '#1f9d55',
+    theme: { accent: '#1f9d55', dark: '#0c1f14' },
+    flavor: 'editorial',
+    summary: { es: '', en: '' },
+    challenge: { es: '', en: '' },
+    approach: { es: '', en: '' },
+    outcome: { es: '', en: '' },
+    metrics: [],
+    featured: false,
+    draft: true,
+  },
+  {
+    slug: 'esem000',
+    client: 'esem000',
+    industry: 'ecommerce',
+    sector: { es: 'Moda urbana · Publicidad', en: 'Streetwear · Paid Ads' },
+    year: '2026',
+    services: {
+      es: ['Publicidad Digital'],
+      en: ['Digital Ads'],
+    },
+    serviceSlugs: ['publicidad-digital'],
+    gradient: '#111111',
+    theme: { accent: '#e0e0e0', dark: '#0a0a0a' },
+    flavor: 'bold',
+    summary: { es: '', en: '' },
+    challenge: { es: '', en: '' },
+    approach: { es: '', en: '' },
+    outcome: { es: '', en: '' },
+    metrics: [],
+    link: 'https://esem000.com',
+    featured: false,
+    draft: true,
+  },
+  {
+    slug: 'minerva',
+    client: 'Minerva',
+    industry: 'ecommerce',
+    sector: { es: 'E-commerce · Papelería personalizada', en: 'E-commerce · Custom stationery' },
+    year: '2026',
+    services: {
+      es: ['Diseño Web', 'E-commerce'],
+      en: ['Web Design', 'E-commerce'],
+    },
+    serviceSlugs: ['ecommerce', 'diseno-web'],
+    gradient: '#7c3aed',
+    theme: { accent: '#7c3aed', dark: '#160f26' },
+    flavor: 'playful',
+    summary: { es: '', en: '' },
+    challenge: { es: '', en: '' },
+    approach: { es: '', en: '' },
+    outcome: { es: '', en: '' },
+    metrics: [],
+    link: 'https://minerva.cl',
+    featured: false,
+    draft: true,
+  },
+  {
+    slug: 'chun-guang',
+    client: 'Chun Guang',
+    industry: 'gastronomia',
+    sector: { es: 'Gastronomía · Carta digital', en: 'Food & Beverage · Digital menu' },
+    year: '2026',
+    services: {
+      es: ['Diseño Web'],
+      en: ['Web Design'],
+    },
+    serviceSlugs: ['diseno-web'],
+    gradient: '#c62828',
+    theme: { accent: '#c62828', dark: '#1c0a0a' },
+    flavor: 'editorial',
+    summary: { es: '', en: '' },
+    challenge: { es: '', en: '' },
+    approach: { es: '', en: '' },
+    outcome: { es: '', en: '' },
+    metrics: [],
+    featured: false,
+    draft: true,
+  },
 ];
 
-export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
+/**
+ * Lo que consume el sitio: todo menos los proyectos en preparación.
+ * Al quitarle `draft` a una ficha aparece sola en portafolio, industrias,
+ * servicios, sitemap y JSON-LD, sin tocar ningún componente.
+ */
+export const PROJECTS: Project[] = ALL_PROJECTS.filter((p) => !p.draft);
+
+/** Fichas pendientes de completar — útil para saber qué falta. */
+export const DRAFT_PROJECTS: Project[] = ALL_PROJECTS.filter((p) => p.draft);
+
+// Salvaguarda: si se publica un proyecto sin llenar los textos, el build
+// falla en vez de subir una ficha vacía al sitio.
+for (const p of PROJECTS) {
+  const faltan = (['summary', 'challenge', 'approach', 'outcome'] as const).filter(
+    (k) => !p[k].es.trim() || !p[k].en.trim()
+  );
+  if (faltan.length) {
+    throw new Error(
+      `[projects] "${p.slug}" está publicado pero le faltan textos (${faltan.join(', ')}). ` +
+        'Complétalos o vuelve a marcarlo con draft: true.'
+    );
+  }
+}
+
+export const getProject = (slug: string) => ALL_PROJECTS.find((p) => p.slug === slug);

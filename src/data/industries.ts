@@ -49,6 +49,14 @@ export const INDUSTRIES: Industry[] = [
     },
   },
   {
+    key: 'medios',
+    name: { es: 'Medios & Deportes', en: 'Media & Sports' },
+    desc: {
+      es: 'Sitios de noticias y comunidades deportivas: publicación ágil, lectura cómoda y audiencia que vuelve.',
+      en: 'News sites and sports communities: fast publishing, comfortable reading and an audience that comes back.',
+    },
+  },
+  {
     key: 'salud',
     name: { es: 'Salud & Estética', en: 'Health & Aesthetics' },
     desc: {
