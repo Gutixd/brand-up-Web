@@ -87,6 +87,10 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
       });
       if (!res.ok) throw new Error('formspree error');
 
+      // Conversión para Meta Ads (si el píxel está activo — ver Base.astro).
+      const fbq = (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq;
+      fbq?.('track', 'Lead');
+
       setStatus('ok');
       form.reset();
       setService('');

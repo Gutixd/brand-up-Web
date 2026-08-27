@@ -51,7 +51,7 @@ const CONTENT = {
       ['4. Proveedores', 'El envío de formularios se procesa mediante un proveedor externo (Formspree) y las comunicaciones pueden realizarse vía WhatsApp e email. Cada proveedor trata los datos según sus propias políticas.'],
       ['5. Conservación', 'Conservamos los datos de contacto mientras exista una relación comercial o potencial, y los eliminamos a solicitud.'],
       ['6. Tus derechos', `Puedes solicitar acceso, rectificación o eliminación de tus datos escribiendo a ${SITE.email}.`],
-      ['7. Cookies', 'Este sitio es estático y no utiliza cookies de seguimiento propias. Si en el futuro se incorporan herramientas de analítica, esta política será actualizada.'],
+      ['7. Analítica y publicidad', 'Usamos Vercel Analytics (sin cookies) y Google Analytics 4 (con cookies) para entender cómo se usa el sitio, y el Píxel de Meta para medir el resultado de nuestra publicidad en Instagram y Facebook y mostrarte anuncios relevantes en esas plataformas. Puedes bloquear estas cookies desde la configuración de tu navegador.'],
     ],
     en: [
       ['1. Controller', `${SITE.legalName}, ${SITE.city}. Contact: ${SITE.email}.`],
@@ -60,13 +60,13 @@ const CONTENT = {
       ['4. Providers', 'Form submissions are processed by an external provider (Formspree) and communications may take place via WhatsApp and email. Each provider processes data under its own policies.'],
       ['5. Retention', 'We keep contact data while a commercial or potential relationship exists, and delete it upon request.'],
       ['6. Your rights', `You may request access, rectification or deletion of your data by writing to ${SITE.email}.`],
-      ['7. Cookies', 'This is a static site and does not use first-party tracking cookies. If analytics tools are added in the future, this policy will be updated.'],
+      ['7. Analytics and advertising', 'We use Vercel Analytics (cookie-free) and Google Analytics 4 (cookie-based) to understand how the site is used, and the Meta Pixel to measure the results of our advertising on Instagram and Facebook and show you relevant ads on those platforms. You can block these cookies from your browser settings.'],
     ],
   },
 } as const;
 
 const sections = CONTENT[kind][locale];
-const updated = locale === 'es' ? 'Última actualización: junio 2026' : 'Last updated: June 2026';
+const updated = locale === 'es' ? 'Última actualización: agosto 2026' : 'Last updated: August 2026';
 ---
 
 <Base locale={locale} title={meta.title} description={meta.desc}>

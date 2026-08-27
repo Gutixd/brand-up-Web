@@ -17,6 +17,9 @@ export const SITE = {
   // Formulario de contacto: ID de Formspree (formspree.io/forms/<id>/integration).
   // Vacío = el formulario solo abre WhatsApp, sin guardar copia.
   formspreeId: 'mljrkvan',
+  // Meta Ads: ID del píxel (Administrador de eventos > Orígenes de datos).
+  // Vacío = no se renderiza el píxel ni se disparan eventos de conversión.
+  metaPixelId: '',
 };
 
 export const wa = (msg: string) =>

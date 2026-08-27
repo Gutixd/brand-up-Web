@@ -109,6 +109,52 @@ const nav = [
       // @ts-ignore
       gtag('config', 'G-XLSQ7KWZF8');
     </script>
+    {SITE.metaPixelId && (
+      <>
+        {/* Meta Pixel — mide conversiones de campañas en Instagram/Facebook.
+            Los eventos Contact (clic a WhatsApp) y Lead (formulario) se
+            disparan desde motion.ts y ContactForm.tsx via window.fbq. */}
+        <script define:vars={{ pixelId: SITE.metaPixelId }}>
+          // @ts-nocheck — snippet oficial de Meta, sin tipos.
+          !(function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+              n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = true;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = true;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s);
+          })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', pixelId);
+          fbq('track', 'PageView');
+        </script>
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style="display:none"
+            src={`https://www.facebook.com/tr?id=${SITE.metaPixelId}&ev=PageView&noscript=1`}
+          />
+        </noscript>
+        <script>
+          // Delegado en document: cubre también los enlaces de WhatsApp que
+          // ContactForm y otros componentes React agregan tras hidratar.
+          document.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement | null;
+            const link = target?.closest('a[href*="wa.me"]');
+            // @ts-ignore — fbq lo define el snippet de Meta arriba.
+            if (link && typeof window.fbq === 'function') window.fbq('track', 'Contact');
+          });
+        </script>
+      </>
+    )}
     <script>
       // Mark JS availability ASAP so reveal styles only hide content when GSAP will run.
       document.documentElement.classList.add('js');
