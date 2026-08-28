@@ -223,14 +223,37 @@
     "info": "Contact information"
   },
   "quote": {
-    "kicker": "Quote",
+    "kicker": "Free quote",
     "title": "Start a project",
-    "intro": "The more context you give us, the more precise the proposal. We reply with concrete pricing and timelines.",
+    "intro": "Tell us what you need and we reply with concrete pricing and timelines. No cost, no commitment and no sales pitch.",
     "steps": [
-      "Tell us your idea",
-      "We send a proposal",
-      "We start building"
-    ]
+      "Fill in the form — it takes 2 minutes",
+      "We write back within one business day",
+      "You get a proposal with fixed price and timeline"
+    ],
+    "trustLabel": "Brands already working with us",
+    "proofLabel": "Real client results",
+    "faqLabel": "Before you write",
+    "faq": [
+      {
+        "q": "Does a quote cost anything?",
+        "a": "No. The quote and the first conversation are free and with no commitment. If the project isn't a fit for us, we'll tell you straight."
+      },
+      {
+        "q": "How fast do you reply?",
+        "a": "Within the next business day. If you write on a weekend or holiday, we reply on the first business day."
+      },
+      {
+        "q": "I'm not sure what I need yet — should I still write?",
+        "a": "Yes, that's the most common case. Tell us what problem you want to solve and we'll propose the path: sometimes it isn't a website, it's something else."
+      },
+      {
+        "q": "How much does a website cost?",
+        "a": "It depends on scope. We publish the real market ranges for Chile, with no fine print:"
+      }
+    ],
+    "faqLinkLabel": "See the 2026 pricing guide →",
+    "faqLinkHref": "/blog/cuanto-cuesta-una-pagina-web-en-chile"
   },
   "form": {
     "name": "Name",

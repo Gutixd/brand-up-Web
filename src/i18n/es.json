@@ -223,14 +223,37 @@
     "info": "Información de contacto"
   },
   "quote": {
-    "kicker": "Cotización",
+    "kicker": "Cotización gratis",
     "title": "Cotiza tu proyecto",
-    "intro": "Mientras más contexto nos des, más precisa será la propuesta. Te respondemos con precios y plazos concretos.",
+    "intro": "Cuéntanos qué necesitas y te respondemos con precio y plazo concretos. Sin costo, sin compromiso y sin discursos de venta.",
     "steps": [
-      "Nos cuentas tu idea",
-      "Te enviamos una propuesta",
-      "Empezamos a construir"
-    ]
+      "Completas el formulario — te toma 2 minutos",
+      "Te escribimos dentro del día hábil siguiente",
+      "Recibes una propuesta con precio y plazo cerrado"
+    ],
+    "trustLabel": "Marcas que ya trabajan con nosotros",
+    "proofLabel": "Resultados reales de clientes",
+    "faqLabel": "Antes de escribirnos",
+    "faq": [
+      {
+        "q": "¿Cotizar tiene algún costo?",
+        "a": "No. La cotización y la primera conversación son gratis y sin compromiso. Si el proyecto no calza con lo que hacemos, te lo decimos de frente."
+      },
+      {
+        "q": "¿En cuánto tiempo me responden?",
+        "a": "Dentro del día hábil siguiente. Si escribes un fin de semana o festivo, te respondemos el primer día hábil."
+      },
+      {
+        "q": "Todavía no tengo claro qué necesito, ¿igual escribo?",
+        "a": "Sí, es el caso más común. Cuéntanos qué problema quieres resolver y nosotros proponemos el camino: a veces no es una web, es otra cosa."
+      },
+      {
+        "q": "¿Cuánto cuesta una página web?",
+        "a": "Depende del alcance. Publicamos los rangos reales de mercado en Chile, sin letra chica:"
+      }
+    ],
+    "faqLinkLabel": "Ver la guía de precios 2026 →",
+    "faqLinkHref": "/blog/cuanto-cuesta-una-pagina-web-en-chile"
   },
   "form": {
     "name": "Nombre",

@@ -449,6 +449,7 @@ const ALL_PROJECTS: Project[] = [
       en: ['Content & Reels', 'Video Production'],
     },
     serviceSlugs: ['contenido-reels'],
+    logo: logoDuocuc,
     cover: coverDuocuc,
     gradient: '#0d0d0d',
     // Ámbar/dorado muestreado del logo real de Duoc UC (no rojo).
