@@ -460,4 +460,21 @@ const crumbsLd = {
 @media (prefers-reduced-motion: reduce) {
   .wrow__img, .wrow__title, .wrow__cta { transition: none; }
 }
+
+/* Celular: kickers y metadatos legibles, y filtros/enlaces con area de
+   toque comoda (estaban en 34-35px). Al final para ganar en cascada. */
+@media (max-width: 767px) {
+  .works__kicker,
+  .works__meta,
+  .wrow__eyebrow,
+  .wrow__services { font-size: 12px; letter-spacing: 0.1em; }
+  .wfilter { min-height: 40px; }
+  .wrow__titlelink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  /* La etiqueta bajo cada cifra estaba en 9px: ilegible en celular. */
+  .wrow__metric small { font-size: 11px; letter-spacing: 0.06em; }
+}
 </style>

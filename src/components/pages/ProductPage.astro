@@ -483,4 +483,15 @@ const faqLd = {
 }
 .pd-cta .pd-btn--ghost { color: var(--color-ink); border-color: rgba(248, 248, 248, 0.28); }
 .pd-cta .pd-btn--ghost:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+/* Celular: kickers legibles y el enlace de FAQ con area de toque. */
+@media (max-width: 767px) {
+  .pd-hero__eyebrow,
+  .pd-kicker { font-size: 12px; letter-spacing: 0.12em; }
+  .pd-faq__more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
 </style>

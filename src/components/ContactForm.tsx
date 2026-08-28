@@ -52,7 +52,8 @@ const WA_LABELS = {
 const input =
   'w-full rounded-xl border border-line bg-white px-4 py-3.5 text-sm text-paper placeholder:text-gray/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all';
 
-const label = 'mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-gray';
+// 12px en celular para que la etiqueta se lea; 11px desde md como estaba.
+const label = 'mb-1.5 block text-[12px] md:text-[11px] font-bold uppercase tracking-[0.1em] text-gray';
 
 export default function ContactForm({ labels, variant = 'contact', locale = 'es' }: Props) {
   const L = WA_LABELS[locale];
@@ -178,7 +179,7 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
                 type="button"
                 aria-pressed={active}
                 onClick={() => setService(active ? '' : o)}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2.5 md:py-2 text-[13px] font-semibold transition-all duration-200 ${
                   active
                     ? 'border-accent bg-accent text-white shadow-[0_8px_20px_rgba(240,94,35,0.35)]'
                     : 'border-line bg-white text-gray hover:border-accent/50 hover:text-paper'
@@ -204,7 +205,7 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
                 type="button"
                 aria-pressed={active}
                 onClick={() => setBudget(active ? '' : o)}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all duration-200 ${
+                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2.5 md:py-2 text-[13px] font-semibold transition-all duration-200 ${
                   active
                     ? 'border-paper bg-paper text-ink shadow-[0_8px_20px_rgba(35,35,35,0.28)]'
                     : 'border-line bg-white text-gray hover:border-paper/50 hover:text-paper'

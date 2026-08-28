@@ -208,11 +208,12 @@ const trustLogos = isQuote ? PROJECTS.filter((p) => p.logo) : [];
 
 /* En una sola columna el formulario va primero: quien llega desde un
    anuncio viene a cotizar, no a leer. Con el orden original quedaba a
-   más de dos pantallas de scroll. Los pasos, las métricas y el contacto
-   pasan abajo, como refuerzo para quien todavía duda. */
+   más de dos pantallas de scroll. Los pasos y el contacto pasan abajo,
+   como refuerzo para quien todavía duda. */
 @media (max-width: 1023px) {
   .contact-grid--quote .contact-form-card { order: -1; }
 }
+
 
 .contact-steps {
   list-style: none;
@@ -312,5 +313,21 @@ const trustLogos = isQuote ? PROJECTS.filter((p) => p.logo) : [];
   margin-bottom: 30px;
   font-size: 0.9rem;
   color: var(--color-gray);
+}
+
+/* Celular: etiquetas legibles y enlaces con área de toque cómoda.
+   Va al final para ganar sobre las definiciones de arriba. */
+@media (max-width: 767px) {
+  .quote-trust__label,
+  .contact-info__label { font-size: 12px; letter-spacing: 0.12em; }
+  .contact-info { line-height: 1.5; }
+  .contact-info__link,
+  .quote-faq__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .contact-step { font-size: 0.95rem; }
+  .quote-faq__a { font-size: 1rem; }
 }
 </style>

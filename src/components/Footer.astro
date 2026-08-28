@@ -293,4 +293,25 @@ const nav = [
 .site-footer__made-link:hover {
   color: var(--color-paper);
 }
+
+/* En celular los enlaces del footer quedaban en 18–21px de alto, muy
+   por debajo del mínimo cómodo para el dedo (~44px), y muy pegados
+   entre sí. Se les da área de toque y aire; en escritorio no cambia. */
+@media (max-width: 767px) {
+  .site-footer__links { gap: 2px; }
+  .site-footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: 0.9375rem;
+  }
+  .site-footer__link--plain { min-height: 32px; }
+  .site-footer__social-link,
+  .site-footer__made-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .site-footer__col-title { font-size: 0.75rem; }
+}
 </style>

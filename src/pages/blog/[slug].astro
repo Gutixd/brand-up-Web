@@ -355,4 +355,17 @@ const related = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
   max-width: 60ch;
 }
 .art__related-link:hover { color: var(--color-accent); }
+
+/* Celular: las etiquetas del artículo estaban en 10–11px y el "volver"
+   quedaba con 21px de alto, incómodo para tocar. */
+@media (max-width: 767px) {
+  .art__tag,
+  .art__answer-label,
+  .art__related-label { font-size: 12px; letter-spacing: 0.12em; }
+  .art__back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
 </style>

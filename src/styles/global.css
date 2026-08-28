@@ -2198,3 +2198,42 @@ html.intro-lock body { overflow: hidden; }
 .svc-u__title { -webkit-text-stroke-width: 1px; }
 /* El outline de la última línea del manifiesto necesita algo más de grosor */
 .manifesto__title .ln--accent { -webkit-text-stroke-width: clamp(1.5px, 0.26vw, 2.6px); }
+
+/* ── Legibilidad y zonas táctiles en celular ─────────────────────────
+   Los kickers, etiquetas y pies de foto estaban entre 9 y 11px: se leen
+   bien en un monitor, pero incómodos en un teléfono. Y varios enlaces
+   quedaban con 18–23px de alto, muy por debajo del mínimo recomendado
+   para tocar con el dedo (~44px).
+
+   Va al final del archivo a propósito: así gana sobre los bloques
+   móviles anteriores que fijaban 9–10px. Solo aplica bajo 768px, el
+   diseño de escritorio queda intacto. */
+@media (max-width: 767px) {
+  .page-hero__kicker,
+  .sec-head__kicker,
+  .svc-urban__kicker,
+  .street__kicker,
+  .stats-band__kicker,
+  .works-intro__kicker,
+  .works-intro__hint,
+  .project-video__soon,
+  .testis__kicker,
+  .cta-final__kicker,
+  .logos-wall__label,
+  .manifesto__sticker,
+  .stat-u__lbl,
+  .svc-u__tag {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+
+  .polaroid__cap { font-size: 10px; }
+  .street-card__chip { font-size: 11px; }
+
+  /* Alto de toque cómodo sin alterar la maquetación. */
+  .cta-final__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

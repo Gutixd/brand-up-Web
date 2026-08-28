@@ -57,8 +57,14 @@ export default function TestimonialCarousel({ items }: { items: TItem[] }) {
                 aria-selected={i === idx}
                 aria-label={`Testimonio ${i + 1}`}
                 onClick={() => setIdx(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === idx ? 'w-9 bg-accent' : 'w-2 bg-line hover:bg-gray'
+                /* El punto mide 8px de alto: imposible de tocar con el dedo.
+                   El botón se agranda a 40px con padding transparente y el
+                   punto visible se dibuja en el ::before, así el área táctil
+                   crece sin que cambie el diseño. */
+                className={`group relative flex h-10 items-center transition-all duration-300 before:block before:h-2 before:rounded-full before:transition-all before:duration-300 ${
+                  i === idx
+                    ? 'w-9 before:w-9 before:bg-accent'
+                    : 'w-2 before:w-2 before:bg-line hover:before:bg-gray'
                 }`}
               />
             ))}

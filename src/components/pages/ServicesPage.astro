@@ -578,4 +578,18 @@ const moreLabel = es ? 'Ver servicio' : 'View service';
   line-height: 1.62;
   color: rgba(248, 248, 248, 0.55);
 }
+
+/* Celular: los kickers y chips estaban en 11px, incomodos de leer en
+   un telefono. Al final para ganar sobre las definiciones de arriba. */
+@media (max-width: 767px) {
+  .svc-hero__kicker,
+  .svc-hero__chip,
+  .svc-index__proof,
+  .svc-chip,
+  .process__kicker,
+  .svc-seo__links-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+}
 </style>
