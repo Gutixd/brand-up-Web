@@ -9,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
 let lenisTickerAdded = false;
+let charSafetyIntervalAdded = false;
 
 function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -952,13 +953,42 @@ function initRevealSafety() {
   }
 
   const targets = '.wrow, [data-reveal], [data-reveal-word], [data-work-item], .wcard-ghost';
-  window.setTimeout(() => {
+  const fixStuckReveals = () => {
     document.querySelectorAll<HTMLElement>(targets).forEach((el) => {
       if (parseFloat(getComputedStyle(el).opacity) < 0.05) {
         gsap.to(el, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.5, ease: 'power2.out' });
       }
     });
-  }, 2600);
+  };
+
+  // Las letras del char-split reveal (data-split-chars) son un caso aparte:
+  // a diferencia de arriba, un .char NUNCA baja su opacidad — solo se
+  // desplaza en Y (translateY 110% -> 0%). Si el scroll rápido con Lenis
+  // interrumpe ese tween a mitad de camino (o su ScrollTrigger nunca llega
+  // a disparar), la letra queda parcial o totalmente cortada por el
+  // overflow:hidden del contenedor sin que la regla de opacidad de arriba
+  // lo note — el título se ve con letras "rotas" o desaparecidas.
+  // Por eso esto no corre una sola vez: se revisa periódicamente, porque
+  // el atasco puede ocurrir en cualquier momento de la sesión de scroll,
+  // no solo al cargar la página.
+  const fixStuckChars = () => {
+    document.querySelectorAll<HTMLElement>('.char').forEach((el) => {
+      const m = new DOMMatrix(getComputedStyle(el).transform);
+      if (Math.abs(m.m42) > 0.5) {
+        gsap.to(el, { y: '0%', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+      }
+    });
+  };
+
+  window.setTimeout(() => { fixStuckReveals(); fixStuckChars(); }, 2600);
+  // Solo un intervalo para toda la vida de la pestaña: como corre a nivel
+  // de módulo (no por página), registrarlo de nuevo en cada transición de
+  // Astro solo iría acumulando intervalos duplicados sin necesidad — el
+  // mismo problema que ya se resolvió para el ticker de Lenis arriba.
+  if (!charSafetyIntervalAdded) {
+    window.setInterval(fixStuckChars, 1500);
+    charSafetyIntervalAdded = true;
+  }
 }
 
 // ── Showreel lightbox + cursor magnético ───────────────────────────

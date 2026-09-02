@@ -2,10 +2,8 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
-import TestimonialCarousel from '../TestimonialCarousel';
 import { PROJECTS } from '../../data/projects';
 import { SERVICES } from '../../data/services';
-import { TESTIMONIALS } from '../../data/testimonials';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 // Antes era una foto de stock de desconocidos frente a laptops. Esta es
@@ -47,12 +45,6 @@ const lp = (p: string) => localePath(locale, p);
 const es = locale === 'es';
 
 const featured = PROJECTS.filter((p) => p.featured);
-const testimonials = TESTIMONIALS.map((x) => ({
-  text: pick(x.text, locale),
-  name: x.name,
-  role: pick(x.role, locale),
-  initials: x.initials,
-}));
 
 const worksAllLabel = es ? 'Ver todos los trabajos' : 'View all work';
 
@@ -421,17 +413,6 @@ const stats = [
       </a>
     </div>
   </div>
-
-  <!-- ════ TESTIMONIOS ══════════════════════════════════════════════ -->
-  <section class="testis rule">
-    <div class="testis__inner">
-      <p class="testis__kicker" data-reveal>— {es ? 'Testimonios' : 'Testimonials'}</p>
-      <h2 class="testis__title" data-split-chars>{t.home.testimonialsTitle}</h2>
-      <div data-reveal>
-        <TestimonialCarousel client:visible items={testimonials} />
-      </div>
-    </div>
-  </section>
 
   <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
   <section class="cta-final">

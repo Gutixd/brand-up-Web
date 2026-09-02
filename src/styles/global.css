@@ -2119,30 +2119,6 @@ html.intro-lock body { overflow: hidden; }
 @media (min-width: 900px) { .stat-u--big { grid-column: auto; } }
 .stat-u--big .stat-u__val { font-size: clamp(2.5rem, 3.3vw, 3.5rem); }
 
-/* ── Testimonios — sección editorial ─────────────────────────────── */
-.testis { background: var(--color-ink); }
-.testis__inner {
-  max-width: 1400px;
-  margin-inline: auto;
-  padding: clamp(80px, 10vw, 140px) 24px;
-}
-@media (min-width: 768px) { .testis__inner { padding-inline: 48px; } }
-.testis__kicker {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 16px;
-}
-.testis__title {
-  font-size: clamp(2.4rem, 7.5vw, 6.5rem);
-  text-transform: uppercase;
-  line-height: 0.96;
-  color: var(--color-paper);
-  margin-bottom: clamp(40px, 6vw, 70px);
-}
-
 /* ── CTA — marquee gigante de fondo ──────────────────────────────── */
 .cta-final__marquee {
   position: absolute;
@@ -2180,7 +2156,6 @@ html.intro-lock body { overflow: hidden; }
 .svc-u__title,
 .street__title,
 .stat-u__val,
-.testis__title,
 .works-intro__title,
 .cta-final__title,
 .ticker__item,
