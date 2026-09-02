@@ -2,12 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
-import { PROJECTS } from '../../data/projects';
 import { SITE } from '../../data/site';
-import {
-  HERO, FRICTION, SERVICE_BLOCKS, DISCOVERABILITY, CONNECTION,
-  PROCESS, INVESTMENT, CASES, FAQ, LABELS,
-} from '../../data/servicesPage';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 interface Props {
@@ -17,34 +12,21 @@ const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
 const es = locale === 'es';
-const P = <T extends { es: string; en: string }>(v: T) => pick(v, locale);
-
-// Une el bloque editorial con el servicio real de services.ts: el copy
-// premium vive en servicesPage.ts, pero el título, la etiqueta y el slug
-// siguen viniendo de la única fuente de verdad de servicios.
-const blocks = SERVICE_BLOCKS.map((b) => {
-  const svc = SERVICES.find((s) => s.slug === b.slug)!;
-  return { ...b, num: svc.num, title: svc.title, tag: svc.tag };
-});
-
-// Casos: solo proyectos destacados reales, y solo se muestran las métricas
-// que existen en los datos. Nunca se inventa un número.
-const cases = PROJECTS.filter((p) => p.featured).slice(0, 3);
 
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: FAQ.items.map((f) => ({
+  mainEntity: t.services.faq.map((f) => ({
     '@type': 'Question',
-    name: P(f.q),
-    acceptedAnswer: { '@type': 'Answer', text: P(f.a) },
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 };
 
+// Servicios como datos estructurados (SEO local: cada servicio con área Santiago)
 const servicesLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: es ? 'Capacidades de BrandUp' : 'BrandUp capabilities',
   itemListElement: SERVICES.map((s, i) => ({
     '@type': 'ListItem',
     position: i + 1,
@@ -53,7 +35,6 @@ const servicesLd = {
       name: pick(s.title, locale),
       description: pick(s.short, locale),
       url: `${SITE.domain}${lp(`/servicios/${s.slug}`)}`,
-      serviceType: pick(s.tag, locale),
       areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
       provider: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
     },
@@ -65,17 +46,78 @@ const breadcrumbLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: es ? 'Inicio' : 'Home', item: SITE.domain },
-    { '@type': 'ListItem', position: 2, name: es ? 'Servicios' : 'Services', item: `${SITE.domain}${lp('/servicios')}` },
+    { '@type': 'ListItem', position: 2, name: es ? 'Servicios' : 'Services' },
   ],
 };
 
-// Interlinking al blog — guías reales publicadas (solo ES: el blog es en español)
+// Chips de confianza del hero
+const heroChips = es
+  ? ['Santiago de Chile', 'Respuesta en 24 horas', 'Propuesta con precio cerrado']
+  : ['Santiago, Chile', 'Reply within 24 hours', 'Fixed-price proposal'];
+
+// Prueba de resultado por servicio (casos reales del portafolio)
+const proof: Record<string, { es: string; en: string }> = {
+  'diseno-web': { es: '+120% leads B2B — JD Cargo', en: '+120% B2B leads — JD Cargo' },
+  'ecommerce': { es: '+450% ticket promedio — Aracnida', en: '+450% AOV — Aracnida' },
+  'branding': { es: 'Sistemas gráficos completos', en: 'Complete graphic systems' },
+  'contenido-reels': { es: '+1M de views generadas', en: '+1M views generated' },
+  'publicidad-digital': { es: 'Campañas geolocalizadas en RM', en: 'Geotargeted campaigns' },
+  'automatizaciones-ia': { es: 'Carritos recuperados en automático', en: 'Automated cart recovery' },
+  'marketing-growth': { es: '+300% engagement promedio', en: '+300% average engagement' },
+};
+
+// Enlaces internos al blog (interlinking SEO — solo ES, el blog es en español)
 const seoLinks = [
   { href: '/blog/cuanto-cuesta-una-pagina-web-en-chile', label: '¿Cuánto cuesta una página web en Chile en 2026?' },
   { href: '/blog/cuanto-cobra-una-agencia-de-marketing-digital-en-chile', label: '¿Cuánto cobra una agencia de marketing digital en Chile?' },
   { href: '/blog/como-aparecer-en-google-chile-seo-local', label: 'Cómo aparecer en Google en Chile: guía de SEO local' },
-  { href: '/blog/google-ads-o-meta-ads-cual-conviene-en-chile', label: 'Google Ads o Meta Ads: cuál conviene en Chile' },
+  { href: '/blog/instagram-para-negocios-chile-reels', label: 'Instagram para negocios: cómo conseguir clientes con reels' },
 ];
+
+// Foto de cada servicio (mismas imágenes urbanas de la home)
+const svcImg: Record<string, string> = {
+  'diseno-web': '/images/urban/svc-web.jpg',
+  'ecommerce': '/images/urban/svc-ecommerce.jpg',
+  'branding': '/images/urban/svc-branding.jpg',
+  'contenido-reels': '/images/urban/svc-reels.jpg',
+  'publicidad-digital': '/images/urban/svc-ads.jpg',
+  'automatizaciones-ia': '/images/urban/svc-ia.jpg',
+  'marketing-growth': '/images/urban/svc-growth.jpg',
+};
+
+// Proceso de trabajo — para que se entienda cómo operamos
+const steps = [
+  {
+    n: '01',
+    t: es ? 'Diagnóstico' : 'Diagnosis',
+    d: es
+      ? 'Escuchamos tu negocio, tu mercado y tus objetivos. Sin plantillas: cada marca parte de una realidad distinta.'
+      : 'We listen to your business, your market and your goals. No templates: every brand starts from a different reality.',
+  },
+  {
+    n: '02',
+    t: es ? 'Estrategia' : 'Strategy',
+    d: es
+      ? 'Definimos un plan claro con metas medibles: qué haremos, en qué canales y qué resultados esperar.'
+      : 'We define a clear plan with measurable goals: what we will do, on which channels and what results to expect.',
+  },
+  {
+    n: '03',
+    t: es ? 'Producción' : 'Production',
+    d: es
+      ? 'Diseño, contenido, desarrollo y campañas. Todo lo ejecutamos nosotros, con calidad de detalle.'
+      : 'Design, content, development and campaigns. We execute everything ourselves, with attention to detail.',
+  },
+  {
+    n: '04',
+    t: es ? 'Crecimiento' : 'Growth',
+    d: es
+      ? 'Medimos, optimizamos y escalamos lo que funciona. Los números mandan, no las opiniones.'
+      : 'We measure, optimize and scale what works. Numbers rule, not opinions.',
+  },
+];
+
+const moreLabel = es ? 'Ver servicio' : 'View service';
 ---
 
 <Base locale={locale} title={t.meta.services.title} description={t.meta.services.desc}>
@@ -83,292 +125,101 @@ const seoLinks = [
   <script type="application/ld+json" set:html={JSON.stringify(servicesLd)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
 
-  <!-- ════════ HERO ════════ -->
-  <header class="sv-hero">
-    <div class="sv-hero__inner">
-      <p class="sv-hero__kicker" data-reveal>— {P(HERO.kicker)}</p>
-      <h1 class="sv-hero__title">
-        <span class="ln" data-split-chars>{P(HERO.line1)}</span>
-        <span class="ln" data-split-chars>{P(HERO.line2)}</span>
-        <span class="ln ln--accent" data-split-chars>{P(HERO.line3)}</span>
+  <!-- Hero propio — H1 con keywords locales + chips de confianza -->
+  <header class="svc-hero">
+    <div class="svc-hero__inner">
+      <p class="svc-hero__kicker" data-reveal>— {t.services.kicker}</p>
+      <h1 class="svc-hero__title">
+        <span class="ln" data-split-chars>{es ? 'Servicios de marketing' : 'Digital marketing &'}</span>
+        <span class="ln" data-split-chars>{es ? 'digital y diseño web' : 'web design services'}</span>
+        <span class="ln ln--accent" data-split-chars>{es ? 'en Santiago.' : 'in Santiago.'}</span>
       </h1>
-      <p class="sv-hero__intro" data-reveal data-delay="0.18">{P(HERO.intro)}</p>
-      <div class="sv-hero__actions" data-reveal data-delay="0.28">
-        <a href={lp('/cotizar')} class="sv-btn sv-btn--solid">
-          {P(HERO.ctaPrimary)}
-          <span aria-hidden="true">&#8594;</span>
-        </a>
-        <a href="#capacidades" class="sv-btn sv-btn--ghost">
-          {P(HERO.ctaSecondary)}
-        </a>
+      <p class="svc-hero__intro" data-reveal data-delay="0.18">{t.services.intro}</p>
+      <div class="svc-hero__chips" data-reveal data-delay="0.28">
+        {heroChips.map((c) => (
+          <span class="svc-hero__chip">
+            <span class="svc-hero__chip-dot" aria-hidden="true"></span>
+            {c}
+          </span>
+        ))}
       </div>
     </div>
   </header>
 
-  <!-- ════════ 01 · EL CRECIMIENTO NO OCURRE EN UN SOLO CANAL ════════ -->
-  <section class="sv-friction">
-    <div class="sv-wrap">
-      <div class="sv-friction__head">
-        <p class="sv-kicker" data-reveal>— {P(FRICTION.kicker)}</p>
-        <h2 class="sv-h2" data-split-chars>{P(FRICTION.title)}</h2>
-        <p class="sv-lead" data-reveal data-delay="0.12">{P(FRICTION.lead)}</p>
-      </div>
+  <!-- Lista editorial de servicios con foto + entregables -->
+  <section class="svc-index">
+    {SERVICES.map((s) => (
+      <a href={lp(`/servicios/${s.slug}`)} class="svc-index__row" data-reveal>
+        <span class="svc-index__num">{s.num}</span>
 
-      <ol class="sv-friction__list">
-        {FRICTION.points.map((p, i) => (
-          <li class="sv-friction__item" data-reveal data-delay={String(i * 0.08)}>
-            <span class="sv-friction__idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <p>{P(p)}</p>
-          </li>
-        ))}
-      </ol>
+        <div class="svc-index__media" aria-hidden="true">
+          <!-- width/height explícitos: sin ellos el navegador no sabe cuánto
+               espacio reservar y la lista salta al cargar cada imagen. Son
+               las medidas reales de los svc-*.jpg (1400x933). -->
+          <img src={svcImg[s.slug]}
+               srcset={`${svcImg[s.slug].replace('.jpg', '-sm.jpg')} 800w, ${svcImg[s.slug]} 1400w`}
+               sizes="(max-width: 899px) 92vw, 240px"
+               width="1400" height="933"
+               alt="" loading="lazy" decoding="async" />
+        </div>
 
-      <p class="sv-friction__close" data-reveal>{P(FRICTION.close)}</p>
-
-      <!-- Cadena del sistema -->
-      <div class="sv-chain" data-reveal>
-        {FRICTION.chain.map((c, i) => (
-          <>
-            <div class="sv-chain__node">
-              <span class="sv-chain__key">{c.key}</span>
-              <span class="sv-chain__q">{P(c.q)}</span>
-            </div>
-            {i < FRICTION.chain.length - 1 && (
-              <span class="sv-chain__arrow" aria-hidden="true">&#8594;</span>
+        <div class="svc-index__main">
+          <div class="svc-index__topline">
+            <h2 class="svc-index__title">{pick(s.title, locale)}</h2>
+            {proof[s.slug] && (
+              <span class="svc-index__proof">{es ? proof[s.slug].es : proof[s.slug].en}</span>
             )}
-          </>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════ CAPACIDADES ════════ -->
-  <section class="sv-caps" id="capacidades">
-    <div class="sv-wrap">
-      <div class="sv-caps__head">
-        <p class="sv-kicker" data-reveal>— {P(LABELS.sectionServices)}</p>
-        <h2 class="sv-h2 sv-h2--poster" data-split-chars>{P(LABELS.sectionServicesTitle)}</h2>
-      </div>
-    </div>
-
-    {blocks.map((b, i) => (
-      <article class="sv-svc" id={`svc-${b.slug}`} data-flip={i % 2 === 1 ? 'true' : undefined}>
-        <div class="sv-wrap sv-svc__grid">
-          <div class="sv-svc__rail">
-            <span class="sv-svc__num" data-reveal>{b.num}</span>
-            <span class="sv-svc__tag" data-reveal data-delay="0.06">{P(b.tag)}</span>
           </div>
-
-          <div class="sv-svc__main">
-            <h3 class="sv-svc__title" data-reveal>{P(b.title)}</h3>
-            <p class="sv-svc__headline" data-reveal data-delay="0.06">{P(b.headline)}</p>
-            <p class="sv-svc__lead" data-reveal data-delay="0.12">{P(b.lead)}</p>
-
-            <div class="sv-svc__caps" data-reveal data-delay="0.16">
-              <p class="sv-svc__caps-label">{P(LABELS.capabilities)}</p>
-              <ul class="sv-svc__caps-list">
-                {(es ? b.capabilities.es : b.capabilities.en).map((c) => (
-                  <li>{c}</li>
-                ))}
-              </ul>
-            </div>
-
-            {b.foundation && (
-              <div class="sv-found" data-reveal>
-                <p class="sv-found__label">{P(b.foundation.label)}</p>
-                <div class="sv-found__items">
-                  {(es ? b.foundation.items.es : b.foundation.items.en).map((f) => (
-                    <span class="sv-found__item">{f}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {b.flow && (
-              <div class="sv-flow" data-reveal aria-hidden="true">
-                {b.flow.map((step, i) => (
-                  <>
-                    <span class="sv-flow__step">{step}</span>
-                    {i < b.flow!.length - 1 && <span class="sv-flow__sep">&#8594;</span>}
-                  </>
-                ))}
-              </div>
-            )}
-
-            <p class="sv-svc__disco" data-reveal>
-              <span class="sv-svc__disco-tag">{P(LABELS.discoverability)}</span>
-              {P(b.discoverability)}
-            </p>
-
-            <a href={lp(`/servicios/${b.slug}`)} class="sv-svc__go">
-              {P(LABELS.explore)}
-              <span aria-hidden="true">&#8594;</span>
-            </a>
+          <p class="svc-index__short">{pick(s.short, locale)}</p>
+          <div class="svc-index__chips">
+            {(es ? s.items.es : s.items.en).slice(0, 3).map((item) => (
+              <span class="svc-chip">{item}</span>
+            ))}
           </div>
         </div>
-      </article>
+
+        <span class="svc-index__go" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+            <path d="M2 14 L14 2 M14 2 H5 M14 2 V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="sr-only">{moreLabel}</span>
+      </a>
     ))}
   </section>
 
-  <!-- ════════ DISCOVERABILITY SYSTEM ════════ -->
-  <section class="sv-disco">
-    <div class="sv-wrap">
-      <div class="sv-disco__head">
-        <p class="sv-kicker sv-kicker--light" data-reveal>— {P(DISCOVERABILITY.kicker)}</p>
-        <h2 class="sv-h2 sv-h2--light" data-split-chars>{P(DISCOVERABILITY.title)}</h2>
-        <p class="sv-lead sv-lead--light" data-reveal data-delay="0.12">{P(DISCOVERABILITY.lead)}</p>
-      </div>
-
-      <div class="sv-disco__grid">
-        {DISCOVERABILITY.pillars.map((p, i) => (
-          <div class="sv-pillar" data-reveal data-delay={String(i * 0.06)}>
-            <span class="sv-pillar__code">{p.code}</span>
-            <span class="sv-pillar__scope">{P(p.scope)}</span>
-            <p class="sv-pillar__desc">{P(p.desc)}</p>
-          </div>
-        ))}
-      </div>
-
-      <div class="sv-disco__result" data-reveal>
-        <span class="sv-disco__eq" aria-hidden="true">=</span>
-        <span class="sv-disco__label">{P(DISCOVERABILITY.result)}</span>
-      </div>
-
-      <p class="sv-disco__note" data-reveal>{P(DISCOVERABILITY.disclaimer)}</p>
-    </div>
-  </section>
-
-  <!-- ════════ CÓMO SE CONECTA TODO ════════ -->
-  <section class="sv-connect">
-    <div class="sv-wrap">
-      <div class="sv-connect__head">
-        <p class="sv-kicker" data-reveal>— {P(CONNECTION.kicker)}</p>
-        <h2 class="sv-h2" data-split-chars>{P(CONNECTION.title)}</h2>
-        <p class="sv-lead" data-reveal data-delay="0.12">{P(CONNECTION.lead)}</p>
-      </div>
-
-      <ol class="sv-connect__flow">
-        {CONNECTION.steps.map((s, i) => (
-          <li class="sv-connect__step" data-reveal data-delay={String(i * 0.06)}>
-            <span class="sv-connect__code">{s.code}</span>
-            <span class="sv-connect__rule" aria-hidden="true"></span>
-            <span class="sv-connect__d">{P(s.d)}</span>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <!-- ════════ CASOS ════════ -->
-  {cases.length > 0 && (
-    <section class="sv-cases">
-      <div class="sv-wrap">
-        <div class="sv-cases__head">
-          <p class="sv-kicker" data-reveal>— {P(CASES.kicker)}</p>
-          <h2 class="sv-h2" data-split-chars>{P(CASES.title)}</h2>
-        </div>
-
-        <div class="sv-cases__list">
-          {cases.map((c) => (
-            <article class="sv-case" data-reveal>
-              <header class="sv-case__head">
-                <h3 class="sv-case__client">{c.client}</h3>
-                <span class="sv-case__sector">{P(c.sector)}</span>
-              </header>
-
-              <div class="sv-case__body">
-                <div class="sv-case__col">
-                  <p class="sv-case__label">{P(CASES.labels.challenge)}</p>
-                  <p class="sv-case__text">{P(c.challenge)}</p>
-                </div>
-                <div class="sv-case__col">
-                  <p class="sv-case__label">{P(CASES.labels.strategy)}</p>
-                  <p class="sv-case__text">{P(c.approach)}</p>
-                </div>
-                <div class="sv-case__col">
-                  <p class="sv-case__label">{P(CASES.labels.impact)}</p>
-                  <p class="sv-case__text">{P(c.outcome)}</p>
-                </div>
-              </div>
-
-              {c.metrics.length > 0 && (
-                <div class="sv-case__metrics">
-                  {c.metrics.map((m) => (
-                    <div class="sv-metric">
-                      <span class="sv-metric__val">{m.val}</span>
-                      <span class="sv-metric__lbl">{P(m.lbl)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <a href={lp(`/trabajos/${c.slug}`)} class="sv-case__go">
-                {P(CASES.viewCase)} <span aria-hidden="true">&#8594;</span>
-              </a>
-            </article>
-          ))}
-        </div>
-
-        <a href={lp('/trabajos')} class="sv-cases__all" data-reveal>
-          {P(CASES.viewAll)} <span aria-hidden="true">&#8594;</span>
-        </a>
-      </div>
-    </section>
-  )}
-
-  <!-- ════════ PROCESO ════════ -->
-  <section class="sv-process">
-    <div class="sv-wrap">
-      <div class="sv-process__head">
-        <p class="sv-kicker sv-kicker--light" data-reveal>— {P(PROCESS.kicker)}</p>
-        <h2 class="sv-h2 sv-h2--light" data-split-chars>{P(PROCESS.title)}</h2>
-      </div>
-      <div class="sv-process__grid">
-        {PROCESS.steps.map((s, i) => (
-          <div class="sv-step" data-reveal data-delay={String(i * 0.07)}>
-            <span class="sv-step__n">{s.n}</span>
-            <h3 class="sv-step__code">{s.code}</h3>
-            <p class="sv-step__d">{P(s.d)}</p>
+  <!-- Cómo trabajamos — proceso en 4 pasos -->
+  <section class="process">
+    <div class="process__inner">
+      <p class="process__kicker" data-reveal>— {es ? 'Cómo trabajamos' : 'How we work'}</p>
+      <h2 class="process__title" data-split-chars>{es ? 'De la idea al resultado' : 'From idea to result'}</h2>
+      <div class="process__grid">
+        {steps.map((st, i) => (
+          <div class="process-step" data-reveal data-delay={String(i * 0.1)}>
+            <span class="process-step__num">{st.n}</span>
+            <h3 class="process-step__t">{st.t}</h3>
+            <p class="process-step__d">{st.d}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- ════════ INVERSIÓN ════════ -->
-  <section class="sv-invest">
-    <div class="sv-wrap sv-invest__grid">
-      <div>
-        <p class="sv-kicker" data-reveal>— {P(INVESTMENT.kicker)}</p>
-        <h2 class="sv-h2" data-split-chars>{P(INVESTMENT.title)}</h2>
-        <p class="sv-lead" data-reveal data-delay="0.12">{P(INVESTMENT.lead)}</p>
-        <a href={lp('/cotizar')} class="sv-btn sv-btn--solid sv-invest__cta" data-reveal>
-          {P(INVESTMENT.cta)} <span aria-hidden="true">&#8594;</span>
-        </a>
+  <!-- FAQ -->
+  <section class="page-section--cream">
+    <div class="page-section__inner" style="padding-block: 96px;">
+      <div class="sec-head">
+        <p class="sec-head__kicker">{t.services.faqKicker}</p>
+        <h2 class="sec-head__title">{t.services.faqTitle}</h2>
       </div>
-      <ul class="sv-invest__factors">
-        {INVESTMENT.factors.map((f, i) => (
-          <li data-reveal data-delay={String(i * 0.05)}>{P(f)}</li>
-        ))}
-      </ul>
-    </div>
-  </section>
-
-  <!-- ════════ FAQ ════════ -->
-  <section class="sv-faq">
-    <div class="sv-wrap">
-      <div class="sv-faq__head">
-        <p class="sv-kicker" data-reveal>— {P(FAQ.kicker)}</p>
-        <h2 class="sv-h2" data-split-chars>{P(FAQ.title)}</h2>
-      </div>
-      <div class="sv-faq__list">
-        {FAQ.items.map((f) => (
+      <div class="mx-auto max-w-4xl">
+        {t.services.faq.map((f) => (
           <details class="faq-item" data-reveal>
             <summary>
-              {P(f.q)}
+              {f.q}
               <span class="faq-item__icon" aria-hidden="true">+</span>
             </summary>
-            <p class="faq-item__body">{P(f.a)}</p>
+            <p class="faq-item__body">{f.a}</p>
           </details>
         ))}
       </div>
@@ -376,29 +227,28 @@ const seoLinks = [
   </section>
 
   {es && (
-    <!-- Contexto local — cobertura semántica real, sin relleno de keywords -->
-    <section class="sv-local">
-      <div class="sv-wrap sv-local__grid">
-        <div>
-          <h2 class="sv-local__title">Agencia digital en Santiago de Chile</h2>
+    <!-- Bloque SEO local — texto keyword-rich + interlinking al blog -->
+    <section class="svc-seo">
+      <div class="svc-seo__inner">
+        <div class="svc-seo__text">
+          <h2 class="svc-seo__title">Agencia de marketing digital en Santiago de Chile</h2>
           <p>
-            BrandUp es una agencia de marketing digital y diseño web con base en Santiago
-            que trabaja con empresas de la Región Metropolitana, del resto de Chile y del
-            extranjero. Reunimos en un mismo equipo las disciplinas que normalmente están
-            repartidas entre varios proveedores: estrategia y branding, desarrollo web y
-            e-commerce, contenido, publicidad digital, automatización con IA y growth.
+            BrandUp es una agencia de marketing digital y diseño web con base en Santiago,
+            que trabaja con pymes y marcas de toda la Región Metropolitana y Chile. Combinamos
+            estrategia, diseño y tecnología en un solo equipo: sitios web que convierten,
+            tiendas online con pagos integrados, branding memorable, contenido para redes
+            sociales y campañas de publicidad digital medibles.
           </p>
           <p>
-            Esa integración es el punto: una identidad que se sostiene en la experiencia
-            digital, un sitio preparado para ser encontrado, campañas que aterrizan donde
-            corresponde y procesos que no dependen de que alguien esté disponible. Si estás
-            evaluando un proyecto y quieres entender qué implica, conversemos.
+            Cada proyecto parte con un objetivo de negocio concreto — más clientes, más ventas,
+            más marca — y una métrica clara para medirlo. Si buscas una agencia en Santiago que
+            hable de resultados y no de likes, hablemos.
           </p>
         </div>
-        <div class="sv-local__links">
-          <p class="sv-local__links-label">— Guías publicadas</p>
+        <div class="svc-seo__links">
+          <p class="svc-seo__links-label">— Guías útiles antes de cotizar</p>
           {seoLinks.map((l) => (
-            <a href={l.href} class="sv-local__link">{l.label} <span aria-hidden="true">&#8594;</span></a>
+            <a href={l.href} class="svc-seo__link">{l.label} <span aria-hidden="true">→</span></a>
           ))}
         </div>
       </div>
@@ -409,785 +259,337 @@ const seoLinks = [
 </Base>
 
 <style>
-/* ════════════════════════════════════════════════════════════════════
-   /servicios — experiencia editorial premium.
-   Sistema: tipografía protagonista, mucho aire, líneas finas, números
-   grandes y acento naranja usado con cuentagotas. Ritmo de fondos:
-   oscuro → claro → claro → oscuro → claro → crema → oscuro → claro.
-   ════════════════════════════════════════════════════════════════════ */
-
-.sv-wrap {
-  max-width: 1360px;
-  margin-inline: auto;
-  padding-inline: 24px;
-}
-@media (min-width: 768px) { .sv-wrap { padding-inline: 48px; } }
-
-/* ── Tipografía compartida ──────────────────────────────────────── */
-.sv-kicker {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 22px;
-}
-.sv-kicker--light { color: var(--color-accent); }
-
-.sv-h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2rem, 4.6vw, 4.1rem);
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-  color: var(--color-paper);
-  max-width: 20ch;
-  text-wrap: balance;
-}
-.sv-h2--light { color: #f8f8f8; }
-.sv-h2--poster {
-  font-family: var(--font-poster);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.012em;
-  line-height: 0.98;
-  font-size: clamp(2.1rem, 5.6vw, 5rem);
-  max-width: 16ch;
-}
-.sv-lead {
-  margin-top: clamp(20px, 2.6vw, 30px);
-  max-width: 60ch;
-  font-size: clamp(1.02rem, 1.55vw, 1.2rem);
-  line-height: 1.7;
-  color: var(--color-gray);
-}
-.sv-lead--light { color: rgba(248, 248, 248, 0.62); }
-
-/* ── Botones ────────────────────────────────────────────────────── */
-.sv-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  padding: 15px 32px;
-  border-radius: 100px;
-  transition: background 0.35s ease, color 0.35s ease, gap 0.35s ease, border-color 0.35s ease;
-}
-.sv-btn--solid { background: var(--color-accent); color: #fff; }
-.sv-btn--solid:hover { background: #f8f8f8; color: #0d0d0d; gap: 16px; }
-.sv-btn--ghost {
-  color: rgba(248, 248, 248, 0.86);
-  border: 1px solid rgba(248, 248, 248, 0.22);
-}
-.sv-btn--ghost:hover { border-color: #f8f8f8; color: #f8f8f8; }
-
-/* ════════ HERO ════════ */
-.sv-hero {
+/* ── Hero — H1 poster con keywords locales ───────────────────────── */
+.svc-hero {
   position: relative;
   background: #0d0d0d;
   color: #f8f8f8;
   overflow: hidden;
-  padding: clamp(150px, 17vw, 220px) 0 clamp(80px, 10vw, 130px);
+  padding: clamp(150px, 17vw, 210px) 24px clamp(64px, 8vw, 100px);
 }
-.sv-hero::before {
+@media (min-width: 768px) { .svc-hero { padding-inline: 48px; } }
+.svc-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 70% at 88% -8%, rgba(240, 94, 35, 0.18) 0%, transparent 62%);
+  background: radial-gradient(ellipse 70% 80% at 85% -10%, rgba(240,94,35,0.16) 0%, transparent 60%);
   pointer-events: none;
 }
-.sv-hero__inner {
-  position: relative;
-  max-width: 1360px;
-  margin-inline: auto;
-  padding-inline: 24px;
-}
-@media (min-width: 768px) { .sv-hero__inner { padding-inline: 48px; } }
-.sv-hero__kicker {
+.svc-hero__inner { position: relative; max-width: 1400px; margin-inline: auto; }
+.svc-hero__kicker {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
-.sv-hero__title {
+.svc-hero__title {
   font-family: var(--font-poster);
   font-weight: 400;
-  font-size: clamp(2.35rem, 7.4vw, 6.6rem);
-  letter-spacing: 0.012em;
-  line-height: 0.98;
+  font-size: clamp(2.5rem, 8.2vw, 7.4rem);
+  letter-spacing: 0.014em;
+  line-height: 0.96;
   text-transform: uppercase;
 }
-.sv-hero__title .ln { display: block; }
-.sv-hero__title .ln--accent {
+.svc-hero__title .ln { display: block; }
+.svc-hero__title .ln--accent {
   color: transparent;
-  -webkit-text-stroke: clamp(1.3px, 0.22vw, 2.2px) var(--color-accent);
+  -webkit-text-stroke: clamp(1.4px, 0.24vw, 2.4px) var(--color-accent);
 }
-.sv-hero__intro {
-  margin-top: clamp(28px, 3.6vw, 44px);
-  max-width: 64ch;
-  font-size: clamp(1rem, 1.6vw, 1.22rem);
-  line-height: 1.7;
+.svc-hero__intro {
+  margin-top: clamp(24px, 3.5vw, 38px);
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  line-height: 1.65;
   color: rgba(248, 248, 248, 0.6);
 }
-.sv-hero__actions {
+.svc-hero__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: clamp(32px, 4vw, 46px);
+  gap: 10px 14px;
+  margin-top: clamp(24px, 3.5vw, 36px);
 }
-
-/* ════════ FRICCIÓN ════════ */
-.sv-friction {
-  background: var(--color-ink);
-  padding-block: clamp(84px, 11vw, 150px);
-  border-bottom: 1px solid var(--color-line);
-}
-.sv-friction__list {
-  list-style: none;
-  margin-top: clamp(48px, 6vw, 78px);
-  border-top: 1px solid var(--color-line);
-}
-.sv-friction__item {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 18px;
-  align-items: baseline;
-  padding: clamp(22px, 2.6vw, 32px) 0;
-  border-bottom: 1px solid var(--color-line);
-}
-@media (min-width: 900px) {
-  .sv-friction__item { grid-template-columns: 110px 1fr; gap: 40px; }
-}
-.sv-friction__idx {
-  font-family: var(--font-poster);
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  color: var(--color-accent);
-  letter-spacing: 0.04em;
-}
-.sv-friction__item p {
-  font-size: clamp(1.06rem, 2vw, 1.6rem);
-  line-height: 1.42;
-  letter-spacing: -0.018em;
-  color: var(--color-paper);
-  max-width: 40ch;
-  text-wrap: balance;
-}
-.sv-friction__close {
-  margin-top: clamp(40px, 5vw, 64px);
-  max-width: 62ch;
-  font-size: clamp(1rem, 1.5vw, 1.16rem);
-  line-height: 1.72;
-  color: var(--color-gray);
-}
-
-/* Cadena Brand → Digital → … */
-.sv-chain {
-  display: flex;
-  flex-wrap: wrap;
+.svc-hero__chip {
+  display: inline-flex;
   align-items: center;
-  gap: 12px 14px;
-  margin-top: clamp(48px, 6vw, 76px);
-  padding-top: clamp(32px, 4vw, 48px);
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(248, 248, 248, 0.72);
+  border: 1px solid rgba(248, 248, 248, 0.16);
+  border-radius: 99px;
+  padding: 9px 16px;
+}
+.svc-hero__chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(240, 94, 35, 0.8);
+}
+
+/* ── Prueba de resultado por servicio ────────────────────────────── */
+.svc-index__topline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px 18px;
+  flex-wrap: wrap;
+}
+.svc-index__proof {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* ── Bloque SEO local + interlinking ─────────────────────────────── */
+.svc-seo {
+  background: var(--color-ink);
   border-top: 1px solid var(--color-line);
 }
-.sv-chain__node { display: flex; flex-direction: column; gap: 5px; }
-.sv-chain__key {
+.svc-seo__inner {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding: clamp(64px, 8vw, 100px) 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 44px;
+}
+@media (min-width: 768px) { .svc-seo__inner { padding-inline: 48px; } }
+@media (min-width: 1000px) {
+  .svc-seo__inner { grid-template-columns: 1.2fr 0.8fr; gap: 72px; }
+}
+.svc-seo__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-paper);
+  margin-bottom: 18px;
+}
+.svc-seo__text p {
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--color-gray);
+  margin-bottom: 14px;
+  max-width: 65ch;
+}
+.svc-seo__links {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  align-self: start;
+  border-left: 2px solid var(--color-accent);
+  padding-left: 26px;
+}
+.svc-seo__links-label {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-paper);
-}
-.sv-chain__q { font-size: 12.5px; color: var(--color-gray); }
-.sv-chain__arrow { color: var(--color-accent); font-size: 0.95rem; opacity: 0.7; }
-
-/* ════════ CAPACIDADES ════════ */
-.sv-caps { background: var(--color-ink); }
-.sv-caps__head {
-  padding-block: clamp(84px, 11vw, 150px) clamp(30px, 4vw, 52px);
-}
-.sv-svc {
-  border-top: 1px solid var(--color-line);
-  padding-block: clamp(56px, 7vw, 104px);
-}
-.sv-svc:nth-child(even) { background: #f3f1ed; }
-.sv-svc__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 26px;
-}
-@media (min-width: 900px) {
-  .sv-svc__grid { grid-template-columns: 190px 1fr; gap: 56px; }
-}
-@media (min-width: 1200px) {
-  .sv-svc__grid { grid-template-columns: 240px 1fr; gap: 88px; }
-}
-/* Ritmo asimétrico: los servicios pares invierten el eje (el número pasa a
-   la derecha) para que la lectura no caiga en una plantilla repetida.
-   En móvil la columna es única y el orden vuelve a ser el natural. */
-@media (min-width: 900px) {
-  .sv-svc[data-flip] .sv-svc__grid { grid-template-columns: 1fr 190px; }
-  .sv-svc[data-flip] .sv-svc__rail { order: 2; align-items: flex-end; text-align: right; }
-  .sv-svc[data-flip] .sv-svc__main { order: 1; }
-}
-@media (min-width: 1200px) {
-  .sv-svc[data-flip] .sv-svc__grid { grid-template-columns: 1fr 240px; }
-}
-.sv-svc__rail {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-}
-@media (min-width: 900px) {
-  .sv-svc__rail {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    position: sticky;
-    top: 120px;
-    align-self: start;
-  }
-}
-.sv-svc__num {
-  font-family: var(--font-poster);
-  font-size: clamp(2.6rem, 5.2vw, 4.6rem);
-  line-height: 0.86;
-  color: transparent;
-  -webkit-text-stroke: 1.4px rgba(35, 35, 35, 0.26);
-  letter-spacing: 0.02em;
-}
-.sv-svc__tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: var(--color-accent);
+  margin-bottom: 4px;
 }
-.sv-svc__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.35rem, 2.1vw, 1.7rem);
+.svc-seo__link {
+  font-size: 0.96rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
   color: var(--color-paper);
-}
-.sv-svc__headline {
-  margin-top: 14px;
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3.5vw, 2.85rem);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  color: var(--color-paper);
-  max-width: 22ch;
-  text-wrap: balance;
-}
-.sv-svc__lead {
-  margin-top: clamp(18px, 2.2vw, 26px);
-  max-width: 62ch;
-  font-size: clamp(1rem, 1.45vw, 1.12rem);
-  line-height: 1.72;
-  color: var(--color-gray);
-}
-.sv-svc__caps { margin-top: clamp(28px, 3.4vw, 40px); }
-.sv-svc__caps-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-gray);
-  margin-bottom: 16px;
-}
-.sv-svc__caps-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  border-top: 1px solid var(--color-line);
-}
-@media (min-width: 700px) {
-  .sv-svc__caps-list { grid-template-columns: 1fr 1fr; column-gap: 40px; }
-}
-.sv-svc__caps-list li {
-  padding: 13px 0;
-  border-bottom: 1px solid var(--color-line);
-  font-size: clamp(0.92rem, 1.25vw, 1rem);
-  line-height: 1.5;
-  color: var(--color-paper);
-}
-
-/* Fundamento técnico (SEO desde la arquitectura) */
-.sv-found {
-  margin-top: clamp(26px, 3vw, 36px);
-  padding: clamp(22px, 2.6vw, 30px);
-  border: 1px solid var(--color-line);
-  border-left: 2px solid var(--color-accent);
-  background: rgba(255, 255, 255, 0.5);
-}
-.sv-found__label {
-  font-size: clamp(0.98rem, 1.4vw, 1.1rem);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: var(--color-paper);
-  margin-bottom: 16px;
+  transition: color 0.25s, transform 0.3s;
   max-width: 46ch;
 }
-.sv-found__items { display: flex; flex-wrap: wrap; gap: 8px 10px; }
-.sv-found__item {
+.svc-seo__link:hover { color: var(--color-accent); transform: translateX(4px); }
+
+.svc-index {
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 768px) { .svc-index { padding-inline: 48px; } }
+
+.svc-index__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  padding: 34px 8px;
+  border-bottom: 1px solid var(--color-line);
+  text-decoration: none;
+  transition: background 0.35s;
+  position: relative;
+}
+@media (min-width: 900px) {
+  .svc-index__row {
+    grid-template-columns: 56px 240px minmax(0, 1fr) 64px;
+    gap: 40px;
+    align-items: center;
+    padding-block: 40px;
+  }
+}
+.svc-index__row:hover { background: #f0ede8; }
+
+.svc-index__num {
   font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-gray);
+  font-variant-numeric: tabular-nums;
+  align-self: start;
+  padding-top: 8px;
+}
+@media (max-width: 899px) { .svc-index__num { display: none; } }
+
+/* Foto del servicio — inclinada, se endereza al hover */
+.svc-index__media {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 14px;
+  overflow: hidden;
+  transform: rotate(-2deg);
+  box-shadow: 0 18px 44px rgba(35, 35, 35, 0.14);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-index__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.svc-index__row:hover .svc-index__media { transform: rotate(0deg) scale(1.02); }
+.svc-index__row:hover .svc-index__media img { transform: scale(1.09); }
+
+.svc-index__main { min-width: 0; }
+.svc-index__title {
+  font-family: var(--font-poster);
+  font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.014em;
+  line-height: 1.02;
+  color: var(--color-paper);
+  transition: color 0.3s, transform 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.svc-index__row:hover .svc-index__title {
+  color: var(--color-accent);
+  transform: translateX(10px) skewX(-3deg);
+}
+.svc-index__short {
+  margin-top: 10px;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--color-gray);
+  max-width: 56ch;
+}
+.svc-index__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.svc-chip {
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--color-gray);
   border: 1px solid var(--color-line);
   border-radius: 99px;
   padding: 6px 13px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.55);
+  transition: border-color 0.3s, color 0.3s;
 }
+.svc-index__row:hover .svc-chip { border-color: rgba(240, 94, 35, 0.4); color: var(--color-paper); }
 
-/* Flujo horizontal (Creative → Landing → …) */
-.sv-flow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 10px;
-  margin-top: clamp(24px, 2.8vw, 32px);
-}
-.sv-flow__step {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-paper);
-  border-bottom: 1px solid var(--color-accent);
-  padding-bottom: 3px;
-}
-.sv-flow__sep { color: var(--color-accent); font-size: 0.85rem; opacity: 0.65; }
-
-/* Microcopy discoverability */
-.sv-svc__disco {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: clamp(24px, 2.8vw, 32px);
-  font-size: clamp(0.9rem, 1.25vw, 0.98rem);
-  line-height: 1.6;
+.svc-index__go {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  display: none;
+  place-items: center;
   color: var(--color-gray);
+  justify-self: end;
+  transition: background 0.35s, border-color 0.35s, color 0.35s,
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.sv-svc__disco-tag {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  border: 1px solid rgba(240, 94, 35, 0.32);
-  border-radius: 99px;
-  padding: 4px 10px;
+@media (min-width: 900px) { .svc-index__go { display: grid; } }
+.svc-index__row:hover .svc-index__go {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+  transform: rotate(45deg) scale(1.08);
 }
-.sv-svc__go {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: clamp(26px, 3vw, 34px);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-paper);
-  border-bottom: 1px solid var(--color-paper);
-  padding-bottom: 4px;
-  transition: color 0.3s ease, border-color 0.3s ease, gap 0.3s ease;
-}
-.sv-svc__go:hover { color: var(--color-accent); border-color: var(--color-accent); gap: 16px; }
 
-/* ════════ DISCOVERABILITY ════════ */
-.sv-disco {
+/* ── Proceso — banda oscura con 4 pasos ─────────────────────────── */
+.process {
   background: #0d0d0d;
   color: #f8f8f8;
-  padding-block: clamp(84px, 11vw, 150px);
-  position: relative;
-  overflow: hidden;
+  padding: clamp(80px, 10vw, 140px) 24px;
 }
-.sv-disco::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 55% 60% at 12% 8%, rgba(240, 94, 35, 0.13) 0%, transparent 60%);
-  pointer-events: none;
-}
-.sv-disco > .sv-wrap { position: relative; }
-.sv-disco__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  margin-top: clamp(48px, 6vw, 76px);
-  border-top: 1px solid rgba(248, 248, 248, 0.12);
-}
-@media (min-width: 700px) { .sv-disco__grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1100px) { .sv-disco__grid { grid-template-columns: repeat(3, 1fr); } }
-.sv-pillar {
-  padding: clamp(24px, 3vw, 34px) clamp(18px, 2.4vw, 30px) clamp(24px, 3vw, 34px) 0;
-  border-bottom: 1px solid rgba(248, 248, 248, 0.12);
-}
-@media (min-width: 700px) {
-  .sv-pillar:nth-child(odd) { border-right: 1px solid rgba(248, 248, 248, 0.12); padding-right: clamp(24px, 3vw, 40px); }
-  .sv-pillar:nth-child(even) { padding-left: clamp(24px, 3vw, 40px); }
-}
-@media (min-width: 1100px) {
-  .sv-pillar { border-right: 1px solid rgba(248, 248, 248, 0.12); padding-inline: clamp(24px, 2.4vw, 34px); }
-  .sv-pillar:nth-child(3n) { border-right: 0; }
-  .sv-pillar:nth-child(3n + 1) { padding-left: 0; }
-}
-.sv-pillar__code {
-  display: block;
-  font-family: var(--font-poster);
-  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-  letter-spacing: 0.03em;
-  color: #f8f8f8;
-  text-transform: uppercase;
-}
-.sv-pillar__scope {
-  display: block;
-  margin-top: 8px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-.sv-pillar__desc {
-  margin-top: 14px;
-  font-size: 0.95rem;
-  line-height: 1.62;
-  color: rgba(248, 248, 248, 0.56);
-  max-width: 34ch;
-}
-.sv-disco__result {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: clamp(40px, 5vw, 60px);
-}
-.sv-disco__eq {
-  font-family: var(--font-poster);
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  color: var(--color-accent);
-}
-.sv-disco__label {
-  font-family: var(--font-poster);
-  font-size: clamp(1.5rem, 4.4vw, 3.4rem);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: transparent;
-  -webkit-text-stroke: clamp(1px, 0.16vw, 1.6px) #f8f8f8;
-}
-.sv-disco__note {
-  margin-top: clamp(32px, 4vw, 46px);
-  max-width: 68ch;
-  font-size: 0.92rem;
-  line-height: 1.72;
-  color: rgba(248, 248, 248, 0.44);
-  padding-left: 18px;
-  border-left: 1px solid rgba(240, 94, 35, 0.4);
-}
-
-/* ════════ CONEXIÓN ════════ */
-.sv-connect {
-  background: var(--color-ink);
-  padding-block: clamp(84px, 11vw, 150px);
-}
-.sv-connect__flow {
-  list-style: none;
-  margin-top: clamp(48px, 6vw, 74px);
-  border-top: 1px solid var(--color-line);
-}
-.sv-connect__step {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-  padding: clamp(20px, 2.4vw, 28px) 0;
-  border-bottom: 1px solid var(--color-line);
-  align-items: baseline;
-}
-@media (min-width: 800px) {
-  .sv-connect__step { grid-template-columns: 260px 1fr auto; gap: 32px; }
-}
-.sv-connect__code {
-  font-family: var(--font-poster);
-  font-size: clamp(1.15rem, 2vw, 1.6rem);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--color-paper);
-}
-.sv-connect__rule { display: none; }
-@media (min-width: 800px) {
-  .sv-connect__rule {
-    display: block;
-    height: 1px;
-    background: var(--color-line);
-    order: 3;
-    min-width: 40px;
-  }
-  .sv-connect__d { order: 2; }
-}
-.sv-connect__d {
-  font-size: clamp(0.98rem, 1.4vw, 1.12rem);
-  line-height: 1.6;
-  color: var(--color-gray);
-}
-
-/* ════════ CASOS ════════ */
-.sv-cases {
-  background: #f0ede8;
-  padding-block: clamp(84px, 11vw, 150px);
-  border-top: 1px solid var(--color-line);
-}
-.sv-cases__list { margin-top: clamp(44px, 5.6vw, 72px); }
-.sv-case {
-  border-top: 1px solid var(--color-line);
-  padding-block: clamp(34px, 4.4vw, 56px);
-}
-.sv-case:last-child { border-bottom: 1px solid var(--color-line); }
-.sv-case__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 18px;
-  margin-bottom: clamp(22px, 2.8vw, 34px);
-}
-.sv-case__client {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.3rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--color-paper);
-}
-.sv-case__sector {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-.sv-case__body {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 26px;
-}
-@media (min-width: 850px) {
-  .sv-case__body { grid-template-columns: repeat(3, 1fr); gap: 40px; }
-}
-.sv-case__label {
-  font-size: 10px;
+@media (min-width: 768px) { .process { padding-inline: 48px; } }
+.process__inner { max-width: 1400px; margin-inline: auto; }
+.process__kicker {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-gray);
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-line);
+  color: var(--color-accent);
+  margin-bottom: 16px;
 }
-.sv-case__text {
-  font-size: clamp(0.94rem, 1.3vw, 1.02rem);
-  line-height: 1.66;
-  color: var(--color-paper);
-}
-.sv-case__metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 44px;
-  margin-top: clamp(26px, 3vw, 36px);
-}
-.sv-metric { display: flex; flex-direction: column; gap: 4px; }
-.sv-metric__val {
+.process__title {
   font-family: var(--font-poster);
-  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 6.5vw, 5.4rem);
+  letter-spacing: 0.014em;
+  text-transform: uppercase;
+  line-height: 0.98;
+  margin-bottom: clamp(44px, 6vw, 72px);
+}
+.process__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 34px 28px;
+}
+@media (min-width: 640px) { .process__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .process__grid { grid-template-columns: repeat(4, 1fr); } }
+.process-step {
+  border-top: 1px solid rgba(248, 248, 248, 0.16);
+  padding-top: 22px;
+}
+.process-step__num {
+  font-family: var(--font-poster);
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  color: var(--color-accent);
   line-height: 1;
-  color: var(--color-accent);
-  letter-spacing: 0.01em;
 }
-.sv-metric__lbl {
-  font-size: 10.5px;
+.process-step__t {
+  margin-top: 14px;
+  font-size: 1.12rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-gray);
+  letter-spacing: -0.01em;
 }
-.sv-case__go {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: clamp(22px, 2.6vw, 30px);
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--color-paper);
-  border-bottom: 1px solid var(--color-line);
-  padding-bottom: 3px;
-  transition: color 0.3s ease, border-color 0.3s ease, gap 0.3s ease;
-}
-.sv-case__go:hover { color: var(--color-accent); border-color: var(--color-accent); gap: 15px; }
-.sv-cases__all {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: clamp(38px, 4.4vw, 56px);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-paper);
-  transition: color 0.3s ease, gap 0.3s ease;
-}
-.sv-cases__all:hover { color: var(--color-accent); gap: 16px; }
-
-/* ════════ PROCESO ════════ */
-.sv-process {
-  background: #0d0d0d;
-  color: #f8f8f8;
-  padding-block: clamp(84px, 11vw, 150px);
-}
-.sv-process__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  margin-top: clamp(48px, 6vw, 74px);
-  border-top: 1px solid rgba(248, 248, 248, 0.12);
-}
-@media (min-width: 700px) { .sv-process__grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1100px) { .sv-process__grid { grid-template-columns: repeat(3, 1fr); } }
-.sv-step {
-  padding: clamp(26px, 3.2vw, 38px) clamp(20px, 2.6vw, 32px) clamp(26px, 3.2vw, 38px) 0;
-  border-bottom: 1px solid rgba(248, 248, 248, 0.12);
-}
-@media (min-width: 700px) {
-  .sv-step:nth-child(odd) { border-right: 1px solid rgba(248, 248, 248, 0.12); padding-right: clamp(26px, 3vw, 42px); }
-  .sv-step:nth-child(even) { padding-left: clamp(26px, 3vw, 42px); }
-}
-@media (min-width: 1100px) {
-  .sv-step { border-right: 1px solid rgba(248, 248, 248, 0.12); padding-inline: clamp(24px, 2.6vw, 36px); }
-  .sv-step:nth-child(3n) { border-right: 0; }
-  .sv-step:nth-child(3n + 1) { padding-left: 0; }
-}
-.sv-step__n {
-  font-family: var(--font-poster);
-  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
-  line-height: 0.9;
-  color: transparent;
-  -webkit-text-stroke: 1.2px rgba(248, 248, 248, 0.3);
-}
-.sv-step__code {
-  margin-top: 16px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-.sv-step__d {
-  margin-top: 12px;
-  font-size: 0.98rem;
-  line-height: 1.65;
-  color: rgba(248, 248, 248, 0.58);
-  max-width: 36ch;
+.process-step__d {
+  margin-top: 9px;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: rgba(248, 248, 248, 0.55);
 }
 
-/* ════════ INVERSIÓN ════════ */
-.sv-invest {
-  background: var(--color-ink);
-  padding-block: clamp(84px, 11vw, 150px);
-}
-.sv-invest__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(40px, 5vw, 72px);
-  align-items: start;
-}
-@media (min-width: 950px) { .sv-invest__grid { grid-template-columns: 1.15fr 0.85fr; } }
-.sv-invest__cta { margin-top: clamp(30px, 3.6vw, 42px); }
-.sv-invest__factors {
-  list-style: none;
-  border-top: 1px solid var(--color-line);
-}
-.sv-invest__factors li {
-  padding: clamp(14px, 1.7vw, 19px) 0;
-  border-bottom: 1px solid var(--color-line);
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.7vw, 1.32rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--color-paper);
-}
-
-/* ════════ FAQ ════════ */
-.sv-faq {
-  background: #f3f1ed;
-  padding-block: clamp(84px, 11vw, 140px);
-  border-top: 1px solid var(--color-line);
-}
-.sv-faq__list { margin-top: clamp(40px, 5vw, 62px); max-width: 900px; }
-
-/* ════════ LOCAL / SEO ════════ */
-.sv-local {
-  background: var(--color-ink);
-  padding-block: clamp(72px, 9vw, 120px);
-  border-top: 1px solid var(--color-line);
-}
-.sv-local__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(36px, 4.6vw, 68px);
-}
-@media (min-width: 950px) { .sv-local__grid { grid-template-columns: 1.35fr 0.65fr; } }
-.sv-local__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
-  font-weight: 600;
-  letter-spacing: -0.028em;
-  color: var(--color-paper);
-  margin-bottom: 20px;
-}
-.sv-local p {
-  font-size: 0.98rem;
-  line-height: 1.78;
-  color: var(--color-gray);
-  max-width: 66ch;
-}
-.sv-local p + p { margin-top: 16px; }
-.sv-local__links { display: flex; flex-direction: column; gap: 2px; }
-.sv-local__links-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 14px;
-}
-.sv-local__link {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--color-line);
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: var(--color-paper);
-  transition: color 0.28s ease, padding-left 0.28s ease;
-}
-.sv-local__link:first-of-type { border-top: 1px solid var(--color-line); }
-.sv-local__link:hover { color: var(--color-accent); padding-left: 6px; }
-
-/* ── Móvil: se rediseña la jerarquía, no solo se apila ───────────── */
+/* Celular: los kickers y chips estaban en 11px, incomodos de leer en
+   un telefono. Al final para ganar sobre las definiciones de arriba. */
 @media (max-width: 767px) {
-  .sv-hero__title { line-height: 1.02; }
-  .sv-svc__num { -webkit-text-stroke-width: 1.1px; }
-  .sv-svc__rail { align-items: center; }
-  .sv-chain { gap: 10px 12px; }
-  .sv-chain__arrow { display: none; }
-  .sv-chain__node {
-    border: 1px solid var(--color-line);
-    border-radius: 99px;
-    padding: 8px 14px;
+  .svc-hero__kicker,
+  .svc-hero__chip,
+  .svc-index__proof,
+  .svc-chip,
+  .process__kicker,
+  .svc-seo__links-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
   }
-  .sv-btn { padding: 14px 26px; font-size: 0.92rem; }
-  .sv-hero__actions .sv-btn { flex: 1 1 auto; justify-content: center; }
-  .sv-case__metrics { gap: 18px 30px; }
 }
 </style>
