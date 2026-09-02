@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initWorks3D, destroyWorks3D } from './works3d';
+import { audio } from './audio';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,6 +130,12 @@ function initCounters() {
     const isFloat = el.dataset.counter?.includes('.');
     const suffix = el.dataset.suffix ?? '';
     const obj = { val: 0 };
+    // Ticks sonoros enganchados al mismo tween que ya existía (no se
+    // reemplaza la animación, solo se le escucha). El intervalo entre
+    // ticks se abre a medida que el contador desacelera: al principio
+    // suenan seguidos y hacia el final se separan solos, evitando el
+    // "chorro" de sonidos que quedaría al dispararlos por cada número.
+    let nextTick = 0;
     gsap.to(obj, {
       val: target, duration: 1.8, ease: 'power2.out',
       scrollTrigger: { trigger: el, start: 'top 85%', once: true },
@@ -137,6 +144,15 @@ function initCounters() {
         const loc = document.documentElement.lang === 'en' ? 'en-US' : 'es-CL';
         const n = isFloat ? obj.val.toFixed(1) : (target >= 1000 ? Math.round(obj.val).toLocaleString(loc) : Math.round(obj.val).toString());
         el.textContent = n + suffix;
+
+        const p = target ? obj.val / target : 1;
+        if (p >= nextTick) {
+          audio.play('counterTick');
+          nextTick = p + 0.06 + p * 0.18;
+        }
+      },
+      onComplete() {
+        audio.play('counterDone');
       },
     });
   });

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Logo from './Logo';
+import { audio } from '../scripts/audio';
 import { localePath, type Locale } from '../i18n';
 
 interface NavItem { label: string; href: string; }
@@ -16,6 +17,20 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  // Arranca siempre en false para que el HTML del servidor y el del cliente
+  // coincidan; la preferencia real se lee después del montaje.
+  const [soundOn, setSoundOn] = useState(false);
+
+  useEffect(() => {
+    setSoundOn(audio.isEnabled());
+    return audio.onChange(setSoundOn);
+  }, []);
+
+  const toggleSound = () => {
+    const on = audio.toggle();
+    // Confirmación audible solo al encender: apagar tiene que ser silencio.
+    if (on) audio.play('menuOpen');
+  };
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -55,12 +70,39 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
               <Logo />
             </a>
 
+            <div className="flex items-center gap-1">
+            {/* Control de sonido — minimalista, mismo lenguaje que el resto */}
+            <button
+              type="button"
+              onClick={toggleSound}
+              aria-pressed={soundOn}
+              aria-label={
+                locale === 'es'
+                  ? soundOn ? 'Desactivar sonido' : 'Activar sonido'
+                  : soundOn ? 'Turn sound off' : 'Turn sound on'
+              }
+              title={soundOn ? 'Sound on' : 'Sound off'}
+              className="sound-toggle group flex h-10 items-center gap-2 px-2 text-gray transition-colors hover:text-accent"
+            >
+              <span className="flex h-3 items-end gap-[2px]" aria-hidden="true">
+                <span className={`sound-toggle__bar w-[2px] bg-current ${soundOn ? 'is-on' : ''}`} style={{ height: soundOn ? '6px' : '2px' }} />
+                <span className={`sound-toggle__bar w-[2px] bg-current ${soundOn ? 'is-on' : ''}`} style={{ height: soundOn ? '12px' : '2px' }} />
+                <span className={`sound-toggle__bar w-[2px] bg-current ${soundOn ? 'is-on' : ''}`} style={{ height: soundOn ? '8px' : '2px' }} />
+              </span>
+              <span className="hidden font-mono text-[10px] tracking-widest sm:inline">
+                {soundOn ? 'ON' : 'OFF'}
+              </span>
+            </button>
+
             {/* Hamburger — always visible */}
             <button
               className="relative flex h-10 w-10 flex-col items-center justify-center"
               aria-expanded={open}
               aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-              onClick={() => setOpen(!open)}
+              onClick={() => {
+                audio.play(open ? 'menuClose' : 'menuOpen');
+                setOpen(!open);
+              }}
             >
               <span
                 className="absolute block h-[1.5px] w-6 bg-paper origin-center transition-all duration-300 ease-in-out"
@@ -75,6 +117,7 @@ export default function Header({ locale, nav, quoteLabel, altHref, switchLabel, 
                 style={{ transform: open ? 'translateY(0) rotate(-45deg)' : 'translateY(6px) rotate(0deg)' }}
               />
             </button>
+            </div>
           </div>
         </div>
       </header>

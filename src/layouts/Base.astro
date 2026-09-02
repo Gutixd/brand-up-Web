@@ -172,5 +172,9 @@ const nav = [
     </main>
     <Footer locale={locale} />
     <script src="../scripts/motion.ts"></script>
+    {/* Sistema de sonido de interfaz. No reproduce nada hasta que el
+        usuario lo activa desde el header (política de autoplay + la
+        preferencia queda guardada en localStorage). */}
+    <script src="../scripts/sound.ts"></script>
   </body>
 </html>
