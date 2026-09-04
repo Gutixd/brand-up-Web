@@ -1,0 +1,316 @@
+---
+// Landing bespoke para "Comida China Chun Guang" (gastronomía · restaurante).
+// Dirección de arte: CARTA EDITORIAL. La pieza se lee como el menú impreso de
+// un restaurante — papel cálido, sello rojo, y precios unidos al plato por una
+// línea de puntos, que es el gesto tipográfico más reconocible de una carta.
+// Es lo que la separa de las otras landings: aquí manda la comida y la lectura.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = isEs
+  ? `${p.client} — Caso real | BrandUp`
+  : `${p.client} — Case study | BrandUp`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// Categorías reales de la carta. Los precios NO se listan: cambian, y la
+// gracia del proyecto es justamente que el local pueda moverlos sin tocar
+// el sitio. Aquí solo mostramos cómo se organiza la lectura.
+const categorias = isEs
+  ? ['Entradas', 'Arroces', 'Chapsui', 'Carnes', 'Pollo', 'Mariscos', 'Colaciones', 'Menús familiares', 'Sushi']
+  : ['Starters', 'Rice', 'Chop suey', 'Beef', 'Chicken', 'Seafood', 'Lunch sets', 'Family menus', 'Sushi'];
+
+const accesos = isEs
+  ? [
+      { k: 'Carta', d: 'Los 155 productos por categoría, con foto y precio.' },
+      { k: 'WhatsApp', d: 'El pedido sale directo, sin formularios.' },
+      { k: 'Cómo llegar', d: 'Ubicación del local abierta en un toque.' },
+      { k: 'Uber Eats', d: 'Para quien prefiere pedir por delivery.' },
+    ]
+  : [
+      { k: 'Menu', d: 'All 155 items by category, with photo and price.' },
+      { k: 'WhatsApp', d: 'Orders go straight through, no forms.' },
+      { k: 'Directions', d: 'The location opens in one tap.' },
+      { k: 'Uber Eats', d: 'For anyone who prefers delivery.' },
+    ];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
+<div class="cg" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — el plato manda ════════════════════════════════════ -->
+  <section class="cg-hero">
+    {p.cover && (
+      <Image src={p.cover} alt={p.client} class="cg-hero__img" widths={[900, 1400, 1800]} sizes="100vw" loading="eager" />
+    )}
+    <div class="cg-hero__veil" aria-hidden="true"></div>
+
+    <div class="cg-hero__inner">
+      <a href={lp('/trabajos')} class="cg-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+
+      <div class="cg-hero__body">
+        {p.logo && <Image src={p.logo} alt={`${p.client} logo`} class="cg-hero__seal" widths={[120, 240]} sizes="120px" />}
+        <p class="cg-kicker">{pick(p.sector, locale)} · {p.year}</p>
+        <h1 class="cg-hero__title display-tight" data-split-chars>
+          {isEs ? 'Una nueva forma de descubrir la carta' : 'A new way to discover the menu'}
+        </h1>
+        <p class="cg-hero__sub" data-reveal>{pick(p.summary, locale)}</p>
+      </div>
+    </div>
+    <span class="cg-hero__scroll" aria-hidden="true">{isEs ? 'Baja para ver la carta' : 'Scroll for the menu'}</span>
+  </section>
+
+  <!-- ════ RELATO — papel de carta ═════════════════════════════════ -->
+  <section class="cg-paper">
+    <div class="cg-paper__inner">
+      <article class="cg-story" data-reveal>
+        <span class="cg-story__tag">{t.work.challenge}</span>
+        <p>{pick(p.challenge, locale)}</p>
+      </article>
+      <article class="cg-story" data-reveal data-delay="0.1">
+        <span class="cg-story__tag">{t.work.approach}</span>
+        <p>{pick(p.approach, locale)}</p>
+      </article>
+      <article class="cg-story" data-reveal data-delay="0.2">
+        <span class="cg-story__tag">{t.work.outcome}</span>
+        <p>{pick(p.outcome, locale)}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ════ LA CARTA — línea de puntos, el gesto de un menú ═════════ -->
+  <section class="cg-menu">
+    <div class="cg-menu__head">
+      <h2 class="cg-menu__title display-tight" data-split-chars>
+        {isEs ? 'Nueve categorías, cero desorden' : 'Nine categories, zero clutter'}
+      </h2>
+      <p class="cg-menu__lead" data-reveal>
+        {isEs
+          ? 'Una carta de 155 productos deja de ser un problema cuando se recorre por partes. Cada categoría abre solo lo suyo.'
+          : 'A 155-item menu stops being a problem when you browse it in parts. Each category opens only its own.'}
+      </p>
+    </div>
+
+    <ol class="cg-list">
+      {categorias.map((c, i) => (
+        <li class="cg-list__row" data-reveal data-delay={`${i * 0.04}`}>
+          <span class="cg-list__num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="cg-list__name">{c}</span>
+          <span class="cg-list__dots" aria-hidden="true"></span>
+          <span class="cg-list__meta">{isEs ? 'con foto y precio' : 'photo and price'}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ════ MESA — mosaico de platos ════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="cg-table">
+      <div class="cg-table__grid">
+        {media.slice(0, 6).map((m, i) => (
+          m.src && (
+            <figure class={`cg-tile cg-tile--${m.ratio}`} data-reveal data-delay={`${i * 0.06}`}>
+              <Image src={m.src} alt={pick(m.label, locale)} widths={[500, 900, 1300]} sizes="(max-width: 780px) 100vw, 45vw" />
+              <figcaption>{pick(m.label, locale)}</figcaption>
+            </figure>
+          )
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ CUATRO ACCESOS ══════════════════════════════════════════ -->
+  <section class="cg-doors">
+    <h2 class="cg-doors__title display-tight" data-split-chars>
+      {isEs ? 'Todo a un toque' : 'Everything one tap away'}
+    </h2>
+    <div class="cg-doors__grid">
+      {accesos.map((a, i) => (
+        <div class="cg-door" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="cg-door__k">{a.k}</span>
+          <p>{a.d}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ MÉTRICAS ════════════════════════════════════════════════ -->
+  <section class="cg-nums">
+    {p.metrics.map((m, i) => (
+      <div class="cg-num" data-reveal data-delay={`${i * 0.08}`}>
+        <span class="cg-num__v">{m.val}</span>
+        <span class="cg-num__l">{pick(m.lbl, locale)}</span>
+      </div>
+    ))}
+  </section>
+
+  <!-- ════ SIGUIENTE ═══════════════════════════════════════════════ -->
+  <section class="cg-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="cg-next__link">
+      <span class="cg-next__label">{t.work.next}</span>
+      <span class="cg-next__client">{next.client}</span>
+      <span class="cg-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+
+  <CtaBand locale={locale} />
+</div>
+
+<style>
+/* ── Paleta de papel cálido. Todo el archivo vive bajo .cg ── */
+.cg {
+  --paper: #fbf4e9;
+  --paper-deep: #f3e7d4;
+  --ink: #241a14;
+  --ink-soft: #6d5c4d;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── HERO ── */
+.cg-hero { position: relative; min-height: 88svh; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+.cg-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cg-hero__veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, rgba(20,10,6,0.88) 0%, rgba(20,10,6,0.38) 52%, rgba(20,10,6,0.12) 100%),
+    radial-gradient(ellipse 70% 60% at 20% 90%, rgba(193,39,45,0.35), transparent 70%);
+}
+.cg-hero__inner { position: relative; padding: 120px clamp(20px, 5vw, 80px) clamp(48px, 7vw, 96px); }
+.cg-back {
+  position: absolute; top: 96px; left: clamp(20px, 5vw, 80px);
+  color: rgba(255,246,236,0.75); font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: color 0.25s;
+}
+.cg-back:hover { color: #fff; }
+.cg-hero__body { max-width: min(820px, 92%); }
+.cg-hero__seal {
+  width: clamp(64px, 8vw, 96px); height: auto; margin-bottom: 20px;
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5));
+}
+.cg-kicker {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #f0b8a0; margin: 0 0 14px;
+}
+.cg-hero__title {
+  font-size: clamp(32px, 5.2vw, 74px); line-height: 0.98; color: #fff7ef;
+  margin: 0 0 20px; text-wrap: balance;
+}
+.cg-hero__sub { max-width: 46ch; font-size: clamp(15px, 1.6vw, 19px); color: rgba(255,240,228,0.82); margin: 0; }
+.cg-hero__scroll {
+  position: absolute; right: clamp(20px, 5vw, 80px); bottom: clamp(48px, 7vw, 96px);
+  writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,240,228,0.5);
+}
+
+/* ── RELATO sobre papel ── */
+.cg-paper { background: var(--paper); padding: clamp(64px, 9vw, 128px) clamp(20px, 5vw, 80px); }
+.cg-paper__inner { max-width: 1120px; margin: 0 auto; display: grid; gap: 40px; grid-template-columns: repeat(3, 1fr); }
+.cg-story p { font-size: 16px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
+.cg-story__tag {
+  display: inline-block; margin-bottom: 14px; padding-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); border-bottom: 2px solid var(--accent);
+}
+
+/* ── LA CARTA ── */
+.cg-menu { background: var(--paper-deep); padding: clamp(64px, 9vw, 128px) clamp(20px, 5vw, 80px); }
+.cg-menu__head { max-width: 1120px; margin: 0 auto clamp(36px, 5vw, 60px); }
+.cg-menu__title { font-size: clamp(30px, 5vw, 62px); line-height: 1; margin: 0 0 16px; text-wrap: balance; }
+.cg-menu__lead { max-width: 56ch; color: var(--ink-soft); font-size: 16px; margin: 0; }
+.cg-list { max-width: 1120px; margin: 0 auto; padding: 0; list-style: none; }
+.cg-list__row {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 16px 0; border-bottom: 1px solid rgba(36,26,20,0.12);
+}
+.cg-list__num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); }
+.cg-list__name { font-size: clamp(19px, 2.6vw, 30px); font-weight: 700; letter-spacing: -0.01em; }
+/* La línea de puntos: el gesto que hace que esto se lea como una carta */
+.cg-list__dots {
+  flex: 1; height: 1px; min-width: 24px;
+  background-image: radial-gradient(circle, rgba(36,26,20,0.4) 1px, transparent 1px);
+  background-size: 7px 1px; background-repeat: repeat-x; background-position: 0 100%;
+}
+.cg-list__meta { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+
+/* ── MOSAICO ── */
+.cg-table { background: var(--paper); padding: clamp(48px, 7vw, 100px) clamp(20px, 5vw, 80px); }
+.cg-table__grid {
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.cg-tile { margin: 0; position: relative; overflow: hidden; border-radius: 4px; background: var(--paper-deep); }
+.cg-tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+.cg-tile:hover img { transform: scale(1.05); }
+.cg-tile figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 16px;
+  font-size: 12px; color: #fff;
+  background: linear-gradient(to top, rgba(20,10,6,0.85), transparent);
+}
+.cg-tile--wide { grid-column: span 2; aspect-ratio: 16/10; }
+.cg-tile--tall { grid-column: span 1; aspect-ratio: 3/4; }
+.cg-tile--square { grid-column: span 1; aspect-ratio: 1/1; }
+
+/* ── ACCESOS ── */
+.cg-doors { background: var(--dark); color: #f7ece0; padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 80px); }
+.cg-doors__title { font-size: clamp(28px, 4.6vw, 56px); margin: 0 auto clamp(32px, 4vw, 52px); max-width: 1120px; }
+.cg-doors__grid { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.cg-door { padding: 24px; border: 1px solid rgba(247,236,224,0.16); border-radius: 6px; background: rgba(255,255,255,0.03); }
+.cg-door__k { display: block; font-size: 17px; font-weight: 700; color: var(--accent); margin-bottom: 10px; }
+.cg-door p { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(247,236,224,0.72); }
+
+/* ── MÉTRICAS ── */
+.cg-nums {
+  background: var(--accent); color: #fff5ee;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 80px); gap: 24px;
+}
+.cg-num { text-align: center; }
+.cg-num__v { display: block; font-size: clamp(30px, 4.6vw, 56px); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.cg-num__l { display: block; margin-top: 10px; font-size: 13px; color: rgba(255,245,238,0.82); }
+
+/* ── SIGUIENTE ── */
+.cg-next { background: var(--paper-deep); }
+.cg-next__link {
+  max-width: 1120px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) clamp(20px, 5vw, 80px);
+  display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink);
+}
+.cg-next__label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.cg-next__client { font-size: clamp(22px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; }
+.cg-next__arrow { margin-left: auto; font-size: 26px; color: var(--accent); transition: transform 0.3s; }
+.cg-next__link:hover .cg-next__arrow { transform: translateX(8px); }
+
+/* ── RESPONSIVE: se recompone, no se encoge ── */
+@media (max-width: 900px) {
+  .cg-paper__inner { grid-template-columns: 1fr; gap: 32px; }
+  .cg-doors__grid { grid-template-columns: repeat(2, 1fr); }
+  .cg-table__grid { grid-template-columns: repeat(2, 1fr); }
+  .cg-tile--wide { grid-column: span 2; }
+}
+@media (max-width: 620px) {
+  .cg-hero { min-height: 88svh; }
+  .cg-hero__scroll { display: none; }
+  .cg-doors__grid { grid-template-columns: 1fr; }
+  .cg-nums { grid-template-columns: 1fr; gap: 28px; }
+  /* En móvil la fila de carta se parte en dos líneas para que el nombre
+     del plato no se corte y los puntos sigan leyéndose. */
+  .cg-list__row { flex-wrap: wrap; }
+  .cg-list__meta { width: 100%; padding-left: 26px; }
+  .cg-tile--tall, .cg-tile--square { grid-column: span 1; }
+}
+</style>
+</Base>

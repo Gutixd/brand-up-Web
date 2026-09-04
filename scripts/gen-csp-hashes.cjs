@@ -34,12 +34,22 @@ const files = walk(DIST);
 const scriptRe = /<script(?![^>]*\ssrc=)([^>]*)>([\s\S]*?)<\/script>/gi;
 const hashes = new Set();
 
+// Bloques de DATOS, no de código: el navegador nunca los ejecuta, así que
+// `script-src` no se les aplica y hashearlos no aporta ninguna seguridad.
+// Cada página tiene su propio JSON-LD (canonical distinto), así que incluirlos
+// hacía crecer la cabecera una entrada por página: 235 de 244 hashes eran
+// basura y la CSP pesaba ~13,9 KB en CADA respuesta, cerca de los límites que
+// algunos proxies y CDN imponen a las cabeceras.
+const DATA_TYPES = /type\s*=\s*["']?application\/(ld\+json|json)["']?/i;
+
 for (const file of files) {
   const html = fs.readFileSync(file, 'utf8');
   let m;
   while ((m = scriptRe.exec(html))) {
+    const attrs = m[1];
     const content = m[2];
     if (!content.trim()) continue;
+    if (DATA_TYPES.test(attrs)) continue;
     const hash = crypto.createHash('sha256').update(content, 'utf8').digest('base64');
     hashes.add(`'sha256-${hash}'`);
   }

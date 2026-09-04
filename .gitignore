@@ -24,3 +24,8 @@ pnpm-debug.log*
 .idea/
 
 .vercel
+
+# secretos locales (nunca commitear)
+.env
+.env.*
+!.env.example

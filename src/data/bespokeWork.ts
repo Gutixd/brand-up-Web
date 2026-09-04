@@ -22,6 +22,10 @@ export const BESPOKE_WORK_SLUGS = [
   'microterapias',
   'duoc-uc',
   'bschool',
+  'chun-guang',
+  'auristal',
+  'terapia-deportiva',
+  'regalon-pet',
 ] as const;
 
 export const isBespokeWork = (slug: string) =>

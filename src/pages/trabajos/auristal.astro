@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkAuristal from '../../components/pages/WorkAuristal.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('auristal')!;
+---
+
+<WorkAuristal locale="es" project={project} />

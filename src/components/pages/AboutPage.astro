@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { useT, type Locale } from '../../i18n';
-import { SITE } from '../../data/site';
+import { SITE, SCHEMA_ID } from '../../data/site';
 
 import fotoDiego from '../../assets/team/diego.webp';
 import fotoValentina from '../../assets/team/valentina.webp';
@@ -32,6 +32,7 @@ const aboutLd = {
   inLanguage: es ? 'es-CL' : 'en',
   mainEntity: {
     '@type': 'Organization',
+    '@id': SCHEMA_ID.organization,
     name: SITE.legalName,
     url: SITE.domain,
     email: SITE.email,
@@ -49,7 +50,7 @@ const aboutLd = {
           'Desarrollo web', 'E-commerce', 'Rendimiento web',
           'Automatización', 'Integraciones', 'Inteligencia artificial aplicada',
         ],
-        worksFor: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+        worksFor: { '@id': SCHEMA_ID.organization },
       },
       {
         '@type': 'Person',
@@ -61,7 +62,7 @@ const aboutLd = {
           'Branding', 'Dirección creativa', 'Contenido para redes sociales',
           'Estrategia de marca', 'Publicidad digital',
         ],
-        worksFor: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+        worksFor: { '@id': SCHEMA_ID.organization },
       },
     ],
   },

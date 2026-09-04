@@ -5,7 +5,7 @@
 // rubro ni qué servicios incluyeron. Se emite:
 //   · CreativeWork  → el caso en sí, con su cliente y servicios
 //   · BreadcrumbList → Inicio > Trabajos > Cliente
-import { SITE } from '../../data/site';
+import { SITE, SCHEMA_ID } from '../../data/site';
 import type { Project } from '../../data/projects';
 import { pick, type Locale } from '../../i18n';
 
@@ -30,17 +30,7 @@ const workLd = {
   genre: pick(p.sector, locale),
   keywords: pick(p.services, locale).join(', '),
   about: { '@type': 'Organization', name: p.client, ...(p.link ? { url: p.link } : {}) },
-  creator: {
-    '@type': 'Organization',
-    name: SITE.legalName,
-    url: SITE.domain,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Santiago',
-      addressRegion: 'Región Metropolitana',
-      addressCountry: 'CL',
-    },
-  },
+  creator: { '@id': SCHEMA_ID.organization },
   // Las métricas del caso, legibles por máquinas
   ...(p.metrics.length
     ? {

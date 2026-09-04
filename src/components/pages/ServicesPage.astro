@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
-import { SITE } from '../../data/site';
+import { SITE, SCHEMA_ID } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 interface Props {
@@ -36,7 +36,7 @@ const servicesLd = {
       description: pick(s.short, locale),
       url: `${SITE.domain}${lp(`/servicios/${s.slug}`)}`,
       areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
-      provider: { '@type': 'Organization', name: SITE.legalName, url: SITE.domain },
+      provider: { '@id': SCHEMA_ID.organization },
     },
   })),
 };

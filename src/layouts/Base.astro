@@ -5,7 +5,7 @@ import '@fontsource/anton';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header';
 import Footer from '../components/Footer.astro';
-import { SITE } from '../data/site';
+import { SITE, SCHEMA_ID } from '../data/site';
 import { useT, altPath, hasAlternate, type Locale } from '../i18n';
 
 interface Props {
@@ -20,10 +20,13 @@ const pathname = Astro.url.pathname;
 const alternate = altPath(locale, pathname);
 const canonical = new URL(pathname, Astro.site).href;
 
-// LocalBusiness para SEO local (Santiago de Chile)
-const jsonLd = {
-  '@context': 'https://schema.org',
+// Grafo de entidades: Organization (la marca) + WebSite (el sitio) + WebPage
+// (esta página concreta), enlazados por `@id`. Los buscadores y los motores
+// de respuesta consolidan así todo en una sola entidad "BrandUp" en vez de
+// tratar cada página como una empresa distinta.
+const organization = {
   '@type': ['Organization', 'LocalBusiness'],
+  '@id': SCHEMA_ID.organization,
   name: SITE.legalName,
   alternateName: 'Brand Up',
   description:
@@ -47,8 +50,46 @@ const jsonLd = {
     'Publicidad digital', 'Contenido para redes sociales', 'SEO',
   ],
   sameAs: [SITE.instagram, SITE.tiktok],
-  logo: `${SITE.domain}/favicon-512.png`,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE.domain}/favicon-512.png`,
+    width: 512,
+    height: 512,
+  },
   image: `${SITE.domain}/og-image.png`,
+  foundingDate: SITE.founded,
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': SCHEMA_ID.website,
+  url: SITE.domain,
+  name: SITE.legalName,
+  publisher: { '@id': SCHEMA_ID.organization },
+  inLanguage: locale === 'es' ? 'es-CL' : 'en',
+};
+
+// La página actual, colgada del sitio y "acerca de" la marca. `speakable`
+// marca qué leer en voz alta a los asistentes (Google Assistant, etc.).
+const webPage = {
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: title,
+  description,
+  isPartOf: { '@id': SCHEMA_ID.website },
+  about: { '@id': SCHEMA_ID.organization },
+  inLanguage: locale === 'es' ? 'es-CL' : 'en',
+  primaryImageOfPage: `${SITE.domain}/og-image.png`,
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['h1', '.page-hero__intro'],
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [organization, website, webPage],
 };
 
 const nav = [
@@ -94,8 +135,16 @@ const nav = [
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={`${SITE.domain}/og-image.png`} />
+    {/* Sin width/height algunos scrapers (WhatsApp, LinkedIn) descartan la
+        imagen y comparten el enlace sin tarjeta. */}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITE.legalName} — ${title}`} />
     <meta property="og:locale" content={locale === 'es' ? 'es_CL' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${SITE.domain}/og-image.png`} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <!-- Vercel Web Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>

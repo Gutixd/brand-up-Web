@@ -1,0 +1,361 @@
+---
+// Landing bespoke para "Terapia Deportiva" (medios · fútbol chileno).
+// Dirección de arte: PORTADA DE MEDIO. Fondo oscuro, titulares condensados
+// enormes y, en vez de secciones apiladas, la página imita la jerarquía de
+// una portada: una nota que manda y el resto ordenado alrededor. Incluye un
+// ticker y un bloque de tabla — los dos elementos que hacen que un sitio se
+// lea como medio y no como blog.
+//
+// Este proyecto NO tiene fotografía de cliente disponible, así que la pieza
+// se sostiene en tipografía y estructura. Es una decisión, no una carencia
+// disimulada: los medios deportivos se reconocen por su jerarquía.
+import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = isEs ? `${p.client} — Caso real | BrandUp` : `${p.client} — Case study | BrandUp`;
+
+// Secciones reales del medio.
+const secciones = isEs
+  ? [
+      { n: 'Liga de Primera', d: 'El torneo local, fecha a fecha.' },
+      { n: 'Copa Chile', d: 'Llaves, cruces y eliminatorias.' },
+      { n: 'La Roja', d: 'Selección, nóminas y clasificatorias.' },
+      { n: 'Fichajes', d: 'Movimientos del mercado.' },
+      { n: 'Internacional', d: 'Lo que pasa fuera de Chile.' },
+    ]
+  : [
+      { n: 'Primera División', d: 'The domestic league, week by week.' },
+      { n: 'Copa Chile', d: 'Ties, brackets and knockouts.' },
+      { n: 'La Roja', d: 'National team, squads and qualifiers.' },
+      { n: 'Transfers', d: 'Movements in the market.' },
+      { n: 'International', d: 'What happens outside Chile.' },
+    ];
+
+// Estructura de la tabla — SIN datos deportivos reales: mostramos la forma
+// del componente, no resultados que no nos consta que sean los de hoy.
+const columnas = isEs ? ['Pos', 'Equipo', 'PJ', 'DG', 'Pts'] : ['Pos', 'Team', 'P', 'GD', 'Pts'];
+
+const capacidades = isEs
+  ? [
+      { k: 'Publicar a diario', d: 'La estructura aguanta el ritmo de un medio sin rediseñar nada.' },
+      { k: 'Tabla al día', d: 'Las posiciones se mantienen actualizadas solas.' },
+      { k: 'Newsletter', d: 'El lector que vuelve deja su correo.' },
+      { k: 'Redes', d: 'Cada nota viaja bien cuando se comparte.' },
+    ]
+  : [
+      { k: 'Daily publishing', d: 'The structure keeps a newsroom pace without redesigns.' },
+      { k: 'Live standings', d: 'The table keeps itself current.' },
+      { k: 'Newsletter', d: 'Returning readers leave their email.' },
+      { k: 'Social', d: 'Every story travels well when shared.' },
+    ];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
+<div class="td" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ TICKER — el pulso de un medio ═══════════════════════════ -->
+  <div class="td-ticker" aria-hidden="true" style="margin-top:72px">
+    <div class="td-ticker__track">
+      {Array.from({ length: 2 }).map(() => (
+        <span class="td-ticker__row">
+          {secciones.map((s) => <b>{s.n}<i>&#9679;</i></b>)}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- ════ PORTADA ═════════════════════════════════════════════════ -->
+  <section class="td-front">
+    <a href={lp('/trabajos')} class="td-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+
+    <div class="td-front__grid">
+      <div class="td-lead">
+        <p class="td-kicker">{pick(p.sector, locale)} · {p.year}</p>
+        <h1 class="td-lead__title display-tight" data-split-chars>
+          {isEs ? 'El fútbol chileno, contado como se debe' : 'Chilean football, told the way it should be'}
+        </h1>
+        <p class="td-lead__sub" data-reveal>{pick(p.summary, locale)}</p>
+      </div>
+
+      <aside class="td-side">
+        <!-- Maqueta de portada: una nota que manda y dos secundarias. Es la
+             jerarquía del proyecto mostrada, no descrita. -->
+        <div class="td-mockfront" role="img"
+          aria-label={isEs ? 'Jerarquía de portada del medio' : 'Front-page hierarchy'}>
+          <span class="td-mockfront__badge">{isEs ? 'Portada' : 'Front page'}</span>
+          <div class="td-mockfront__lead">
+            <i style="width:92%"></i><i style="width:74%"></i><i style="width:58%"></i>
+          </div>
+          <div class="td-mockfront__row">
+            <div class="td-mockfront__card"><i style="width:88%"></i><i style="width:62%"></i></div>
+            <div class="td-mockfront__card"><i style="width:80%"></i><i style="width:54%"></i></div>
+          </div>
+        </div>
+        <div class="td-side__meta">
+          {p.services[locale].map((s) => <span class="td-pill">{s}</span>)}
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ════ EL PROBLEMA — a toda página ═════════════════════════════ -->
+  <section class="td-quote">
+    <p class="td-quote__tag">{t.work.challenge}</p>
+    <p class="td-quote__text" data-reveal>{pick(p.challenge, locale)}</p>
+  </section>
+
+  <!-- ════ SECCIONES — la parrilla editorial ═══════════════════════ -->
+  <section class="td-sections">
+    <div class="td-sections__head">
+      <h2 class="display-tight" data-split-chars>{isEs ? 'Cinco frentes' : 'Five fronts'}</h2>
+      <p data-reveal>{pick(p.approach, locale)}</p>
+    </div>
+    <ul class="td-sections__list">
+      {secciones.map((s, i) => (
+        <li class="td-sec" data-reveal data-delay={`${i * 0.06}`}>
+          <span class="td-sec__n">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h3>{s.n}</h3>
+            <p>{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ════ TABLA — contenido vivo ══════════════════════════════════ -->
+  <section class="td-table">
+    <div class="td-table__text">
+      <span class="td-live"><i aria-hidden="true"></i>{isEs ? 'Se actualiza sola' : 'Updates itself'}</span>
+      <h2 class="display-tight" data-split-chars>{isEs ? 'Contenido que no se queda viejo' : 'Content that never goes stale'}</h2>
+      <p data-reveal>
+        {isEs
+          ? 'La tabla de posiciones se mantiene al día sin que nadie la toque. Es lo que hace que el sitio tenga algo vivo incluso los días en que no se publica.'
+          : 'The standings table stays current without anyone touching it. That is what keeps the site alive even on days with no new posts.'}
+      </p>
+    </div>
+    <div class="td-table__mock" data-reveal data-delay="0.12" role="img"
+      aria-label={isEs ? 'Estructura de la tabla de posiciones' : 'Standings table structure'}>
+      <div class="td-mock__head">
+        {columnas.map((c) => <span>{c}</span>)}
+      </div>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div class="td-mock__row">
+          <span class="td-mock__pos">{i + 1}</span>
+          <span class="td-mock__bar"><i style={`width:${88 - i * 9}%`}></i></span>
+          <span class="td-mock__dash">&mdash;</span>
+          <span class="td-mock__dash">&mdash;</span>
+          <span class="td-mock__dash">&mdash;</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ CAPACIDADES ═════════════════════════════════════════════ -->
+  <section class="td-caps">
+    {capacidades.map((c, i) => (
+      <div class="td-cap" data-reveal data-delay={`${i * 0.07}`}>
+        <span class="td-cap__k">{c.k}</span>
+        <p>{c.d}</p>
+      </div>
+    ))}
+  </section>
+
+  <!-- ════ RESULTADO ═══════════════════════════════════════════════ -->
+  <section class="td-outcome">
+    <span class="td-quote__tag">{t.work.outcome}</span>
+    <p data-reveal>{pick(p.outcome, locale)}</p>
+    <div class="td-outcome__nums">
+      {p.metrics.map((m, i) => (
+        <div class="td-num" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="td-num__v">{m.val}</span>
+          <span class="td-num__l">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="td-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="td-next__link">
+      <span class="td-next__label">{t.work.next}</span>
+      <span class="td-next__client">{next.client}</span>
+      <span class="td-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+
+  <CtaBand locale={locale} />
+</div>
+
+<style>
+.td {
+  --bg: #0c0e12;
+  --bg-2: #12151c;
+  --line: rgba(255,255,255,0.1);
+  --fg: #f2f4f7;
+  --fg-soft: #98a1b0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* ── TICKER ── */
+.td-ticker { border-bottom: 1px solid var(--line); background: var(--accent); overflow: hidden; }
+.td-ticker__track { display: flex; width: max-content; animation: tdMarquee 34s linear infinite; }
+.td-ticker__row { display: flex; align-items: center; padding: 9px 0; white-space: nowrap; }
+.td-ticker__row b {
+  display: inline-flex; align-items: center; gap: 22px; padding: 0 22px;
+  font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; color: #fff;
+}
+.td-ticker__row i { font-style: normal; font-size: 7px; opacity: 0.55; }
+@keyframes tdMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .td-ticker__track { animation: none; } }
+
+/* ── PORTADA ── */
+.td-front { padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 80px) clamp(48px, 7vw, 96px); position: relative; }
+.td-back { display: inline-block; margin-bottom: 34px; color: var(--fg-soft); font-size: 14px; font-weight: 600; text-decoration: none; }
+.td-back:hover { color: var(--fg); }
+.td-front__grid {
+  max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.25fr 0.75fr; gap: clamp(28px, 4vw, 64px); align-items: start;
+}
+.td-kicker {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px;
+}
+.td-lead__title {
+  font-size: clamp(38px, 7.4vw, 108px); line-height: 0.9; letter-spacing: -0.02em;
+  margin: 0 0 22px; text-transform: uppercase; text-wrap: balance;
+}
+.td-lead__sub { font-size: clamp(15px, 1.7vw, 20px); line-height: 1.6; color: var(--fg-soft); margin: 0; max-width: 48ch; }
+.td-mockfront {
+  border: 1px solid var(--line); border-radius: 10px; padding: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+}
+.td-mockfront__badge {
+  display: inline-block; margin-bottom: 14px; padding: 4px 10px; border-radius: 4px;
+  background: var(--accent); color: #fff; font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 800;
+}
+.td-mockfront__lead { display: grid; gap: 9px; margin-bottom: 16px; }
+.td-mockfront__lead i { height: 15px; border-radius: 3px; background: rgba(255,255,255,0.5); display: block; }
+.td-mockfront__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.td-mockfront__card { border-top: 2px solid var(--accent); padding-top: 10px; display: grid; gap: 7px; }
+.td-mockfront__card i { height: 8px; border-radius: 3px; background: rgba(255,255,255,0.22); display: block; }
+.td-side__meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.td-pill {
+  padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 12px; color: var(--fg-soft);
+}
+
+/* ── CITA / PROBLEMA ── */
+.td-quote { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-2); padding: clamp(48px, 7vw, 96px) clamp(20px, 5vw, 80px); }
+.td-quote__tag {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--accent); margin: 0 0 18px; max-width: 1080px; margin-inline: auto;
+}
+.td-quote__text {
+  max-width: 1080px; margin: 0 auto; font-size: clamp(19px, 2.6vw, 32px);
+  line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; color: var(--fg);
+}
+
+/* ── SECCIONES ── */
+.td-sections { padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); }
+.td-sections__head { max-width: 1080px; margin: 0 auto clamp(28px, 4vw, 48px); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; }
+.td-sections__head h2 { font-size: clamp(28px, 4.6vw, 60px); text-transform: uppercase; letter-spacing: -0.02em; margin: 0; }
+.td-sections__head p { margin: 0; color: var(--fg-soft); font-size: 16px; line-height: 1.7; }
+.td-sections__list { max-width: 1080px; margin: 0 auto; padding: 0; list-style: none; }
+.td-sec {
+  display: grid; grid-template-columns: 64px 1fr; gap: 18px; align-items: baseline;
+  padding: 22px 0; border-top: 1px solid var(--line);
+  transition: background 0.3s;
+}
+.td-sec:hover { background: rgba(255,255,255,0.02); }
+.td-sec__n { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--accent); }
+.td-sec h3 { margin: 0 0 6px; font-size: clamp(19px, 2.6vw, 30px); font-weight: 800; letter-spacing: -0.01em; }
+.td-sec p { margin: 0; font-size: 14.5px; color: var(--fg-soft); }
+
+/* ── TABLA ── */
+.td-table {
+  background: var(--bg-2); border-top: 1px solid var(--line);
+  padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(32px, 5vw, 72px); align-items: center;
+}
+.td-live {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+}
+.td-live i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: tdPulse 2s ease-in-out infinite; }
+@keyframes tdPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .td-live i { animation: none; } }
+.td-table__text h2 { font-size: clamp(26px, 4.2vw, 52px); text-transform: uppercase; letter-spacing: -0.02em; margin: 0 0 16px; text-wrap: balance; }
+.td-table__text p { margin: 0; color: var(--fg-soft); font-size: 16px; line-height: 1.7; max-width: 46ch; }
+.td-table__mock { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg); }
+.td-mock__head, .td-mock__row { display: grid; grid-template-columns: 44px 1fr 52px 52px 52px; align-items: center; gap: 10px; padding: 12px 16px; }
+.td-mock__head { background: rgba(255,255,255,0.04); font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-soft); }
+.td-mock__row { border-top: 1px solid var(--line); }
+.td-mock__pos { font-weight: 800; font-size: 14px; color: var(--accent); }
+.td-mock__bar { height: 10px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; }
+.td-mock__bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), rgba(216,31,42,0.35)); }
+.td-mock__dash { text-align: center; color: var(--fg-soft); font-size: 13px; }
+
+/* ── CAPACIDADES ── */
+.td-caps {
+  padding: clamp(48px, 7vw, 96px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+  max-width: 1280px; margin: 0 auto;
+}
+.td-cap { padding: 24px; border: 1px solid var(--line); border-radius: 8px; }
+.td-cap__k { display: block; font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+.td-cap p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--fg-soft); }
+
+/* ── RESULTADO ── */
+.td-outcome { border-top: 1px solid var(--line); padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); max-width: 1080px; margin: 0 auto; }
+.td-outcome > p { font-size: clamp(16px, 1.8vw, 20px); line-height: 1.7; color: var(--fg-soft); margin: 0 0 40px; max-width: 62ch; }
+.td-outcome__nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.td-num__v { display: block; font-size: clamp(24px, 3.2vw, 40px); font-weight: 800; letter-spacing: -0.02em; color: var(--accent); }
+.td-num__l { display: block; margin-top: 6px; font-size: 13px; color: var(--fg-soft); }
+
+/* ── SIGUIENTE ── */
+.td-next { border-top: 1px solid var(--line); }
+.td-next__link {
+  max-width: 1280px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) clamp(20px, 5vw, 80px);
+  display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--fg);
+}
+.td-next__label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-soft); }
+.td-next__client { font-size: clamp(22px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
+.td-next__arrow { margin-left: auto; font-size: 26px; color: var(--accent); transition: transform 0.3s; }
+.td-next__link:hover .td-next__arrow { transform: translateX(8px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 940px) {
+  .td-front__grid { grid-template-columns: 1fr; }
+  /* La portada en móvil pone la imagen primero, como haría un medio real */
+  .td-side { order: -1; }
+  .td-sections__head { grid-template-columns: 1fr; gap: 18px; }
+  .td-table { grid-template-columns: 1fr; }
+  .td-caps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .td-caps { grid-template-columns: 1fr; }
+  .td-outcome__nums { grid-template-columns: 1fr; gap: 20px; }
+  .td-sec { grid-template-columns: 40px 1fr; gap: 12px; }
+  /* La tabla se estrecha: se ocultan dos columnas de detalle y quedan
+     posición, equipo y puntos — que es lo que se mira en un teléfono. */
+  .td-mock__head, .td-mock__row { grid-template-columns: 34px 1fr 46px; }
+  .td-mock__head span:nth-child(3), .td-mock__head span:nth-child(4),
+  .td-mock__row .td-mock__dash:nth-of-type(1), .td-mock__row .td-mock__dash:nth-of-type(2) { display: none; }
+}
+</style>
+</Base>

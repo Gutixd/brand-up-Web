@@ -36,6 +36,24 @@ import bschool3 from '../assets/projects/gallery/bschool-3.webp';
 import bschool4 from '../assets/projects/gallery/bschool-4.webp';
 import aseocoolHome from '../assets/projects/gallery/aseocool-home.webp';
 import aseocoolProductos from '../assets/projects/gallery/aseocool-productos.webp';
+import cgPlato from '../assets/projects/gallery/chunguang-plato.webp';
+import cgChapsui from '../assets/projects/gallery/chunguang-chapsui.webp';
+import cgMongoliana from '../assets/projects/gallery/chunguang-mongoliana.webp';
+import cgFamiliar from '../assets/projects/gallery/chunguang-familiar.webp';
+import cgArroz from '../assets/projects/gallery/chunguang-arroz.webp';
+import cgSalon from '../assets/projects/gallery/chunguang-salon.webp';
+import auRosa from '../assets/projects/gallery/auristal-rosa.webp';
+import auFlor from '../assets/projects/gallery/auristal-flor.webp';
+import auBuda from '../assets/projects/gallery/auristal-buda.webp';
+import auLunas from '../assets/projects/gallery/auristal-lunas.webp';
+import auFrasco from '../assets/projects/gallery/auristal-frasco.webp';
+import auFatima from '../assets/projects/gallery/auristal-fatima.webp';
+import rpBanner from '../assets/projects/gallery/regalonpet-banner.webp';
+import rpAlfombra from '../assets/projects/gallery/regalonpet-alfombra.webp';
+import rpPelota from '../assets/projects/gallery/regalonpet-pelota.webp';
+import rpPlato from '../assets/projects/gallery/regalonpet-plato.webp';
+import rpBebedero from '../assets/projects/gallery/regalonpet-bebedero.webp';
+import rpBotella from '../assets/projects/gallery/regalonpet-botella.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -114,5 +132,29 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'tall', label: { es: 'Programa NEE-TEA', en: 'NEE-TEA program' }, src: bschool2 },
     { kind: 'photo', ratio: 'tall', label: { es: 'Pieza de marca 1', en: 'Brand asset 1' }, src: bschool3 },
     { kind: 'photo', ratio: 'tall', label: { es: 'Pieza de marca 2', en: 'Brand asset 2' }, src: bschool4 },
+  ],
+  'chun-guang': [
+    { kind: 'photo', ratio: 'wide', label: { es: 'Plato de la casa', en: 'House dish' }, src: cgPlato },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Chapsui', en: 'Chop suey' }, src: cgChapsui },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Carne mongoliana', en: 'Mongolian beef' }, src: cgMongoliana },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Menú familiar', en: 'Family menu' }, src: cgFamiliar },
+    { kind: 'photo', ratio: 'square', label: { es: 'Arroz venezolano', en: 'Venezuelan rice' }, src: cgArroz },
+    { kind: 'photo', ratio: 'wide', label: { es: 'El salón del restaurante', en: 'The dining room' }, src: cgSalon },
+  ],
+  auristal: [
+    { kind: 'photo', ratio: 'tall', label: { es: 'Vela rosa', en: 'Rose candle' }, src: auRosa },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Vela flor', en: 'Flower candle' }, src: auFlor },
+    { kind: 'photo', ratio: 'square', label: { es: 'Mini Buda', en: 'Mini Buddha' }, src: auBuda },
+    { kind: 'photo', ratio: 'wide', label: { es: 'Pack de lunas', en: 'Moon set' }, src: auLunas },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Vela en frasco', en: 'Jar candle' }, src: auFrasco },
+    { kind: 'photo', ratio: 'square', label: { es: 'Mano de Fátima', en: 'Hand of Fatima' }, src: auFatima },
+  ],
+  'regalon-pet': [
+    { kind: 'photo', ratio: 'wide', label: { es: 'Portada de la tienda', en: 'Store hero' }, src: rpBanner },
+    { kind: 'photo', ratio: 'square', label: { es: 'Alfombra olfativa', en: 'Snuffle mat' }, src: rpAlfombra },
+    { kind: 'photo', ratio: 'square', label: { es: 'Pelota 3 en 1', en: '3-in-1 ball' }, src: rpPelota },
+    { kind: 'photo', ratio: 'square', label: { es: 'Plato anti-estrés', en: 'Slow feeder bowl' }, src: rpPlato },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Bebedero automático', en: 'Automatic waterer' }, src: rpBebedero },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Botella de paseo', en: 'Walk bottle' }, src: rpBotella },
   ],
 };

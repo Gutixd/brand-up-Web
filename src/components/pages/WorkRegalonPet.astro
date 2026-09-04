@@ -1,0 +1,348 @@
+---
+// Landing bespoke para "Regalón Pet" (e-commerce · mascotas).
+// Dirección de arte: TIENDA. A diferencia de las otras landings, aquí la
+// página se comporta como el producto que vendimos: fila de filtros, grilla
+// de fichas con precio, el recorrido de compra como pasos numerados y un
+// reproductor para las guías en audio. Se entiende que es un e-commerce de
+// verdad antes de leer una sola línea.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = isEs ? `${p.client} — Caso real | BrandUp` : `${p.client} — Case study | BrandUp`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+// La primera imagen es el banner: va aparte, como cabecera de la tienda.
+const productos = media.filter((m) => m.src).slice(1, 6);
+
+const filtros = isEs
+  ? ['Todo', 'Perros', 'Gatos', 'Juego', 'Alimentación', 'Paseo', 'Higiene']
+  : ['All', 'Dogs', 'Cats', 'Play', 'Feeding', 'Walks', 'Hygiene'];
+
+const pasos = isEs
+  ? [
+      { n: 'Encuentra', d: 'Categorías por mascota, filtros por actividad y buscador.' },
+      { n: 'Entiende', d: 'La ficha explica para qué sirve antes que la especificación.' },
+      { n: 'Compra', d: 'Carrito y pago en línea, sin salir del sitio.' },
+      { n: 'Se gestiona', d: 'El pedido queda registrado y validado antes de procesarse.' },
+    ]
+  : [
+      { n: 'Find', d: 'Categories by pet, filters by activity and search.' },
+      { n: 'Understand', d: 'The product page leads with the benefit, not the spec.' },
+      { n: 'Buy', d: 'Cart and online payment, without leaving the site.' },
+      { n: 'Managed', d: 'Every order is recorded and validated before processing.' },
+    ];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
+<div class="rp" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — cabecera de tienda ═══════════════════════════════ -->
+  <section class="rp-hero">
+    <div class="rp-hero__text">
+      <a href={lp('/trabajos')} class="rp-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+      {p.logo && <Image src={p.logo} alt={`${p.client} logo`} class="rp-hero__logo" widths={[120, 240]} sizes="120px" />}
+      <p class="rp-kicker">{pick(p.sector, locale)} · {p.year}</p>
+      <h1 class="rp-hero__title display-tight" data-split-chars>
+        {isEs ? 'Una tienda pensada para vender y crecer' : 'A store built to sell and to grow'}
+      </h1>
+      <p class="rp-hero__sub" data-reveal>{pick(p.summary, locale)}</p>
+      {p.link && (
+        <a href={p.link} target="_blank" rel="noopener" class="rp-hero__cta" data-reveal data-delay="0.1">
+          {isEs ? 'Ver la tienda' : 'Visit the store'} &#8599;
+        </a>
+      )}
+    </div>
+    {p.cover && (
+      <figure class="rp-hero__shot" data-reveal data-delay="0.12">
+        <Image src={p.cover} alt={p.client} widths={[700, 1200]} sizes="(max-width: 900px) 100vw, 48vw" loading="eager" />
+      </figure>
+    )}
+  </section>
+
+  <!-- ════ FILTROS — se ve que es una tienda ═══════════════════════ -->
+  <div class="rp-filters" role="img"
+    aria-label={isEs ? 'Fila de filtros del catálogo' : 'Catalogue filter row'}>
+    {filtros.map((f, i) => <span class={`rp-filter${i === 0 ? ' is-on' : ''}`}>{f}</span>)}
+  </div>
+
+  <!-- ════ CATÁLOGO — producto protagonista ════════════════════════ -->
+  {productos.length > 0 && (
+    <section class="rp-shop">
+      <div class="rp-shop__head">
+        <h2 class="display-tight" data-split-chars>{isEs ? 'El catálogo' : 'The catalogue'}</h2>
+        <p data-reveal>
+          {isEs
+            ? 'Cada ficha explica qué resuelve el producto. Quien compra para su mascota compra tranquilidad, no características.'
+            : 'Every product page explains what it solves. Someone buying for their pet is buying peace of mind, not features.'}
+        </p>
+      </div>
+      <div class="rp-grid">
+        {productos.map((m, i) => (
+          m.src && (
+            <article class="rp-card" data-reveal data-delay={`${i * 0.06}`}>
+              <div class="rp-card__img">
+                <Image src={m.src} alt={pick(m.label, locale)} widths={[350, 700]} sizes="(max-width: 780px) 45vw, 22vw" />
+              </div>
+              <h3>{pick(m.label, locale)}</h3>
+              <div class="rp-card__foot">
+                <span class="rp-card__price">$&mdash;&mdash;</span>
+                <span class="rp-card__add">{isEs ? 'Agregar' : 'Add'}</span>
+              </div>
+            </article>
+          )
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ RELATO ══════════════════════════════════════════════════ -->
+  <section class="rp-story">
+    <div class="rp-story__col" data-reveal>
+      <span class="rp-tag">{t.work.challenge}</span>
+      <p>{pick(p.challenge, locale)}</p>
+    </div>
+    <div class="rp-story__col" data-reveal data-delay="0.12">
+      <span class="rp-tag">{t.work.approach}</span>
+      <p>{pick(p.approach, locale)}</p>
+    </div>
+  </section>
+
+  <!-- ════ RECORRIDO DE COMPRA ═════════════════════════════════════ -->
+  <section class="rp-flow">
+    <h2 class="rp-flow__title display-tight" data-split-chars>
+      {isEs ? 'Del descubrimiento a la operación' : 'From discovery to operation'}
+    </h2>
+    <ol class="rp-flow__steps">
+      {pasos.map((s, i) => (
+        <li class="rp-step" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="rp-step__n">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{s.n}</h3>
+          <p>{s.d}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ════ CONTENIDO + AUDIO ═══════════════════════════════════════ -->
+  <section class="rp-audio">
+    <div class="rp-audio__text">
+      <span class="rp-tag rp-tag--light">{isEs ? 'Contenido' : 'Content'}</span>
+      <h2 class="display-tight" data-split-chars>
+        {isEs ? 'Guías que además se pueden escuchar' : 'Guides you can also listen to'}
+      </h2>
+      <p data-reveal>
+        {isEs
+          ? 'La tienda no solo vende: publica guías de cuidado de mascotas. Cada una puede leerse o escucharse, para quien prefiere hacerlo mientras pasea al perro.'
+          : 'The store does more than sell: it publishes pet care guides. Each one can be read or listened to, for anyone who would rather do it while walking the dog.'}
+      </p>
+    </div>
+    <div class="rp-player" role="img"
+      aria-label={isEs ? 'Reproductor de guías en audio' : 'Audio guide player'}>
+      <span class="rp-player__btn" aria-hidden="true">&#9654;</span>
+      <div class="rp-player__body">
+        <span class="rp-player__t">{isEs ? 'Guía de cuidado' : 'Care guide'}</span>
+        <span class="rp-player__wave" aria-hidden="true">
+          {Array.from({ length: 26 }).map((_, i) => (
+            <i style={`height:${18 + ((i * 37) % 26)}px; animation-delay:${(i % 9) * 0.11}s`}></i>
+          ))}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ RESULTADO ═══════════════════════════════════════════════ -->
+  <section class="rp-outcome">
+    <div class="rp-outcome__text" data-reveal>
+      <span class="rp-tag rp-tag--light">{t.work.outcome}</span>
+      <p>{pick(p.outcome, locale)}</p>
+    </div>
+    <div class="rp-outcome__nums">
+      {p.metrics.map((m, i) => (
+        <div class="rp-num" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="rp-num__v">{m.val}</span>
+          <span class="rp-num__l">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="rp-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="rp-next__link">
+      <span class="rp-next__label">{t.work.next}</span>
+      <span class="rp-next__client">{next.client}</span>
+      <span class="rp-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+
+  <CtaBand locale={locale} />
+</div>
+
+<style>
+.rp {
+  --cream: #fdf8f1;
+  --cream-deep: #f5ece0;
+  --ink: #221a13;
+  --ink-soft: #6f6055;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+/* ── HERO ── */
+.rp-hero {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: center;
+  padding: clamp(56px, 7vw, 104px) clamp(20px, 5vw, 80px) clamp(36px, 5vw, 64px);
+  max-width: 1320px; margin: 0 auto;
+}
+.rp-back { display: inline-block; margin-bottom: 26px; color: var(--ink-soft); font-size: 14px; font-weight: 600; text-decoration: none; }
+.rp-back:hover { color: var(--accent); }
+.rp-hero__logo { width: clamp(76px, 9vw, 108px); height: auto; border-radius: 12px; margin-bottom: 18px; }
+.rp-kicker {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+}
+.rp-hero__title { font-size: clamp(34px, 5.4vw, 74px); line-height: 0.98; margin: 0 0 20px; text-wrap: balance; }
+.rp-hero__sub { font-size: clamp(15px, 1.6vw, 19px); line-height: 1.65; color: var(--ink-soft); margin: 0 0 26px; max-width: 46ch; }
+.rp-hero__cta {
+  display: inline-block; padding: 13px 26px; border-radius: 999px;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 14.5px; text-decoration: none;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.rp-hero__cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(224,123,40,0.32); }
+.rp-hero__shot { margin: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 60px rgba(34,26,19,0.16); }
+.rp-hero__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── FILTROS ── */
+.rp-filters {
+  max-width: 1320px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 80px) 8px;
+  display: flex; gap: 9px; overflow-x: auto; scrollbar-width: none;
+}
+.rp-filters::-webkit-scrollbar { display: none; }
+.rp-filter {
+  flex: 0 0 auto; padding: 8px 17px; border-radius: 999px; font-size: 13.5px;
+  border: 1px solid rgba(34,26,19,0.16); color: var(--ink-soft); background: #fff; white-space: nowrap;
+}
+.rp-filter.is-on { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+
+/* ── CATÁLOGO ── */
+.rp-shop { padding: clamp(36px, 5vw, 64px) clamp(20px, 5vw, 80px) clamp(56px, 8vw, 100px); max-width: 1320px; margin: 0 auto; }
+.rp-shop__head { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: clamp(24px, 3vw, 40px); }
+.rp-shop__head h2 { font-size: clamp(26px, 4vw, 50px); margin: 0; }
+.rp-shop__head p { margin: 0; color: var(--ink-soft); font-size: 15.5px; line-height: 1.7; }
+.rp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.rp-card {
+  background: #fff; border: 1px solid rgba(34,26,19,0.09); border-radius: 14px; padding: 12px;
+  display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s;
+}
+.rp-card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(34,26,19,0.12); }
+.rp-card__img { aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; background: var(--cream-deep); margin-bottom: 12px; }
+.rp-card__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rp-card h3 { margin: 0 0 auto; font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+.rp-card__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.rp-card__price { font-size: 15px; font-weight: 800; color: var(--ink); }
+.rp-card__add { font-size: 12.5px; font-weight: 700; color: var(--accent); }
+
+/* ── RELATO ── */
+.rp-story {
+  background: var(--cream-deep); padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 60px);
+  max-width: none;
+}
+.rp-story__col { max-width: 52ch; }
+.rp-story__col p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--ink-soft); }
+.rp-tag {
+  display: inline-block; margin-bottom: 14px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+}
+.rp-tag--light { color: #f0a869; }
+
+/* ── FLUJO ── */
+.rp-flow { padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); max-width: 1320px; margin: 0 auto; }
+.rp-flow__title { font-size: clamp(26px, 4.2vw, 54px); margin: 0 0 clamp(28px, 4vw, 48px); text-wrap: balance; }
+.rp-flow__steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.rp-step { padding: 26px 22px; border-radius: 14px; background: #fff; border: 1px solid rgba(34,26,19,0.09); position: relative; }
+.rp-step__n { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); }
+.rp-step h3 { margin: 10px 0 8px; font-size: 18px; font-weight: 800; }
+.rp-step p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+/* ── AUDIO ── */
+.rp-audio {
+  background: var(--dark); color: #f6e9dc;
+  padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 72px); align-items: center;
+}
+.rp-audio__text h2 { font-size: clamp(26px, 4vw, 50px); margin: 0 0 16px; text-wrap: balance; }
+.rp-audio__text p { margin: 0; font-size: 16px; line-height: 1.75; color: rgba(246,233,220,0.75); max-width: 48ch; }
+.rp-player {
+  display: flex; align-items: center; gap: 18px; padding: 22px;
+  border: 1px solid rgba(246,233,220,0.18); border-radius: 16px; background: rgba(255,255,255,0.04);
+}
+.rp-player__btn {
+  flex: 0 0 auto; width: 52px; height: 52px; border-radius: 50%; background: var(--accent);
+  display: grid; place-items: center; color: #fff; font-size: 17px; padding-left: 3px;
+}
+.rp-player__body { flex: 1; min-width: 0; }
+.rp-player__t { display: block; font-size: 13px; color: rgba(246,233,220,0.7); margin-bottom: 10px; }
+.rp-player__wave { display: flex; align-items: center; gap: 3px; height: 44px; }
+.rp-player__wave i {
+  flex: 1; background: var(--accent); border-radius: 2px; opacity: 0.55;
+  animation: rpWave 1.5s ease-in-out infinite;
+}
+@keyframes rpWave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .rp-player__wave i { animation: none; } }
+
+/* ── RESULTADO ── */
+.rp-outcome {
+  padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 72px);
+  max-width: 1320px; margin: 0 auto;
+}
+.rp-outcome .rp-tag--light { color: var(--accent); }
+.rp-outcome__text p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--ink-soft); max-width: 54ch; }
+.rp-outcome__nums { display: grid; gap: 22px; align-content: center; }
+.rp-num__v { display: block; font-size: clamp(22px, 3vw, 36px); font-weight: 800; letter-spacing: -0.02em; }
+.rp-num__l { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
+
+/* ── SIGUIENTE ── */
+.rp-next { background: var(--cream-deep); }
+.rp-next__link {
+  max-width: 1320px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) clamp(20px, 5vw, 80px);
+  display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink);
+}
+.rp-next__label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.rp-next__client { font-size: clamp(22px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; }
+.rp-next__arrow { margin-left: auto; font-size: 26px; color: var(--accent); transition: transform 0.3s; }
+.rp-next__link:hover .rp-next__arrow { transform: translateX(8px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1080px) { .rp-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .rp-hero { grid-template-columns: 1fr; }
+  .rp-hero__shot { order: -1; }
+  .rp-shop__head { grid-template-columns: 1fr; gap: 14px; }
+  .rp-story { grid-template-columns: 1fr; }
+  .rp-flow__steps { grid-template-columns: repeat(2, 1fr); }
+  .rp-audio { grid-template-columns: 1fr; }
+  .rp-outcome { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  /* Dos productos por fila: la grilla de 5 en móvil dejaría fichas ilegibles */
+  .rp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .rp-flow__steps { grid-template-columns: 1fr; }
+  .rp-card h3 { font-size: 13.5px; }
+}
+</style>
+</Base>

@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkTerapiaDeportiva from '../../components/pages/WorkTerapiaDeportiva.astro';
+import { getProject } from '../../data/projects';
+
+const project = getProject('terapia-deportiva')!;
+---
+
+<WorkTerapiaDeportiva locale="es" project={project} />

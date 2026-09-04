@@ -1,0 +1,343 @@
+---
+// Landing bespoke para "Auristal Velas" (retail · producto artesanal).
+// Dirección de arte: BOUTIQUE. Nada de rejilla rectangular — las fotos van
+// dentro de ARCOS (la silueta de una vela y de una hornacina), que es el
+// gesto que separa esta página de las demás. La pieza central no es una
+// galería sino el CONFIGURADOR: se muestra cómo el precio se mueve con cada
+// decisión, porque ése es el corazón del proyecto.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import WorkSchema from '../seo/WorkSchema.astro';
+import CtaBand from '../CtaBand.astro';
+import { PROJECTS, type Project } from '../../data/projects';
+import { PROJECT_MEDIA } from '../../data/projectMedia';
+import { useT, pick, localePath, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; project: Project; }
+const { locale, project: p } = Astro.props;
+const t = useT(locale);
+const lp = (path: string) => localePath(locale, path);
+const isEs = locale === 'es';
+
+const idx = PROJECTS.findIndex((x) => x.slug === p.slug);
+const next = PROJECTS[(idx + 1) % PROJECTS.length];
+const title = isEs ? `${p.client} — Caso real | BrandUp` : `${p.client} — Case study | BrandUp`;
+const media = PROJECT_MEDIA[p.slug] ?? [];
+
+// Las cinco variables reales del configurador.
+const opciones = isEs
+  ? [
+      { k: 'Formato', v: ['Mini', 'Frasco', 'Pack'] },
+      { k: 'Aroma', v: ['Vainilla', 'Lavanda', 'Cítrico'] },
+      { k: 'Color', v: ['Perla', 'Rosa', 'Ámbar'] },
+      { k: 'Brillo', v: ['Mate', 'Perlado'] },
+      { k: 'Cantidad', v: ['1', '3', '6'] },
+    ]
+  : [
+      { k: 'Format', v: ['Mini', 'Jar', 'Set'] },
+      { k: 'Scent', v: ['Vanilla', 'Lavender', 'Citrus'] },
+      { k: 'Colour', v: ['Pearl', 'Rose', 'Amber'] },
+      { k: 'Finish', v: ['Matte', 'Pearl'] },
+      { k: 'Quantity', v: ['1', '3', '6'] },
+    ];
+
+// Propuestas de identidad exploradas sobre el mismo catálogo.
+const paletas = [
+  { n: isEs ? 'Arena' : 'Sand', c: ['#e8d5c0', '#c0603c', '#3b2620'] },
+  { n: isEs ? 'Rosa seco' : 'Dusty rose', c: ['#f0d8d4', '#b4696a', '#3a2427'] },
+  { n: isEs ? 'Oliva' : 'Olive', c: ['#e2e3d2', '#7c8358', '#2c2f24'] },
+];
+---
+
+<Base locale={locale} title={title} description={pick(p.summary, locale)}>
+  <WorkSchema locale={locale} project={p} />
+<div class="au" style={`--accent:${p.theme.accent}; --dark:${p.theme.dark}`}>
+
+  <!-- ════ HERO — el producto dentro de un arco ════════════════════ -->
+  <section class="au-hero">
+    <div class="au-hero__glow" aria-hidden="true"></div>
+    <div class="au-hero__inner">
+      <a href={lp('/trabajos')} class="au-back"><span aria-hidden="true">&#8592;</span> {t.work.back}</a>
+
+      <div class="au-hero__text">
+        {p.logo && <Image src={p.logo} alt={`${p.client} logo`} class="au-hero__logo" widths={[140, 280]} sizes="140px" />}
+        <p class="au-kicker">{pick(p.sector, locale)} · {p.year}</p>
+        <h1 class="au-hero__title display-tight" data-split-chars>
+          {isEs ? 'Personalización convertida en experiencia' : 'Personalisation turned into experience'}
+        </h1>
+        <p class="au-hero__sub" data-reveal>{pick(p.summary, locale)}</p>
+      </div>
+
+      {p.cover && (
+        <figure class="au-arch au-arch--hero" data-reveal data-delay="0.15">
+          <Image src={p.cover} alt={p.client} widths={[600, 1000]} sizes="(max-width: 900px) 80vw, 40vw" loading="eager" />
+        </figure>
+      )}
+    </div>
+  </section>
+
+  <!-- ════ RELATO ══════════════════════════════════════════════════ -->
+  <section class="au-story">
+    <div class="au-story__inner">
+      <div class="au-story__col" data-reveal>
+        <span class="au-tag">{t.work.challenge}</span>
+        <p>{pick(p.challenge, locale)}</p>
+      </div>
+      <div class="au-story__col" data-reveal data-delay="0.12">
+        <span class="au-tag">{t.work.approach}</span>
+        <p>{pick(p.approach, locale)}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ CONFIGURADOR — el corazón del proyecto ══════════════════ -->
+  <section class="au-config">
+    <div class="au-config__head">
+      <h2 class="au-config__title display-tight" data-split-chars>
+        {isEs ? 'Cinco decisiones, un precio que responde' : 'Five decisions, a price that answers'}
+      </h2>
+      <p data-reveal>
+        {isEs
+          ? 'El visitante arma su vela y ve el total moverse con cada elección. Cuando termina, el pedido sale por WhatsApp con todo detallado.'
+          : 'Visitors build their candle and watch the total move with every choice. When they finish, the order goes out on WhatsApp, fully itemised.'}
+      </p>
+    </div>
+
+    <div class="au-panel" data-reveal data-delay="0.1">
+      <div class="au-panel__rows">
+        {opciones.map((o) => (
+          <div class="au-row">
+            <span class="au-row__k">{o.k}</span>
+            <div class="au-row__chips">
+              {o.v.map((v, j) => (
+                <span class={`au-chip${j === 0 ? ' is-on' : ''}`}>{v}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="au-panel__total">
+        <span class="au-total__l">{isEs ? 'Total actualizado' : 'Running total'}</span>
+        <span class="au-total__v">$&mdash;&mdash;&mdash;</span>
+        <span class="au-total__note">
+          {isEs ? 'El precio se recalcula con cada opción elegida.' : 'The price recalculates with every option chosen.'}
+        </span>
+        <span class="au-total__cta">{isEs ? 'Pedir por WhatsApp' : 'Order on WhatsApp'} &#8594;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ VITRINA — arcos ═════════════════════════════════════════ -->
+  {media.length > 0 && (
+    <section class="au-shelf">
+      <h2 class="au-shelf__title display-tight" data-split-chars>
+        {isEs ? 'El catálogo' : 'The catalogue'}
+      </h2>
+      <div class="au-shelf__grid">
+        {media.slice(0, 6).map((m, i) => (
+          m.src && (
+            <figure class="au-arch" data-reveal data-delay={`${i * 0.07}`}>
+              <Image src={m.src} alt={pick(m.label, locale)} widths={[400, 800]} sizes="(max-width: 780px) 45vw, 30vw" />
+              <figcaption>{pick(m.label, locale)}</figcaption>
+            </figure>
+          )
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ════ PALETAS — propuestas de identidad ═══════════════════════ -->
+  <section class="au-palettes">
+    <div class="au-palettes__head">
+      <h2 class="display-tight" data-split-chars>{isEs ? 'Tres personalidades posibles' : 'Three possible personalities'}</h2>
+      <p data-reveal>
+        {isEs
+          ? 'Dejamos el mismo catálogo trabajado en varias direcciones de color, para que la marca pudiera ver cómo cambia antes de fijar su identidad.'
+          : 'We left the same catalogue built in several colour directions, so the brand could see how it shifts before settling on an identity.'}
+      </p>
+    </div>
+    <div class="au-palettes__grid">
+      {paletas.map((pal, i) => (
+        <div class="au-pal" data-reveal data-delay={`${i * 0.1}`}>
+          <div class="au-pal__swatches">
+            {pal.c.map((c) => <span style={`background:${c}`}></span>)}
+          </div>
+          <span class="au-pal__n">{pal.n}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ════ RESULTADO + MÉTRICAS ════════════════════════════════════ -->
+  <section class="au-outcome">
+    <div class="au-outcome__text" data-reveal>
+      <span class="au-tag au-tag--light">{t.work.outcome}</span>
+      <p>{pick(p.outcome, locale)}</p>
+    </div>
+    <div class="au-outcome__nums">
+      {p.metrics.map((m, i) => (
+        <div class="au-num" data-reveal data-delay={`${i * 0.08}`}>
+          <span class="au-num__v">{m.val}</span>
+          <span class="au-num__l">{pick(m.lbl, locale)}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="au-next">
+    <a href={lp(`/trabajos/${next.slug}`)} class="au-next__link">
+      <span class="au-next__label">{t.work.next}</span>
+      <span class="au-next__client">{next.client}</span>
+      <span class="au-next__arrow" aria-hidden="true">&#8594;</span>
+    </a>
+  </section>
+
+  <CtaBand locale={locale} />
+</div>
+
+<style>
+.au {
+  --sand: #f6ede2;
+  --sand-deep: #ece0d0;
+  --ink: #2c1d18;
+  --ink-soft: #7a6357;
+  background: var(--sand);
+  color: var(--ink);
+}
+
+/* El arco: silueta de vela / hornacina. Es EL gesto de esta landing. */
+.au-arch {
+  margin: 0; position: relative; overflow: hidden;
+  border-radius: 50% 50% 10px 10px / 32% 32% 4px 4px;
+  background: var(--sand-deep);
+  box-shadow: 0 18px 50px rgba(44,29,24,0.12);
+}
+.au-arch img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+.au-arch:hover img { transform: scale(1.06); }
+.au-arch figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 16px 14px;
+  font-size: 12px; color: #fff; text-align: center;
+  background: linear-gradient(to top, rgba(44,29,24,0.8), transparent);
+}
+
+/* ── HERO ── */
+.au-hero { position: relative; padding: 148px clamp(20px, 5vw, 80px) clamp(56px, 8vw, 110px); overflow: hidden; }
+.au-hero__glow {
+  position: absolute; top: -20%; right: -10%; width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+  background: radial-gradient(circle, rgba(192,96,60,0.16), transparent 62%);
+  pointer-events: none;
+}
+.au-hero__inner {
+  position: relative; max-width: 1180px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 72px); align-items: center;
+}
+.au-back { position: absolute; top: -46px; left: 0; color: var(--ink-soft); font-size: 14px; font-weight: 600; text-decoration: none; }
+.au-back:hover { color: var(--accent); }
+.au-hero__logo { width: clamp(96px, 12vw, 140px); height: auto; margin-bottom: 22px; }
+.au-kicker {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+}
+.au-hero__title { font-size: clamp(34px, 5.6vw, 76px); line-height: 0.98; margin: 0 0 20px; text-wrap: balance; }
+.au-hero__sub { font-size: clamp(15px, 1.6vw, 19px); line-height: 1.65; color: var(--ink-soft); margin: 0; max-width: 46ch; }
+.au-arch--hero { aspect-ratio: 3/4; }
+
+/* ── RELATO ── */
+.au-story { padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); background: var(--sand-deep); }
+.au-story__inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 60px); }
+.au-story__col p { margin: 0; font-size: 16px; line-height: 1.75; color: var(--ink-soft); }
+.au-tag {
+  display: inline-block; margin-bottom: 14px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent);
+}
+.au-tag--light { color: #e8b79f; }
+
+/* ── CONFIGURADOR ── */
+.au-config { padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 80px); }
+.au-config__head { max-width: 1080px; margin: 0 auto clamp(32px, 4vw, 52px); }
+.au-config__title { font-size: clamp(28px, 4.4vw, 56px); line-height: 1.02; margin: 0 0 14px; text-wrap: balance; }
+.au-config__head p { max-width: 56ch; color: var(--ink-soft); font-size: 16px; margin: 0; }
+.au-panel {
+  max-width: 1080px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 0;
+  border: 1px solid rgba(44,29,24,0.14); border-radius: 14px; overflow: hidden;
+  background: #fff;
+}
+.au-panel__rows { padding: clamp(20px, 3vw, 34px); display: flex; flex-direction: column; gap: 20px; }
+.au-row { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; }
+.au-row__k { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.au-row__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.au-chip {
+  padding: 7px 14px; border-radius: 999px; font-size: 13px;
+  border: 1px solid rgba(44,29,24,0.18); color: var(--ink-soft); background: #fff;
+}
+.au-chip.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.au-panel__total {
+  background: var(--dark); color: #f3e2d6;
+  padding: clamp(22px, 3vw, 34px); display: flex; flex-direction: column; justify-content: center; gap: 8px;
+}
+.au-total__l { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(243,226,214,0.6); }
+.au-total__v { font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; }
+.au-total__note { font-size: 12.5px; color: rgba(243,226,214,0.65); line-height: 1.5; }
+.au-total__cta { margin-top: 10px; font-size: 13.5px; font-weight: 700; color: var(--accent); }
+
+/* ── VITRINA ── */
+.au-shelf { padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); background: var(--sand-deep); }
+.au-shelf__title { max-width: 1180px; margin: 0 auto clamp(28px, 4vw, 48px); font-size: clamp(26px, 4vw, 50px); }
+.au-shelf__grid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 26px); }
+.au-shelf__grid .au-arch { aspect-ratio: 3/4; }
+
+/* ── PALETAS ── */
+.au-palettes { padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px); }
+.au-palettes__head { max-width: 1080px; margin: 0 auto clamp(28px, 4vw, 44px); }
+.au-palettes__head h2 { font-size: clamp(26px, 4vw, 50px); margin: 0 0 14px; }
+.au-palettes__head p { max-width: 58ch; color: var(--ink-soft); font-size: 16px; margin: 0; }
+.au-palettes__grid { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.au-pal__swatches { display: flex; height: 96px; border-radius: 10px; overflow: hidden; }
+.au-pal__swatches span { flex: 1; }
+.au-pal__n { display: block; margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
+
+/* ── RESULTADO ── */
+.au-outcome {
+  background: var(--dark); color: #f3e2d6;
+  padding: clamp(56px, 8vw, 110px) clamp(20px, 5vw, 80px);
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 72px);
+  max-width: none;
+}
+.au-outcome__text p { margin: 0; font-size: 16px; line-height: 1.75; color: rgba(243,226,214,0.8); max-width: 52ch; }
+.au-outcome__nums { display: grid; gap: 22px; align-content: center; }
+.au-num__v { display: block; font-size: clamp(26px, 3.4vw, 42px); font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+.au-num__l { display: block; margin-top: 4px; font-size: 13px; color: rgba(243,226,214,0.62); }
+
+/* ── SIGUIENTE ── */
+.au-next { background: var(--sand-deep); }
+.au-next__link {
+  max-width: 1180px; margin: 0 auto; padding: clamp(36px, 5vw, 64px) clamp(20px, 5vw, 80px);
+  display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink);
+}
+.au-next__label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.au-next__client { font-size: clamp(22px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; }
+.au-next__arrow { margin-left: auto; font-size: 26px; color: var(--accent); transition: transform 0.3s; }
+.au-next__link:hover .au-next__arrow { transform: translateX(8px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .au-hero__inner { grid-template-columns: 1fr; }
+  .au-arch--hero { aspect-ratio: 4/3; max-height: 62vh; }
+  .au-story__inner { grid-template-columns: 1fr; gap: 28px; }
+  .au-panel { grid-template-columns: 1fr; }
+  .au-shelf__grid { grid-template-columns: repeat(2, 1fr); }
+  .au-palettes__grid { grid-template-columns: 1fr; }
+  .au-outcome { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  /* Las filas del configurador pasan a dos líneas: el nombre de la
+     variable arriba y las opciones abajo, para que los chips no se apilen
+     en una columna ilegible. */
+  .au-row { grid-template-columns: 1fr; gap: 8px; }
+  .au-shelf__grid { grid-template-columns: 1fr; }
+  .au-shelf__grid .au-arch { aspect-ratio: 4/5; }
+}
+</style>
+</Base>

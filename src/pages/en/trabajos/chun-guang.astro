@@ -1,0 +1,9 @@
+---
+// Ruta propia para que esta landing compile solo su CSS (ver bespokeWork.ts).
+import WorkChunGuang from '../../../components/pages/WorkChunGuang.astro';
+import { getProject } from '../../../data/projects';
+
+const project = getProject('chun-guang')!;
+---
+
+<WorkChunGuang locale="en" project={project} />

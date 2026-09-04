@@ -13,6 +13,9 @@ import logoAseocool from '../assets/logos/aseocool.webp';
 import logoMicroterapias from '../assets/logos/microterapias.webp';
 import logoDuocuc from '../assets/logos/duoc-uc.webp';
 import logoBschool from '../assets/logos/bschool.webp';
+import logoChunguang from '../assets/logos/chunguang.webp';
+import logoAuristal from '../assets/logos/auristal.webp';
+import logoRegalonPet from '../assets/logos/regalon-pet.webp';
 
 import coverChacha from '../assets/projects/chachapollo.webp';
 import coverJdcargo from '../assets/projects/jdcargo.webp';
@@ -26,6 +29,10 @@ import coverMicroterapias from '../assets/projects/microterapias.webp';
 import coverDuocuc from '../assets/projects/duoc-uc.webp';
 import coverBell from '../assets/projects/bell-college.webp';
 import coverBschool from '../assets/projects/bschool.webp';
+import coverChunguang from '../assets/projects/chunguang.webp';
+import coverAuristal from '../assets/projects/auristal.webp';
+import coverRegalonPet from '../assets/projects/regalon-pet.webp';
+import coverTerapiaDeportiva from '../assets/projects/terapia-deportiva.webp';
 
 export interface Project {
   slug: string;
@@ -547,28 +554,6 @@ const ALL_PROJECTS: Project[] = [
     draft: true,
   },
   {
-    slug: 'terapia-deportiva',
-    client: 'Terapia Deportiva',
-    industry: 'medios',
-    sector: { es: 'Medios · Fútbol chileno', en: 'Media · Chilean football' },
-    year: '2026',
-    services: {
-      es: ['Diseño Web'],
-      en: ['Web Design'],
-    },
-    serviceSlugs: ['diseno-web'],
-    gradient: '#1f9d55',
-    theme: { accent: '#1f9d55', dark: '#0c1f14' },
-    flavor: 'editorial',
-    summary: { es: '', en: '' },
-    challenge: { es: '', en: '' },
-    approach: { es: '', en: '' },
-    outcome: { es: '', en: '' },
-    metrics: [],
-    featured: false,
-    draft: true,
-  },
-  {
     slug: 'esem000',
     client: 'esem000',
     industry: 'ecommerce',
@@ -616,25 +601,158 @@ const ALL_PROJECTS: Project[] = [
   },
   {
     slug: 'chun-guang',
-    client: 'Chun Guang',
+    client: 'Comida China Chun Guang',
     industry: 'gastronomia',
-    sector: { es: 'Gastronomía · Carta digital', en: 'Food & Beverage · Digital menu' },
+    sector: { es: 'Gastronomía · Restaurante', en: 'Food · Restaurant' },
     year: '2026',
     services: {
-      es: ['Diseño Web'],
-      en: ['Web Design'],
+      es: ['Diseño Web', 'Carta Digital', 'SEO Local'],
+      en: ['Web Design', 'Digital Menu', 'Local SEO'],
     },
     serviceSlugs: ['diseno-web'],
-    gradient: '#c62828',
-    theme: { accent: '#c62828', dark: '#1c0a0a' },
+    logo: logoChunguang,
+    cover: coverChunguang,
+    gradient: '#f5cc53',
+    theme: { accent: '#c1272d', dark: '#1b0e0b' },
     flavor: 'editorial',
-    summary: { es: '', en: '' },
-    challenge: { es: '', en: '' },
-    approach: { es: '', en: '' },
-    outcome: { es: '', en: '' },
-    metrics: [],
+    summary: {
+      es: 'La carta completa de un restaurante de barrio convertida en una experiencia digital que se explora en segundos desde el teléfono.',
+      en: "A neighbourhood restaurant's full menu turned into a digital experience you can browse in seconds from your phone.",
+    },
+    challenge: {
+      es: 'Chun Guang tenía una carta extensa que solo existía en papel y en fotos que circulaban por WhatsApp. Quien quería pedir terminaba preguntando precios uno por uno, y el restaurante repetía las mismas respuestas todos los días.',
+      en: 'Chun Guang had a long menu that only existed on paper and in photos passed around on WhatsApp. Anyone wanting to order ended up asking prices one by one, and the restaurant repeated the same answers every day.',
+    },
+    approach: {
+      es: 'Ordenamos los 155 productos en categorías que se recorren sin perderse y pusimos la fotografía de los platos al frente, porque en gastronomía la foto es la que vende. Además rescatamos la identidad visual que ya tenía el local y la adaptamos para que funcione en digital con la calidad que merecía.',
+      en: 'We organised all 155 items into categories you can navigate without getting lost and put the food photography up front, because in hospitality the photo is what sells. We also rescued the restaurant\u2019s existing visual identity and adapted it so it works digitally at the quality it deserved.',
+    },
+    outcome: {
+      es: 'Hoy el restaurante tiene un enlace único que resuelve la conversación completa: el cliente ve la carta con precios, elige, y pasa directo a pedir por WhatsApp o por Uber Eats. La carta quedó construida para que el local pueda cambiar platos y precios sin rehacer el sitio.',
+      en: 'The restaurant now has a single link that handles the whole conversation: customers see the menu with prices, choose, and go straight to ordering via WhatsApp or Uber Eats. The menu was built so the restaurant can change dishes and prices without rebuilding the site.',
+    },
+    metrics: [
+      { val: '155', lbl: { es: 'Productos en la carta', en: 'Items on the menu' } },
+      { val: '1 enlace', lbl: { es: 'Resuelve carta y pedido', en: 'Menu and ordering in one' } },
+      { val: 'Mobile', lbl: { es: 'Pensado primero para el teléfono', en: 'Designed phone-first' } },
+    ],
+    featured: true,
+  },
+  {
+    slug: 'auristal',
+    client: 'Auristal Velas',
+    industry: 'ecommerce',
+    sector: { es: 'Retail · Producto artesanal', en: 'Retail · Handmade goods' },
+    year: '2026',
+    services: {
+      es: ['Diseño Web', 'Catálogo Digital', 'Identidad Visual'],
+      en: ['Web Design', 'Digital Catalogue', 'Visual Identity'],
+    },
+    serviceSlugs: ['diseno-web', 'branding'],
+    logo: logoAuristal,
+    cover: coverAuristal,
+    gradient: '#f4d9c6',
+    theme: { accent: '#c0603c', dark: '#251512' },
+    flavor: 'editorial',
+    summary: {
+      es: 'Un catálogo donde cada vela se configura antes de pedirla: formato, aroma, color y brillo, con el precio actualizándose a medida que se elige.',
+      en: 'A catalogue where every candle is configured before ordering: format, scent, colour and finish, with the price updating as you choose.',
+    },
+    challenge: {
+      es: 'Auristal hace velas artesanales que casi nunca se venden tal cual salen del molde: el cliente quiere otro aroma, otro color, otro tamaño. Esa conversación ocurría entera por mensajes, y era imposible que alguien se imaginara el producto final antes de encargarlo.',
+      en: 'Auristal makes handmade candles that are almost never sold exactly as they come out of the mould: customers want a different scent, colour or size. That whole conversation happened over messages, and it was impossible for anyone to picture the final product before ordering.',
+    },
+    approach: {
+      es: 'Convertimos esa conversación en una experiencia: el visitante arma su vela y ve el precio moverse con cada decisión. Cuando termina, el pedido sale ordenado por WhatsApp con todo lo que eligió. Sin carrito, sin registro, sin pasarela — el camino más corto entre imaginar el producto y encargarlo.',
+      en: 'We turned that conversation into an experience: visitors build their candle and watch the price move with every decision. When they finish, the order goes out through WhatsApp, neatly itemised. No cart, no sign-up, no checkout — the shortest path from picturing the product to ordering it.',
+    },
+    outcome: {
+      es: 'La marca dejó de explicar su oferta por mensajes y pasó a mostrarla. Además dejamos varias propuestas de color trabajadas sobre el mismo catálogo, para que Auristal pueda ver cómo cambia su personalidad antes de fijar su identidad definitiva.',
+      en: 'The brand stopped explaining its range over messages and started showing it. We also left several colour directions built on the same catalogue, so Auristal can see how its personality shifts before settling on a final identity.',
+    },
+    metrics: [
+      { val: '14', lbl: { es: 'Productos en catálogo', en: 'Products in the catalogue' } },
+      { val: '5', lbl: { es: 'Variables por vela', en: 'Options per candle' } },
+      { val: 'WhatsApp', lbl: { es: 'Pedido directo, sin checkout', en: 'Direct ordering, no checkout' } },
+    ],
+    featured: true,
+  },
+  {
+    slug: 'terapia-deportiva',
+    client: 'Terapia Deportiva',
+    industry: 'medios',
+    sector: { es: 'Medios · Fútbol chileno', en: 'Media · Chilean football' },
+    year: '2026',
+    services: {
+      es: ['Plataforma Editorial', 'Diseño Web', 'Arquitectura de Contenido'],
+      en: ['Editorial Platform', 'Web Design', 'Content Architecture'],
+    },
+    serviceSlugs: ['diseno-web'],
+    cover: coverTerapiaDeportiva,
+    gradient: '#b9c6d6',
+    theme: { accent: '#d81f2a', dark: '#0c0e12' },
+    flavor: 'bold',
+    summary: {
+      es: 'Un medio digital de fútbol chileno con jerarquía de portada, secciones por torneo y una tabla de posiciones que se mantiene al día sola.',
+      en: 'A Chilean football news outlet with front-page hierarchy, sections by competition and a standings table that keeps itself up to date.',
+    },
+    challenge: {
+      es: 'El proyecto necesitaba dejar de verse como un blog y empezar a verse como un medio. Eso significa que el lector entienda de un vistazo qué es lo más importante del día, y que publicar todos los días no obligue a rediseñar nada.',
+      en: 'The project needed to stop looking like a blog and start looking like a news outlet. That means readers grasp the day\u2019s biggest story at a glance, and publishing daily never requires redesigning anything.',
+    },
+    approach: {
+      es: 'Trabajamos la jerarquía como se trabaja una portada: titulares grandes, una nota que manda y el resto ordenado alrededor. Separamos el contenido por Liga de Primera, Copa Chile, Selección, fichajes e internacional, para que cada lector entre por donde le interesa.',
+      en: 'We treated hierarchy the way a front page is built: big headlines, one story that leads and the rest arranged around it. We split content into the domestic league, Copa Chile, the national team, transfers and international football, so each reader enters where they care to.',
+    },
+    outcome: {
+      es: 'El sitio funciona como un medio de verdad: la tabla de posiciones se mantiene actualizada sin que nadie la toque, así que hay contenido vivo incluso entre publicaciones. Y la estructura está pensada para que el archivo crezca sin desordenarse.',
+      en: 'The site works like a real outlet: the standings table stays current without anyone touching it, so there is living content even between posts. And the structure is built so the archive can grow without falling into disorder.',
+    },
+    metrics: [
+      { val: 'En vivo', lbl: { es: 'Tabla de posiciones al día', en: 'Standings kept current' } },
+      { val: '5 frentes', lbl: { es: 'Torneos y secciones', en: 'Competitions and sections' } },
+      { val: 'Editorial', lbl: { es: 'Jerarquía tipo portada', en: 'Front-page hierarchy' } },
+    ],
     featured: false,
-    draft: true,
+  },
+  {
+    slug: 'regalon-pet',
+    client: 'Regalón Pet',
+    industry: 'ecommerce',
+    sector: { es: 'E-commerce · Mascotas', en: 'E-commerce · Pets' },
+    year: '2026',
+    services: {
+      es: ['E-commerce', 'Diseño Web', 'Contenido y SEO'],
+      en: ['E-commerce', 'Web Design', 'Content & SEO'],
+    },
+    serviceSlugs: ['ecommerce', 'diseno-web'],
+    logo: logoRegalonPet,
+    cover: coverRegalonPet,
+    gradient: '#f6d9a8',
+    theme: { accent: '#e07b28', dark: '#1a1310' },
+    flavor: 'playful',
+    summary: {
+      es: 'Una tienda online completa para productos de mascotas: del catálogo al pago, con stock, pedidos y gestión en un mismo lugar.',
+      en: 'A complete online store for pet products: from catalogue to payment, with stock, orders and management in one place.',
+    },
+    challenge: {
+      es: 'Regalón Pet no necesitaba una vitrina bonita, necesitaba vender. Es decir: que el cliente encuentre el producto, entienda para qué sirve, pague sin fricción, y que del otro lado alguien pueda administrar el stock y los pedidos sin depender de nadie.',
+      en: 'Regalón Pet did not need a pretty showcase, it needed to sell. That means: customers find the product, understand what it is for, pay without friction — and on the other side someone can manage stock and orders without depending on anyone.',
+    },
+    approach: {
+      es: 'Construimos la tienda completa, no una maqueta: catálogo con categorías por mascota, filtros por actividad, búsqueda, carrito y pago en línea. La ficha de producto explica el beneficio antes que la especificación, porque quien compra para su perro compra tranquilidad, no características.',
+      en: 'We built the full store, not a mockup: a catalogue with categories by pet, filters by activity, search, cart and online payment. Product pages lead with the benefit before the spec, because someone buying for their dog is buying peace of mind, not features.',
+    },
+    outcome: {
+      es: 'La marca quedó con una operación real: cada pedido queda registrado y validado antes de procesarse, y hay un espacio de gestión para revisar pedidos, stock y clientes desde un mismo lugar. Sumamos guías de cuidado que además se pueden escuchar, y una arquitectura preparada para que los productos y el contenido se encuentren en buscadores.',
+      en: 'The brand ended up with a real operation: every order is recorded and validated before processing, and there is a management space to review orders, stock and customers in one place. We added care guides you can also listen to, and an architecture prepared so products and content get found in search.',
+    },
+    metrics: [
+      { val: 'Pago online', lbl: { es: 'Compra completa en el sitio', en: 'Full checkout on site' } },
+      { val: 'Panel propio', lbl: { es: 'Pedidos, stock y clientes', en: 'Orders, stock and customers' } },
+      { val: 'Audio', lbl: { es: 'Guías que se pueden escuchar', en: 'Guides you can listen to' } },
+    ],
+    featured: true,
   },
 ];
 

@@ -22,6 +22,22 @@ export const SITE = {
   metaPixelId: '3246537428868858',
 };
 
+/**
+ * Identificadores estables de las entidades del sitio (JSON-LD `@id`).
+ *
+ * Sin esto, cada página declaraba su propia `Organization` suelta: Google y
+ * los motores de respuesta (ChatGPT, Perplexity, AI Overviews) veían ~9
+ * entidades distintas en vez de UNA sola marca. Al repetir el mismo `@id`,
+ * todos esos nodos se funden en una única entidad BrandUp y las propiedades
+ * se acumulan (dirección, servicios, socios, casos, artículos).
+ *
+ * Son URIs, no URLs navegables: nunca cambiarlos o se parte la entidad.
+ */
+export const SCHEMA_ID = {
+  organization: `${SITE.domain}/#organization`,
+  website: `${SITE.domain}/#website`,
+} as const;
+
 export const wa = (msg: string) =>
   `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(msg)}`;
 
