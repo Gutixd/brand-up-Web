@@ -542,16 +542,34 @@ const ALL_PROJECTS: Project[] = [
       en: ['Web Design', 'E-commerce'],
     },
     serviceSlugs: ['ecommerce', 'diseno-web'],
+    // Sin logo ni cover: los únicos archivos de marca que existen en el
+    // proyecto son restos de otro cliente (quedaron de clonar la base de
+    // Aracnida Store) — no corresponden a Full Stock y no se usan.
     gradient: '#2b6cb0',
     theme: { accent: '#2b6cb0', dark: '#0d1b2a' },
     flavor: 'bold',
-    summary: { es: '', en: '' },
-    challenge: { es: '', en: '' },
-    approach: { es: '', en: '' },
-    outcome: { es: '', en: '' },
-    metrics: [],
+    summary: {
+      es: 'Una tienda online para una distribuidora de abarrotes de Maipú, con 402 productos organizados en 24 categorías y precio por mayor y por menor.',
+      en: 'An online store for a Maipú grocery distributor, with 402 products organised into 24 categories and both wholesale and retail pricing.',
+    },
+    challenge: {
+      es: 'Full Stock vende por mayor y por menor a la vez, dos formas de comprar con lógicas distintas. El catálogo tenía que ordenar 402 productos sin que el cliente que compra una caja se pierda entre quien compra un pallet.',
+      en: 'Full Stock sells both wholesale and retail at once, two ways of buying with different logic. The catalogue had to organise 402 products without the customer buying one box getting lost among those buying a pallet.',
+    },
+    approach: {
+      es: 'Construimos la tienda completa con las 24 categorías reales del negocio — abarrotes, limpieza, bebidas, congelados, cuidado personal y el resto — y un precio que cambia según la cantidad que se compra.',
+      en: 'We built the full store around the business’ 24 real categories — groceries, cleaning, beverages, frozen goods, personal care and the rest — with pricing that adjusts to the quantity purchased.',
+    },
+    outcome: {
+      es: 'La distribuidora tiene su catálogo completo online, con despacho en la Región Metropolitana y retiro en bodega en Maipú. Falta cargar fotografía real de los productos: hoy el sitio funciona con íconos mientras se toman las fotos.',
+      en: 'The distributor has its full catalogue online, with delivery across the Santiago region and pickup at its Maipú warehouse. Real product photography is still pending: the site currently runs on icons while photos are taken.',
+    },
+    metrics: [
+      { val: '402', lbl: { es: 'Productos en el catálogo', en: 'Products in the catalogue' } },
+      { val: '24', lbl: { es: 'Categorías', en: 'Categories' } },
+      { val: 'Mayor y menor', lbl: { es: 'Dos formas de comprar', en: 'Two ways to buy' } },
+    ],
     featured: false,
-    draft: true,
   },
   {
     slug: 'esem000',
