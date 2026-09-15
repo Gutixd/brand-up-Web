@@ -2,13 +2,8 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
-import { PROJECTS } from '../../data/projects';
 import { SERVICES } from '../../data/services';
 import { useT, pick, localePath, type Locale } from '../../i18n';
-
-// Antes era una foto de stock de desconocidos frente a laptops. Esta es
-// propia y sigue la misma estética del resto (oscuro + naranja quemado).
-import imgWorksBg from '../../assets/categories/works-bg.webp';
 
 // Collage y strip: piezas de TRABAJO real (sitios, gráficas, packaging).
 // Nada de logos sueltos ni capturas de perfil de Instagram.
@@ -43,10 +38,6 @@ const { locale } = Astro.props;
 const t = useT(locale);
 const lp = (p: string) => localePath(locale, p);
 const es = locale === 'es';
-
-const featured = PROJECTS.filter((p) => p.featured);
-
-const worksAllLabel = es ? 'Ver todos los trabajos' : 'View all work';
 
 // ── Ticker urbano ──────────────────────────────────────────────────
 const tickerWords = es
@@ -355,64 +346,6 @@ const stats = [
       ))}
     </div>
   </section>
-
-  <!-- ════ TRABAJOS — intro "Our Works" ════════════════════════════ -->
-  <section class="works-intro">
-    <div class="works-intro__bg" style={`background-image:url(${imgWorksBg.src})`}></div>
-    <div class="works-intro__scrim"></div>
-    <div class="works-intro__content">
-      <p class="works-intro__kicker">
-        {es ? '— Portafolio seleccionado 2025–2026' : '— Selected portfolio 2025–2026'}
-      </p>
-      <h2 class="works-intro__title">
-        <span class="ln">{es ? 'Nuestros' : 'Our'}</span>
-        <span class="ln ln--alt">{es ? 'Trabajos' : 'Works'}</span>
-      </h2>
-      <p class="works-intro__desc">
-        {es
-          ? 'Marcas reales, resultados medibles. Cada proyecto parte de un objetivo concreto: más ventas, más visibilidad o una identidad que dure. Esto es lo que hemos construido.'
-          : 'Real brands, measurable results. Every project starts from a concrete goal: more sales, more visibility or an identity built to last. This is what we\'ve built.'}
-      </p>
-    </div>
-    <div class="works-intro__meta">
-      <span class="works-intro__hint">
-        {es ? 'Desplázate para ver' : 'Scroll to explore'}
-        <svg width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
-          <path d="M6 1v12M1 8l5 5 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-    </div>
-  </section>
-
-  <!-- ════ TRABAJOS — videos full-screen ════════════════════════════ -->
-  <div class="works-videos">
-    {featured.map((p, i) => (
-      <a
-        href={lp(`/trabajos/${p.slug}`)}
-        class="project-video group"
-        data-video-src={`/videos/work${i + 1}.mp4`}
-        aria-label={p.client}
-      >
-        <div class="project-video__inner" style={`background:${p.gradient}`}>
-          <div class="project-video__placeholder">
-            <span class="project-video__play">
-              <svg viewBox="0 0 24 24" width="26" height="26" fill="#f8f8f8" aria-hidden="true">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </span>
-            <span class="project-video__soon">{es ? 'Video próximamente' : 'Video coming soon'}</span>
-          </div>
-        </div>
-      </a>
-    ))}
-
-    <!-- Cierre: ver todos -->
-    <div class="relative z-10 flex justify-center bg-[#0d0d0d] pb-20 pt-16">
-      <a href={lp('/trabajos')} class="rounded-full border border-[rgba(248,248,248,0.2)] px-8 py-3.5 text-sm font-medium text-[#f8f8f8] transition-colors hover:border-accent hover:text-accent">
-        {worksAllLabel} →
-      </a>
-    </div>
-  </div>
 
   <!-- ════ CTA FINAL ════════════════════════════════════════════════ -->
   <section class="cta-final">

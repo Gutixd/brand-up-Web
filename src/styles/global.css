@@ -39,7 +39,7 @@ html.js .wrow { opacity: 0; transform: translateY(36px); }
 
 /* ─── Marquee ────────────────────────────────────────────────────── */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; will-change: transform; }
 .marquee-track--slow { animation-duration: 60s; }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
@@ -360,162 +360,6 @@ html.js .wrow { opacity: 0; transform: translateY(36px); }
 }
 .stack-card--dark .stack-card__tag { background: rgba(178,243,102,0.15); color: #B2F366; }
 
-/* ─── Trabajos — intro tipo "Our Works" (texto gigante sobre video) ── */
-.works-intro {
-  position: relative;
-  height: 100svh;
-  overflow: hidden;
-  background: #0d0d0d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* Video/foto de fondo — activar reemplazando el div por <video> o añadiendo background-image */
-.works-intro__bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: radial-gradient(120% 90% at 50% 120%, #2a2a2a 0%, #141414 55%, #0d0d0d 100%);
-  background-size: cover;
-  background-position: center;
-}
-.works-intro__bg video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.works-intro__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.15) 50%, rgba(13,13,13,0.85) 100%);
-}
-.works-intro__content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-inline: clamp(1.5rem, 6vw, 4rem);
-}
-.works-intro__kicker {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(248,248,248,0.45);
-  margin-bottom: 1.75rem;
-}
-.works-intro__title {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-display);
-  font-size: clamp(3.4rem, 15vw, 16rem);
-  font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 0.86;
-  text-align: center;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  text-shadow: 0 4px 60px rgba(240,94,35,0.25);
-  margin-bottom: 2rem;
-}
-.works-intro__desc {
-  max-width: 54ch;
-  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-  line-height: 1.65;
-  color: rgba(248,248,248,0.6);
-}
-.works-intro__title .ln { display: block; }
-.works-intro__title .ln--alt { color: #f8f8f8; }
-.works-intro__meta {
-  position: absolute;
-  z-index: 2;
-  bottom: 32px;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-inline: 32px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(248,248,248,0.5);
-}
-.works-intro__hint {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-@keyframes nudge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
-.works-intro__hint svg { animation: nudge 1.6s ease-in-out infinite; }
-
-/* ─── Trabajos — videos full-screen sticky (se apilan por encima) ──── */
-.works-videos {
-  position: relative;
-  background: #0d0d0d;
-}
-/* Cada video se queda pegado a pantalla completa; el siguiente sube por
-   encima → el de arriba permanece a pantalla completa, sin encoger. */
-.project-video {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100svh;
-  overflow: hidden;
-  background: #0d0d0d;
-  display: block;
-  text-decoration: none;
-}
-/* Contenedor del media — JS inyecta <video> cuando data-video-src está seteado */
-.project-video__inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.project-video__inner video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* Placeholder mientras no hay video (sin nombre de proyecto) */
-.project-video__placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-}
-.project-video__play {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s, transform 0.3s;
-}
-.project-video:hover .project-video__play { background: rgba(255,255,255,0.2); transform: scale(1.07); }
-.project-video__soon {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-}
-.stacked-spacer { height: 100svh; }
 .stat-val { font-variant-numeric: tabular-nums; }
 
 /* ─── Stats + Esfera 3D ─────────────────────────────────────────────── */
@@ -1742,6 +1586,12 @@ html.intro-lock body { overflow: hidden; }
   /* Alto proporcional al ancho: como las tarjetas miden un % del ancho,
      su altura escala igual y la caja nunca queda corta ni con un vacío. */
   aspect-ratio: 1338 / 582;
+  /* Este contenedor recibe un skewY inline por JS en cada frame de scroll
+     (ver initVelocitySkew en motion.ts). Sin su propia capa, el navegador
+     repinta las 5 fotos completas cada vez → el scroll se siente pegado.
+     will-change lo sube a una capa de composición: el skew queda gratis. */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .polaroid-pos { position: absolute; will-change: transform; }
 /* Las piezas son verticales (gráficas 4:5 y capturas de celular), así que
@@ -1996,6 +1846,11 @@ html.intro-lock body { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: clamp(14px, 2vw, 26px);
+  /* Mismo caso que .manifesto__collage: recibe skewY inline por scroll y
+     además contiene los marquees que ya animan solos vía CSS. Sin capa
+     propia, cada tick de scroll repinta las dos filas completas. */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 .street-marquee { overflow: hidden; }
 /* 4 copias de la secuencia y desplazamiento de -25% (en vez de 2 y -50%).
@@ -2172,7 +2027,6 @@ html.intro-lock body { overflow: hidden; }
 .svc-u__title,
 .street__title,
 .stat-u__val,
-.works-intro__title,
 .cta-final__title,
 .ticker__item,
 .page-hero__title,
@@ -2183,7 +2037,6 @@ html.intro-lock body { overflow: hidden; }
   letter-spacing: 0.014em;
 }
 .manifesto__title { line-height: 1; }
-.works-intro__title { line-height: 0.98; }
 .cta-final__title { line-height: 1; text-transform: uppercase; }
 .page-hero__title { text-transform: uppercase; line-height: 0.98; }
 .svc-u__title { -webkit-text-stroke-width: 1px; }
@@ -2205,9 +2058,6 @@ html.intro-lock body { overflow: hidden; }
   .svc-urban__kicker,
   .street__kicker,
   .stats-band__kicker,
-  .works-intro__kicker,
-  .works-intro__hint,
-  .project-video__soon,
   .testis__kicker,
   .cta-final__kicker,
   .logos-wall__label,
