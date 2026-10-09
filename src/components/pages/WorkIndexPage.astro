@@ -3,16 +3,20 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
 import { SERVICES } from '../../data/services';
-import { PROJECTS } from '../../data/projects';
+import { PROJECTS, FEATURED_PROJECTS, OTHER_PROJECTS } from '../../data/projects';
 import { SITE } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 import logoChacha from '../../assets/logos/chachapollo.webp';
 import logoJdcargo from '../../assets/logos/jdcargo.webp';
 import logoAracnida from '../../assets/logos/aracnida.webp';
-import logoTemplo from '../../assets/logos/templo-maipu.webp';
 import logoBell from '../../assets/logos/bell-college.webp';
-import logoSuperlunch from '../../assets/logos/superlunch.webp';
+import logoDuoc from '../../assets/logos/duoc-uc.webp';
+import logoChunguang from '../../assets/logos/chunguang.webp';
+import logoAuristal from '../../assets/logos/auristal.webp';
+import logoBschool from '../../assets/logos/bschool.webp';
+import logoMicro from '../../assets/logos/microterapias.webp';
+import logoAseocool from '../../assets/logos/aseocool.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -27,7 +31,7 @@ const svcName = (slug: string) => {
   return s ? pick(s.title, locale) : slug;
 };
 
-const items = PROJECTS.map((p, i) => ({
+const items = FEATURED_PROJECTS.map((p, i) => ({
   slug: p.slug,
   num: String(i + 1).padStart(2, '0'),
   client: p.client,
@@ -45,6 +49,15 @@ const items = PROJECTS.map((p, i) => ({
   href: lp(`/trabajos/${p.slug}`),
 }));
 
+// Trabajos que se nombran sin destacar: una línea cada uno, sin imagen.
+const others = OTHER_PROJECTS.map((p) => ({
+  client: p.client,
+  sector: pick(p.sector, locale),
+  year: p.year,
+  serviceSlugs: p.serviceSlugs,
+  href: lp(`/trabajos/${p.slug}`),
+}));
+
 // Tabs de filtro: "Todos" + un tab por servicio con al menos un caso.
 const filters = [
   { slug: 'all', label: isEs ? 'Todos' : 'All', count: total },
@@ -56,12 +69,16 @@ const filters = [
 ];
 
 const clientLogos = [
+  { img: logoDuoc, name: 'Duoc UC' },
   { img: logoChacha, name: 'El Chacha Pollo' },
-  { img: logoJdcargo, name: 'JD Cargo Logistics' },
+  { img: logoChunguang, name: 'Comida China Chun Guang' },
   { img: logoAracnida, name: 'Aracnida Store' },
-  { img: logoTemplo, name: 'Templo Votivo de Maipú' },
+  { img: logoJdcargo, name: 'JD Cargo Logistics' },
   { img: logoBell, name: 'Bell College' },
-  { img: logoSuperlunch, name: 'Superlunch' },
+  { img: logoAuristal, name: 'Auristal Velas' },
+  { img: logoBschool, name: 'BSchool' },
+  { img: logoMicro, name: 'Microterapias' },
+  { img: logoAseocool, name: 'AseoCool' },
 ];
 
 const metas = [
@@ -211,6 +228,23 @@ const crumbsLd = {
             </div>
           </article>
         ))}
+
+        {others.length > 0 && (
+          <div class="wmore" data-more>
+            <h2 class="wmore__title">{isEs ? 'Más proyectos' : 'More projects'}</h2>
+            <ul class="wmore__list">
+              {others.map((o) => (
+                <li class="wmore__row" data-project-slot data-filters={o.serviceSlugs.join(' ')}>
+                  <a href={o.href} class="wmore__link">
+                    <span class="wmore__client">{o.client}</span>
+                    <span class="wmore__sector">{o.sector}</span>
+                    <span class="wmore__year">{o.year}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <p class="works3d__empty" id="works3d-empty" hidden>
           {isEs ? 'No hay proyectos en esta categoría todavía.' : 'No projects in this category yet.'}
@@ -450,6 +484,30 @@ const crumbsLd = {
   font-family: var(--font-body); font-weight: 700; font-size: 9px;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(246, 246, 246, 0.44); margin-top: 2px;
+}
+
+/* ── Más proyectos: lista compacta, sin imagen ────────────────────── */
+.wmore { border-top: 1px solid rgba(246, 246, 246, 0.1); padding-top: 28px; }
+.wmore__title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(246, 246, 246, 0.4);
+  margin-bottom: 8px;
+}
+.wmore__list { list-style: none; margin: 0; padding: 0; }
+.wmore__row { border-bottom: 1px solid rgba(246, 246, 246, 0.07); }
+.wmore__link {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto;
+  gap: 16px; align-items: baseline; padding: 15px 0;
+  text-decoration: none; color: rgba(246, 246, 246, 0.6);
+  transition: color 0.3s ease;
+}
+.wmore__link:hover { color: #fff; }
+.wmore__client { font-size: 1rem; font-weight: 600; }
+.wmore__sector, .wmore__year { font-size: 12.5px; color: rgba(246, 246, 246, 0.4); }
+.wmore__year { font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .wmore__link { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; min-height: 44px; }
+  .wmore__sector { grid-column: 1 / -1; grid-row: 2; }
 }
 
 .works3d__empty {

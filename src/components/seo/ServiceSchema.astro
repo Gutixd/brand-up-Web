@@ -1,0 +1,59 @@
+---
+// Datos estructurados de una página de servicio. Le dice a Google y a los
+// asistentes de IA qué servicio es, quién lo presta (la misma entidad
+// BrandUp del resto del sitio, por `@id`) y en qué zona.
+//
+// No incluye precios ni valoraciones: el schema debe corresponder a lo que
+// la página muestra, y las reseñas propias no verificables van contra las
+// directrices de Google.
+import { SITE, SCHEMA_ID } from '../../data/site';
+import { SERVICE_SEO } from '../../data/serviceSeo';
+import type { Service } from '../../data/services';
+import type { Locale } from '../../i18n';
+
+interface Props { locale: Locale; service: Service; }
+const { locale, service } = Astro.props;
+const isEs = locale === 'es';
+const seo = SERVICE_SEO[service.slug];
+const base = isEs ? SITE.domain : `${SITE.domain}/en`;
+const url = `${base}/servicios/${service.slug}`;
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      '@id': `${url}#service`,
+      name: service.title[locale],
+      serviceType: seo?.serviceType[locale] ?? service.title[locale],
+      description: seo?.desc[locale] ?? service.desc[locale],
+      url,
+      inLanguage: isEs ? 'es-CL' : 'en',
+      provider: { '@id': SCHEMA_ID.organization },
+      areaServed: [
+        { '@type': 'City', name: 'Santiago de Chile' },
+        { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' },
+        { '@type': 'Country', name: 'Chile' },
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: service.title[locale],
+        itemListElement: service.items[locale].map((item) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: item },
+        })),
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: isEs ? 'Inicio' : 'Home', item: base },
+        { '@type': 'ListItem', position: 2, name: isEs ? 'Servicios' : 'Services', item: `${base}/servicios` },
+        { '@type': 'ListItem', position: 3, name: service.title[locale], item: url },
+      ],
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

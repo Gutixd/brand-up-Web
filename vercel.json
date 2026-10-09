@@ -30,5 +30,28 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.brandup.cl"
+        }
+      ],
+      "destination": "https://brandup.cl/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cuando-conviene-rediseñar-la-marca-de-tu-negocio",
+      "destination": "/blog/cuando-conviene-redisenar-la-marca-de-tu-negocio",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cuando-conviene-redise%C3%B1ar-la-marca-de-tu-negocio",
+      "destination": "/blog/cuando-conviene-redisenar-la-marca-de-tu-negocio",
+      "permanent": true
+    }
   ]
 }

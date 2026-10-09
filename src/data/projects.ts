@@ -259,7 +259,7 @@ const ALL_PROJECTS: Project[] = [
       { val: 'Full', lbl: { es: 'Proyecto completo', en: 'Full project' } },
     ],
     link: 'https://aseocool.cl',
-    featured: false,
+    featured: true,
   },
   {
     slug: 'aracnida-store',
@@ -338,7 +338,7 @@ const ALL_PROJECTS: Project[] = [
       en: 'A clear, coherent campaign that boosted attendance and the events’ digital presence.',
     },
     metrics: [{ val: '100%', lbl: { es: 'Sistema gráfico unificado', en: 'Unified graphic system' } }],
-    featured: true,
+    featured: false,
   },
   {
     slug: 'bell-college',
@@ -444,7 +444,7 @@ const ALL_PROJECTS: Project[] = [
     },
     metrics: [{ val: 'Full', lbl: { es: 'Identidad aplicada', en: 'Identity applied' } }],
     link: 'https://microterapias.cl',
-    featured: false,
+    featured: true,
   },
   {
     slug: 'duoc-uc',
@@ -481,7 +481,7 @@ const ALL_PROJECTS: Project[] = [
     },
     metrics: [{ val: '69,2K', lbl: { es: 'Seguidores de la cuenta', en: 'Account followers' } }],
     link: 'https://www.instagram.com/duocuc_cl/',
-    featured: false,
+    featured: true,
   },
   {
     slug: 'bschool',
@@ -518,7 +518,7 @@ const ALL_PROJECTS: Project[] = [
     },
     metrics: [{ val: 'Full', lbl: { es: 'Gestión de contenido', en: 'Content management' } }],
     link: 'https://bschool.cl',
-    featured: false,
+    featured: true,
   },
 
   // ── En preparación ────────────────────────────────────────────────
@@ -772,16 +772,43 @@ const ALL_PROJECTS: Project[] = [
       { val: 'Panel propio', lbl: { es: 'Pedidos, stock y clientes', en: 'Orders, stock and customers' } },
       { val: 'Audio', lbl: { es: 'Guías que se pueden escuchar', en: 'Guides you can listen to' } },
     ],
-    featured: true,
+    featured: false,
   },
 ];
+
+// Orden de los trabajos principales (`featured: true`). Los que no están
+// aquí van después, en el orden en que aparecen en ALL_PROJECTS.
+const FEATURED_ORDER = [
+  'duoc-uc',
+  'el-chacha-pollo',
+  'chun-guang',
+  'aracnida-store',
+  'jd-cargo-logistics',
+  'bell-college',
+  'auristal',
+  'bschool',
+  'microterapias',
+  'aseocool',
+];
+const rank = (p: Project) => {
+  const i = FEATURED_ORDER.indexOf(p.slug);
+  return p.featured && i !== -1 ? i : FEATURED_ORDER.length;
+};
 
 /**
  * Lo que consume el sitio: todo menos los proyectos en preparación.
  * Al quitarle `draft` a una ficha aparece sola en portafolio, industrias,
  * servicios, sitemap y JSON-LD, sin tocar ningún componente.
  */
-export const PROJECTS: Project[] = ALL_PROJECTS.filter((p) => !p.draft);
+export const PROJECTS: Project[] = ALL_PROJECTS.filter((p) => !p.draft).sort(
+  (a, b) => rank(a) - rank(b)
+);
+
+/** Trabajos principales: se muestran en grande, en el orden de FEATURED_ORDER. */
+export const FEATURED_PROJECTS: Project[] = PROJECTS.filter((p) => p.featured);
+
+/** El resto: se nombran en una lista compacta, sin destacar. */
+export const OTHER_PROJECTS: Project[] = PROJECTS.filter((p) => !p.featured);
 
 /** Fichas pendientes de completar — útil para saber qué falta. */
 export const DRAFT_PROJECTS: Project[] = ALL_PROJECTS.filter((p) => p.draft);

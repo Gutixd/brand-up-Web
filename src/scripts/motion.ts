@@ -539,6 +539,9 @@ function initWorkFilters() {
       });
 
       if (empty) empty.hidden = toShow.length > 0;
+      // El bloque "Más proyectos" se oculta entero si ninguna de sus filas calza.
+      const more = document.querySelector<HTMLElement>('[data-more]');
+      if (more) more.hidden = !toShow.some((s) => more.contains(s));
 
       const tl = gsap.timeline();
       if (toHide.length) {

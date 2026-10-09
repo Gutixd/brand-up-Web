@@ -1,6 +1,8 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import { SERVICES } from '../../../data/services';
+import { SERVICE_SEO } from '../../../data/serviceSeo';
+import ServiceSchema from '../../../components/seo/ServiceSchema.astro';
 import { PROJECTS } from '../../../data/projects';
 import { localePath } from '../../../i18n';
 
@@ -9,13 +11,15 @@ export function getStaticPaths() {
 }
 
 const { service } = Astro.props;
+const seo = SERVICE_SEO[service.slug];
 const locale = 'en' as const;
 const lp = (p: string) => localePath(locale, p);
 const projects = PROJECTS.filter((p) => p.serviceSlugs.includes(service.slug));
 const count = projects.length;
 ---
 
-<Base locale={locale} title={`${service.title.en} — BrandUp`} description={service.desc.en}>
+<Base locale={locale} title={seo?.title.en ?? `${service.title.en} — BrandUp`} description={seo?.desc.en ?? service.desc.en}>
+  <ServiceSchema locale={locale} service={service} />
 
   <section class="svc-page-hero">
     <div class="svc-page-hero__inner">

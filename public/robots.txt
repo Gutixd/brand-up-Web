@@ -29,4 +29,23 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
+# Gemini (Google): usa el índice normal de Google (Googlebot) y Google-Extended
+# decide si el contenido puede alimentar sus respuestas. Ambos permitidos.
+User-agent: Googlebot
+Allow: /
+
+# Meta AI (el asistente de WhatsApp, Instagram y Facebook)
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Copilot (Microsoft) y la búsqueda de ChatGPT se apoyan en el índice de Bing
+User-agent: Bingbot
+Allow: /
+
 Sitemap: https://brandup.cl/sitemap-index.xml

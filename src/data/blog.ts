@@ -921,7 +921,7 @@ export const BLOG_POSTS: BlogPost[] = [
     cta: 'Implementamos automatizaciones que ahorran horas reales, no juguetes. Cuéntanos qué tarea te consume más tiempo.',
   },
   {
-    slug: 'cuando-conviene-rediseñar-la-marca-de-tu-negocio',
+    slug: 'cuando-conviene-redisenar-la-marca-de-tu-negocio',
     title: '¿Cuándo conviene rediseñar la marca de tu negocio?',
     desc: 'Señales de que tu marca necesita un rediseño, cuándo NO conviene cambiarla y cómo hacerlo sin perder a los clientes que ya te reconocen.',
     tag: 'Branding',
