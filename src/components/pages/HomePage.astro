@@ -25,7 +25,7 @@ import wBschool1 from '../../assets/strip/bschool-1.webp';
 import wMicro1 from '../../assets/strip/microterapias-1.webp';
 import wAracnidaProd from '../../assets/strip/aracnida-product.webp';
 import wJdcargoPort from '../../assets/strip/jdcargo-detail.webp';
-import wBschool3 from '../../assets/strip/bschool-3.webp';
+import wDuocReel from '../../assets/strip/duocuc-reel.webp';
 
 import wBell1 from '../../assets/strip/bellcollege-1.webp';
 import wBschool2 from '../../assets/strip/bschool-2.webp';
@@ -85,14 +85,14 @@ const streetsBottom = [
   { img: wMicro1,       name: 'Microterapias' },
   { img: wAracnidaProd, name: 'Aracnida Store' },
   { img: wJdcargoPort,  name: 'JD Cargo Logistics' },
-  { img: wBschool3,     name: 'BSchool' },
+  { img: wDuocReel,     name: 'Duoc UC' },
 ];
 
 // ── Stats ──────────────────────────────────────────────────────────
 
 const stats = [
   { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
-  { val: '1000000', suffix: '+', prefix: '',  lbl: es ? 'Views generadas para clientes' : 'Views generated for clients' },
+  { val: '1',       suffix: 'M+', prefix: '',  lbl: es ? 'Views generadas para clientes' : 'Views generated for clients' },
   { val: '300',     suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
   { val: '100',     suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
 ];
@@ -222,7 +222,7 @@ const stats = [
             <path id="bu-circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/>
           </defs>
           <text class="manifesto__badge-text">
-            <textPath href="#bu-circ">BRAND UP · SANTIAGO · BRAND UP · CRECIMIENTO ·</textPath>
+            <textPath href="#bu-circ" textLength="470" lengthAdjust="spacing">BRAND UP · SANTIAGO · BRAND UP · CRECIMIENTO ·</textPath>
           </text>
         </svg>
       </div>
@@ -360,10 +360,12 @@ const stats = [
       </div>
     </div>
     <div class="cta-final__inner">
-      <p class="cta-final__kicker" data-reveal>{t.home.ctaText}</p>
-      <h2 class="cta-final__title display-tight" data-split-chars>
-        {t.home.ctaTitle}
-      </h2>
+      <div class="cta-final__left">
+        <p class="cta-final__kicker" data-reveal>{t.home.ctaText}</p>
+        <h2 class="cta-final__title display-tight" data-split-chars>
+          {t.home.ctaTitle}
+        </h2>
+      </div>
       <div class="cta-final__actions" data-reveal data-delay="0.3">
         <a href={lp('/cotizar')} data-magnetic="0.35" class="cta-final__btn">
           {es ? 'Empezar ahora' : 'Start now'} →

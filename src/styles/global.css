@@ -69,7 +69,9 @@ html.js .wrow { opacity: 0; transform: translateY(36px); }
 /* Cada palabra se mantiene entera (no se parte a la mitad); solo se corta
    entre palabras. Los espacios sí permiten salto de línea. */
 .char-word { display: inline-block; white-space: nowrap; }
-.char-space { display: inline-block; width: 0.28em; }
+/* inline (no inline-block): así el espacio se colapsa al saltar de línea y la
+   línea siguiente no parte corrida hacia la derecha. */
+.char-space { display: inline; white-space: normal; }
 .char-container { display: inline-block; overflow: hidden; vertical-align: bottom; }
 .char { display: inline-block; transform: translateY(110%); will-change: transform; }
 
@@ -673,16 +675,16 @@ html.js .wrow { opacity: 0; transform: translateY(36px); }
   transform: translateY(-2px);
 }
 .cta-final__link {
-  font-size: 0.82rem;
-  color: rgba(248,248,248,0.3);
-  border-bottom: 1px solid rgba(248,248,248,0.1);
+  font-size: 0.9rem;
+  color: rgba(248,248,248,0.72);
+  border-bottom: 1px solid rgba(248,248,248,0.3);
   padding-bottom: 2px;
   white-space: nowrap;
   transition: color 0.3s, border-color 0.3s;
 }
 .cta-final__link:hover {
-  color: rgba(248,248,248,0.7);
-  border-color: rgba(248,248,248,0.35);
+  color: #f8f8f8;
+  border-color: rgba(248,248,248,0.7);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1570,9 +1572,10 @@ html.intro-lock body { overflow: hidden; }
 }
 @keyframes buSpin { to { transform: rotate(360deg); } }
 .manifesto__badge-text {
-  font-size: 14.5px;
+  /* El largo lo fija textLength en el SVG; con letter-spacing fijo el texto
+     medía más que la circunferencia y las palabras se montaban. */
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 3.4px;
   fill: #141414;
   text-transform: uppercase;
 }
@@ -1816,6 +1819,9 @@ html.intro-lock body { overflow: hidden; }
   background: #0d0d0d;
   color: #f8f8f8;
   overflow: hidden;
+  /* Se monta 1px sobre la sección anterior (mismo color): sin esto quedaba una
+     rendija subpixel por donde se veía el fondo claro, como una línea suelta. */
+  margin-top: -1px;
   padding: clamp(80px, 10vw, 150px) 0;
 }
 .street__head {

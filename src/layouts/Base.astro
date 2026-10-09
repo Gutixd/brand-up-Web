@@ -20,6 +20,15 @@ const pathname = Astro.url.pathname;
 const alternate = altPath(locale, pathname);
 const canonical = new URL(pathname, Astro.site).href;
 
+// Google corta las descripciones cerca de los 160 caracteres. Si viene más
+// larga, se recorta en el último espacio para no partir una palabra.
+const metaDescription =
+  description.length <= 158
+    ? description
+    : description.slice(0, 157).replace(/\s+\S*$/, '').replace(/[,;:.\s]+$/, '') + '…';
+const esHref = new URL(locale === 'es' ? pathname : alternate, Astro.site).href;
+const enHref = new URL(locale === 'en' ? pathname : alternate, Astro.site).href;
+
 // Grafo de entidades: Organization (la marca) + WebSite (el sitio) + WebPage
 // (esta página concreta), enlazados por `@id`. Los buscadores y los motores
 // de respuesta consolidan así todo en una sola entidad "BrandUp" en vez de
@@ -107,12 +116,16 @@ const nav = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonical} />
     {/* Solo si la traducción existe: el blog es solo en español, y anunciar
         un alternate hacia /en/blog/... mandaba a Google a URLs inexistentes. */}
     {hasAlternate(pathname) && (
-      <link rel="alternate" hreflang={locale === 'es' ? 'en' : 'es'} href={new URL(alternate, Astro.site).href} />
+      <>
+        <link rel="alternate" hreflang="es" href={esHref} />
+        <link rel="alternate" hreflang="en" href={enHref} />
+        <link rel="alternate" hreflang="x-default" href={esHref} />
+      </>
     )}
     <!-- Google exige mínimo 48x48 para mostrar el ícono en resultados de
          búsqueda; con solo 32x32 cae al globo genérico. -->

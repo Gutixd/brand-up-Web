@@ -33,6 +33,7 @@ import coverChunguang from '../assets/projects/chunguang.webp';
 import coverAuristal from '../assets/projects/auristal.webp';
 import coverRegalonPet from '../assets/projects/regalon-pet.webp';
 import coverTerapiaDeportiva from '../assets/projects/terapia-deportiva.webp';
+import coverFullStock from '../assets/projects/full-stock.webp';
 
 export interface Project {
   slug: string;
@@ -308,7 +309,7 @@ const ALL_PROJECTS: Project[] = [
     client: 'Templo Votivo de Maipú',
     industry: 'instituciones',
     sector: { es: 'Institución · Eventos', en: 'Institution · Events' },
-    year: '2026',
+    year: '2024',
     services: {
       es: ['Diseño Gráfico', 'Campaña de Difusión', 'Piezas para Redes'],
       en: ['Graphic Design', 'Awareness Campaign', 'Social Assets'],
@@ -542,11 +543,12 @@ const ALL_PROJECTS: Project[] = [
       en: ['Web Design', 'E-commerce'],
     },
     serviceSlugs: ['ecommerce', 'diseno-web'],
-    // Sin logo ni cover: los únicos archivos de marca que existen en el
-    // proyecto son restos de otro cliente (quedaron de clonar la base de
-    // Aracnida Store) — no corresponden a Full Stock y no se usan.
-    gradient: '#2b6cb0',
-    theme: { accent: '#2b6cb0', dark: '#0d1b2a' },
+    // Portada armada con tarjetas reales de su catálogo. Sin logo: el archivo
+    // de logo que hay en su proyecto es un resto de otro cliente y no se usa.
+    // Colores: el naranja real de su tienda (#ff6b00).
+    cover: coverFullStock,
+    gradient: '#ff6b00',
+    theme: { accent: '#ff6b00', dark: '#14110f' },
     flavor: 'bold',
     summary: {
       es: 'Una tienda online para una distribuidora de abarrotes de Maipú, con 402 productos organizados en 24 categorías y precio por mayor y por menor.',

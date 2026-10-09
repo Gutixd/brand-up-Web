@@ -104,7 +104,7 @@ const trustLogos = isQuote ? PROJECTS.filter((p) => p.logo) : [];
                 {i === (page as typeof t.quote).faq.length - 1 && (
                   <>
                     {' '}
-                    <a href={lp((page as typeof t.quote).faqLinkHref)} class="quote-faq__link">
+                    <a href={(page as typeof t.quote).faqLinkHref.startsWith('/blog') ? (page as typeof t.quote).faqLinkHref : lp((page as typeof t.quote).faqLinkHref)} class="quote-faq__link">
                       {(page as typeof t.quote).faqLinkLabel}
                     </a>
                   </>
