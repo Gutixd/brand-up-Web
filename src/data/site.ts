@@ -20,6 +20,10 @@ export const SITE = {
   // Meta Ads: ID del píxel (Administrador de eventos > Orígenes de datos).
   // Vacío = no se renderiza el píxel ni se disparan eventos de conversión.
   metaPixelId: '3246537428868858',
+  // Microsoft Clarity (mapas de calor y grabaciones de sesión). Pegar aquí el
+  // ID del proyecto (clarity.microsoft.com → Configuración → Instalación).
+  // Vacío = Clarity apagado.
+  clarityId: 'yvbgsvull3',
 };
 
 /**
