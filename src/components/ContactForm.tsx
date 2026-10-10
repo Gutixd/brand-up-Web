@@ -38,12 +38,12 @@ interface Props {
 // fijos en español, así que una consulta desde /en llegaba mezclada.
 const WA_LABELS = {
   es: {
-    head: 'Nueva solicitud desde brandup.cl',
+    head: 'Cotización brandup.cl',
     name: 'Nombre', email: 'Email', phone: 'Teléfono',
     service: 'Servicio', budget: 'Presupuesto', project: 'Proyecto',
   },
   en: {
-    head: 'New enquiry from brandup.cl',
+    head: 'Quote request brandup.cl',
     name: 'Name', email: 'Email', phone: 'Phone',
     service: 'Service', budget: 'Budget', project: 'Project',
   },
@@ -80,7 +80,10 @@ export default function ContactForm({ labels, variant = 'contact', locale = 'es'
     try {
       data.set('service', service);
       data.set('budget', budget);
-      data.set('_subject', L.head);
+      // El nombre va en el asunto: así cada solicitud llega como un correo
+      // aparte y Gmail no las agrupa todas en una sola conversación.
+      const who = String(data.get('name') ?? '').trim().slice(0, 60);
+      data.set('_subject', who ? `${L.head}: ${who}` : L.head);
       const res = await fetch(`https://formspree.io/f/${SITE.formspreeId}`, {
         method: 'POST',
         body: data,

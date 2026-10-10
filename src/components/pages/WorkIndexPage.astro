@@ -7,17 +7,6 @@ import { PROJECTS, FEATURED_PROJECTS, OTHER_PROJECTS } from '../../data/projects
 import { SITE } from '../../data/site';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
-import logoChacha from '../../assets/logos/chachapollo.webp';
-import logoJdcargo from '../../assets/logos/jdcargo.webp';
-import logoAracnida from '../../assets/logos/aracnida.webp';
-import logoBell from '../../assets/logos/bell-college.webp';
-import logoDuoc from '../../assets/logos/duoc-uc.webp';
-import logoChunguang from '../../assets/logos/chunguang.webp';
-import logoAuristal from '../../assets/logos/auristal.webp';
-import logoBschool from '../../assets/logos/bschool.webp';
-import logoMicro from '../../assets/logos/microterapias.webp';
-import logoAseocool from '../../assets/logos/aseocool.webp';
-
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = useT(locale);
@@ -68,18 +57,9 @@ const filters = [
   })).filter((f) => f.count > 0),
 ];
 
-const clientLogos = [
-  { img: logoDuoc, name: 'Duoc UC' },
-  { img: logoChacha, name: 'El Chacha Pollo' },
-  { img: logoChunguang, name: 'Comida China Chun Guang' },
-  { img: logoAracnida, name: 'Aracnida Store' },
-  { img: logoJdcargo, name: 'JD Cargo Logistics' },
-  { img: logoBell, name: 'Bell College' },
-  { img: logoAuristal, name: 'Auristal Velas' },
-  { img: logoBschool, name: 'BSchool' },
-  { img: logoMicro, name: 'Microterapias' },
-  { img: logoAseocool, name: 'AseoCool' },
-];
+// Cinta de logos: todos los trabajos que tienen logo cargado, en el mismo
+// orden del portafolio. Al sumar un trabajo con logo aparece aquí solo.
+const clientLogos = PROJECTS.filter((p) => p.logo).map((p) => ({ img: p.logo!, name: p.client, bg: p.logoBg ?? '#ffffff' }));
 
 const metas = [
   { val: `${total}`, lbl: isEs ? 'Proyectos' : 'Projects' },
@@ -146,9 +126,9 @@ const crumbsLd = {
       <div class="marquee-track marquee-track--slow">
         {[0, 1].map((copy) => (
           <div class="works-logos__seq" aria-hidden={copy === 1 ? 'true' : undefined}>
-            {[...clientLogos, ...clientLogos].map((l, i) => (
-              <span class="works-logos__item">
-                <Image src={l.img} alt={copy === 0 && i < clientLogos.length ? l.name : ''} widths={[200]} sizes="140px" />
+            {clientLogos.map((l, i) => (
+              <span class="works-logos__item" style={`background:${l.bg}`}>
+                <Image src={l.img} alt={copy === 0 && i < clientLogos.length ? l.name : ''} widths={[200, 400]} sizes="150px" />
               </span>
             ))}
           </div>
@@ -299,17 +279,20 @@ const crumbsLd = {
   display: flex; align-items: center; flex: 0 0 auto;
   gap: clamp(28px, 4vw, 56px); padding-inline: clamp(22px, 3vw, 44px);
 }
+/* Cada logo va en una ficha del mismo tamaño, con el color de fondo de su
+   propia marca: así conviven logos claros, oscuros y con fondo. */
 .works-logos__item {
-  display: flex; align-items: center; justify-content: center;
-  height: 58px; padding: 8px; border-radius: 14px; overflow: hidden;
-  opacity: 0.85; box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+  display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  width: 150px; height: 78px; padding: 10px 16px; border-radius: 14px;
+  border: 1px solid rgba(246, 246, 246, 0.12);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 .works-logos__item:hover {
-  opacity: 1; transform: translateY(-3px) scale(1.04);
+  transform: translateY(-3px) scale(1.04);
   box-shadow: 0 16px 36px rgba(240, 94, 35, 0.28);
 }
-.works-logos__item img { height: 100%; width: auto; max-width: 128px; object-fit: cover; border-radius: 10px; }
+.works-logos__item img { width: 100%; height: 100%; object-fit: contain; }
 
 /* ── Sección lista + canvas WebGL ─────────────────────────────────── */
 .works3d { position: relative; }

@@ -218,7 +218,7 @@ export const BLOG_POSTS: BlogPost[] = [
         ],
       },
     ],
-    cta: 'Producimos reels que superaron las 267.000 reproducciones para clientes reales. Hablemos de tu contenido.',
+    cta: 'Producimos reels que superaron el millón de reproducciones para clientes reales. Hablemos de tu contenido.',
   },
   {
     slug: 'como-elegir-agencia-marketing-digital-chile',
@@ -448,7 +448,7 @@ export const BLOG_POSTS: BlogPost[] = [
         h: 'El error más caro: pagar por cantidad de posts',
         p: [
           'Muchos planes se venden por número de publicaciones. Es la métrica equivocada: veinte publicaciones que nadie ve valen menos que cuatro reels bien pensados que llegan a miles de personas.',
-          'En nuestro trabajo con El Chacha Pollo, lo que cambió el negocio no fue publicar más seguido, sino producir reels diseñados para alcance. Un solo reel superó las 260 mil reproducciones y llenó el local un fin de semana.',
+          'En nuestro trabajo con El Chacha Pollo, lo que cambió el negocio no fue publicar más seguido, sino producir reels diseñados para alcance. Sus reels superaron el millón de reproducciones y llenaron el local un fin de semana.',
         ],
       },
       {

@@ -16,6 +16,12 @@ import logoBschool from '../assets/logos/bschool.webp';
 import logoChunguang from '../assets/logos/chunguang.webp';
 import logoAuristal from '../assets/logos/auristal.webp';
 import logoRegalonPet from '../assets/logos/regalon-pet.webp';
+import logoHolozone from '../assets/logos/holozone.webp';
+import logoEsem from '../assets/logos/esem.webp';
+import logoFullStock from '../assets/logos/full-stock.webp';
+import logoAltitude from '../assets/logos/altitude.webp';
+import logoMusclecar from '../assets/logos/musclecarchile.webp';
+import logoTerapia from '../assets/logos/terapia-deportiva.webp';
 
 import coverChacha from '../assets/projects/chachapollo.webp';
 import coverJdcargo from '../assets/projects/jdcargo.webp';
@@ -34,17 +40,30 @@ import coverAuristal from '../assets/projects/auristal.webp';
 import coverRegalonPet from '../assets/projects/regalon-pet.webp';
 import coverTerapiaDeportiva from '../assets/projects/terapia-deportiva.webp';
 import coverFullStock from '../assets/projects/full-stock.webp';
+import coverHolozone from '../assets/projects/holozone.webp';
+import heroHolozone from '../assets/projects/holozone-hero.webp';
+import heroEsem from '../assets/projects/esem-hero.webp';
+import coverEsem from '../assets/projects/esem.webp';
 
 export interface Project {
   slug: string;
   client: string;
   cover?: ImageMetadata;
+  /** Fondo del encabezado de la página del proyecto. Si falta, se usa `cover`. */
+  heroImage?: ImageMetadata;
+  /** `object-position` del fondo del encabezado (qué parte se conserva al recortar). */
+  heroPosition?: string;
+  /** Centra el título del encabezado y permite un texto propio sobre él. */
+  heroCenter?: boolean;
+  heroKicker?: L;
   industry: string; // key of INDUSTRIES
   sector: L;
   year: string;
   services: { es: string[]; en: string[] };
   serviceSlugs: string[]; // keys of SERVICES
   logo?: ImageMetadata;
+  /** Color de la ficha donde se muestra el logo (cinta de marcas). */
+  logoBg?: string;
   gradient: string; // cover gradient (CSS)
   // Identidad visual propia de la landing de este proyecto: accent = color
   // saturado fiel a la marca real (kickers, botones, banda de métricas);
@@ -60,6 +79,11 @@ export interface Project {
   outcome: L;
   metrics: { val: string; lbl: L }[];
   link?: string;
+  /**
+   * Franja destacada con el logo y el enlace al sitio en vivo, con el
+   * degradado de la marca. Solo para proyectos cuyo sitio queremos lucir.
+   */
+  siteBand?: { from: string; to: string };
   featured: boolean;
   /**
    * Proyecto en preparación: no se publica en ninguna parte del sitio
@@ -78,35 +102,35 @@ const ALL_PROJECTS: Project[] = [
     sector: { es: 'Gastronomía · Redes Sociales', en: 'Food & Beverage · Social Media' },
     year: '2025',
     services: {
-      es: ['Social Media', 'Contenido & Reels', 'Meta Ads'],
-      en: ['Social Media', 'Content & Reels', 'Meta Ads'],
+      es: ['Community Management', 'Contenido & Reels', 'Instagram · TikTok · Facebook'],
+      en: ['Community Management', 'Content & Reels', 'Instagram · TikTok · Facebook'],
     },
     serviceSlugs: ['contenido-reels'],
     logo: logoChacha,
+    logoBg: '#020979',
     cover: coverChacha,
     gradient: '#f5cc53',
     theme: { accent: '#e8752c', dark: '#1f1206' },
     flavor: 'playful',
     summary: {
-      es: 'Estrategia completa de contenido en Instagram: reels de alto alcance, parrilla constante y una identidad visual que llenó el local.',
-      en: 'Complete Instagram content strategy: high-reach reels, a consistent calendar and a visual identity that filled the restaurant.',
+      es: 'Community management y creación de contenido para El Chacha Pollo en Instagram, TikTok y Facebook, con reels que superaron el millón de visitas.',
+      en: 'Community management and content creation for El Chacha Pollo on Instagram, TikTok and Facebook, with reels that passed one million views.',
     },
     challenge: {
-      es: 'Un local con excelente producto pero invisible en redes. Publicaciones esporádicas, sin línea gráfica y sin un plan que convirtiera seguidores en visitas reales al local.',
-      en: 'A restaurant with an excellent product but invisible on social media. Sporadic posts, no visual line and no plan to turn followers into real visits.',
+      es: 'Un local con excelente producto pero invisible en redes: antes de empezar prácticamente no hacían contenido.',
+      en: 'A restaurant with an excellent product but invisible on social media: before we started they were barely making any content.',
     },
     approach: {
-      es: 'Construimos una identidad visual apetitosa y reconocible, definimos una parrilla de contenido semanal y produjimos reels pensados para el alcance. Sumamos campañas de Meta Ads geolocalizadas.',
-      en: 'We built an appetizing, recognizable visual identity, defined a weekly content calendar and produced reels designed for reach, plus geotargeted Meta Ads campaigns.',
+      es: 'Nos hicimos cargo de sus redes: reels, publicaciones e historias, además de responder a la comunidad. Manejamos Instagram, TikTok y Facebook con una misma línea.',
+      en: 'We took over their social media: reels, posts and stories, plus replying to the community. We run Instagram, TikTok and Facebook with one consistent line.',
     },
     outcome: {
-      es: 'En pocos meses la cuenta pasó de testimonial a motor de tráfico presencial, con reels que superaron las 260 mil reproducciones.',
-      en: 'In a few months the account went from token presence to a foot-traffic engine, with reels surpassing 260K views.',
+      es: 'Como partían casi sin contenido, la interacción de la cuenta subió con fuerza, y varios reels pasaron el millón de visitas.',
+      en: 'Starting from almost no content, the account’s engagement rose sharply, and several reels passed one million views.',
     },
     metrics: [
-      { val: '8.395', lbl: { es: 'Seguidores', en: 'Followers' } },
-      { val: '267K', lbl: { es: 'Views en un reel', en: 'Views on one reel' } },
-      { val: '+300%', lbl: { es: 'Engagement', en: 'Engagement' } },
+      { val: '1M+', lbl: { es: 'Visitas en reels', en: 'Reel views' } },
+      { val: '3', lbl: { es: 'Redes: Instagram, TikTok y Facebook', en: 'Networks: Instagram, TikTok and Facebook' } },
     ],
     link: 'https://www.instagram.com/elchachapollo/',
     featured: true,
@@ -123,6 +147,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['diseno-web'],
     logo: logoJdcargo,
+    logoBg: '#ffffff',
     cover: coverJdcargo,
     gradient: '#cbbedc',
     theme: { accent: '#5b4e91', dark: '#0d0a1a' },
@@ -153,6 +178,8 @@ const ALL_PROJECTS: Project[] = [
   },
   {
     slug: 'altitude',
+    logo: logoAltitude,
+    logoBg: '#ffffff',
     client: 'Altitude',
     industry: 'b2b',
     sector: { es: 'Consultoría · Migración Web', en: 'Consulting · Web Migration' },
@@ -189,6 +216,8 @@ const ALL_PROJECTS: Project[] = [
   },
   {
     slug: 'musclecarchile',
+    logo: logoMusclecar,
+    logoBg: '#ffffff',
     client: 'MuscleCarChile',
     industry: 'ecommerce',
     sector: { es: 'Automotriz · Migración Web', en: 'Automotive · Web Migration' },
@@ -235,6 +264,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['diseno-web'],
     logo: logoAseocool,
+    logoBg: '#ffffff',
     cover: coverAseocool,
     gradient: '#d4ecd4',
     theme: { accent: '#1ea884', dark: '#06201a' },
@@ -273,6 +303,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['ecommerce'],
     logo: logoAracnida,
+    logoBg: '#ffffff',
     cover: coverAracnida,
     gradient: '#f49fc5',
     theme: { accent: '#d1273f', dark: '#120608' },
@@ -316,6 +347,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['branding'],
     logo: logoTemplo,
+    logoBg: '#f7f7f7',
     cover: coverTemplo,
     gradient: '#f2fbe0',
     // Azul marino + rojo tomados del logo real del Templo.
@@ -352,6 +384,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['publicidad-digital'],
     logo: logoBell,
+    logoBg: '#f6eee6',
     cover: coverBell,
     gradient: '#bcd9f0',
     theme: { accent: '#2f6fb3', dark: '#0a1826' },
@@ -387,6 +420,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['branding'],
     logo: logoSuperlunch,
+    logoBg: '#ffffff',
     cover: coverSuperlunch,
     gradient: '#f8cfd2',
     theme: { accent: '#ef6f6f', dark: '#240d0d' },
@@ -422,6 +456,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['contenido-reels'],
     logo: logoMicroterapias,
+    logoBg: '#f8f3ef',
     cover: coverMicroterapias,
     gradient: '#e4dcf5',
     theme: { accent: '#8b6fd1', dark: '#150f26' },
@@ -458,6 +493,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['contenido-reels'],
     logo: logoDuocuc,
+    logoBg: '#0d0d0d',
     cover: coverDuocuc,
     gradient: '#0d0d0d',
     // Ámbar/dorado muestreado del logo real de Duoc UC (no rojo).
@@ -495,6 +531,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['contenido-reels'],
     logo: logoBschool,
+    logoBg: '#ece8e4',
     cover: coverBschool,
     gradient: '#f9b208',
     // Verde institucional muestreado del escudo real de BSchool.
@@ -547,6 +584,8 @@ const ALL_PROJECTS: Project[] = [
     // de logo que hay en su proyecto es un resto de otro cliente y no se usa.
     // Colores: el naranja real de su tienda (#ff6b00).
     cover: coverFullStock,
+    logo: logoFullStock,
+    logoBg: '#fffef0',
     gradient: '#ff6b00',
     theme: { accent: '#ff6b00', dark: '#14110f' },
     flavor: 'bold',
@@ -574,27 +613,89 @@ const ALL_PROJECTS: Project[] = [
     featured: false,
   },
   {
-    slug: 'esem000',
-    client: 'esem000',
+    slug: 'holozone',
+    client: 'HoloZone',
+    cover: coverHolozone,
+    heroImage: heroHolozone,
+    heroCenter: true,
+    heroKicker: { es: 'Página web · E-commerce', en: 'Website · E-commerce' },
+    logo: logoHolozone,
+    logoBg: '#07071a',
     industry: 'ecommerce',
-    sector: { es: 'Moda urbana · Publicidad', en: 'Streetwear · Paid Ads' },
+    sector: { es: 'E-commerce · Cartas Pokémon', en: 'E-commerce · Pokémon cards' },
     year: '2026',
     services: {
-      es: ['Publicidad Digital'],
-      en: ['Digital Ads'],
+      es: ['Diseño Web', 'E-commerce'],
+      en: ['Web Design', 'E-commerce'],
     },
-    serviceSlugs: ['publicidad-digital'],
+    serviceSlugs: ['ecommerce', 'diseno-web'],
+    gradient: '#0b0b1e',
+    theme: { accent: '#4fd8e8', dark: '#07071a' },
+    flavor: 'bold',
+    summary: {
+      es: 'Tienda online de cartas Pokémon, diseñada y desarrollada desde cero en dos semanas.',
+      en: 'An online Pokémon card store, designed and built from scratch in two weeks.',
+    },
+    challenge: {
+      es: 'HoloZone partía de cero: sin sitio, sin catálogo cargado y con la necesidad de vender cartas sueltas y producto sellado desde un solo lugar.',
+      en: 'HoloZone started from nothing: no site, no catalogue online, and the need to sell single cards and sealed product from one place.',
+    },
+    approach: {
+      es: 'Diseño 100% nuestro. Cargamos sus productos y mejoramos algunas imágenes con ayuda de inteligencia artificial. Cada carta tiene un botón para escribir por WhatsApp.',
+      en: 'A design that is 100% ours. We loaded the products and improved some images with the help of AI. Every card has a button to message on WhatsApp.',
+    },
+    outcome: {
+      es: 'La tienda tiene su propio panel de administración: desde ahí agregan cartas nuevas, ven a sus clientes y hacen seguimiento, sin depender de nosotros.',
+      en: 'The store has its own admin panel: from there they add new cards, see their customers and keep track, without depending on us.',
+    },
+    metrics: [
+      { val: '2 semanas', lbl: { es: 'Desde cero', en: 'From scratch' } },
+      { val: '100%', lbl: { es: 'Diseño propio', en: 'Original design' } },
+      { val: 'Panel', lbl: { es: 'Cartas, clientes y seguimiento', en: 'Cards, customers and tracking' } },
+      { val: 'WhatsApp', lbl: { es: 'Botón en cada carta', en: 'Button on every card' } },
+    ],
+    link: 'https://holozone.cl',
+    siteBand: { from: '#4fd8e8', to: '#a06bff' },
+    featured: true,
+  },
+  {
+    slug: 'esem000',
+    client: 'ESEM',
+    cover: coverEsem,
+    heroImage: heroEsem,
+    heroPosition: '72% center',
+    logo: logoEsem,
+    logoBg: '#0b0b0b',
+    industry: 'ecommerce',
+    sector: { es: 'Marca de ropa · Redes sociales', en: 'Clothing brand · Social media' },
+    year: '2026',
+    services: {
+      es: ['Reels', 'Contenido para Instagram', 'Community management', 'TikTok'],
+      en: ['Reels', 'Instagram content', 'Community management', 'TikTok'],
+    },
+    serviceSlugs: ['contenido-reels'],
     gradient: '#111111',
     theme: { accent: '#e0e0e0', dark: '#0a0a0a' },
     flavor: 'bold',
-    summary: { es: '', en: '' },
-    challenge: { es: '', en: '' },
-    approach: { es: '', en: '' },
-    outcome: { es: '', en: '' },
+    summary: {
+      es: 'Llevamos las redes de ESEM, marca chilena de ropa: reels, publicaciones, historias y comunidad en Instagram, además de su TikTok.',
+      en: 'We run social media for ESEM, a Chilean clothing brand: reels, posts, stories and community on Instagram, plus its TikTok.',
+    },
+    challenge: {
+      es: 'Una marca de ropa necesita estar presente todos los días, con una línea visual que se reconozca y una comunidad que responda, no solo publicar cuando sale una prenda.',
+      en: 'A clothing brand needs to show up every day, with a visual line people recognise and a community that responds, not only post when a garment drops.',
+    },
+    approach: {
+      es: 'Creamos el contenido en formato reel, diseñamos las publicaciones y las historias de la cuenta, y hacemos el community management en Instagram. También manejamos su TikTok.',
+      en: 'We create the reel content, design the account’s posts and stories, and handle community management on Instagram. We also run its TikTok.',
+    },
+    outcome: {
+      es: 'Trabajamos de forma ordenada: cada avance queda en un documento online que la marca revisa cuando quiere. Es un trabajo en curso.',
+      en: 'We work in an orderly way: every step is logged in an online document the brand can review whenever it wants. This is ongoing work.',
+    },
     metrics: [],
     link: 'https://esem000.com',
-    featured: false,
-    draft: true,
+    featured: true,
   },
   {
     slug: 'minerva',
@@ -631,6 +732,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['diseno-web'],
     logo: logoChunguang,
+    logoBg: '#ffffff',
     cover: coverChunguang,
     gradient: '#f5cc53',
     theme: { accent: '#c1272d', dark: '#1b0e0b' },
@@ -670,6 +772,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['diseno-web', 'branding'],
     logo: logoAuristal,
+    logoBg: '#f6efe6',
     cover: coverAuristal,
     gradient: '#f4d9c6',
     theme: { accent: '#c0603c', dark: '#251512' },
@@ -699,6 +802,8 @@ const ALL_PROJECTS: Project[] = [
   },
   {
     slug: 'terapia-deportiva',
+    logo: logoTerapia,
+    logoBg: '#23265a',
     client: 'Terapia Deportiva',
     industry: 'medios',
     sector: { es: 'Medios · Fútbol chileno', en: 'Media · Chilean football' },
@@ -747,6 +852,7 @@ const ALL_PROJECTS: Project[] = [
     },
     serviceSlugs: ['ecommerce', 'diseno-web'],
     logo: logoRegalonPet,
+    logoBg: '#fed000',
     cover: coverRegalonPet,
     gradient: '#f6d9a8',
     theme: { accent: '#e07b28', dark: '#1a1310' },
@@ -778,7 +884,11 @@ const ALL_PROJECTS: Project[] = [
 
 // Orden de los trabajos principales (`featured: true`). Los que no están
 // aquí van después, en el orden en que aparecen en ALL_PROJECTS.
+// REGLA: cada trabajo nuevo se agrega ARRIBA de esta lista (el más reciente
+// va primero).
 const FEATURED_ORDER = [
+  'holozone',
+  'esem000',
   'duoc-uc',
   'el-chacha-pollo',
   'chun-guang',

@@ -54,6 +54,7 @@ import rpPelota from '../assets/projects/gallery/regalonpet-pelota.webp';
 import rpPlato from '../assets/projects/gallery/regalonpet-plato.webp';
 import rpBebedero from '../assets/projects/gallery/regalonpet-bebedero.webp';
 import rpBotella from '../assets/projects/gallery/regalonpet-botella.webp';
+import esemPolera from '../assets/projects/gallery/esem-polera.webp';
 
 export type MediaKind = 'photo' | 'video';
 export type MediaRatio = 'wide' | 'tall' | 'reel' | 'square';
@@ -70,7 +71,7 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
   'el-chacha-pollo': [
     { kind: 'video', ratio: 'reel', label: { es: 'Reel destacado', en: 'Featured reel' }, videoSrc: '/videos/chachapollo-reel1.mp4' },
     { kind: 'video', ratio: 'reel', label: { es: 'Reel de año nuevo', en: 'New Year reel' }, videoSrc: '/videos/chachapollo-reel2.mp4' },
-    { kind: 'photo', ratio: 'tall', label: { es: 'Cuenta de Instagram', en: 'Instagram account' }, src: chachaInstagram },
+    { kind: 'photo', ratio: 'reel', label: { es: 'Perfil de El Chacha Pollo', en: 'El Chacha Pollo profile' }, src: chachaInstagram },
   ],
   'jd-cargo-logistics': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Home del sitio (desktop)', en: 'Homepage (desktop)' }, src: jdcargoDesktop },
@@ -148,6 +149,11 @@ export const PROJECT_MEDIA: Record<string, MediaSlot[]> = {
     { kind: 'photo', ratio: 'wide', label: { es: 'Pack de lunas', en: 'Moon set' }, src: auLunas },
     { kind: 'photo', ratio: 'tall', label: { es: 'Vela en frasco', en: 'Jar candle' }, src: auFrasco },
     { kind: 'photo', ratio: 'square', label: { es: 'Mano de Fátima', en: 'Hand of Fatima' }, src: auFatima },
+  ],
+  esem000: [
+    { kind: 'video', ratio: 'reel', label: { es: 'Reel en la calle', en: 'Street reel' }, videoSrc: '/videos/esem-reel1.mp4' },
+    { kind: 'video', ratio: 'reel', label: { es: 'Reel de producto', en: 'Product reel' }, videoSrc: '/videos/esem-reel2.mp4' },
+    { kind: 'photo', ratio: 'tall', label: { es: 'Fotografía de producto', en: 'Product photography' }, src: esemPolera },
   ],
   'regalon-pet': [
     { kind: 'photo', ratio: 'wide', label: { es: 'Portada de la tienda', en: 'Store hero' }, src: rpBanner },

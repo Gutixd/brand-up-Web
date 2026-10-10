@@ -46,12 +46,13 @@ const chapters = [
   <div style={`--color-accent:${p.theme.accent}; --project-dark:${p.theme.dark}`}>
 
   <!-- ════ HERO editorial ═══════════════════════════════════════════ -->
-  <section class={`wd-hero wd-hero--${p.flavor}`} style={`background:${p.gradient}`}>
-    {p.cover && (
+  <section class={`wd-hero wd-hero--${p.flavor}${p.heroCenter ? ' wd-hero--center' : ''}`} style={`background:${p.gradient}`}>
+    {(p.heroImage ?? p.cover) && (
       <Image
-        src={p.cover}
+        src={(p.heroImage ?? p.cover)!}
         alt={p.client}
         class="wd-hero__bg"
+        style={p.heroPosition ? `object-position:${p.heroPosition}` : undefined}
         widths={[800, 1400, 1920]}
         sizes="100vw"
       />
@@ -67,7 +68,7 @@ const chapters = [
       <a href={lp('/trabajos')} class="wd-hero__back">
         <span aria-hidden="true">&#8592;</span> {t.work.back}
       </a>
-      <p class="wd-hero__kicker">{pick(p.sector, locale)}</p>
+      <p class="wd-hero__kicker">{pick(p.heroKicker ?? p.sector, locale)}</p>
       <h1 class="wd-hero__title" data-reveal-word data-word-anim={p.flavor}>{p.client}</h1>
       <div class="wd-hero__meta">
         <span class="wd-hero__pill">{p.year}</span>
@@ -99,6 +100,26 @@ const chapters = [
       </ul>
     </div>
   </section>
+
+  <!-- ════ SITIO EN VIVO — franja destacada (solo si el proyecto la define) ═ -->
+  {p.siteBand && p.link && (
+    <section class="wd-site" style={`--site-from:${p.siteBand.from}; --site-to:${p.siteBand.to}`}>
+      <div class="wd-site__inner" data-reveal>
+        {p.logo && (
+          <Image src={p.logo} alt={`Logo ${p.client}`} class="wd-site__logo" widths={[320, 520]} sizes="260px" />
+        )}
+        <div class="wd-site__text">
+          <p class="wd-site__kicker">{isEs ? 'Sitio en vivo' : 'Live site'}</p>
+          <a href={p.link} target="_blank" rel="noopener" class="wd-site__url">
+            {p.link.replace(/^https?:\/\//, '')}
+          </a>
+          <a href={p.link} target="_blank" rel="noopener" class="wd-site__btn">
+            {isEs ? 'Visitar la tienda' : 'Visit the store'} <span aria-hidden="true">&#8599;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ════ STORYTELLING — desafío / solución / resultado ═══════════ -->
   <section class="wd-story">
@@ -258,6 +279,15 @@ const chapters = [
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 0.9;
+}
+/* Variante centrada: el nombre al medio de la imagen */
+.wd-hero--center { align-items: center; }
+.wd-hero--center .wd-hero__inner { text-align: center; padding-block: 150px 90px; }
+.wd-hero--center .wd-hero__meta { justify-content: center; }
+.wd-hero.wd-hero--center .wd-hero__scrim {
+  background:
+    radial-gradient(60% 55% at 50% 52%, rgba(5,5,16,0.72), rgba(5,5,16,0.15) 100%),
+    linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0) 30%);
 }
 .wd-hero__meta {
   display: flex;
@@ -430,6 +460,48 @@ const chapters = [
 }
 
 /* ════ MÉTRICAS ═══════════════════════════════════════════════════ */
+/* ── Franja "sitio en vivo" ───────────────────────────────────────── */
+.wd-site {
+  background:
+    radial-gradient(60% 120% at 15% 50%, color-mix(in srgb, var(--site-from) 22%, transparent), transparent 70%),
+    radial-gradient(60% 120% at 85% 50%, color-mix(in srgb, var(--site-to) 26%, transparent), transparent 70%),
+    var(--project-dark);
+  color: #fff;
+}
+.wd-site__inner {
+  max-width: 1100px; margin-inline: auto; padding: 64px 24px;
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(28px, 6vw, 72px); flex-wrap: wrap;
+}
+.wd-site__logo { width: clamp(170px, 24vw, 260px); height: auto; }
+.wd-site__text { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.wd-site__kicker {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255, 255, 255, 0.6);
+}
+.wd-site__url {
+  font-family: var(--font-poster); font-weight: 400; line-height: 1;
+  font-size: clamp(2.4rem, 7vw, 4.6rem); letter-spacing: 0.01em;
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--site-from), var(--site-to));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.wd-site__btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px;
+  padding: 0 26px; border-radius: 999px; text-decoration: none;
+  font-size: 14px; font-weight: 700; color: #07071a;
+  background: linear-gradient(90deg, var(--site-from), var(--site-to));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.wd-site__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--site-to) 45%, transparent);
+}
+@media (max-width: 700px) {
+  .wd-site__inner { flex-direction: column; padding: 48px 20px; }
+  .wd-site__text { align-items: center; text-align: center; }
+}
+
 .wd-metrics {
   background: var(--color-accent);
   color: #fff;
