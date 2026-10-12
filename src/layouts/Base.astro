@@ -163,12 +163,13 @@ const nav = [
     <script defer src="/_vercel/insights/script.js"></script>
     <!-- Google Analytics 4 — propiedad "BrandUp - brandup.cl" -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLSQ7KWZF8"></script>
-    <script>
+    {/* Debe ser JS plano con `arguments`: gtag.js solo procesa objetos
+        Arguments, e ignora en silencio un Array (como el que genera
+        `...args`). Con la versión anterior GA4 nunca registró una visita. */}
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(...args: unknown[]) { dataLayer.push(args); }
-      // @ts-ignore — gtag() espera argumentos variádicos
+      function gtag() { dataLayer.push(arguments); }
       gtag('js', new Date());
-      // @ts-ignore
       gtag('config', 'G-XLSQ7KWZF8');
     </script>
     {SITE.clarityId && (
