@@ -4,7 +4,16 @@ export const SITE = {
   name: 'BrandUp',
   legalName: 'BrandUp Agency',
   domain: 'https://brandup.cl',
-  city: 'Santiago, Chile',
+  city: 'Maipú, Santiago de Chile',
+  // Ubicación comercial según la ficha de Google Business. No se publica el
+  // número de calle: la ficha tampoco lo muestra.
+  locality: 'Maipú',
+  region: 'Región Metropolitana',
+  postalCode: '9250000',
+  geo: { lat: -33.5025168, lng: -70.7872217 },
+  // Ficha de Google Business (Maps). Sirve para "cómo llegar" y reseñas.
+  googleMaps: 'https://maps.app.goo.gl/YGoAKnDwkneJawrt8',
+  googleCid: 'https://www.google.com/maps?cid=18239725017259252089',
   email: 'brandup.092@gmail.com',
   phone: '+56 9 7982 2862',
   whatsappNumber: '56979822862',

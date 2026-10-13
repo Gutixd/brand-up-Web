@@ -2,7 +2,9 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
+import Reviews from '../Reviews.astro';
 import { useT, type Locale } from '../../i18n';
+import { siteStats } from '../../data/stats';
 import { SITE, SCHEMA_ID } from '../../data/site';
 
 import fotoDiego from '../../assets/team/diego.webp';
@@ -72,12 +74,9 @@ const tickerWords = es
   ? ['Estrategia', 'Diseño', 'Tecnología', 'Contenido', 'Resultados']
   : ['Strategy', 'Design', 'Technology', 'Content', 'Results'];
 
-const stats = [
-  { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
-  { val: '1000000', suffix: '+', prefix: '',  lbl: es ? 'Views generadas' : 'Views generated' },
-  { val: '300',     suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
-  { val: '100',     suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
-];
+// El valor real va en el HTML (ver data/stats.ts): antes los rastreadores
+// que no ejecutan JS leían "0" en cada contador.
+const stats = siteStats(locale);
 ---
 
 <Base locale={locale} title={t.meta.about.title} description={t.meta.about.desc}>
@@ -154,7 +153,7 @@ const stats = [
       {stats.map((s) => (
         <div class={`stat-u${s.val.length > 4 ? ' stat-u--big' : ''}`} data-reveal>
           <span class="stat-u__val">
-            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>0</span>
+            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>{s.val}{s.suffix}</span>
           </span>
           <span class="stat-u__lbl">{s.lbl}</span>
         </div>
@@ -199,6 +198,8 @@ const stats = [
       </ol>
     </div>
   </section>
+
+  <Reviews locale={locale} />
 
   <CtaBand locale={locale} />
 

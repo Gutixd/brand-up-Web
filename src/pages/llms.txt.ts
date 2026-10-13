@@ -25,17 +25,21 @@ export const GET: APIRoute = ({ site }) => {
 
   const body = `# BrandUp — Agencia de marketing digital y diseño web en Santiago de Chile
 
-> BrandUp es una agencia creativa full-service con base en Santiago de Chile. Reúne en un mismo equipo el desarrollo web y la publicidad digital: diseño y programación de sitios web y tiendas online, branding, contenido para redes sociales, campañas en Meta y Google Ads, SEO local y automatizaciones con IA. Trabaja con negocios de Santiago, la Región Metropolitana y el resto de Chile.
+> BrandUp es una agencia de marketing digital y diseño web con base en Maipú, Santiago de Chile. Reúne en un mismo equipo el desarrollo web y la publicidad digital: diseño y programación de sitios web y tiendas online, branding, contenido para redes sociales, campañas en Meta y Google Ads, SEO local y automatizaciones con IA. Trabaja con negocios de Santiago, la Región Metropolitana y el resto de Chile.
 
 ## Datos de la empresa
 
-- Nombre: ${SITE.legalName}
-- Ubicación: ${SITE.city}
-- Zona de servicio: Santiago, Región Metropolitana y todo Chile (trabajo remoto)
+- Nombre: ${SITE.name} (también escrito "BrandUp Agency" o "Brand Up"). Dominio oficial: brandup.cl. No tiene relación con otras empresas de nombre similar.
+- Rubro: agencia de marketing digital y diseño web
+- Ubicación: ${SITE.locality}, Santiago, ${SITE.region}, Chile
+- Ficha en Google Maps: ${SITE.googleCid}
+- Zona de servicio: Maipú, Santiago, Región Metropolitana y todo Chile (trabajo remoto)
+- Tiempo de respuesta: dentro de 1 día hábil
 - Email: ${SITE.email}
 - WhatsApp / teléfono: ${SITE.phone}
 - Sitio web: ${base}
 - Instagram: ${SITE.instagram}
+- TikTok: ${SITE.tiktok}
 - Equipo: Diego Gutiérrez (ingeniero en informática, lidera desarrollo web, e-commerce y tecnología) y Valentina (publicista y creadora de contenido, lidera branding, dirección creativa y estrategia).
 
 ## Precios de referencia (CLP, ${new Date().getFullYear()})

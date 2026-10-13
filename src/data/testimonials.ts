@@ -1,49 +1,36 @@
-// ⚠️ PLACEHOLDER TESTIMONIALS — ficticios pero naturales y verosímiles.
-// Reemplazar por testimonios reales de clientes cuando existan (con permiso).
+// Testimonios y reseñas REALES de clientes.
+//
+// Este archivo estuvo lleno de testimonios ficticios de relleno; se eliminaron
+// porque publicar opiniones inventadas engaña al visitante y va contra las
+// directrices de Google. Mientras la lista esté vacía, el sitio no muestra
+// ninguna sección de testimonios (ver components/Reviews.astro).
+//
+// CÓMO AGREGAR UNO
+// - Debe ser de un cliente real, con su autorización para publicarlo.
+// - `source: 'google'`  → copiar el texto tal cual desde la reseña de Google
+//   y pegar en `url` el enlace a esa reseña.
+// - `source: 'directo'` → testimonio entregado por WhatsApp o correo; guardar
+//   el respaldo y dejar `permission: true` solo si autorizó publicarlo.
+// - No editar el texto para que "suene mejor": se publica como lo escribió.
 import type { L } from './services';
 
 export interface Testimonial {
   text: L;
   name: string;
+  /** Cargo y empresa, por ejemplo "Dueño — El Chacha Pollo". */
   role: L;
-  initials: string;
+  source: 'google' | 'directo';
+  /** Enlace a la reseña pública (obligatorio si source es 'google'). */
+  url?: string;
+  /** Estrellas de la reseña de Google, de 1 a 5. */
+  rating?: number;
+  /** Fecha en formato AAAA-MM-DD. */
+  date?: string;
+  /** El cliente autorizó publicar su testimonio. */
+  permission: boolean;
 }
 
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    text: {
-      es: 'Partimos con puros pedidos de conocidos. Hoy la mayoría de la gente llega por Instagram: uno de los reels que grabaron pasó las 260 mil vistas y esa semana se notó al tiro en el local.',
-      en: 'We started with orders from friends only. Today most people come through Instagram: one of the reels they filmed passed 260K views and we felt it at the restaurant that same week.',
-    },
-    name: 'Cristóbal A.',
-    role: { es: 'Dueño — Restaurante en Maipú', en: 'Owner — Restaurant in Maipú' },
-    initials: 'CA',
-  },
-  {
-    text: {
-      es: 'Yo no entiendo nada de páginas web y nunca me hicieron sentir eso. Me explicaron todo en simple, cumplieron las fechas que prometieron y la tienda quedó mejor de lo que yo había pedido.',
-      en: "I know nothing about websites and they never made me feel it. They explained everything in plain words, met every deadline and the store turned out better than what I asked for.",
-    },
-    name: 'Martina S.',
-    role: { es: 'Fundadora — Tienda online', en: 'Founder — Online store' },
-    initials: 'MS',
-  },
-  {
-    text: {
-      es: 'Fuimos claros: necesitábamos que la web generara cotizaciones, no que ganara premios de diseño. Entendieron eso desde la primera reunión y los leads subieron desde el primer mes.',
-      en: 'We were clear: we needed the website to generate quotes, not win design awards. They got that from the first meeting and leads went up from month one.',
-    },
-    name: 'Roberto G.',
-    role: { es: 'Gerente Comercial — Empresa de logística', en: 'Sales Manager — Logistics company' },
-    initials: 'RG',
-  },
-  {
-    text: {
-      es: 'Lo que más valoro es que todo se mide. Es la primera vez que trabajo con una agencia y sé exactamente qué estoy pagando y qué está dando resultado. Y responden el WhatsApp, que no es poco.',
-      en: "What I value most is that everything gets measured. It's the first agency where I know exactly what I'm paying for and what's working. And they answer WhatsApp, which is not a small thing.",
-    },
-    name: 'Fernanda M.',
-    role: { es: 'Directora — Clínica estética, Las Condes', en: 'Director — Aesthetic clinic, Las Condes' },
-    initials: 'FM',
-  },
-];
+export const TESTIMONIALS: Testimonial[] = [];
+
+/** Solo los que se pueden publicar. */
+export const PUBLISHED_TESTIMONIALS = TESTIMONIALS.filter((t) => t.permission);

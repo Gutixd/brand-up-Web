@@ -52,18 +52,20 @@ const breadcrumbLd = {
 
 // Chips de confianza del hero
 const heroChips = es
-  ? ['Santiago de Chile', 'Respuesta en 24 horas', 'Propuesta con precio cerrado']
-  : ['Santiago, Chile', 'Reply within 24 hours', 'Fixed-price proposal'];
+  ? ['Maipú, Santiago de Chile', 'Respuesta en 1 día hábil', 'Propuesta con precio cerrado']
+  : ['Maipú, Santiago, Chile', 'Reply within one business day', 'Fixed-price proposal'];
 
 // Prueba de resultado por servicio (casos reales del portafolio)
 const proof: Record<string, { es: string; en: string }> = {
-  'diseno-web': { es: '+120% leads B2B — JD Cargo', en: '+120% B2B leads — JD Cargo' },
-  'ecommerce': { es: '+450% ticket promedio — Aracnida', en: '+450% AOV — Aracnida' },
+  // Solo hechos comprobables en el portafolio: sin porcentajes de resultado
+  // que no tengan una medición detrás.
+  'diseno-web': { es: 'Sitio B2B para JD Cargo Logistics', en: 'B2B site for JD Cargo Logistics' },
+  'ecommerce': { es: 'Tiendas con pago online y panel propio', en: 'Stores with online payment and own panel' },
   'branding': { es: 'Sistemas gráficos completos', en: 'Complete graphic systems' },
   'contenido-reels': { es: '+1M de views generadas', en: '+1M views generated' },
   'publicidad-digital': { es: 'Campañas geolocalizadas en RM', en: 'Geotargeted campaigns' },
-  'automatizaciones-ia': { es: 'Carritos recuperados en automático', en: 'Automated cart recovery' },
-  'marketing-growth': { es: '+300% engagement promedio', en: '+300% average engagement' },
+  'automatizaciones-ia': { es: 'Respuestas y avisos automáticos', en: 'Automatic replies and alerts' },
+  'marketing-growth': { es: 'Web, contenido y anuncios en un equipo', en: 'Web, content and ads in one team' },
 };
 
 // Enlaces internos al blog (interlinking SEO — solo ES, el blog es en español)

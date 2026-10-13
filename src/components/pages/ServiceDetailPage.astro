@@ -1,0 +1,265 @@
+---
+// Página de detalle de un servicio (ES y EN comparten esta plantilla).
+// El contenido en profundidad vive en data/serviceContent.ts.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ServiceSchema from '../seo/ServiceSchema.astro';
+import type { Service } from '../../data/services';
+import { SERVICE_SEO } from '../../data/serviceSeo';
+import { SERVICE_CONTENT } from '../../data/serviceContent';
+import { PROJECTS } from '../../data/projects';
+import { SITE, wa, WA_MSG } from '../../data/site';
+import { localePath, pick, type Locale } from '../../i18n';
+
+interface Props { locale: Locale; service: Service; }
+const { locale, service } = Astro.props;
+const isEs = locale === 'es';
+const lp = (p: string) => localePath(locale, p);
+const seo = SERVICE_SEO[service.slug];
+const content = SERVICE_CONTENT[service.slug];
+const title = pick(service.title, locale);
+
+const related = PROJECTS.filter((p) => p.serviceSlugs.includes(service.slug));
+const shown = related.slice(0, 6);
+
+const L = isEs
+  ? {
+      back: 'Servicios', includes: 'Qué incluye', quote: `Cotizar ${title}`,
+      benefits: 'Beneficios para tu negocio', process: 'Cómo trabajamos',
+      tools: 'Tecnologías y herramientas', work: 'Proyectos reales', workTitle: `Trabajos de ${title}`,
+      all: `Ver los ${related.length} proyectos`, faq: 'Preguntas frecuentes', faqTitle: `Dudas sobre ${title.toLowerCase()}`,
+      ctaTitle: '¿Conversamos tu proyecto?',
+      ctaSub: 'Cuéntanos qué necesitas y te enviamos una propuesta con precio cerrado. Estamos en Maipú y atendemos todo Santiago y Chile.',
+      ctaBtn: 'Cotizar ahora', ctaWa: 'Escribir por WhatsApp', view: 'Ver caso',
+    }
+  : {
+      back: 'Services', includes: 'What is included', quote: `Get a quote for ${title}`,
+      benefits: 'Benefits for your business', process: 'How we work',
+      tools: 'Technologies and tools', work: 'Real projects', workTitle: `${title} work`,
+      all: `See all ${related.length} projects`, faq: 'Frequently asked questions', faqTitle: `Questions about ${title.toLowerCase()}`,
+      ctaTitle: 'Shall we talk about your project?',
+      ctaSub: 'Tell us what you need and we will send a fixed-price proposal. We are based in Maipú and serve all of Santiago and Chile.',
+      ctaBtn: 'Get a quote', ctaWa: 'Message on WhatsApp', view: 'View case',
+    };
+
+// Las preguntas se muestran en la página, así que se declaran como FAQPage.
+const faqLd = content && {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: content.faq.map((f) => ({
+    '@type': 'Question',
+    name: pick(f.q, locale),
+    acceptedAnswer: { '@type': 'Answer', text: pick(f.a, locale) },
+  })),
+};
+---
+
+<Base locale={locale} title={seo ? pick(seo.title, locale) : `${title} — ${SITE.name}`} description={seo ? pick(seo.desc, locale) : pick(service.desc, locale)}>
+  <ServiceSchema locale={locale} service={service} />
+  {faqLd && <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
+
+  <section class="svc-hero">
+    <div class="svc-wrap svc-hero__inner">
+      <a href={lp('/servicios')} class="svc-hero__back">&#8592; {L.back}</a>
+      <span class="svc-kicker">{pick(service.tag, locale)}</span>
+      <h1 class="svc-hero__title display-tight">{title}</h1>
+      <p class="svc-hero__headline">{pick(service.headline, locale)}</p>
+    </div>
+  </section>
+
+  <section class="svc-body">
+    <div class="svc-wrap svc-body__inner">
+      <div>
+        <p class="svc-body__desc">{pick(service.desc, locale)}</p>
+        {content?.intro.map((p) => <p class="svc-body__p">{pick(p, locale)}</p>)}
+        <a href={lp('/cotizar')} class="svc-btn">{L.quote} &#8594;</a>
+      </div>
+      <div>
+        <h2 class="svc-label">{L.includes}</h2>
+        <ul class="svc-items">
+          {pick(service.items, locale).map((item) => (
+            <li class="svc-item"><span class="svc-item__dot" aria-hidden="true">&#8594;</span>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {content && (
+    <section class="svc-block">
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.benefits}</h2>
+        <div class="svc-grid">
+          {content.benefits.map((b) => (
+            <article class="svc-card">
+              <h3 class="svc-card__t">{pick(b.t, locale)}</h3>
+              <p class="svc-card__d">{pick(b.d, locale)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {content && (
+    <section class="svc-block svc-block--dark">
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.process}</h2>
+        <ol class="svc-steps">
+          {content.process.map((s, i) => (
+            <li class="svc-step">
+              <span class="svc-step__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="svc-step__t">{pick(s.t, locale)}</h3>
+              <p class="svc-step__d">{pick(s.d, locale)}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  {content?.tools && (
+    <section class="svc-block">
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.tools}</h2>
+        {content.toolsNote && <p class="svc-note">{pick(content.toolsNote, locale)}</p>}
+        <ul class="svc-chips">
+          {content.tools.map((t) => <li class="svc-chip">{t}</li>)}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {shown.length > 0 && (
+    <section class="svc-block svc-block--dark">
+      <div class="svc-wrap">
+        <p class="svc-kicker">{L.work}</p>
+        <h2 class="svc-h2 display-tight">{L.workTitle}</h2>
+        <div class="svc-work">
+          {shown.map((p) => (
+            <a href={lp(`/trabajos/${p.slug}`)} class="svc-work__card" aria-label={`${L.view}: ${p.client}`}>
+              <div class="svc-work__media" style={`background:${p.gradient}`}>
+                {p.cover ? (
+                  <Image src={p.cover} alt={p.client} widths={[400, 700]} sizes="(max-width: 700px) 92vw, 340px" loading="lazy" />
+                ) : p.logo ? (
+                  <Image src={p.logo} alt={p.client} class="svc-work__logo" widths={[240]} sizes="160px" loading="lazy" />
+                ) : null}
+              </div>
+              <h3 class="svc-work__t">{p.client}</h3>
+              <p class="svc-work__d">{pick(p.sector, locale)}</p>
+            </a>
+          ))}
+        </div>
+        {related.length > shown.length && (
+          <a href={lp(`/servicios/${service.slug}/portafolio`)} class="svc-btn svc-btn--ghost">{L.all} &#8599;</a>
+        )}
+      </div>
+    </section>
+  )}
+
+  {content && (
+    <section class="svc-block">
+      <div class="svc-wrap">
+        <p class="svc-kicker">{L.faq}</p>
+        <h2 class="svc-h2 display-tight">{L.faqTitle}</h2>
+        <div class="svc-faq">
+          {content.faq.map((f) => (
+            <details class="svc-faq__item">
+              <summary class="svc-faq__q">{pick(f.q, locale)}</summary>
+              <p class="svc-faq__a">{pick(f.a, locale)}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="svc-cta">
+    <div class="svc-wrap">
+      <h2 class="svc-cta__title display-tight">{L.ctaTitle}</h2>
+      <p class="svc-cta__sub">{L.ctaSub}</p>
+      <div class="svc-cta__row">
+        <a href={lp('/cotizar')} class="svc-btn">{L.ctaBtn} &#8594;</a>
+        <a href={wa(WA_MSG[locale].quote)} class="svc-btn svc-btn--line" target="_blank" rel="noopener">{L.ctaWa}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+.svc-wrap { max-width: 1100px; margin-inline: auto; padding-inline: 24px; }
+@media (min-width: 768px) { .svc-wrap { padding-inline: 48px; } }
+.svc-kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #f05e23; }
+.svc-label { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-gray); margin-bottom: 28px; }
+.svc-h2 { font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 3.2rem); line-height: 1; margin: 10px 0 36px; }
+.svc-note { color: var(--color-gray); max-width: 60ch; margin: -18px 0 28px; line-height: 1.6; }
+
+.svc-hero { background: #0d0d0d; color: #f8f8f8; padding-top: 120px; padding-bottom: 80px; }
+.svc-hero__inner { display: flex; flex-direction: column; gap: 20px; }
+.svc-hero__back { font-size: 0.85rem; color: rgba(248,248,248,0.55); transition: color 0.2s; width: fit-content; min-height: 32px; }
+.svc-hero__back:hover { color: #f8f8f8; }
+.svc-hero__title { font-family: var(--font-display); font-size: clamp(2.8rem, 7vw, 6rem); line-height: 0.94; color: #f8f8f8; }
+.svc-hero__headline { font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.5; color: rgba(248,248,248,0.62); max-width: 58ch; margin-top: 8px; }
+
+.svc-body { background: var(--color-ink); border-top: 1px solid var(--color-line); }
+.svc-body__inner { padding-block: 72px 88px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; }
+@media (min-width: 768px) { .svc-body__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding-block: 96px 112px; gap: 80px; } }
+.svc-body__desc { font-size: clamp(1.1rem, 1.9vw, 1.28rem); line-height: 1.6; color: var(--color-paper); }
+.svc-body__p { margin-top: 20px; font-size: 1.02rem; line-height: 1.75; color: var(--color-gray); }
+.svc-items { list-style: none; display: flex; flex-direction: column; }
+.svc-item { display: flex; align-items: baseline; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--color-line); font-size: clamp(0.95rem, 1.5vw, 1.05rem); line-height: 1.5; color: var(--color-paper); }
+.svc-item:first-child { border-top: 1px solid var(--color-line); }
+.svc-item__dot { color: #f05e23; font-size: 0.8rem; flex-shrink: 0; }
+
+.svc-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 36px; min-height: 48px; background: #0d0d0d; color: #f8f8f8; font-size: 0.95rem; font-weight: 600; padding: 0 32px; border-radius: 100px; border: 1px solid #0d0d0d; transition: background 0.3s, border-color 0.3s, gap 0.3s; }
+.svc-btn:hover { background: #f05e23; border-color: #f05e23; gap: 14px; }
+.svc-btn--ghost { background: transparent; border-color: rgba(248,248,248,0.2); }
+.svc-btn--line { background: transparent; color: var(--color-paper); border-color: currentColor; }
+.svc-btn--line:hover { color: #f8f8f8; }
+
+.svc-block { background: var(--color-ink); border-top: 1px solid var(--color-line); padding-block: 72px; }
+@media (min-width: 768px) { .svc-block { padding-block: 96px; } }
+.svc-block--dark { background: #0d0d0d; color: #f8f8f8; border-top-color: rgba(248,248,248,0.06); }
+
+.svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.svc-card { border: 1px solid var(--color-line); border-radius: 18px; padding: 26px 24px; }
+.svc-card__t { font-size: 1.08rem; font-weight: 700; line-height: 1.3; color: var(--color-paper); }
+.svc-card__d { margin-top: 10px; font-size: 0.96rem; line-height: 1.65; color: var(--color-gray); }
+
+.svc-steps { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px 24px; }
+.svc-step { border-top: 1px solid rgba(248,248,248,0.16); padding-top: 18px; }
+.svc-step__n { font-family: var(--font-poster); font-size: 1.5rem; color: #f05e23; }
+.svc-step__t { margin-top: 8px; font-size: 1.08rem; font-weight: 700; }
+.svc-step__d { margin-top: 8px; font-size: 0.96rem; line-height: 1.65; color: rgba(248,248,248,0.66); }
+
+.svc-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+.svc-chip { border: 1px solid var(--color-line); border-radius: 100px; padding: 9px 18px; font-size: 0.9rem; font-weight: 600; color: var(--color-paper); }
+
+.svc-work { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 20px; }
+.svc-work__card { display: block; color: inherit; }
+.svc-work__media { aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.svc-work__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+.svc-work__media img.svc-work__logo { width: 55%; height: auto; object-fit: contain; }
+.svc-work__card:hover .svc-work__media img { transform: scale(1.04); }
+.svc-work__t { margin-top: 14px; font-size: 1.05rem; font-weight: 700; transition: color 0.25s; }
+.svc-work__card:hover .svc-work__t { color: #f05e23; }
+.svc-work__d { margin-top: 4px; font-size: 0.86rem; color: rgba(248,248,248,0.6); }
+
+.svc-faq { border-top: 1px solid var(--color-line); max-width: 820px; }
+.svc-faq__item { border-bottom: 1px solid var(--color-line); }
+.svc-faq__q { cursor: pointer; list-style: none; padding: 22px 36px 22px 0; position: relative; font-size: clamp(1rem, 1.7vw, 1.14rem); font-weight: 600; line-height: 1.4; color: var(--color-paper); }
+.svc-faq__q::-webkit-details-marker { display: none; }
+.svc-faq__q::after { content: '+'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; font-weight: 400; color: #f05e23; transition: transform 0.25s; }
+.svc-faq__item[open] .svc-faq__q::after { transform: translateY(-50%) rotate(45deg); }
+.svc-faq__a { padding: 0 0 24px; font-size: 1rem; line-height: 1.75; color: var(--color-gray); max-width: 68ch; }
+
+.svc-cta { background: #f0ede8; border-top: 1px solid var(--color-line); padding-block: 80px 96px; }
+.svc-cta__title { font-family: var(--font-display); font-size: clamp(2.2rem, 5.5vw, 4.4rem); line-height: 0.98; color: var(--color-paper); }
+.svc-cta__sub { margin-top: 18px; font-size: 1.05rem; line-height: 1.65; color: var(--color-gray); max-width: 52ch; }
+.svc-cta__row { display: flex; flex-wrap: wrap; gap: 12px; }
+.svc-cta .svc-btn { margin-top: 28px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-work__media img, .svc-btn, .svc-faq__q::after { transition: none; }
+}
+</style>

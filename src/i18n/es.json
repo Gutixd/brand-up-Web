@@ -12,7 +12,7 @@
   },
   "meta": {
     "home": {
-      "title": "BrandUp — Agencia de Marketing Digital y Diseño Web en Santiago de Chile",
+      "title": "BrandUp | Agencia de Marketing Digital y Diseño Web en Santiago",
       "desc": "Agencia de marketing digital en Santiago de Chile: diseño web, e-commerce, branding, reels, publicidad digital y growth. Marcas reales, resultados medibles. Cotiza gratis por WhatsApp."
     },
     "services": {
@@ -24,8 +24,8 @@
       "desc": "Proyectos reales de BrandUp en Santiago: sitios web que convierten, e-commerce, branding y campañas con más de 1 millón de views generadas."
     },
     "industries": {
-      "title": "Industrias — BrandUp Agency",
-      "desc": "Experiencia en gastronomía, e-commerce, B2B, educación, salud e instituciones."
+      "title": "Industrias que atendemos en Santiago y Chile | BrandUp",
+      "desc": "BrandUp trabaja con gastronomía, e-commerce, empresas B2B, educación, salud, medios e instituciones. Revisa proyectos reales de cada rubro en Santiago y todo Chile."
     },
     "about": {
       "title": "Nosotros — Agencia creativa en Santiago de Chile | BrandUp",
@@ -36,19 +36,19 @@
       "desc": "Hablemos de tu proyecto: WhatsApp +56 9 7982 2862 o formulario. Agencia de marketing digital y diseño web en Santiago de Chile."
     },
     "quote": {
-      "title": "Cotiza tu proyecto — BrandUp Agency",
+      "title": "Cotiza tu página web o campaña en Santiago | BrandUp",
       "desc": "Cotiza tu página web, tienda online, contenido o publicidad con BrandUp. Cuéntanos qué necesitas y te enviamos una propuesta a medida, sin compromiso."
     },
     "terms": {
-      "title": "Términos y Condiciones — BrandUp Agency",
+      "title": "Términos y Condiciones | BrandUp",
       "desc": "Términos y condiciones que rigen la contratación y el uso de los servicios de BrandUp, agencia de marketing digital y diseño web en Santiago de Chile."
     },
     "privacy": {
-      "title": "Política de Privacidad — BrandUp Agency",
+      "title": "Política de Privacidad | BrandUp",
       "desc": "Cómo BrandUp recopila, usa y protege los datos personales que entregas en este sitio y en nuestros formularios de contacto."
     },
     "faq": {
-      "title": "Preguntas Frecuentes — Agencia de Marketing Digital en Santiago | BrandUp",
+      "title": "Preguntas frecuentes: precios, plazos y servicios | BrandUp",
       "desc": "Resolvemos las dudas más comunes sobre precios, plazos, servicios y cómo elegir agencia de marketing digital y diseño web en Santiago de Chile."
     },
     "product": {
@@ -112,11 +112,11 @@
     "faq": [
       {
         "q": "¿Cuánto cuesta un sitio web?",
-        "a": "Depende del alcance: una landing page parte aproximadamente desde $120.000 CLP y un sitio corporativo o e-commerce se cotiza a medida según funcionalidades. Siempre te entregamos un precio cerrado antes de empezar."
+        "a": "Depende del alcance: una landing page va de $150.000 a $400.000 CLP, un sitio corporativo de $350.000 a $900.000 y un e-commerce de $600.000 a $2.500.000. Siempre te entregamos un precio cerrado antes de empezar."
       },
       {
         "q": "¿Cuánto se demora un proyecto?",
-        "a": "Una landing page toma entre 1 y 2 semanas; un sitio corporativo, entre 3 y 5 semanas; un e-commerce, entre 4 y 8 semanas. Te damos un calendario claro al iniciar."
+        "a": "Una landing page toma entre 1 y 2 semanas; un sitio corporativo, entre 3 y 6 semanas; un e-commerce, entre 6 y 12 semanas. Te damos un calendario claro al iniciar."
       },
       {
         "q": "¿Incluyen soporte y mantención?",
@@ -217,7 +217,7 @@
   "contact": {
     "kicker": "Contacto",
     "title": "Hablemos de tu proyecto",
-    "intro": "Cuéntanos qué necesitas y te respondemos dentro del día hábil.",
+    "intro": "Cuéntanos qué necesitas y te respondemos dentro de 1 día hábil.",
     "whatsapp": "Escríbenos por WhatsApp",
     "or": "o completa el formulario",
     "info": "Información de contacto"
@@ -228,7 +228,7 @@
     "intro": "Cuéntanos qué necesitas y te respondemos con precio y plazo concretos. Sin costo, sin compromiso y sin discursos de venta.",
     "steps": [
       "Completas el formulario — te toma 2 minutos",
-      "Te escribimos dentro del día hábil siguiente",
+      "Te escribimos dentro de 1 día hábil",
       "Recibes una propuesta con precio y plazo cerrado"
     ],
     "trustLabel": "Marcas que ya trabajan con nosotros",
@@ -240,7 +240,7 @@
       },
       {
         "q": "¿En cuánto tiempo me responden?",
-        "a": "Dentro del día hábil siguiente. Si escribes un fin de semana o festivo, te respondemos el primer día hábil."
+        "a": "Dentro de 1 día hábil. Si escribes un fin de semana o festivo, te respondemos el primer día hábil."
       },
       {
         "q": "Todavía no tengo claro qué necesito, ¿igual escribo?",
@@ -281,13 +281,13 @@
     "message": "Cuéntanos sobre tu proyecto",
     "submit": "Enviar mensaje",
     "sending": "Enviando…",
-    "success": "¡Listo! Recibimos tu mensaje y te respondemos dentro del día hábil.",
+    "success": "¡Listo! Recibimos tu mensaje y te respondemos dentro de 1 día hábil.",
     "error": "No se pudo enviar. Escríbenos directo a brandup.092@gmail.com o al +56 9 7982 2862.",
     "required": "Este campo es obligatorio",
     "invalidEmail": "Ingresa un email válido",
     "phone": "Teléfono / WhatsApp (opcional)",
     "serviceChips": "¿Qué necesitas?",
-    "note": "Respuesta en menos de 24 horas · Sin spam, sin compromiso"
+    "note": "Respuesta dentro de 1 día hábil · Sin spam, sin compromiso"
   },
   "footer": {
     "tagline": "Agencia creativa full service en Santiago de Chile.",

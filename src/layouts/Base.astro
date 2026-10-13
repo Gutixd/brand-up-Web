@@ -36,29 +36,33 @@ const enHref = new URL(locale === 'en' ? pathname : alternate, Astro.site).href;
 const organization = {
   '@type': ['Organization', 'LocalBusiness'],
   '@id': SCHEMA_ID.organization,
-  name: SITE.legalName,
-  alternateName: 'Brand Up',
+  name: SITE.name,
+  legalName: SITE.legalName,
+  alternateName: ['BrandUp Agency', 'Brand Up'],
   description:
     locale === 'es'
-      ? 'Agencia de marketing digital y diseño web en Santiago de Chile: e-commerce, branding, contenido para redes, publicidad digital y automatizaciones con IA.'
-      : 'Digital marketing and web design agency in Santiago, Chile: e-commerce, branding, social content, digital ads and AI automations.',
+      ? 'BrandUp es una agencia de marketing digital y diseño web con base en Maipú, Santiago de Chile: sitios web, e-commerce, branding, contenido para redes, publicidad digital y automatizaciones con IA.'
+      : 'BrandUp is a digital marketing and web design agency based in Maipú, Santiago, Chile: websites, e-commerce, branding, social content, digital ads and AI automations.',
   url: SITE.domain,
   email: SITE.email,
   telephone: SITE.phone,
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Santiago',
-    addressRegion: 'Región Metropolitana',
+    addressLocality: SITE.locality,
+    addressRegion: SITE.region,
+    postalCode: SITE.postalCode,
     addressCountry: 'CL',
   },
-  geo: { '@type': 'GeoCoordinates', latitude: -33.4489, longitude: -70.6693 },
-  areaServed: ['Santiago de Chile', 'Región Metropolitana', 'Chile'],
+  geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng },
+  hasMap: SITE.googleCid,
+  areaServed: ['Maipú', 'Santiago de Chile', 'Región Metropolitana', 'Chile'],
   priceRange: '$$',
   knowsAbout: [
     'Diseño web', 'E-commerce', 'Branding', 'Marketing digital',
     'Publicidad digital', 'Contenido para redes sociales', 'SEO',
   ],
-  sameAs: [SITE.instagram, SITE.tiktok],
+  // Perfiles oficiales: distinguen a BrandUp de otras empresas de nombre parecido.
+  sameAs: [SITE.instagram, SITE.tiktok, SITE.googleCid],
   logo: {
     '@type': 'ImageObject',
     url: `${SITE.domain}/favicon-512.png`,
@@ -73,7 +77,7 @@ const website = {
   '@type': 'WebSite',
   '@id': SCHEMA_ID.website,
   url: SITE.domain,
-  name: SITE.legalName,
+  name: SITE.name,
   publisher: { '@id': SCHEMA_ID.organization },
   inLanguage: locale === 'es' ? 'es-CL' : 'en',
 };
@@ -137,13 +141,14 @@ const nav = [
     <meta name="generator" content={Astro.generator} />
     <!-- SEO local -->
     <meta name="geo.region" content="CL-RM" />
-    <meta name="geo.placename" content="Santiago de Chile" />
+    <meta name="geo.placename" content="Maipú, Santiago de Chile" />
+    <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
     {SITE.googleSiteVerification && (
       <meta name="google-site-verification" content={SITE.googleSiteVerification} />
     )}
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="BrandUp Agency" />
+    <meta property="og:site_name" content="BrandUp" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

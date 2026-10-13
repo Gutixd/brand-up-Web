@@ -1,0 +1,87 @@
+---
+// Confianza: testimonios reales + acceso a la ficha de Google de BrandUp.
+//
+// - Los testimonios salen de data/testimonials.ts y SOLO se muestran si hay
+//   alguno real y autorizado. Con la lista vacía, el bloque muestra únicamente
+//   la ficha de Google y la invitación a dejar una reseña.
+// - No se declara `aggregateRating` ni `Review` en datos estructurados:
+//   Google no admite reseñas propias de una empresa en su propio sitio.
+import { SITE } from '../data/site';
+import { PUBLISHED_TESTIMONIALS } from '../data/testimonials';
+import { pick, type Locale } from '../i18n';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const es = locale === 'es';
+const items = PUBLISHED_TESTIMONIALS;
+---
+
+<section class="reviews">
+  <div class="reviews__inner">
+    <p class="reviews__kicker">{es ? 'Confianza' : 'Trust'}</p>
+    <h2 class="reviews__title display-tight">
+      {items.length > 0
+        ? (es ? 'Lo que dicen nuestros clientes' : 'What our clients say')
+        : (es ? 'BrandUp en Google' : 'BrandUp on Google')}
+    </h2>
+
+    {items.length > 0 && (
+      <div class="reviews__grid">
+        {items.map((t) => (
+          <figure class="reviews__card">
+            {t.rating && (
+              <p class="reviews__stars" aria-label={`${t.rating} / 5`}>{'★'.repeat(t.rating)}</p>
+            )}
+            <blockquote class="reviews__text">{pick(t.text, locale)}</blockquote>
+            <figcaption class="reviews__who">
+              <strong>{t.name}</strong>
+              <span>{pick(t.role, locale)}</span>
+              {t.source === 'google' && t.url && (
+                <a href={t.url} target="_blank" rel="noopener" class="reviews__src">
+                  {es ? 'Ver reseña en Google' : 'See review on Google'} &#8599;
+                </a>
+              )}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+
+    <div class="reviews__google">
+      <p class="reviews__lead">
+        {es
+          ? `BrandUp es una agencia de marketing digital y diseño web ubicada en ${SITE.locality}, Santiago. Puedes revisar nuestra ficha oficial en Google Maps y, si trabajaste con nosotros, dejar tu opinión ahí.`
+          : `BrandUp is a digital marketing and web design agency located in ${SITE.locality}, Santiago. You can check our official Google Maps listing and, if you worked with us, leave your review there.`}
+      </p>
+      <div class="reviews__row">
+        <a href={SITE.googleMaps} target="_blank" rel="noopener" class="reviews__btn">
+          {es ? 'Ver ficha en Google Maps' : 'See us on Google Maps'} &#8599;
+        </a>
+        <a href={SITE.instagram} target="_blank" rel="noopener" class="reviews__btn reviews__btn--line">Instagram &#8599;</a>
+        <a href={SITE.tiktok} target="_blank" rel="noopener" class="reviews__btn reviews__btn--line">TikTok &#8599;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.reviews { background: var(--color-ink); border-top: 1px solid var(--color-line); padding-block: 72px; }
+@media (min-width: 768px) { .reviews { padding-block: 96px; } }
+.reviews__inner { max-width: 1100px; margin-inline: auto; padding-inline: 24px; }
+@media (min-width: 768px) { .reviews__inner { padding-inline: 48px; } }
+.reviews__kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent); }
+.reviews__title { font-family: var(--font-display); font-size: clamp(1.9rem, 4.2vw, 3.2rem); line-height: 1; margin: 10px 0 28px; color: var(--color-paper); }
+.reviews__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.reviews__card { border: 1px solid var(--color-line); border-radius: 18px; padding: 26px 24px; }
+.reviews__stars { color: var(--color-accent); letter-spacing: 2px; margin-bottom: 10px; }
+.reviews__text { font-size: 1rem; line-height: 1.7; color: var(--color-paper); }
+.reviews__who { margin-top: 16px; display: flex; flex-direction: column; gap: 2px; font-size: 0.88rem; color: var(--color-gray); }
+.reviews__who strong { color: var(--color-paper); }
+.reviews__src { margin-top: 6px; color: var(--color-accent); font-weight: 600; }
+.reviews__lead { font-size: 1.05rem; line-height: 1.7; color: var(--color-gray); max-width: 62ch; }
+.reviews__row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.reviews__btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 26px; border-radius: 100px; background: #0d0d0d; color: #f8f8f8; border: 1px solid #0d0d0d; font-size: 0.93rem; font-weight: 600; transition: background 0.3s, border-color 0.3s; }
+.reviews__btn:hover { background: var(--color-accent); border-color: var(--color-accent); }
+.reviews__btn--line { background: transparent; color: var(--color-paper); border-color: var(--color-line); }
+.reviews__btn--line:hover { color: #f8f8f8; }
+</style>

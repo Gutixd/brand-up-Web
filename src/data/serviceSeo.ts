@@ -78,7 +78,7 @@ export const SERVICE_SEO: Record<string, { title: L; desc: L; serviceType: L }> 
   'marketing-growth': {
     title: {
       es: 'Marketing Digital en Santiago de Chile para Pymes | BrandUp',
-      en: 'Digital Marketing in Santiago, Chile for Small Businesses | BrandUp',
+      en: 'Digital Marketing for Small Businesses in Santiago | BrandUp',
     },
     desc: {
       es: 'Estrategia de marketing digital para pymes de Santiago: web, contenido, publicidad y medición trabajando juntos, con un solo equipo.',

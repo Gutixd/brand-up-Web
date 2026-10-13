@@ -165,13 +165,14 @@ const ALL_PROJECTS: Project[] = [
       en: 'We designed a clear, conversion-oriented architecture: precisely explained services, social proof and simple quote forms. All built to load fast and rank.',
     },
     outcome: {
-      es: 'El sitio se transformó en el primer punto de contacto comercial y disparó la llegada de leads B2B calificados.',
-      en: 'The site became the first commercial touchpoint and triggered a surge of qualified B2B leads.',
+      es: 'El sitio funciona como primer punto de contacto comercial de la empresa: explica sus servicios de carga internacional y permite solicitar una cotización desde un formulario.',
+      en: 'The site works as the company’s first commercial point of contact: it explains its international freight services and lets visitors request a quote through a form.',
     },
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
     metrics: [
-      { val: '+120%', lbl: { es: 'Leads B2B', en: 'B2B leads' } },
-      { val: '100', lbl: { es: 'Performance score', en: 'Performance score' } },
-      { val: '<1s', lbl: { es: 'Tiempo de carga', en: 'Load time' } },
+      { val: 'Sitio B2B', lbl: { es: 'Agenciamiento de carga internacional', en: 'International freight forwarding' } },
+      { val: 'Cotización', lbl: { es: 'Formulario en el sitio', en: 'Quote form on the site' } },
     ],
     link: 'https://jdcargologistics.cl',
     featured: true,
@@ -206,11 +207,14 @@ const ALL_PROJECTS: Project[] = [
       en: 'We performed a full hosting migration, DNS record correction and functionality verification across all domains.',
     },
     outcome: {
-      es: 'Sitio funcionando correctamente con DNS estabilizado y sin pérdida de tráfico.',
-      en: 'Site working correctly with stabilized DNS and no traffic loss.',
+      es: 'Sitio funcionando correctamente, con el hosting migrado y los registros DNS corregidos.',
+      en: 'Site working correctly, with hosting migrated and DNS records corrected.',
     },
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
     metrics: [
-      { val: '100%', lbl: { es: 'Uptime restaurado', en: 'Uptime restored' } },
+      { val: 'Hosting', lbl: { es: 'Sitio migrado', en: 'Site migrated' } },
+      { val: 'DNS', lbl: { es: 'Registros corregidos', en: 'Records corrected' } },
     ],
     featured: false,
   },
@@ -247,8 +251,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Sitio estable, accesible y sin interrupciones para los fanáticos del muscle car en Chile.',
       en: 'Stable, accessible site with no interruptions for muscle car fans in Chile.',
     },
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
     metrics: [
-      { val: '✓', lbl: { es: 'DNS corregido', en: 'DNS fixed' } },
+      { val: 'Hosting', lbl: { es: 'Sitio migrado', en: 'Site migrated' } },
+      { val: 'DNS', lbl: { es: 'Registros corregidos', en: 'Records corrected' } },
     ],
     featured: false,
   },
@@ -285,8 +292,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Presencia digital profesional que permite a AseoCool competir con empresas de mayor tamaño en el mercado corporativo.',
       en: 'Professional digital presence that lets AseoCool compete with larger companies in the corporate market.',
     },
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
     metrics: [
-      { val: 'Full', lbl: { es: 'Proyecto completo', en: 'Full project' } },
+      { val: 'Sitio web', lbl: { es: 'Diseño y desarrollo', en: 'Design and development' } },
+      { val: 'Identidad', lbl: { es: 'Línea visual de la marca', en: 'Brand visual line' } },
     ],
     link: 'https://aseocool.cl',
     featured: true,
@@ -366,10 +376,14 @@ const ALL_PROJECTS: Project[] = [
       en: 'We developed a flexible graphic system for posters, social assets and event material, with careful hierarchy, readability and consistency.',
     },
     outcome: {
-      es: 'Una campaña clara y coherente que elevó la convocatoria y la presencia digital de los eventos.',
-      en: 'A clear, coherent campaign that boosted attendance and the events’ digital presence.',
+      es: 'Una campaña clara y coherente, con piezas impresas y digitales para los eventos del Templo.',
+      en: 'A clear, consistent campaign, with print and digital pieces for the Templo’s events.',
     },
-    metrics: [{ val: '100%', lbl: { es: 'Sistema gráfico unificado', en: 'Unified graphic system' } }],
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
+    metrics: [
+      { val: 'Impreso + digital', lbl: { es: 'Piezas de la campaña', en: 'Campaign pieces' } },
+    ],
     featured: false,
   },
   {
@@ -405,7 +419,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Una comunidad activa en redes y apoderados que reciben respuesta rápida durante el proceso de admisión.',
       en: 'An active social community and parents who get quick responses during the admissions process.',
     },
-    metrics: [{ val: '+DM', lbl: { es: 'Respuesta de mensajes', en: 'Message response' } }],
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
+    metrics: [
+      { val: 'Instagram', lbl: { es: 'Contenido y respuesta de mensajes', en: 'Content and message replies' } },
+    ],
     featured: true,
   },
   {
@@ -441,7 +459,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Una marca consistente que facilita la comunicación diaria del negocio.',
       en: 'A consistent brand that streamlines the business’s daily communication.',
     },
-    metrics: [{ val: 'Full', lbl: { es: 'Identidad aplicada', en: 'Identity applied' } }],
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
+    metrics: [
+      { val: 'Identidad', lbl: { es: 'Menús, redes y material promocional', en: 'Menus, social media and promo material' } },
+    ],
     featured: false,
   },
   {
@@ -477,7 +499,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Una comunidad digital coherente que acompaña a las personas con información clara y una identidad reconocible.',
       en: 'A coherent digital community that guides people with clear information and a recognizable identity.',
     },
-    metrics: [{ val: 'Full', lbl: { es: 'Identidad aplicada', en: 'Identity applied' } }],
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
+    metrics: [
+      { val: 'Contenido', lbl: { es: 'Piezas educativas y video', en: 'Educational pieces and video' } },
+    ],
     link: 'https://microterapias.cl',
     featured: true,
   },
@@ -553,7 +579,11 @@ const ALL_PROJECTS: Project[] = [
       es: 'Una comunicación constante y profesional que acompaña el proceso de admisión de BSchool durante todo el año.',
       en: 'Consistent, professional communication that supports BSchool\'s admissions process year-round.',
     },
-    metrics: [{ val: 'Full', lbl: { es: 'Gestión de contenido', en: 'Content management' } }],
+    // PENDIENTE: sin cifras medidas. Reemplazar por datos reales (con período)
+    // cuando existan; mientras tanto se describe lo entregado.
+    metrics: [
+      { val: 'Instagram', lbl: { es: 'Piezas de admisión y contenido regular', en: 'Admission pieces and regular content' } },
+    ],
     link: 'https://bschool.cl',
     featured: true,
   },

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import IntroOverlay from '../IntroOverlay.astro';
 import { SERVICES } from '../../data/services';
+import { siteStats } from '../../data/stats';
 import { useT, pick, localePath, type Locale } from '../../i18n';
 
 // Collage y strip: piezas de TRABAJO real (sitios, gráficas, packaging).
@@ -90,12 +91,9 @@ const streetsBottom = [
 
 // ── Stats ──────────────────────────────────────────────────────────
 
-const stats = [
-  { val: '15',      suffix: '+', prefix: '',  lbl: es ? 'Marcas acompañadas' : 'Brands supported' },
-  { val: '1',       suffix: 'M+', prefix: '',  lbl: es ? 'Views generadas para clientes' : 'Views generated for clients' },
-  { val: '300',     suffix: '%', prefix: '+', lbl: es ? 'Engagement promedio' : 'Average engagement' },
-  { val: '100',     suffix: '',  prefix: '',  lbl: es ? 'Performance score' : 'Performance score' },
-];
+// El valor real va en el HTML (ver data/stats.ts): antes los rastreadores
+// que no ejecutan JS leían "0" en cada contador.
+const stats = siteStats(locale);
 ---
 
 <Base locale={locale} title={t.meta.home.title} description={t.meta.home.desc}>
@@ -339,7 +337,7 @@ const stats = [
       {stats.map((s) => (
         <div class={`stat-u${s.val.length > 4 ? ' stat-u--big' : ''}`} data-reveal>
           <span class="stat-u__val">
-            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>0</span>
+            {s.prefix && <span class="stat-u__prefix">{s.prefix}</span>}<span data-counter={s.val} data-suffix={s.suffix}>{s.val}{s.suffix}</span>
           </span>
           <span class="stat-u__lbl">{s.lbl}</span>
         </div>
