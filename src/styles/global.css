@@ -33,8 +33,20 @@ html.js [data-reveal-word] .word { display: inline-block; opacity: 0; transform:
    arriba), no por JS — así nunca hay un flash de "visible → oculto"
    mientras se espera a que la fuente Anton cargue antes de animar. */
 html.js .wrow { opacity: 0; transform: translateY(36px); }
+/* Títulos que el JS parte en palabras o letras: hasta que se parten se
+   veían completos, y al partirse desaparecían y volvían a entrar (el
+   "salto" de la primera palabra al hacer scroll). Ocultos desde el primer
+   paint; `visibility` conserva el espacio, así no se mueve nada. Si el JS
+   fallara, la animación de respaldo los muestra igual a los 2,5 s. */
+html.js [data-reveal-word]:not([data-split="done"]),
+html.js [data-split-chars]:not([data-char-done]) {
+  visibility: hidden;
+  animation: reveal-fallback 0s 2.5s forwards;
+}
+@keyframes reveal-fallback { to { visibility: visible; } }
 @media (prefers-reduced-motion: reduce) {
   html.js [data-reveal], html.js [data-reveal-word] .word, html.js .wrow { opacity: 1 !important; transform: none !important; }
+  html.js [data-reveal-word], html.js [data-split-chars] { visibility: visible !important; }
 }
 
 /* ─── Marquee ────────────────────────────────────────────────────── */
