@@ -737,3 +737,195 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
     ],
   },
 };
+
+// ─────────────────────────────────────────────────────────────────────────
+// Bloques extra para los servicios principales: respuesta directa (para
+// buscadores y asistentes de IA), ficha rápida, para quién es, entregables,
+// planes con precios publicados, casos de uso y servicios relacionados.
+//
+// Mismas reglas de arriba: precios y plazos SOLO los publicados en /faq.
+// Los casos de uso de automatización son ejemplos de lo que se puede
+// automatizar, no proyectos entregados.
+// ─────────────────────────────────────────────────────────────────────────
+export interface ServiceExtra {
+  answer: L;
+  facts: { k: L; v: L }[];
+  audience: L[];
+  deliverables: L[];
+  plans?: { name: L; price: L; time?: L; d: L; href?: string }[];
+  useCases?: { t: L; d: L }[];
+  related: string[];
+  /** Para el schema: rango publicado en CLP. `monthly` = precio mensual. */
+  offer?: { min: number; max?: number; monthly?: boolean };
+}
+
+export const SERVICE_EXTRA: Record<string, ServiceExtra> = {
+  'diseno-web': {
+    answer: {
+      es: 'BrandUp diseña y desarrolla páginas web a medida para negocios de Santiago y todo Chile. Una landing page cuesta entre $150.000 y $400.000 CLP y toma de 1 a 2 semanas; un sitio corporativo cuesta entre $350.000 y $900.000 CLP y toma de 3 a 6 semanas. Cada sitio queda optimizado para celular y para Google, con precio cerrado antes de empezar y todo a nombre del cliente.',
+      en: 'BrandUp designs and builds custom websites for businesses in Santiago and across Chile. A landing page costs CLP $150,000 to $400,000 and takes 1 to 2 weeks; a corporate site costs CLP $350,000 to $900,000 and takes 3 to 6 weeks. Every site is optimised for mobile and Google, with a fixed price before we start and everything in the client’s name.',
+    },
+    facts: [
+      { k: { es: 'Precio', en: 'Price' }, v: { es: 'Desde $150.000 CLP', en: 'From CLP $150,000' } },
+      { k: { es: 'Plazo', en: 'Timeline' }, v: { es: '1 a 6 semanas', en: '1 to 6 weeks' } },
+      { k: { es: 'Atención', en: 'Coverage' }, v: { es: 'Maipú, Santiago y todo Chile', en: 'Maipú, Santiago and all of Chile' } },
+      { k: { es: 'Propiedad', en: 'Ownership' }, v: { es: 'Dominio y sitio a tu nombre', en: 'Domain and site in your name' } },
+    ],
+    audience: [
+      { es: 'Negocios que todavía no tienen página web', en: 'Businesses that do not have a website yet' },
+      { es: 'Empresas con un sitio antiguo, lento o que no se ve bien en el celular', en: 'Companies with an old or slow site, or one that looks bad on mobile' },
+      { es: 'Servicios profesionales que necesitan recibir cotizaciones', en: 'Professional services that need to receive quote requests' },
+      { es: 'Marcas que van a invertir en publicidad y necesitan una página que convierta', en: 'Brands about to invest in ads that need a page that converts' },
+    ],
+    deliverables: [
+      { es: 'Diseño a medida, adaptado a celular, tablet y computador', en: 'Custom design for mobile, tablet and desktop' },
+      { es: 'Sitio publicado en tu dominio, con certificado de seguridad (HTTPS)', en: 'Site live on your domain, with an HTTPS certificate' },
+      { es: 'Botón de WhatsApp y formulario de contacto conectados', en: 'WhatsApp button and contact form connected' },
+      { es: 'Títulos, descripciones y datos estructurados para Google', en: 'Titles, descriptions and structured data for Google' },
+      { es: 'Sitio enviado a Google Search Console', en: 'Site submitted to Google Search Console' },
+      { es: 'Medición de visitas instalada (Google Analytics)', en: 'Visit tracking installed (Google Analytics)' },
+      { es: 'Entrega de todos los accesos', en: 'Handover of all access credentials' },
+    ],
+    plans: [
+      {
+        name: { es: 'Landing page', en: 'Landing page' },
+        price: { es: '$150.000 – $400.000', en: 'CLP $150,000 – $400,000' },
+        time: { es: '1 a 2 semanas', en: '1 to 2 weeks' },
+        d: { es: 'Una página enfocada en un objetivo: que te escriban, coticen o compren. Ideal para lanzar un servicio o recibir tráfico de anuncios.', en: 'A single page focused on one goal: getting people to message, request a quote or buy. Ideal for launching a service or receiving ad traffic.' },
+      },
+      {
+        name: { es: 'Sitio corporativo', en: 'Corporate site' },
+        price: { es: '$350.000 – $900.000', en: 'CLP $350,000 – $900,000' },
+        time: { es: '3 a 6 semanas', en: '3 to 6 weeks' },
+        d: { es: 'Sitio con varias secciones: inicio, servicios, nosotros, trabajos y contacto. Para empresas que necesitan mostrar quiénes son y qué hacen.', en: 'A multi-section site: home, services, about, work and contact. For companies that need to show who they are and what they do.' },
+      },
+      {
+        name: { es: 'Tienda online', en: 'Online store' },
+        price: { es: '$600.000 – $2.500.000', en: 'CLP $600,000 – $2,500,000' },
+        time: { es: '6 a 12 semanas', en: '6 to 12 weeks' },
+        d: { es: 'Catálogo, carrito, pago en línea y panel para administrar productos y pedidos.', en: 'Catalogue, cart, online payment and a panel to manage products and orders.' },
+        href: '/servicios/ecommerce',
+      },
+    ],
+    related: ['ecommerce', 'publicidad-digital', 'branding'],
+    offer: { min: 150000, max: 900000 },
+  },
+
+  'publicidad-digital': {
+    answer: {
+      es: 'BrandUp crea y gestiona campañas en Meta Ads (Instagram y Facebook) y Google Ads para negocios de Santiago y todo Chile, y produce también el contenido de los anuncios: reels, videos y piezas gráficas. La gestión mensual parte desde $250.000 CLP; la inversión en anuncios se paga aparte, directamente a Meta o Google desde la cuenta del cliente.',
+      en: 'BrandUp creates and manages Meta Ads (Instagram and Facebook) and Google Ads campaigns for businesses in Santiago and across Chile, and also produces the ad content: reels, videos and graphics. Monthly management starts from CLP $250,000; ad spend is paid separately, directly to Meta or Google from the client’s account.',
+    },
+    facts: [
+      { k: { es: 'Gestión', en: 'Management' }, v: { es: 'Desde $250.000 CLP al mes', en: 'From CLP $250,000 a month' } },
+      { k: { es: 'Plataformas', en: 'Platforms' }, v: { es: 'Meta Ads y Google Ads', en: 'Meta Ads and Google Ads' } },
+      { k: { es: 'Contenido', en: 'Content' }, v: { es: 'Reels y piezas propias', en: 'Our own reels and graphics' } },
+      { k: { es: 'Inversión en anuncios', en: 'Ad spend' }, v: { es: 'Aparte, en tu cuenta', en: 'Separate, in your account' } },
+    ],
+    audience: [
+      { es: 'Negocios locales que quieren llegar a clientes de su comuna', en: 'Local businesses that want to reach customers in their district' },
+      { es: 'Tiendas online que necesitan más ventas', en: 'Online stores that need more sales' },
+      { es: 'Servicios que quieren recibir más cotizaciones', en: 'Services that want more quote requests' },
+      { es: 'Marcas que publican pero no llegan a gente nueva', en: 'Brands that post but do not reach new people' },
+    ],
+    deliverables: [
+      { es: 'Estrategia de campaña: objetivo, públicos y presupuesto', en: 'Campaign strategy: goal, audiences and budget' },
+      { es: 'Producción de los anuncios: reels, videos y gráficas', en: 'Ad production: reels, videos and graphics' },
+      { es: 'Configuración del Píxel de Meta y la medición', en: 'Meta Pixel and tracking setup' },
+      { es: 'Segmentación por comuna, intereses o búsquedas', en: 'Targeting by district, interests or searches' },
+      { es: 'Revisión y ajuste continuo de las campañas', en: 'Ongoing review and adjustment of campaigns' },
+      { es: 'Reporte con resultados y próximos pasos', en: 'Report with results and next steps' },
+    ],
+    plans: [
+      {
+        name: { es: 'Gestión de campañas', en: 'Campaign management' },
+        price: { es: 'Desde $250.000 / mes', en: 'From CLP $250,000 / month' },
+        d: { es: 'Configuramos, publicamos y optimizamos tus campañas en Meta Ads o Google Ads, con reporte de resultados.', en: 'We set up, launch and optimise your campaigns on Meta Ads or Google Ads, with results reporting.' },
+      },
+      {
+        name: { es: 'Publicidad + contenido', en: 'Ads + content' },
+        price: { es: 'A medida', en: 'Custom quote' },
+        d: { es: 'Sumamos la producción de reels y piezas para los anuncios y para tus redes, así todo mantiene la misma línea.', en: 'We add the production of reels and graphics for your ads and your social media, so everything keeps the same look.' },
+        href: '/servicios/contenido-reels',
+      },
+    ],
+    related: ['contenido-reels', 'diseno-web', 'marketing-growth'],
+    offer: { min: 250000, monthly: true },
+  },
+
+  'contenido-reels': {
+    answer: {
+      es: 'BrandUp crea contenido para redes sociales y gestiona cuentas de Instagram, TikTok y Facebook para negocios de Santiago y todo Chile: reels, publicaciones, historias y respuesta a la comunidad. Los planes mensuales parten desde $250.000 CLP. Con negocios de Santiago y Maipú podemos grabar en el local.',
+      en: 'BrandUp creates social media content and manages Instagram, TikTok and Facebook accounts for businesses in Santiago and across Chile: reels, posts, stories and community replies. Monthly plans start from CLP $250,000. With businesses in Santiago and Maipú we can shoot on site.',
+    },
+    facts: [
+      { k: { es: 'Precio', en: 'Price' }, v: { es: 'Desde $250.000 CLP al mes', en: 'From CLP $250,000 a month' } },
+      { k: { es: 'Redes', en: 'Networks' }, v: { es: 'Instagram, TikTok y Facebook', en: 'Instagram, TikTok and Facebook' } },
+      { k: { es: 'Grabación', en: 'Filming' }, v: { es: 'En tu local o con tu material', en: 'At your premises or with your footage' } },
+      { k: { es: 'Alcance logrado', en: 'Reach achieved' }, v: { es: '+1M de views para clientes', en: '1M+ views for clients' } },
+    ],
+    audience: [
+      { es: 'Locales de comida, tiendas y servicios con atención al público', en: 'Food businesses, shops and customer-facing services' },
+      { es: 'Marcas de ropa y productos que necesitan mostrarse en video', en: 'Clothing and product brands that need to be shown on video' },
+      { es: 'Instituciones educativas y de salud que deben responder consultas', en: 'Educational and health institutions that must answer enquiries' },
+      { es: 'Negocios que no tienen tiempo para publicar con constancia', en: 'Businesses with no time to post consistently' },
+    ],
+    deliverables: [
+      { es: 'Plan de contenido mensual', en: 'Monthly content plan' },
+      { es: 'Reels grabados y editados en formato vertical', en: 'Reels shot and edited in vertical format' },
+      { es: 'Publicaciones e historias diseñadas con tu marca', en: 'Posts and stories designed with your brand' },
+      { es: 'Textos de cada publicación', en: 'Copy for every post' },
+      { es: 'Respuesta a comentarios y mensajes (community management)', en: 'Replies to comments and messages (community management)' },
+      { es: 'Documento online con el avance del mes', en: 'Online document with the month’s progress' },
+    ],
+    plans: [
+      {
+        name: { es: 'Gestión de redes', en: 'Social media management' },
+        price: { es: 'Desde $250.000 / mes', en: 'From CLP $250,000 / month' },
+        d: { es: 'Contenido, publicación y comunidad en tus redes. El valor depende de cuántas redes y cuánto contenido al mes.', en: 'Content, publishing and community on your networks. The price depends on how many networks and how much content per month.' },
+      },
+      {
+        name: { es: 'Contenido + publicidad', en: 'Content + ads' },
+        price: { es: 'A medida', en: 'Custom quote' },
+        d: { es: 'El mismo contenido se usa para campañas pagadas en Meta Ads, para llegar a gente que todavía no te sigue.', en: 'The same content is used for paid Meta Ads campaigns, to reach people who do not follow you yet.' },
+        href: '/servicios/publicidad-digital',
+      },
+    ],
+    related: ['publicidad-digital', 'branding', 'marketing-growth'],
+    offer: { min: 250000, monthly: true },
+  },
+
+  'automatizaciones-ia': {
+    answer: {
+      es: 'BrandUp automatiza tareas de atención y seguimiento para pymes de Santiago y todo Chile: respuestas a preguntas frecuentes en WhatsApp e Instagram, formularios que ordenan los contactos y avisos automáticos de pedidos o cotizaciones. Cada automatización se cotiza a medida, con precio cerrado, y siempre deja la opción de hablar con una persona.',
+      en: 'BrandUp automates customer-service and follow-up tasks for small businesses in Santiago and across Chile: answers to frequent questions on WhatsApp and Instagram, forms that organise enquiries and automatic alerts for orders or quotes. Each automation is quoted case by case, at a fixed price, and always leaves the option of talking to a person.',
+    },
+    facts: [
+      { k: { es: 'Precio', en: 'Price' }, v: { es: 'A medida, precio cerrado', en: 'Custom, fixed price' } },
+      { k: { es: 'Canales', en: 'Channels' }, v: { es: 'WhatsApp, Instagram, web y correo', en: 'WhatsApp, Instagram, web and email' } },
+      { k: { es: 'Disponibilidad', en: 'Availability' }, v: { es: 'Responde fuera de horario', en: 'Replies outside office hours' } },
+      { k: { es: 'Atención', en: 'Coverage' }, v: { es: 'Santiago y todo Chile', en: 'Santiago and all of Chile' } },
+    ],
+    audience: [
+      { es: 'Negocios que reciben muchas preguntas repetidas por WhatsApp', en: 'Businesses that get many repeated questions on WhatsApp' },
+      { es: 'Equipos chicos que pierden contactos por no responder a tiempo', en: 'Small teams that lose leads by not replying in time' },
+      { es: 'Tiendas que quieren avisos automáticos de pedidos', en: 'Stores that want automatic order alerts' },
+      { es: 'Servicios que agendan horas o envían cotizaciones', en: 'Services that book appointments or send quotes' },
+    ],
+    deliverables: [
+      { es: 'Mapa de las tareas que conviene automatizar', en: 'Map of the tasks worth automating' },
+      { es: 'Flujo de conversación diseñado y probado', en: 'Conversation flow designed and tested' },
+      { es: 'Conexión de los canales acordados', en: 'Connection of the agreed channels' },
+      { es: 'Derivación a una persona cuando la consulta lo requiere', en: 'Handover to a person when the enquiry needs it' },
+      { es: 'Ajuste después de las primeras conversaciones reales', en: 'Fine-tuning after the first real conversations' },
+    ],
+    useCases: [
+      { t: { es: 'Preguntas frecuentes', en: 'Frequent questions' }, d: { es: 'Horarios, precios, ubicación y medios de pago respondidos al instante, a cualquier hora.', en: 'Opening hours, prices, location and payment methods answered instantly, at any time.' } },
+      { t: { es: 'Contactos ordenados', en: 'Organised enquiries' }, d: { es: 'Los datos de quien escribe por el sitio o WhatsApp quedan registrados en un solo lugar.', en: 'Details of whoever writes through the site or WhatsApp are recorded in one place.' } },
+      { t: { es: 'Avisos de pedidos', en: 'Order alerts' }, d: { es: 'Te llega un aviso cuando entra un pedido o una cotización, y el cliente recibe su confirmación.', en: 'You get an alert when an order or quote comes in, and the customer gets a confirmation.' } },
+      { t: { es: 'Seguimiento', en: 'Follow-up' }, d: { es: 'Recordatorios a clientes que pidieron información y no respondieron.', en: 'Reminders to customers who asked for information and did not reply.' } },
+      { t: { es: 'Agenda y recordatorios', en: 'Bookings and reminders' }, d: { es: 'Confirmación y recordatorio de citas para reducir las inasistencias.', en: 'Appointment confirmations and reminders to reduce no-shows.' } },
+    ],
+    related: ['diseno-web', 'ecommerce', 'marketing-growth'],
+  },
+};

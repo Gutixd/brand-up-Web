@@ -8,6 +8,7 @@
 // directrices de Google.
 import { SITE, SCHEMA_ID } from '../../data/site';
 import { SERVICE_SEO } from '../../data/serviceSeo';
+import { SERVICE_EXTRA } from '../../data/serviceContent';
 import type { Service } from '../../data/services';
 import type { Locale } from '../../i18n';
 
@@ -17,6 +18,23 @@ const isEs = locale === 'es';
 const seo = SERVICE_SEO[service.slug];
 const base = isEs ? SITE.domain : `${SITE.domain}/en`;
 const url = `${base}/servicios/${service.slug}`;
+const extra = SERVICE_EXTRA[service.slug];
+
+// Precio publicado (mismo rango que /faq). Sin precio publicado no se
+// declara `offers`: Google pide que el schema refleje lo que dice la página.
+const offers = extra?.offer && {
+  '@type': 'Offer',
+  url,
+  availability: 'https://schema.org/InStock',
+  areaServed: 'CL',
+  priceSpecification: {
+    '@type': extra.offer.monthly ? 'UnitPriceSpecification' : 'PriceSpecification',
+    priceCurrency: 'CLP',
+    minPrice: extra.offer.min,
+    ...(extra.offer.max ? { maxPrice: extra.offer.max } : {}),
+    ...(extra.offer.monthly ? { unitCode: 'MON', unitText: isEs ? 'mes' : 'month' } : {}),
+  },
+};
 
 const ld = {
   '@context': 'https://schema.org',
@@ -30,7 +48,10 @@ const ld = {
       url,
       inLanguage: isEs ? 'es-CL' : 'en',
       provider: { '@id': SCHEMA_ID.organization },
+      ...(extra ? { abstract: extra.answer[locale] } : {}),
+      ...(offers ? { offers } : {}),
       areaServed: [
+        { '@type': 'City', name: 'Maipú' },
         { '@type': 'City', name: 'Santiago de Chile' },
         { '@type': 'AdministrativeArea', name: 'Región Metropolitana de Santiago' },
         { '@type': 'Country', name: 'Chile' },

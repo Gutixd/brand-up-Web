@@ -4,9 +4,9 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ServiceSchema from '../seo/ServiceSchema.astro';
-import type { Service } from '../../data/services';
+import { SERVICES, type Service } from '../../data/services';
 import { SERVICE_SEO } from '../../data/serviceSeo';
-import { SERVICE_CONTENT } from '../../data/serviceContent';
+import { SERVICE_CONTENT, SERVICE_EXTRA } from '../../data/serviceContent';
 import { PROJECTS } from '../../data/projects';
 import { SITE, wa, WA_MSG } from '../../data/site';
 import { localePath, pick, type Locale } from '../../i18n';
@@ -17,6 +17,10 @@ const isEs = locale === 'es';
 const lp = (p: string) => localePath(locale, p);
 const seo = SERVICE_SEO[service.slug];
 const content = SERVICE_CONTENT[service.slug];
+const extra = SERVICE_EXTRA[service.slug];
+const relatedServices = (extra?.related ?? [])
+  .map((slug) => SERVICES.find((s) => s.slug === slug))
+  .filter((s): s is Service => Boolean(s));
 const title = pick(service.title, locale);
 
 const related = PROJECTS.filter((p) => p.serviceSlugs.includes(service.slug));
@@ -31,6 +35,9 @@ const L = isEs
       ctaTitle: '¿Conversamos tu proyecto?',
       ctaSub: 'Cuéntanos qué necesitas y te enviamos una propuesta con precio cerrado. Estamos en Maipú y atendemos todo Santiago y Chile.',
       ctaBtn: 'Cotizar ahora', ctaWa: 'Escribir por WhatsApp', view: 'Ver caso',
+      summary: 'En resumen', audience: 'Para quién es', deliverables: 'Qué recibes',
+      plans: 'Planes y precios', plansNote: 'Precios en pesos chilenos. El valor final se fija en una propuesta con precio cerrado.',
+      useCases: 'Qué se puede automatizar', related: 'Servicios relacionados', more: 'Ver servicio',
     }
   : {
       back: 'Services', includes: 'What is included', quote: `Get a quote for ${title}`,
@@ -40,6 +47,9 @@ const L = isEs
       ctaTitle: 'Shall we talk about your project?',
       ctaSub: 'Tell us what you need and we will send a fixed-price proposal. We are based in Maipú and serve all of Santiago and Chile.',
       ctaBtn: 'Get a quote', ctaWa: 'Message on WhatsApp', view: 'View case',
+      summary: 'In short', audience: 'Who it is for', deliverables: 'What you get',
+      plans: 'Plans and pricing', plansNote: 'Prices in Chilean pesos. The final price is set in a fixed-price proposal.',
+      useCases: 'What can be automated', related: 'Related services', more: 'View service',
     };
 
 // Las preguntas se muestran en la página, así que se declaran como FAQPage.
@@ -66,6 +76,25 @@ const faqLd = content && {
       <p class="svc-hero__headline">{pick(service.headline, locale)}</p>
     </div>
   </section>
+
+  {extra && (
+    <section class="svc-sum" aria-labelledby="svc-sum-title">
+      <div class="svc-wrap svc-sum__inner">
+        <div class="svc-sum__answer">
+          <h2 id="svc-sum-title" class="svc-kicker">{L.summary}</h2>
+          <p class="svc-sum__text">{pick(extra.answer, locale)}</p>
+        </div>
+        <dl class="svc-facts">
+          {extra.facts.map((f) => (
+            <div class="svc-fact">
+              <dt>{pick(f.k, locale)}</dt>
+              <dd>{pick(f.v, locale)}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  )}
 
   <section class="svc-body">
     <div class="svc-wrap svc-body__inner">
@@ -101,6 +130,25 @@ const faqLd = content && {
     </section>
   )}
 
+  {extra && (
+    <section class="svc-block">
+      <div class="svc-wrap svc-two">
+        <div>
+          <h2 class="svc-h2 display-tight">{L.audience}</h2>
+          <ul class="svc-list">
+            {extra.audience.map((a) => <li>{pick(a, locale)}</li>)}
+          </ul>
+        </div>
+        <div>
+          <h2 class="svc-h2 display-tight">{L.deliverables}</h2>
+          <ul class="svc-list svc-list--check">
+            {extra.deliverables.map((d) => <li>{pick(d, locale)}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )}
+
   {content && (
     <section class="svc-block svc-block--dark">
       <div class="svc-wrap">
@@ -114,6 +162,46 @@ const faqLd = content && {
             </li>
           ))}
         </ol>
+      </div>
+    </section>
+  )}
+
+  {extra?.plans && (
+    <section class="svc-block">
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.plans}</h2>
+        <div class="svc-plans">
+          {extra.plans.map((pl) => (
+            <article class="svc-plan">
+              <h3 class="svc-plan__name">{pick(pl.name, locale)}</h3>
+              <p class="svc-plan__price">{pick(pl.price, locale)}</p>
+              {pl.time && <p class="svc-plan__time">{pick(pl.time, locale)}</p>}
+              <p class="svc-plan__d">{pick(pl.d, locale)}</p>
+              {pl.href ? (
+                <a href={lp(pl.href)} class="svc-plan__link">{L.more} &#8594;</a>
+              ) : (
+                <a href={lp('/cotizar')} class="svc-plan__link">{L.ctaBtn} &#8594;</a>
+              )}
+            </article>
+          ))}
+        </div>
+        <p class="svc-note svc-note--after">{L.plansNote}</p>
+      </div>
+    </section>
+  )}
+
+  {extra?.useCases && (
+    <section class="svc-block">
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.useCases}</h2>
+        <div class="svc-grid">
+          {extra.useCases.map((u) => (
+            <article class="svc-card">
+              <h3 class="svc-card__t">{pick(u.t, locale)}</h3>
+              <p class="svc-card__d">{pick(u.d, locale)}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )}
@@ -172,6 +260,25 @@ const faqLd = content && {
         </div>
       </div>
     </section>
+  )}
+
+  {relatedServices.length > 0 && (
+    <nav class="svc-block" aria-label={L.related}>
+      <div class="svc-wrap">
+        <h2 class="svc-h2 display-tight">{L.related}</h2>
+        <ul class="svc-rel">
+          {relatedServices.map((r) => (
+            <li>
+              <a href={lp(`/servicios/${r.slug}`)} class="svc-rel__card">
+                <span class="svc-rel__t">{pick(r.title, locale)}</span>
+                <span class="svc-rel__d">{pick(r.short, locale)}</span>
+                <span class="svc-rel__go" aria-hidden="true">&#8594;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
   )}
 
   <section class="svc-cta">
@@ -258,6 +365,44 @@ const faqLd = content && {
 .svc-cta__sub { margin-top: 18px; font-size: 1.05rem; line-height: 1.65; color: var(--color-gray); max-width: 52ch; }
 .svc-cta__row { display: flex; flex-wrap: wrap; gap: 12px; }
 .svc-cta .svc-btn { margin-top: 28px; }
+
+/* Respuesta directa + ficha rápida */
+.svc-sum { background: #0d0d0d; color: #f8f8f8; border-top: 1px solid rgba(248,248,248,0.08); }
+.svc-sum__inner { padding-block: 40px 56px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+@media (min-width: 900px) { .svc-sum__inner { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 56px; align-items: start; } }
+.svc-sum__text { margin-top: 12px; font-size: clamp(1.02rem, 1.6vw, 1.14rem); line-height: 1.75; color: rgba(248,248,248,0.82); }
+.svc-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: rgba(248,248,248,0.1); border: 1px solid rgba(248,248,248,0.1); border-radius: 16px; overflow: hidden; }
+.svc-fact { background: #121212; padding: 18px 18px 20px; }
+.svc-fact dt { font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(248,248,248,0.5); }
+.svc-fact dd { margin-top: 8px; font-size: 0.98rem; font-weight: 600; line-height: 1.35; color: #f8f8f8; }
+
+/* Para quién es / qué recibes */
+.svc-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px; }
+@media (min-width: 768px) { .svc-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; } }
+.svc-two .svc-h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); margin-bottom: 24px; }
+.svc-list { list-style: none; border-top: 1px solid var(--color-line); }
+.svc-list li { position: relative; padding: 15px 0 15px 26px; border-bottom: 1px solid var(--color-line); font-size: 1rem; line-height: 1.5; color: var(--color-paper); }
+.svc-list li::before { content: '\2192'; position: absolute; left: 0; color: var(--color-accent); }
+.svc-list--check li::before { content: '\2713'; }
+
+/* Planes */
+.svc-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.svc-plan { display: flex; flex-direction: column; border: 1px solid var(--color-line); border-radius: 18px; padding: 26px 24px; }
+.svc-plan__name { font-size: 1.12rem; font-weight: 700; color: var(--color-paper); }
+.svc-plan__price { margin-top: 12px; font-family: var(--font-poster); font-size: 1.55rem; line-height: 1.1; color: var(--color-accent); }
+.svc-plan__time { margin-top: 6px; font-size: 0.85rem; font-weight: 600; color: var(--color-gray); }
+.svc-plan__d { margin-top: 14px; font-size: 0.96rem; line-height: 1.65; color: var(--color-gray); flex: 1; }
+.svc-plan__link { margin-top: 20px; font-size: 0.92rem; font-weight: 700; color: var(--color-paper); min-height: 32px; transition: color 0.25s; }
+.svc-plan__link:hover { color: var(--color-accent); }
+.svc-note--after { margin: 20px 0 0; font-size: 0.9rem; }
+
+/* Servicios relacionados */
+.svc-rel { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.svc-rel__card { position: relative; display: flex; flex-direction: column; gap: 8px; height: 100%; border: 1px solid var(--color-line); border-radius: 18px; padding: 24px 48px 24px 24px; color: var(--color-paper); transition: border-color 0.25s; }
+.svc-rel__card:hover { border-color: var(--color-accent); }
+.svc-rel__t { font-weight: 700; font-size: 1.05rem; }
+.svc-rel__d { font-size: 0.92rem; line-height: 1.55; color: var(--color-gray); }
+.svc-rel__go { position: absolute; right: 22px; top: 24px; color: var(--color-accent); }
 
 @media (prefers-reduced-motion: reduce) {
   .svc-work__media img, .svc-btn, .svc-faq__q::after { transition: none; }

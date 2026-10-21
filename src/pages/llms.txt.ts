@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { SITE } from '../data/site';
 import { SERVICES } from '../data/services';
+import { SERVICE_EXTRA } from '../data/serviceContent';
 import { BLOG_POSTS } from '../data/blog';
 import { PRODUCT } from '../data/product';
 
@@ -16,7 +17,8 @@ export const GET: APIRoute = ({ site }) => {
   const base = (site?.href ?? SITE.domain).replace(/\/$/, '');
 
   const servicios = SERVICES.map(
-    (s) => `- [${s.title.es}](${base}/servicios/${s.slug}): ${s.short.es}`
+    (s) =>
+      `- [${s.title.es}](${base}/servicios/${s.slug}): ${SERVICE_EXTRA[s.slug]?.answer.es ?? s.short.es}`
   ).join('\n');
 
   const articulos = BLOG_POSTS.map(
