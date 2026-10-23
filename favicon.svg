@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#f05e23"/>
+  <text x="7" y="48" font-family="Georgia, serif" font-size="44" font-weight="700" fill="white">B</text>
+  <line x1="38" y1="36" x2="55" y2="16" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <polyline points="44,16 55,16 55,27" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
