@@ -14,7 +14,7 @@ export const SITE = {
   // Ficha de Google Business (Maps). Sirve para "cómo llegar" y reseñas.
   googleMaps: 'https://maps.app.goo.gl/YGoAKnDwkneJawrt8',
   googleCid: 'https://www.google.com/maps?cid=18239725017259252089',
-  email: 'brandup.092@gmail.com',
+  email: 'diego@brandup.cl',
   phone: '+56 9 7982 2862',
   whatsappNumber: '56979822862',
   instagram: 'https://www.instagram.com/brand.up.cl/',
