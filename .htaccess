@@ -1,0 +1,30 @@
+# Generado por scripts/gen-htaccess.cjs a partir de vercel.json.
+# NO editar a mano: se reescribe en cada build.
+
+Options -Indexes
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # www.brandup.cl -> brandup.cl (evita contenido duplicado en Google)
+  RewriteCond %{HTTP_HOST} ^www\.brandup\.cl$ [NC]
+  RewriteRule ^(.*)$ https://brandup.cl/$1 [R=301,L]
+
+  # Artículo cuya dirección antigua llevaba "ñ"
+  RewriteRule ^blog/cuando-conviene-redise[^n/]+ar-la-marca-de-tu-negocio/?$ /blog/cuando-conviene-redisenar-la-marca-de-tu-negocio/ [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self' https://formspree.io https://www.facebook.com; frame-src 'self' https://www.facebook.com; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net https://www.clarity.ms https://scripts.clarity.ms 'sha256-7AwO9tluDRk8gjKt83EcXyioJo0XAe8ss5YrSiOCdNs=' 'sha256-GduAmryHkPex0LpYViQdDqBNGr34bmvsm4qG6905bZs=' 'sha256-GpTNYj1LvZjex0dcu1UA8jnLTRolVtPTLlWnu01/xaA=' 'sha256-HVc8+szi0oimzCUfgymZzS88ZAzO0qVOaZx3R9JJryw=' 'sha256-QzWFZi+FLIx23tnm9SBU4aEgx4x8DsuASP07mfqol/c=' 'sha256-RptKj15fMgbE49d7e6Sv06KmwhTM60nnlGRzd2fFpOo=' 'sha256-S7EAk8aLOe98f7GLVvETyfyHdhB8FdnW5l88lU4e0G8=' 'sha256-SaCkFfPruIdTXT8/97JArQmGxiJAL2o4bBDvSgJ5y3Q=' 'sha256-WZRJfWvsnNCPcxzZwvyhovnZGqhZaC+8gPGPRbx6wTk=' 'sha256-ZZJnbZmL990uACkWIuMaFKliX2NaCOsI8QkazkWDxGg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://www.facebook.com https://*.clarity.ms https://c.bing.com; font-src 'self' data:; media-src 'self' blob:; connect-src 'self' https://formspree.io https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://stats.g.doubleclick.net https://www.facebook.com https://*.clarity.ms https://c.bing.com; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "accelerometer=(), autoplay=(self), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), xr-spatial-tracking=()"
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+  # Archivos de /_astro llevan un hash en el nombre: se pueden guardar un año.
+  <If "%{REQUEST_URI} =~ m#^/_astro/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+</IfModule>
