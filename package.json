@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "postbuild": "node scripts/gen-csp-hashes.cjs",
+    "postbuild": "node scripts/gen-csp-hashes.cjs && node scripts/gen-htaccess.cjs",
     "preview": "astro preview",
     "astro": "astro"
   },

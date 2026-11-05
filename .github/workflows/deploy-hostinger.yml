@@ -1,0 +1,40 @@
+# Publica brandup.cl en Hostinger.
+#
+# Hostinger no construye proyectos Astro: solo copia archivos de una rama.
+# Esta tarea construye el sitio con cada cambio en master y deja el resultado
+# (dist/) en la rama `hostinger`. Hostinger está conectado a esa rama y se
+# entera de cada cambio por un webhook configurado en el repositorio.
+name: Publicar en Hostinger
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hostinger
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Dejar dist/ en la rama hostinger
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: hostinger
+          publish_dir: ./dist
+          force_orphan: true
+          enable_jekyll: true
+          commit_message: 'Publicación automática'
