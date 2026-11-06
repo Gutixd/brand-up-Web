@@ -1,0 +1,41 @@
+{
+  "slug": "2026-11-06-plazos-pagina-web",
+  "aprobado": false,
+  "publicarEn": "2026-11-06T19:00:00-03:00",
+  "laminas": [
+    {
+      "kicker": "Plazos reales · Chile 2026",
+      "titulo": "¿Cuánto demora una *página web*?",
+      "texto": "Lo que realmente toma cada tipo de sitio, sin letra chica."
+    },
+    {
+      "numero": "01",
+      "titulo": "Landing page: *1 a 2 semanas*",
+      "texto": "Una sola página con un objetivo: que te escriban, coticen o compren."
+    },
+    {
+      "numero": "02",
+      "titulo": "Sitio corporativo: *3 a 6 semanas*",
+      "texto": "Inicio, servicios, nosotros, trabajos y contacto, con diseño a medida."
+    },
+    {
+      "numero": "03",
+      "titulo": "Tienda online: *6 a 12 semanas*",
+      "texto": "Catálogo, carrito, pago en línea y panel para administrar pedidos."
+    },
+    {
+      "numero": "04",
+      "titulo": "Lo que más *atrasa* un proyecto",
+      "texto": "No es el código: son los textos, las fotos y las aprobaciones. Tenerlos listos acorta los plazos."
+    },
+    {
+      "tipo": "cierre",
+      "kicker": "BrandUp · Maipú, Santiago",
+      "titulo": "¿Tienes fecha *en mente*?",
+      "texto": "Cuéntanos tu proyecto y te damos un plazo y un precio cerrado antes de empezar.",
+      "boton": "Cotiza en brandup.cl"
+    }
+  ],
+  "texto": "¿Cuánto demora hacer una página web? 🗓️\n\nLanding page: 1 a 2 semanas.\nSitio corporativo: 3 a 6 semanas.\nTienda online: 6 a 12 semanas.\n\nY ojo: lo que más atrasa un proyecto casi nunca es el código, sino los textos, las fotos y las aprobaciones. Tenerlos listos acorta los plazos.\n\n¿Tienes una fecha en mente? Escríbenos y te damos plazo y precio cerrado antes de empezar 👉 brandup.cl",
+  "hashtags": ["#paginaweb", "#diseñoweb", "#santiago", "#maipu", "#pymeschile", "#emprendimientochile", "#marketingdigital", "#brandup"]
+}

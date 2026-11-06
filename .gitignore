@@ -29,3 +29,6 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# Instagram: imágenes de trabajo (las publicadas se copian a public/ig/)
+tools/instagram/out/
