@@ -33,6 +33,10 @@ export const SITE = {
   // ID del proyecto (clarity.microsoft.com → Configuración → Instalación).
   // Vacío = Clarity apagado.
   clarityId: 'yvbgsvull3',
+  // Mostrar a Valentina como parte del equipo (Nosotros, datos para Google
+  // y llms.txt). Oculta temporalmente a pedido de Diego (nov 2026): para
+  // volver a mostrarla, cambiar a true. Su foto y textos siguen guardados.
+  showValentina: false,
 };
 
 /**

@@ -1,0 +1,80 @@
+---
+// Botón visible para ver el trabajo publicado del cliente (sitio web o
+// Instagram, según adónde apunte `project.link`).
+//
+// variant="floating": fijo abajo en las páginas de cada proyecto, para que
+//   esté siempre a mano mientras se recorre el caso.
+// variant="inline":  dentro de cada fila del listado /trabajos.
+//
+// Si el proyecto no tiene enlace, no se muestra nada.
+import type { Project } from '../data/projects';
+import type { Locale } from '../i18n';
+
+interface Props { project: Project; locale: Locale; variant?: 'floating' | 'inline'; }
+const { project, locale, variant = 'floating' } = Astro.props;
+const link = project.link;
+const isEs = locale === 'es';
+const isIg = !!link && /instagram\.com/i.test(link);
+const label = isIg
+  ? (isEs ? 'Ver su Instagram' : 'See their Instagram')
+  : (isEs ? 'Ver sitio web' : 'Visit website');
+const host = link ? link.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : '';
+---
+
+{link && (
+  <a
+    href={link}
+    target="_blank"
+    rel="noopener"
+    class={`visit visit--${variant}`}
+    aria-label={`${label}: ${project.client} (${isEs ? 'se abre en una pestaña nueva' : 'opens in a new tab'})`}
+  >
+    <span class="visit__icon" aria-hidden="true">
+      {isIg ? (
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      ) : (
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18"/></svg>
+      )}
+    </span>
+    <span class="visit__text">
+      <span class="visit__label">{label}</span>
+      {variant === 'floating' && <span class="visit__host">{host}</span>}
+    </span>
+    <span class="visit__arrow" aria-hidden="true">&#8599;</span>
+  </a>
+)}
+
+<style>
+.visit {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: #f05e23; color: #fff; text-decoration: none;
+  border-radius: 999px; font-weight: 700;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.visit:hover { background: #d94e16; transform: translateY(-2px); }
+.visit:focus-visible { outline: 3px solid #141414; outline-offset: 3px; }
+.visit__icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+.visit__text { display: flex; flex-direction: column; line-height: 1.15; }
+.visit__label { font-size: 15px; }
+.visit__host { font-size: 12px; font-weight: 600; opacity: 0.85; }
+.visit__arrow { font-size: 18px; transition: transform 0.25s ease; }
+.visit:hover .visit__arrow { transform: translate(2px, -2px); }
+
+/* Fijo abajo en la página del proyecto */
+.visit--floating {
+  position: fixed; z-index: 60; left: 24px; bottom: 24px;
+  padding: 8px 22px 8px 8px;
+  box-shadow: 0 14px 34px rgba(240, 94, 35, 0.38), 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+@media (max-width: 640px) {
+  .visit--floating { left: 16px; right: 16px; bottom: 16px; justify-content: center; }
+}
+
+/* Dentro de cada fila del listado */
+.visit--inline { margin-top: 20px; align-self: flex-start; padding: 6px 20px 6px 6px; min-height: 46px; }
+.visit--inline .visit__icon { width: 34px; height: 34px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .visit, .visit__arrow { transition: none; }
+}
+</style>

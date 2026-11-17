@@ -4,6 +4,7 @@
 // LUMINOSA: menta y blanco, burbujas de jabón subiendo, destellos y un
 // barrido de brillo, para que se sienta literalmente limpia. La info va como
 // una LISTA DE CHEQUEO y las métricas como sello de calidad.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -151,6 +152,7 @@ const checks = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

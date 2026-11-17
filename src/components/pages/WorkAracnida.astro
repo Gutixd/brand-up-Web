@@ -4,6 +4,7 @@
 // dibuja sola, una araña que baja de su hilo, y la info en VIÑETAS de cómic
 // con las métricas como estallidos. Todo geometría propia (sin usar arte de
 // terceros): la telaraña y la araña se generan aquí.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -177,6 +178,7 @@ const panels = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

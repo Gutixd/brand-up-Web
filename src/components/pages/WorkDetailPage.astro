@@ -1,4 +1,5 @@
 ---
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -208,6 +209,7 @@ const chapters = [
   </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

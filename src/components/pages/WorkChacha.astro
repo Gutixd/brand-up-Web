@@ -4,6 +4,7 @@
 // vapor subiendo e ingredientes flotando, y la info presentada como MENÚ +
 // RECETA en vez de tarjetas. Reels en marcos de teléfono. Una de las
 // variantes de diseño únicas por proyecto (ver dispatcher en WorkDetailPage).
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -196,6 +197,7 @@ const steps = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

@@ -5,6 +5,7 @@
 // de fichas con precio, el recorrido de compra como pasos numerados y un
 // reproductor para las guías en audio. Se entiende que es un e-commerce de
 // verdad antes de leer una sola línea.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -345,4 +346,5 @@ const pasos = isEs
   .rp-card h3 { font-size: 13.5px; }
 }
 </style>
+  <VisitSiteButton project={p} locale={locale} />
 </Base>

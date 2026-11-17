@@ -342,7 +342,8 @@ const ALL_PROJECTS: Project[] = [
       { val: '92%', lbl: { es: 'De los pedidos se pagan', en: 'Of orders get paid' } },
       { val: '$37.989', lbl: { es: 'Ticket promedio', en: 'Average order value' } },
     ],
-    link: 'https://aracnidastore.com',
+    // La tienda se mudó de aracnidastore.com (vencido) a aracnidastore.cl.
+    link: 'https://aracnidastore.cl',
     featured: true,
   },
   {
@@ -788,6 +789,7 @@ const ALL_PROJECTS: Project[] = [
       { val: '1 enlace', lbl: { es: 'Resuelve carta y pedido', en: 'Menu and ordering in one' } },
       { val: 'Mobile', lbl: { es: 'Pensado primero para el teléfono', en: 'Designed phone-first' } },
     ],
+    link: 'https://restaurantechunguang.cl',
     featured: true,
   },
   {
@@ -828,6 +830,7 @@ const ALL_PROJECTS: Project[] = [
       { val: '5', lbl: { es: 'Variables por vela', en: 'Options per candle' } },
       { val: 'WhatsApp', lbl: { es: 'Pedido directo, sin checkout', en: 'Direct ordering, no checkout' } },
     ],
+    link: 'https://auristal.cl',
     featured: true,
   },
   {

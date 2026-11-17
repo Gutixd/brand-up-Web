@@ -4,6 +4,7 @@
 // un restaurante — papel cálido, sello rojo, y precios unidos al plato por una
 // línea de puntos, que es el gesto tipográfico más reconocible de una carta.
 // Es lo que la separa de las otras landings: aquí manda la comida y la lectura.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -313,4 +314,5 @@ const accesos = isEs
   .cg-tile--tall, .cg-tile--square { grid-column: span 1; }
 }
 </style>
+  <VisitSiteButton project={p} locale={locale} />
 </Base>

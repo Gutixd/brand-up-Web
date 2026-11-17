@@ -5,6 +5,7 @@
 // gesto que separa esta página de las demás. La pieza central no es una
 // galería sino el CONFIGURADOR: se muestra cómo el precio se mueve con cada
 // decisión, porque ése es el corazón del proyecto.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -340,4 +341,5 @@ const paletas = [
   .au-shelf__grid .au-arch { aspect-ratio: 4/5; }
 }
 </style>
+  <VisitSiteButton project={p} locale={locale} />
 </Base>

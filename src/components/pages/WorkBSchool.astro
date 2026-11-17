@@ -4,6 +4,7 @@
 // y margen, apuntes numerados, fotos como polaroids— pero en el verde
 // institucional de BSchool y con un birrete cuya borla se mece, además de
 // un indicador de "clase en línea" que late (el colegio es online).
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -149,6 +150,7 @@ const notes = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

@@ -3,6 +3,7 @@
 // Tema vianda/reparto: un scooter de delivery cruzando el hero y, en vez de
 // secciones apiladas, TODA la información va en una GRILLA BENTO — cada dato
 // en su compartimento, como una lonchera.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -152,6 +153,7 @@ const media = PROJECT_MEDIA[p.slug] ?? [];
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

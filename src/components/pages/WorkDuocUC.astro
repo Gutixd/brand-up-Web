@@ -4,6 +4,7 @@
 // desplazándose en sentidos opuestos, como un feed vivo. La info se presenta
 // como PUBLICACIONES de un feed (con su barra de interacción) en vez de
 // tarjetas, y la métrica como contador de seguidores.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -157,6 +158,7 @@ const posts = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

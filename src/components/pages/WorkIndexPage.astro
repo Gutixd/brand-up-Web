@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../CtaBand.astro';
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { SERVICES } from '../../data/services';
 import { PROJECTS, FEATURED_PROJECTS, OTHER_PROJECTS } from '../../data/projects';
 import { SITE } from '../../data/site';
@@ -36,6 +37,7 @@ const items = FEATURED_PROJECTS.map((p, i) => ({
   serviceNames: p.serviceSlugs.map(svcName),
   metric: p.metrics[0],
   href: lp(`/trabajos/${p.slug}`),
+  project: p,
 }));
 
 // Trabajos que se nombran sin destacar: una línea cada uno, sin imagen.
@@ -199,6 +201,7 @@ const crumbsLd = {
                 <h2 class="wrow__title">{p.client}</h2>
               </a>
               <p class="wrow__summary">{p.summary}</p>
+              <VisitSiteButton project={p.project} locale={locale} variant="inline" />
               <div class="wrow__foot">
                 <p class="wrow__services">{p.serviceNames.join(' · ')}</p>
                 {p.metric && (

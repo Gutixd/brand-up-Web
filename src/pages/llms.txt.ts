@@ -42,7 +42,7 @@ export const GET: APIRoute = ({ site }) => {
 - Sitio web: ${base}
 - Instagram: ${SITE.instagram}
 - TikTok: ${SITE.tiktok}
-- Equipo: Diego Gutiérrez (ingeniero en informática, lidera desarrollo web, e-commerce y tecnología) y Valentina (publicista y creadora de contenido, lidera branding, dirección creativa y estrategia).
+- Equipo: ${SITE.showValentina ? `Diego Gutiérrez (ingeniero en informática, lidera desarrollo web, e-commerce y tecnología) y Valentina (publicista y creadora de contenido, lidera branding, dirección creativa y estrategia).` : 'Diego Gutiérrez (ingeniero en informática, lidera desarrollo web, e-commerce y tecnología).'}
 
 ## Precios de referencia (CLP, ${new Date().getFullYear()})
 

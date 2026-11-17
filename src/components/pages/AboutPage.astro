@@ -19,7 +19,7 @@ const es = locale === 'es';
 
 const team = [
   { photo: fotoDiego, ...t.about.diego },
-  { photo: fotoValentina, ...t.about.valentina },
+  ...(SITE.showValentina ? [{ photo: fotoValentina, ...t.about.valentina }] : []),
 ];
 const valuesTitle = es ? 'Principios que no negociamos' : 'Principles we don’t negotiate';
 
@@ -54,7 +54,7 @@ const aboutLd = {
         ],
         worksFor: { '@id': SCHEMA_ID.organization },
       },
-      {
+      ...(SITE.showValentina ? [{
         '@type': 'Person',
         name: t.about.valentina.name,
         jobTitle: t.about.valentina.role,
@@ -65,7 +65,7 @@ const aboutLd = {
           'Estrategia de marca', 'Publicidad digital',
         ],
         worksFor: { '@id': SCHEMA_ID.organization },
-      },
+      }] : []),
     ],
   },
 };
@@ -124,7 +124,7 @@ const stats = siteStats(locale);
     <div class="ab-team__inner">
       <p class="ab-team__kicker" data-reveal>— {t.about.teamKicker}</p>
       <h2 class="ab-team__title" data-split-chars>{t.about.teamTitle}</h2>
-      <div class="ab-team__grid">
+      <div class={`ab-team__grid${team.length === 1 ? ' ab-team__grid--solo' : ''}`}>
         {team.map((m, i) => (
           <div class={`ab-member ab-member--${i + 1}`} data-reveal data-delay={`${i * 0.12}`}>
             <figure class="ab-member__photo" data-img-reveal>
@@ -305,6 +305,8 @@ const stats = siteStats(locale);
   gap: clamp(40px, 6vw, 72px);
 }
 @media (min-width: 768px) { .ab-team__grid { grid-template-columns: 1fr 1fr; } }
+/* Con una sola persona, la tarjeta va centrada y a un ancho razonable */
+@media (min-width: 768px) { .ab-team__grid--solo { grid-template-columns: minmax(0, 560px); justify-content: center; } }
 .ab-member__photo {
   position: relative;
   overflow: hidden;

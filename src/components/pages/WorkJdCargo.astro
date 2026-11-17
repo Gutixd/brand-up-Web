@@ -4,6 +4,7 @@
 // contenedores apilados, radar y grilla técnica. La info se presenta como un
 // TRACKING de embarque (origen → tránsito → entregado) y las métricas como
 // un manifiesto de carga. Variante única (ver dispatcher en WorkDetailPage).
+import VisitSiteButton from '../VisitSiteButton.astro';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
@@ -189,6 +190,7 @@ const stages = [
 </div>
 
   <CtaBand locale={locale} />
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
 
 <style>

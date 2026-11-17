@@ -9,6 +9,7 @@
 // Este proyecto NO tiene fotografía de cliente disponible, así que la pieza
 // se sostiene en tipografía y estructura. Es una decisión, no una carencia
 // disimulada: los medios deportivos se reconocen por su jerarquía.
+import VisitSiteButton from '../VisitSiteButton.astro';
 import Base from '../../layouts/Base.astro';
 import WorkSchema from '../seo/WorkSchema.astro';
 import CtaBand from '../CtaBand.astro';
@@ -358,4 +359,5 @@ const capacidades = isEs
   .td-mock__row .td-mock__dash:nth-of-type(1), .td-mock__row .td-mock__dash:nth-of-type(2) { display: none; }
 }
 </style>
+  <VisitSiteButton project={p} locale={locale} />
 </Base>
