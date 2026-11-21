@@ -31,8 +31,8 @@ import wDuocReel from '../../assets/strip/duocuc-reel.webp';
 import wBell1 from '../../assets/strip/bellcollege-1.webp';
 import wBschool2 from '../../assets/strip/bschool-2.webp';
 import wMicro2 from '../../assets/strip/microterapias-2.webp';
-import wAracnidaMobile from '../../assets/strip/aracnida-mobile.webp';
-import wAseocoolProd from '../../assets/strip/aseocool-productos.webp';
+import wChunPlato from '../../assets/projects/gallery/chunguang-plato.webp';
+import wAuristalRosa from '../../assets/projects/gallery/auristal-rosa.webp';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
@@ -60,33 +60,34 @@ const svcImg: Record<string, string> = {
 };
 
 // ── Collage del manifiesto (polaroids con parallax) — trabajo real ─
+// Cada pieza enlaza a su caso en /trabajos.
 const collage = [
-  { img: wBell1,         name: 'Bell College',   par: -16 },
-  { img: wBschool2,      name: 'BSchool',        par: -28 },
-  { img: wMicro2,        name: 'Microterapias',  par: -10 },
-  { img: wAracnidaMobile, name: 'Aracnida Store', par: -24 },
-  { img: wAseocoolProd,  name: 'AseoCool',       par: -14 },
+  { img: wBell1,        name: 'Bell College',  slug: 'bell-college',  par: -16 },
+  { img: wBschool2,     name: 'BSchool',       slug: 'bschool',       par: -28 },
+  { img: wMicro2,       name: 'Microterapias', slug: 'microterapias', par: -10 },
+  { img: wChunPlato,    name: 'Chun Guang',    slug: 'chun-guang',    par: -24 },
+  { img: wAuristalRosa, name: 'Auristal',      slug: 'auristal',      par: -14 },
 ];
 
 // ── Strip urbano horizontal — trabajo real ──────────────────────────
 // Dos filas con piezas DISTINTAS: arriba sitios web y packaging, abajo
 // gráficas de campaña y producto. Antes ambas filas repetían las mismas 6.
 const streetsTop = [
-  { img: wAltitudeWeb,    name: 'Altitude' },
-  { img: wAracnidaWeb,    name: 'Aracnida Store' },
-  { img: wAseocoolWeb,    name: 'AseoCool' },
-  { img: wJdcargoWeb,     name: 'JD Cargo Logistics' },
-  { img: wMusclecarWeb,   name: 'MuscleCarChile' },
-  { img: wSuperlunchPack, name: 'Superlunch' },
+  { img: wAltitudeWeb,    name: 'Altitude',           slug: 'altitude' },
+  { img: wAracnidaWeb,    name: 'Aracnida Store',     slug: 'aracnida-store' },
+  { img: wAseocoolWeb,    name: 'AseoCool',           slug: 'aseocool' },
+  { img: wJdcargoWeb,     name: 'JD Cargo Logistics', slug: 'jd-cargo-logistics' },
+  { img: wMusclecarWeb,   name: 'MuscleCarChile',     slug: 'musclecarchile' },
+  { img: wSuperlunchPack, name: 'Superlunch',         slug: 'superlunch' },
 ];
 
 const streetsBottom = [
-  { img: wBell2,        name: 'Bell College' },
-  { img: wBschool1,     name: 'BSchool' },
-  { img: wMicro1,       name: 'Microterapias' },
-  { img: wAracnidaProd, name: 'Aracnida Store' },
-  { img: wJdcargoPort,  name: 'JD Cargo Logistics' },
-  { img: wDuocReel,     name: 'Duoc UC' },
+  { img: wBell2,        name: 'Bell College',       slug: 'bell-college' },
+  { img: wBschool1,     name: 'BSchool',            slug: 'bschool' },
+  { img: wMicro1,       name: 'Microterapias',      slug: 'microterapias' },
+  { img: wAracnidaProd, name: 'Aracnida Store',     slug: 'aracnida-store' },
+  { img: wJdcargoPort,  name: 'JD Cargo Logistics', slug: 'jd-cargo-logistics' },
+  { img: wDuocReel,     name: 'Duoc UC',            slug: 'duoc-uc' },
 ];
 
 // ── Stats ──────────────────────────────────────────────────────────
@@ -238,6 +239,7 @@ const stats = siteStats(locale);
                 loading="lazy"
               />
               <figcaption class="polaroid__cap">{c.name}</figcaption>
+              <a class="card-link" href={lp(`/trabajos/${c.slug}`)} aria-label={`${es ? 'Ver el caso de' : 'See the case study for'} ${c.name}`}></a>
             </figure>
           </div>
         ))}
@@ -299,6 +301,7 @@ const stats = siteStats(locale);
                     loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{i + 1} — {st.name}</figcaption>
+                  <a class="card-link" href={lp(`/trabajos/${st.slug}`)} tabindex={copy > 0 ? -1 : undefined} aria-label={`${es ? 'Ver el caso de' : 'See the case study for'} ${st.name}`}></a>
                 </figure>
               ))}
             </div>
@@ -319,6 +322,7 @@ const stats = siteStats(locale);
                     loading="lazy"
                   />
                   <figcaption class="street-card__chip">0{6 - i} — {st.name}</figcaption>
+                  <a class="card-link" href={lp(`/trabajos/${st.slug}`)} tabindex={copy > 0 ? -1 : undefined} aria-label={`${es ? 'Ver el caso de' : 'See the case study for'} ${st.name}`}></a>
                 </figure>
               ))}
             </div>

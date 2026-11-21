@@ -94,12 +94,21 @@ class AudioManager {
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.coarsePointer = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    // La preferencia manda por sobre todo, pero nunca se auto-activa:
-    // el AudioContext solo nace tras un gesto real del usuario.
+    // Encendido por defecto (pedido de Diego, nov 2026); si la persona lo
+    // apagó alguna vez, se respeta. El navegador no deja sonar nada hasta el
+    // primer gesto (clic, toque o tecla): ahí se desbloquea el audio.
     try {
-      this.enabled = localStorage.getItem(STORAGE_KEY) === 'on';
+      this.enabled = localStorage.getItem(STORAGE_KEY) !== 'off';
     } catch {
-      this.enabled = false;
+      this.enabled = true;
+    }
+    const unlock = () => {
+      if (!this.enabled) return;
+      this.ensureContext();
+      this.ctx?.resume().catch(() => {});
+    };
+    for (const ev of ['pointerdown', 'keydown', 'touchstart']) {
+      window.addEventListener(ev, unlock, { once: true, passive: true, capture: true });
     }
   }
 

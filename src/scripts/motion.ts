@@ -162,13 +162,14 @@ function initCounters() {
 function initMarqueeScroll() {
   document.querySelectorAll<HTMLElement>('.marquee-track').forEach((track) => {
     let offsetX = 0;
+    const moveX = gsap.quickTo(track, 'x', { duration: 0.4, ease: 'power1.out' });
     ScrollTrigger.create({
       trigger: track.closest('section') ?? track,
       start: 'top bottom', end: 'bottom top',
       onUpdate(self) {
         const v = self.getVelocity() / 800;
         offsetX -= v * 8;
-        gsap.to(track, { x: offsetX, duration: 0.4, ease: 'power1.out', overwrite: 'auto' });
+        moveX(offsetX);
       },
     });
   });
@@ -205,9 +206,13 @@ function initCharReveals() {
         el.appendChild(space);
       }
     });
-    gsap.to(el.querySelectorAll('.char'), {
-      y: '0%', duration: 1, stagger: 0.022, ease: 'power4.out',
-      scrollTrigger: { trigger: el, start: 'top 84%' },
+    // Todo en yPercent (una sola unidad). La posición inicial la fija GSAP,
+    // no el CSS, para que nunca se mezclen píxeles y porcentajes.
+    const chars = el.querySelectorAll<HTMLElement>('.char');
+    gsap.set(chars, { yPercent: 110, y: 0 });
+    gsap.to(chars, {
+      yPercent: 0, duration: 1, stagger: 0.022, ease: 'power4.out',
+      scrollTrigger: { trigger: el, start: 'top 84%', once: true },
     });
   });
 }
@@ -991,11 +996,18 @@ function initRevealSafety() {
   // el atasco puede ocurrir en cualquier momento de la sesión de scroll,
   // no solo al cargar la página.
   const fixStuckChars = () => {
-    document.querySelectorAll<HTMLElement>('.char').forEach((el) => {
-      const m = new DOMMatrix(getComputedStyle(el).transform);
-      if (Math.abs(m.m42) > 0.5) {
-        gsap.to(el, { y: '0%', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-      }
+    // Solo letras que ya deberían verse (su título pasó la línea de
+    // disparo) y que no estén animándose: antes también tocaba letras en
+    // plena entrada y las hacía saltar.
+    const limit = window.innerHeight * 0.84;
+    document.querySelectorAll<HTMLElement>('[data-split-chars]').forEach((title) => {
+      if (title.getBoundingClientRect().top > limit) return;
+      title.querySelectorAll<HTMLElement>('.char').forEach((el) => {
+        if (gsap.isTweening(el)) return;
+        if (Math.abs(Number(gsap.getProperty(el, 'yPercent'))) > 1) {
+          gsap.to(el, { yPercent: 0, y: 0, duration: 0.4, ease: 'power2.out' });
+        }
+      });
     });
   };
 

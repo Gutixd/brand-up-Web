@@ -85,7 +85,11 @@ html.js [data-split-chars]:not([data-char-done]) {
    línea siguiente no parte corrida hacia la derecha. */
 .char-space { display: inline; white-space: normal; }
 .char-container { display: inline-block; overflow: hidden; vertical-align: bottom; }
-.char { display: inline-block; transform: translateY(110%); will-change: transform; }
+/* La posición inicial (abajo, oculta) la fija GSAP con yPercent en motion.ts.
+   Antes estaba también aquí como translateY(110%): GSAP la leía en píxeles y
+   animaba en porcentaje, y al mezclar las dos unidades algunas letras
+   bajaban y volvían a subir. Sin will-change fijo: eran ~60 capas extra. */
+.char { display: inline-block; }
 
 /* ─── Showreel — pantalla completa ──────────────────────────────── */
 .showreel-section {
@@ -1409,8 +1413,7 @@ html.intro-lock body { overflow: hidden; }
   position: absolute;
   bottom: 18px;
   left: 18px;
-  background: rgba(13, 13, 13, 0.66);
-  backdrop-filter: blur(8px);
+  background: rgba(13, 13, 13, 0.82);
   color: #f8f8f8;
   font-size: 11px;
   font-weight: 600;
@@ -1609,6 +1612,10 @@ html.intro-lock body { overflow: hidden; }
   backface-visibility: hidden;
 }
 .polaroid-pos { position: absolute; will-change: transform; }
+/* Enlace invisible que cubre toda la foto (collage y strip): lleva al caso. */
+.polaroid, .street-card { position: relative; }
+.card-link { position: absolute; inset: 0; z-index: 3; cursor: pointer; border-radius: inherit; }
+.card-link:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; }
 /* Las piezas son verticales (gráficas 4:5 y capturas de celular), así que
    las tarjetas son más angostas y altas que antes. Van en zigzag —alta,
    baja, alta, baja, alta— para repartir el peso a lo ancho sin taparse. */
@@ -1653,7 +1660,6 @@ html.intro-lock body { overflow: hidden; }
   display: block;
   width: 100%;
   height: auto;
-  filter: saturate(1.05);
 }
 .polaroid__cap {
   position: absolute;
@@ -1906,7 +1912,6 @@ html.intro-lock body { overflow: hidden; }
   display: block;
   height: 100%;
   width: auto;
-  filter: saturate(1.1) contrast(1.04);
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .street-card:hover img { transform: scale(1.09); }
@@ -1914,8 +1919,9 @@ html.intro-lock body { overflow: hidden; }
   position: absolute;
   bottom: 14px;
   left: 14px;
-  background: rgba(13, 13, 13, 0.72);
-  backdrop-filter: blur(6px);
+  /* Fondo sólido en vez de backdrop-filter: van sobre fotos que se mueven
+     (marquee + skew), y el desenfoque se recalculaba en cada frame. */
+  background: rgba(13, 13, 13, 0.86);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
