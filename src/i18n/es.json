@@ -212,7 +212,12 @@
         "t": "Lanzamiento & crecimiento",
         "d": "Publicamos, medimos y optimizamos. El lanzamiento no es el final: es donde empieza el crecimiento."
       }
-    ]
+    ],
+    "vicente": {
+      "name": "Vicente Cortés",
+      "role": "Edición de video",
+      "bio": "Editor de video para influencers y pymes. Su edición tiene ritmo y calidad de primer nivel: ya trabaja con creadores grandes como Dylantero y Byn1co, entre otros."
+    }
   },
   "contact": {
     "kicker": "Contacto",

@@ -36,7 +36,7 @@ export const SITE = {
   // Mostrar a Valentina como parte del equipo (Nosotros, datos para Google
   // y llms.txt). Oculta temporalmente a pedido de Diego (nov 2026): para
   // volver a mostrarla, cambiar a true. Su foto y textos siguen guardados.
-  showValentina: false,
+  showValentina: true,
 };
 
 /**

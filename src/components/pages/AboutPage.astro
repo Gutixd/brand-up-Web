@@ -9,6 +9,7 @@ import { SITE, SCHEMA_ID } from '../../data/site';
 
 import fotoDiego from '../../assets/team/diego.webp';
 import fotoValentina from '../../assets/team/valentina.webp';
+const fotoVicente = (Object.values(import.meta.glob('../../assets/team/vicente.{webp,jpg,jpeg,png}', { eager: true, import: 'default' }))[0] ?? null) as ImageMetadata | null;
 
 interface Props {
   locale: Locale;
@@ -20,6 +21,8 @@ const es = locale === 'es';
 const team = [
   { photo: fotoDiego, ...t.about.diego },
   ...(SITE.showValentina ? [{ photo: fotoValentina, ...t.about.valentina }] : []),
+  // Vicente aparece solo cuando exista su foto en src/assets/team/vicente.webp
+  ...(fotoVicente ? [{ photo: fotoVicente, ...t.about.vicente }] : []),
 ];
 const valuesTitle = es ? 'Principios que no negociamos' : 'Principles we don’t negotiate';
 
@@ -124,7 +127,7 @@ const stats = siteStats(locale);
     <div class="ab-team__inner">
       <p class="ab-team__kicker" data-reveal>— {t.about.teamKicker}</p>
       <h2 class="ab-team__title" data-split-chars>{t.about.teamTitle}</h2>
-      <div class={`ab-team__grid${team.length === 1 ? ' ab-team__grid--solo' : ''}`}>
+      <div class={`ab-team__grid${team.length === 1 ? ' ab-team__grid--solo' : ''}${team.length === 3 ? ' ab-team__grid--trio' : ''}`}>
         {team.map((m, i) => (
           <div class={`ab-member ab-member--${i + 1}`} data-reveal data-delay={`${i * 0.12}`}>
             <figure class="ab-member__photo" data-img-reveal>
@@ -307,6 +310,8 @@ const stats = siteStats(locale);
 @media (min-width: 768px) { .ab-team__grid { grid-template-columns: 1fr 1fr; } }
 /* Con una sola persona, la tarjeta va centrada y a un ancho razonable */
 @media (min-width: 768px) { .ab-team__grid--solo { grid-template-columns: minmax(0, 560px); justify-content: center; } }
+@media (min-width: 1024px) { .ab-team__grid--trio { grid-template-columns: repeat(3, 1fr); } }
+.ab-member--3 .ab-member__photo { --mtilt: -1deg; }
 .ab-member__photo {
   position: relative;
   overflow: hidden;

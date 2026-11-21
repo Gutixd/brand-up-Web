@@ -212,7 +212,12 @@
         "t": "Launch & growth",
         "d": "We publish, measure and optimize. Launch isn't the end: it's where growth begins."
       }
-    ]
+    ],
+    "vicente": {
+      "name": "Vicente Cortés",
+      "role": "Video editing",
+      "bio": "Video editor for influencers and small businesses. His editing has top-tier pacing and quality: he already works with major creators such as Dylantero and Byn1co, among others."
+    }
   },
   "contact": {
     "kicker": "Contact",
